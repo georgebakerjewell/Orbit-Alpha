@@ -249,7 +249,7 @@ export default function App() {
       return;
     }
     try {
-      const res = await fetch('/api/subscribe', {
+      const res = await fetch('https://www.orbitalpha.cloud/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: emailAddress }),
