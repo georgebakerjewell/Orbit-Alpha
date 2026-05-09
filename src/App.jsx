@@ -241,11 +241,38 @@ export default function App() {
   },[popupDismissed, popupSubmitted]);
 
   const dismissPopup = () => { setShowExitPopup(false); setPopupDismissed(true); };
-  const submitPopup = () => {
-    window.open(popupEmail ? `${BEEHIIV_URL}?email=${encodeURIComponent(popupEmail)}` : BEEHIIV_URL, "_blank");
-    setPopupSubmitted(true);
-    setShowExitPopup(false);
+
+  // ── Central subscribe function — calls API directly, no redirect ──
+  const subscribe = async (emailAddress, onSuccess) => {
+    if(!emailAddress || !emailAddress.includes('@')) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    try {
+      const res = await fetch('https://orbit-alpha-api.vercel.app/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailAddress }),
+      });
+      const data = await res.json();
+      if(data.success) {
+        onSuccess();
+      } else {
+        alert('Something went wrong. Please try again.');
+      }
+    } catch(e) {
+      alert('Something went wrong. Please try again.');
+    }
   };
+
+  const submitPopup = () => {
+    subscribe(popupEmail, ()=>{
+      setPopupSubmitted(true);
+      setShowExitPopup(false);
+    });
+  };
+
+  const sub = () => { subscribe(email, ()=>setSubmitted(true)); };
 
   const SUBSCRIBER_COUNT = 200;
   const [lastUpdated,setLastUpdated]=useState(null);
@@ -449,10 +476,6 @@ export default function App() {
   },[isLive]);
 
   const go=(p,t)=>{setPage(p);if(t)setTab(t);setMenuOpen(false);window.scrollTo({top:0,behavior:"smooth"});};
-  const sub=()=>{
-    window.open(email?`${BEEHIIV_URL}?email=${encodeURIComponent(email)}`:BEEHIIV_URL,"_blank");
-    setSubmitted(true);
-  };
 
   const filtered = (() => {
     let arr = liveStocks.filter(s=>{
@@ -481,13 +504,19 @@ export default function App() {
             <div style={{fontSize:9,color:"#00ff88",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:8}}>Free Weekly Newsletter</div>
             <div style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:800,color:"#fff",lineHeight:1.2,marginBottom:8}}>The only weekly covering every space stock.</div>
             <div style={{fontSize:11,color:"#aab8c2",lineHeight:1.6,marginBottom:16}}>Macro overview · Broker target changes · One stock deep dive. Every Sunday morning.</div>
-            <div style={{display:"flex",gap:6,marginBottom:12}}>
-              <input value={popupEmail} onChange={e=>setPopupEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&submitPopup()} placeholder="your@email.com" style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.12)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none",minWidth:0}}/>
-              <button onClick={submitPopup} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"9px 14px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>Join →</button>
-            </div>
-            <div style={{fontSize:10,color:"#aab8c2",display:"flex",alignItems:"center",gap:6}}>
-              <span style={{color:"#00ff88"}}>✓</span> {SUBSCRIBER_COUNT}+ subscribers · Free · Unsubscribe anytime
-            </div>
+            {popupSubmitted ? (
+              <div style={{fontSize:13,color:"#00ff88",padding:"10px 0"}}>✓ You're subscribed. Welcome to Orbit Alpha.</div>
+            ) : (
+              <>
+                <div style={{display:"flex",gap:6,marginBottom:12}}>
+                  <input value={popupEmail} onChange={e=>setPopupEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&submitPopup()} placeholder="your@email.com" style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.12)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none",minWidth:0}}/>
+                  <button onClick={submitPopup} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"9px 14px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>Join →</button>
+                </div>
+                <div style={{fontSize:10,color:"#aab8c2",display:"flex",alignItems:"center",gap:6}}>
+                  <span style={{color:"#00ff88"}}>✓</span> {SUBSCRIBER_COUNT}+ subscribers · Free · Unsubscribe anytime
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -538,7 +567,7 @@ export default function App() {
             ))}
           </div>
           <div style={{display:"flex",gap:10,alignItems:"center",flexShrink:0}}>
-            <button className="desk-only" onClick={()=>window.open(BEEHIIV_URL,"_blank")} style={{background:"rgba(0,255,136,0.07)",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"7px 15px",borderRadius:4,fontSize:10,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free</button>
+            <button className="desk-only" onClick={()=>go("newsletter")} style={{background:"rgba(0,255,136,0.07)",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"7px 15px",borderRadius:4,fontSize:10,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free</button>
             <button className="desk-only" onClick={()=>{ if(navigator.share){navigator.share({title:"Orbit Alpha",text:"Free space stocks dashboard",url:"https://orbitalpha.cloud"});}else{navigator.clipboard.writeText("https://orbitalpha.cloud").then(()=>alert("Link copied!"));}}} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#ccd0d8",padding:"7px 12px",borderRadius:4,fontSize:10,letterSpacing:"0.06em",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Share ↗</button>
             <button onClick={()=>setMenuOpen(!menuOpen)} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#ccd0d8",padding:"6px 10px",borderRadius:4,cursor:"pointer",fontSize:16,display:"none"}} className="mob-menu-btn">{menuOpen?"✕":"☰"}</button>
           </div>
@@ -549,7 +578,7 @@ export default function App() {
             {[["dashboard","Dashboard"],["news","News"],["newsletter","Newsletter"],["about","About"]].map(([p,l])=>(
               <span key={p} onClick={()=>{go(p);setMenuOpen(false);}} style={{color:page===p?"#00ff88":"#ccd0d8",padding:"10px 0",fontSize:12,letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(255,255,255,0.04)",cursor:"pointer"}}>{l}</span>
             ))}
-            <button onClick={()=>{window.open(BEEHIIV_URL,"_blank");setMenuOpen(false);}} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",marginTop:8}}>Subscribe Free →</button>
+            <button onClick={()=>{go("newsletter");setMenuOpen(false);}} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",marginTop:8}}>Subscribe Free →</button>
           </div>
         )}
 
@@ -589,7 +618,7 @@ export default function App() {
               <p style={{fontSize:13,color:"#aab8c2",maxWidth:380,margin:"0 auto 20px",lineHeight:1.6}}>Live prices, launches, earnings and news. Weekly newsletter every Sunday.</p>
               <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}}>
                 <button onClick={()=>go("dashboard","stocks")} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px 24px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>View Dashboard →</button>
-                <button onClick={()=>window.open(BEEHIIV_URL,"_blank")} style={{background:"none",border:"1px solid rgba(255,255,255,0.15)",color:"#aab8c2",padding:"11px 24px",borderRadius:4,fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free →</button>
+                <button onClick={()=>go("newsletter")} style={{background:"none",border:"1px solid rgba(255,255,255,0.15)",color:"#aab8c2",padding:"11px 24px",borderRadius:4,fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free →</button>
               </div>
             </section>
 
@@ -701,7 +730,6 @@ export default function App() {
             </div>
 
             <div style={{padding:"16px 20px 40px"}}>
-
               {tab==="stocks"&&(
                 <div>
                   {(()=>{
@@ -722,7 +750,6 @@ export default function App() {
                       </div>
                     );
                   })()}
-
                   {isLive&&(()=>{
                     const sorted = [...liveStocks].filter(s=>s.type==="stock"&&typeof s.changePct==="number");
                     const gainer = sorted.sort((a,b)=>b.changePct-a.changePct)[0];
@@ -750,7 +777,6 @@ export default function App() {
                       </div>
                     );
                   })()}
-
                   <div style={{display:"flex",gap:8,marginBottom:12,flexWrap:"wrap",alignItems:"center"}}>
                     <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search ticker or name..." style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#ddd",padding:"8px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",width:200}}/>
                     <button onClick={()=>setShowWatchlistOnly(w=>!w)} style={{background:showWatchlistOnly?"rgba(255,204,0,0.1)":"transparent",border:`1px solid ${showWatchlistOnly?"rgba(255,204,0,0.4)":"rgba(255,255,255,0.08)"}`,color:showWatchlistOnly?"#ffcc00":"#aab8c2",padding:"7px 12px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer",letterSpacing:"0.08em"}}>★ Watchlist</button>
@@ -760,12 +786,10 @@ export default function App() {
                       ))}
                     </div>
                   </div>
-
                   <div className="desk-only" style={{overflowX:"auto"}}>
                     <div style={{minWidth:"auto",width:"100%"}}>
                       <div style={{display:"grid",gridTemplateColumns:"68px 1fr 82px 72px 72px 80px",gap:6,padding:"7px 8px",fontSize:9,color:"#dde1ec",letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
-                        <span>Ticker</span>
-                        <span>Name</span>
+                        <span>Ticker</span><span>Name</span>
                         {[["price","Price"],["changePct","1D Chg%"],["mktCap","Mkt Cap"]].map(([col,label])=>(
                           <span key={col} onClick={()=>handleSort(col)} style={{cursor:"pointer",color:sortCol===col?"#00ff88":"#fff",userSelect:"none"}}>
                             {label}{sortCol===col?(sortDir==="desc"?" ↓":" ↑"):""}
@@ -773,13 +797,11 @@ export default function App() {
                         ))}
                         <span style={{textAlign:"center",color:"#aab8c2"}}>7D</span>
                       </div>
-
                       {loading && Array.from({length:8}).map((_,i)=>(
                         <div key={i} style={{display:"grid",gridTemplateColumns:"68px 1fr 82px 72px 72px 80px",gap:6,padding:"12px 8px",borderBottom:"1px solid rgba(255,255,255,0.04)",alignItems:"center"}}>
                           <div className="skeleton" style={{height:12,width:40}}/><div className="skeleton" style={{height:12,width:120}}/><div className="skeleton" style={{height:12,width:60}}/><div className="skeleton" style={{height:12,width:50}}/><div className="skeleton" style={{height:12,width:55}}/><div className="skeleton" style={{height:24,width:72}}/>
                         </div>
                       ))}
-
                       {!loading && filtered.map(s=>(
                         <div key={s.ticker}>
                           <div className={`hov ${flashMap[s.ticker]==="up"?"flash-up":flashMap[s.ticker]==="down"?"flash-down":""}`}
@@ -811,7 +833,7 @@ export default function App() {
                               <div style={{display:"flex",gap:10,marginTop:8}}>
                                 <span style={{fontSize:10,color:"#ccd0d8",background:"rgba(255,255,255,0.04)",padding:"3px 10px",borderRadius:3}}>{s.sector}</span>
                                 <span onClick={()=>window.open(`https://finance.yahoo.com/quote/${s.ticker}`,"_blank")} style={{fontSize:10,color:"#7eb8ff",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(126,184,255,0.2)"}}>View on Yahoo Finance →</span>
-                                <span onClick={()=>window.open(BEEHIIV_URL,"_blank")} style={{fontSize:10,color:"#00ff88",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(0,255,136,0.2)"}}>{s.ticker} covered in this week's issue →</span>
+                                <span onClick={()=>go("newsletter")} style={{fontSize:10,color:"#00ff88",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(0,255,136,0.2)"}}>{s.ticker} covered in this week's issue →</span>
                               </div>
                             </div>
                           )}
@@ -819,7 +841,6 @@ export default function App() {
                       ))}
                     </div>
                   </div>
-
                   <div style={{display:"none"}} className="mob-cards">
                     <div style={{display:"flex",gap:8,marginBottom:10,alignItems:"center"}}>
                       <button onClick={()=>setShowWatchlistOnly(w=>!w)} style={{background:showWatchlistOnly?"rgba(255,204,0,0.1)":"transparent",border:`1px solid ${showWatchlistOnly?"rgba(255,204,0,0.4)":"rgba(255,255,255,0.08)"}`,color:showWatchlistOnly?"#ffcc00":"#aab8c2",padding:"7px 14px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer",letterSpacing:"0.08em"}}>★ {showWatchlistOnly?"Watchlist Only":"Watchlist"}</button>
@@ -856,7 +877,7 @@ export default function App() {
                             </div>
                             <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                               <button onClick={()=>window.open(`https://finance.yahoo.com/quote/${s.ticker}`,"_blank")} style={{flex:1,background:"none",border:"1px solid rgba(126,184,255,0.2)",color:"#7eb8ff",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Yahoo Finance →</button>
-                              <button onClick={()=>window.open(BEEHIIV_URL,"_blank")} style={{flex:1,background:"none",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>{s.ticker} in this week's issue →</button>
+                              <button onClick={()=>go("newsletter")} style={{flex:1,background:"none",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>{s.ticker} in this week's issue →</button>
                             </div>
                             {stockNews[s.ticker]?.length>0&&(
                               <div style={{marginTop:10,borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:10}}>
@@ -935,8 +956,7 @@ export default function App() {
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:8}}>
                     <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase"}}>Upcoming Launches · Historical Price Impact</div>
                     <div style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"#00ff88"}}>
-                      <div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>
-                      LIVE · rocketlaunch.live
+                      <div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>LIVE · rocketlaunch.live
                     </div>
                   </div>
                   {liveLaunches.map((l,i)=>(
@@ -983,7 +1003,6 @@ export default function App() {
                   </div>
                 </div>
               )}
-
             </div>
           </div>
         )}
@@ -999,20 +1018,17 @@ export default function App() {
                 <div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>LIVE
               </div>
             </div>
-
             <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:20}}>
               {["All","RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","HAWK","SpaceX","Blue Origin","Relativity","Vast","ispace","NASA","ESA","ISRO","Space Force"].map(co=>(
                 <span key={co} onClick={()=>setNewsCompany(co==="All"?"":co)} className="stg" style={{color:newsCompany===(co==="All"?"":co)?"#ff9632":"#ccd0d8",borderColor:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.3)":"rgba(255,255,255,0.2)",background:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.05)":"transparent",fontSize:9}}>{co}</span>
               ))}
             </div>
-
             {newsLoading&&Array.from({length:8}).map((_,i)=>(
               <div key={i} style={{padding:"16px 0",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
                 <div className="skeleton" style={{height:13,width:"70%",marginBottom:8}}/>
                 <div className="skeleton" style={{height:10,width:"30%"}}/>
               </div>
             ))}
-
             {!newsLoading&&(()=>{
               const COMPANY_KEYWORDS = {
                 RKLB:['Rocket Lab','RKLB','Electron','Neutron'],
@@ -1057,7 +1073,14 @@ export default function App() {
             <div style={{marginBottom:28}}>
               <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ORBIT <span style={{color:"#7eb8ff"}}>NEWSLETTER</span></div>
               <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:16}}>Every Sunday — macro overview, broker target changes and one stock deep dive. Free.</p>
-              <button onClick={()=>window.open(BEEHIIV_URL,"_blank")} style={{background:"#7eb8ff",color:"#04060e",border:"none",padding:"10px 22px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Join {SUBSCRIBER_COUNT}+ Free →</button>
+              {submitted ? (
+                <div style={{fontSize:13,color:"#00ff88",padding:"10px 0"}}>✓ You're subscribed. Welcome to Orbit Alpha.</div>
+              ) : (
+                <div style={{display:"flex",gap:8,maxWidth:400}}>
+                  <input value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&sub()} placeholder="your@email.com" style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",color:"#fff",padding:"10px 14px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}/>
+                  <button onClick={sub} style={{background:"#7eb8ff",color:"#04060e",border:"none",padding:"10px 22px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap"}}>Join Free →</button>
+                </div>
+              )}
             </div>
             <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
             <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
@@ -1090,7 +1113,14 @@ export default function App() {
             <div style={{fontSize:10,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>Get in touch</div>
             <a href="mailto:OrbitAlphaApp@proton.me" style={{color:"#00ff88",fontSize:13,textDecoration:"none",display:"inline-flex",alignItems:"center",gap:6}}>📬 OrbitAlphaApp@proton.me</a>
             <div style={{marginTop:24}}>
-              <button onClick={()=>window.open(BEEHIIV_URL,"_blank")} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"10px 22px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe to the newsletter →</button>
+              {submitted ? (
+                <div style={{fontSize:13,color:"#00ff88",padding:"10px 0"}}>✓ You're subscribed. Welcome to Orbit Alpha.</div>
+              ) : (
+                <div style={{display:"flex",gap:8,maxWidth:400}}>
+                  <input value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&sub()} placeholder="your@email.com" style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",color:"#fff",padding:"10px 14px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}/>
+                  <button onClick={sub} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"10px 22px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap"}}>Subscribe →</button>
+                </div>
+              )}
             </div>
           </div>
         )}
