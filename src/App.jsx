@@ -394,6 +394,8 @@ export default function App() {
 ]);
         const rssItems = rssRes.status==='fulfilled' && Array.isArray(rssRes.value) ? rssRes.value : [];
         const yahooItems = yahooRes.status==='fulfilled' && Array.isArray(yahooRes.value) ? yahooRes.value : [];
+        console.log('RSS items:', rssItems.length, 'Yahoo items:', yahooItems.length);
+console.log('Yahoo HAWK articles:', yahooItems.filter(i=>i.ticker==='HAWK'));
         const seenTitles = new Set();
 const combined = [...yahooItems, ...rssItems]
   .filter(item => {
