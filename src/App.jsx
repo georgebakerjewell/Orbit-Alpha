@@ -388,14 +388,9 @@ export default function App() {
   useEffect(()=>{
     const fetchNews = async () => {
       try {
-        const withTimeout = (promise, ms) => Promise.race([
-  promise,
-  new Promise((_,reject) => setTimeout(()=>reject(new Error('timeout')), ms))
-]);
-
-const [rssRes, yahooRes] = await Promise.allSettled([
-  withTimeout(fetch('https://orbit-alpha-api.vercel.app/api/news?limit=50').then(r=>r.json()), 8000),
-  withTimeout(fetch(`https://orbit-alpha-api.vercel.app/api/yahoonews?t=${Date.now()}`).then(r=>r.json()), 8000),
+        const [rssRes, yahooRes] = await Promise.allSettled([
+  fetch('https://orbit-alpha-api.vercel.app/api/news?limit=50').then(r=>r.json()),
+  fetch(`https://orbit-alpha-api.vercel.app/api/yahoonews?t=${Date.now()}`).then(r=>r.json()),
 ]);
         const rssItems = rssRes.status==='fulfilled' && Array.isArray(rssRes.value) ? rssRes.value : [];
         const yahooItems = yahooRes.status==='fulfilled' && Array.isArray(yahooRes.value) ? yahooRes.value : [];
