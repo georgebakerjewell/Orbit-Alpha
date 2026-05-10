@@ -1,6 +1,7 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
+  res.setHeader('Cache-Control', 'no-store');
 
   const { ticker, limit = 50 } = req.query;
 
@@ -69,8 +70,8 @@ export default async function handler(req, res) {
   const fetchGoogleNews = async ({ q }) => {
     try {
       const url = `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=en-US&gl=US&ceid=US:en`;
-      const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-      const text = await res.text();
+      const response = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+      const text = await response.text();
       const items = [];
       const itemMatches = text.matchAll(/<item>([\s\S]*?)<\/item>/g);
       for (const match of itemMatches) {
@@ -103,12 +104,13 @@ export default async function handler(req, res) {
     const allNews = [];
 
     const results = [];
-for (let i = 0; i < GOOGLE_QUERIES.length; i += 5) {
-  const batch = GOOGLE_QUERIES.slice(i, i + 5);
-  const batchResults = await Promise.allSettled(batch.map(q => fetchGoogleNews(q)));
-  results.push(...batchResults);
-  if (i + 5 < GOOGLE_QUERIES.length) await new Promise(r => setTimeout(r, 300));
-}
+    for (let i = 0; i < GOOGLE_QUERIES.length; i += 5) {
+      const batch = GOOGLE_QUERIES.slice(i, i + 5);
+      const batchResults = await Promise.allSettled(batch.map(q => fetchGoogleNews(q)));
+      results.push(...batchResults);
+      if (i + 5 < GOOGLE_QUERIES.length) await new Promise(r => setTimeout(r, 300));
+    }
+
     results.forEach(r => {
       if (r.status === 'fulfilled') {
         r.value.forEach(article => {
