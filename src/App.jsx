@@ -443,7 +443,7 @@ const [rssRes, yahooRes] = await Promise.allSettled([
   const fetchStockNews = async (ticker) => {
     if(stockNews[ticker]) return;
     try {
-      const res = await fetch(`https://orbit-alpha-api.vercel.app/api/news?ticker=${ticker}&limit=3`);
+      const res = await fetch(`https://orbit-alpha-api.vercel.app/api/yahoonews?ticker=${ticker}`);
       const data = await res.json();
       setStockNews(prev => ({...prev, [ticker]: data.slice(0,3)}));
     } catch(e) {}
