@@ -4,10 +4,10 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
 
   const SPACE_TICKERS = [
-    'RKLB', 'ASTS', 'LUNR', 'PL', 'BKSY', 'RDW', 'MNTS', 'SPCE',
-    'KRMN', 'SATL', 'KULR', 'GSAT', 'VSAT', 'MDA', 'SPIR', 'DXYZ',
-    'LMT', 'FLY', 'OKLO', 'BA', 'NOC', 'RTX', 'UFO', 'ARKX',
-    'TSAT', 'HAWK', 'GILT', 'SATS', 'VOYG', 'YSS',
+    'RKLB', 'ASTS', 'HAWK', 'LUNR', 'PL', 'BKSY', 'RDW', 'MNTS',
+    'SPCE', 'KRMN', 'SATL', 'KULR', 'GSAT', 'VSAT', 'MDA', 'SPIR',
+    'DXYZ', 'LMT', 'FLY', 'OKLO', 'BA', 'NOC', 'RTX', 'UFO',
+    'ARKX', 'TSAT', 'GILT', 'SATS', 'VOYG', 'YSS',
   ];
 
   const HIGH_SIGNAL_KEYWORDS = [
