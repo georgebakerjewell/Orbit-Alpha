@@ -206,7 +206,7 @@ function ThreadsPage({ go }) {
     setShowUsernamePrompt(true);
   };
 
-  const API = "https://orbit-alpha-api.vercel.app/api/threads";
+  const API = "/api/threads";
 
   const fetchThreads = async (ticker) => {
     setLoading(true);
@@ -466,7 +466,7 @@ function ThreadsPage({ go }) {
   );
 }
 
-const PROXY_URL = "https://orbit-alpha-api.vercel.app/api/quote";
+const PROXY_URL = "/api/quote";
 const ALL_TICKERS = STOCKS.map(s=>s.ticker);
 
 const formatMktCap = (v) => {
@@ -585,7 +585,7 @@ export default function App() {
   useEffect(()=>{
     const fetchLaunches = async () => {
       try {
-        const res = await fetch('https://orbit-alpha-api.vercel.app/api/launches');
+        const res = await fetch('/api/launches');
         const data = await res.json();
         if(data.result && data.result.length > 0) {
           const now = Date.now() / 1000;
@@ -612,8 +612,8 @@ export default function App() {
     const fetchNews = async () => {
       try {
         const [rssRes, yahooRes] = await Promise.allSettled([
-          fetch('https://orbit-alpha-api.vercel.app/api/news?limit=50').then(r=>r.json()),
-          fetch(`https://orbit-alpha-api.vercel.app/api/yahoonews?t=${Date.now()}`).then(r=>r.json()),
+          fetch('/api/news?limit=50').then(r=>r.json()),
+          fetch(`/api/yahoonews?t=${Date.now()}`).then(r=>r.json()),
         ]);
         const rssItems = rssRes.status==='fulfilled' && Array.isArray(rssRes.value) ? rssRes.value : [];
         const yahooItems = yahooRes.status==='fulfilled' && Array.isArray(yahooRes.value) ? yahooRes.value : [];
@@ -644,7 +644,7 @@ export default function App() {
   const fetchStockNews = async (ticker) => {
     if(stockNews[ticker]) return;
     try {
-      const res = await fetch(`https://orbit-alpha-api.vercel.app/api/yahoonews?ticker=${ticker}`);
+      const res = await fetch(`/api/yahoonews?ticker=${ticker}`);
       const data = await res.json();
       setStockNews(prev => ({...prev,[ticker]:data.slice(0,3)}));
     } catch(e) {}
