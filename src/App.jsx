@@ -75,16 +75,6 @@ const LAUNCHES = [
   { date:"SUMMER 2026", mission:"SpaceX – IPO Roadshow", status:"CONFIRMED", impact:"Sector re-rating", ticker:null },
 ];
 
-const FEED = [
-  { time:"2m ago", src:"r/spaceinvesting", text:"RKLB nailing back-to-back launches. Revenue guidance still looks conservative 🚀", sentiment:"bull", ticker:"RKLB" },
-  { time:"7m ago", src:"X / @SpaceStockPro", text:"ASTS BlueBird delay confirmed, pushed to May. Watch the dip — this is the buy zone imo", sentiment:"bull", ticker:"ASTS" },
-  { time:"14m ago", src:"r/RocketLab", text:"Neutron update in earnings call was disappointing. No 2025 launch anymore.", sentiment:"bear", ticker:"RKLB" },
-  { time:"21m ago", src:"StockTwits", text:"$SPCE at support. Either this bounces hard or lights out. No middle ground.", sentiment:"neutral", ticker:"SPCE" },
-  { time:"35m ago", src:"r/spaceinvesting", text:"Planet Labs quietly profitable? Q4 numbers look way better than people realise", sentiment:"bull", ticker:"PL" },
-  { time:"48m ago", src:"X / @OrbitalAlpha", text:"DXYZ premium to NAV still wild but SpaceX exposure is genuinely hard to get otherwise", sentiment:"neutral", ticker:"DXYZ" },
-  { time:"1h ago", src:"r/spaceinvesting", text:"KRMN flying under the radar. Anyone else doing DD on this one?", sentiment:"bull", ticker:"KRMN" },
-];
-
 const SPARKDATA = {
   RKLB:[18,19,17,20,21,19,22,24,23,24.82], ASTS:[28,27,29,30,29,28,30,31,30,31.17],
   LUNR:[10,9.5,9,8.8,9.2,9,8.5,8.6,8.5,8.44], PL:[3.5,3.6,3.7,3.6,3.8,3.9,3.8,3.9,3.9,3.91],
@@ -110,6 +100,27 @@ const SPARKDATA = {
 };
 
 const SECTORS = ["All","Launch","Comms","Earth Obs","Hardware","Lunar","Tourism","Transport","Defence","Energy","ETF","Private Access"];
+
+// ── THREADS DATA (stored in-memory, no login required) ──
+const TICKER_LIST = ["RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","UFO","ARKX","HAWK","VOYG","YSS","SATS"];
+
+const SEED_THREADS = {
+  RKLB: [
+    { id:"t1", author:"orbital_dan", time:"2h ago", title:"Neutron timeline — what are realistic expectations now?", body:"After Q1 earnings Neutron looks like late 2027 at best. Does that change the thesis materially or is Electron + Space Systems enough to hold?", upvotes:24, downvotes:2, comments:[
+      { id:"c1", author:"spaceInvest88", time:"1h ago", body:"Electron cadence alone is printing money. Neutron is optionality not the core case.", upvotes:11, downvotes:0 },
+      { id:"c2", author:"bearish_gravity", time:"45m ago", body:"Disagree — at current valuation you're paying for Neutron. If it slips to 2028 the multiple doesn't hold.", upvotes:7, downvotes:3 },
+    ]},
+    { id:"t2", author:"launchwatch", time:"5h ago", title:"Back-to-back launches this month — operational excellence or luck?", body:"Two successful Electron missions in 10 days. The manufacturing cadence story is real. Anyone tracking their launch rate vs Rocket Lab's own guidance?", upvotes:18, downvotes:1, comments:[] },
+  ],
+  ASTS: [
+    { id:"t3", author:"bb_watcher", time:"3h ago", title:"BlueBird 8-10 mid-June — what's the expected pop?", body:"Historical avg on ASTS launches is +12% per the dashboard. But Block 2 is different scale. Anyone modelling the coverage impact?", upvotes:31, downvotes:4, comments:[
+      { id:"c3", author:"telecomanalyst", time:"2h ago", body:"Block 2 is transformational. BB7 delay scared people off but the fundamentals haven't changed.", upvotes:14, downvotes:1 },
+    ]},
+  ],
+  LUNR: [
+    { id:"t4", author:"moonbull", time:"6h ago", title:"$1B guidance — credible or wishful thinking?", body:"Management confirmed $900M–$1B for 2026. The NASA contract pipeline is there but execution has been bumpy. How much do you trust this?", upvotes:12, downvotes:5, comments:[] },
+  ],
+};
 
 function Sparkline({ data, positive }) {
   const [hoverIdx, setHoverIdx] = useState(null);
@@ -170,21 +181,17 @@ function Stars() {
     <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:0}}>
       {stars.map((st,i)=>(
         <div key={i} style={{
-          position:"absolute",
-          left:`${st.x}%`,
-          top:`${st.y}%`,
-          width: i%3===0 ? 1.8 : i%3===1 ? 1.2 : 1,
-          height: i%3===0 ? 1.8 : i%3===1 ? 1.2 : 1,
-          borderRadius:"50%",
-          background:"#fff",
-          opacity: i%3===0 ? 0.18 : i%3===1 ? 0.14 : 0.10,
+          position:"absolute",left:`${st.x}%`,top:`${st.y}%`,
+          width:i%3===0?1.8:i%3===1?1.2:1,height:i%3===0?1.8:i%3===1?1.2:1,
+          borderRadius:"50%",background:"#fff",
+          opacity:i%3===0?0.18:i%3===1?0.14:0.10,
         }}/>
       ))}
     </div>
   );
 }
 
-function Ticker({ stocks }) {
+function TickerStrip({ stocks }) {
   const items=stocks.filter(s=>s.type==="stock"||s.type==="etf");
   return (
     <div style={{overflow:"hidden",background:"rgba(0,0,0,0.5)",borderBottom:"1px solid rgba(255,255,255,0.06)",padding:"6px 0"}}>
@@ -195,6 +202,234 @@ function Ticker({ stocks }) {
           </span>
         ))}
       </div>
+    </div>
+  );
+}
+
+// ── THREADS PAGE ──
+function ThreadsPage({ go }) {
+  const [threads, setThreads] = useState(SEED_THREADS);
+  const [activeTicker, setActiveTicker] = useState("RKLB");
+  const [openThread, setOpenThread] = useState(null);
+  const [showCompose, setShowCompose] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
+  const [newBody, setNewBody] = useState("");
+  const [newComment, setNewComment] = useState({});
+  const [votes, setVotes] = useState({});
+
+  const tickerThreads = threads[activeTicker] || [];
+
+  const handleVote = (id, dir) => {
+    setVotes(prev => {
+      const current = prev[id];
+      if (current === dir) return { ...prev, [id]: null };
+      return { ...prev, [id]: dir };
+    });
+  };
+
+  const getScore = (item, id) => {
+    const vote = votes[id];
+    let score = item.upvotes - item.downvotes;
+    if (vote === "up") score += 1;
+    if (vote === "down") score -= 1;
+    return score;
+  };
+
+  const postThread = () => {
+    if (!newTitle.trim()) return;
+    const thread = {
+      id: `t${Date.now()}`,
+      author: "anonymous",
+      time: "just now",
+      title: newTitle.trim(),
+      body: newBody.trim(),
+      upvotes: 0,
+      downvotes: 0,
+      comments: [],
+    };
+    setThreads(prev => ({
+      ...prev,
+      [activeTicker]: [thread, ...(prev[activeTicker] || [])],
+    }));
+    setNewTitle("");
+    setNewBody("");
+    setShowCompose(false);
+  };
+
+  const postComment = (threadId) => {
+    const text = newComment[threadId]?.trim();
+    if (!text) return;
+    const comment = {
+      id: `c${Date.now()}`,
+      author: "anonymous",
+      time: "just now",
+      body: text,
+      upvotes: 0,
+      downvotes: 0,
+    };
+    setThreads(prev => ({
+      ...prev,
+      [activeTicker]: (prev[activeTicker] || []).map(t =>
+        t.id === threadId ? { ...t, comments: [...t.comments, comment] } : t
+      ),
+    }));
+    setNewComment(prev => ({ ...prev, [threadId]: "" }));
+  };
+
+  const tickersWithThreads = TICKER_LIST.filter(t => threads[t]?.length > 0);
+  const otherTickers = TICKER_LIST.filter(t => !threads[t]?.length);
+  const sortedTickers = [...tickersWithThreads, ...otherTickers];
+
+  return (
+    <div style={{animation:"fu 0.3s ease",maxWidth:800,margin:"0 auto",padding:"32px 20px 60px"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,flexWrap:"wrap",gap:12}}>
+        <div>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ORBIT <span style={{color:"#a78bfa"}}>THREADS</span></div>
+          <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Discuss any space stock. No account needed — just post.</p>
+        </div>
+      </div>
+
+      {/* Ticker selector */}
+      <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:20,paddingBottom:16,borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+        {sortedTickers.map(t => {
+          const count = threads[t]?.length || 0;
+          const isActive = activeTicker === t;
+          return (
+            <button key={t} onClick={() => { setActiveTicker(t); setOpenThread(null); setShowCompose(false); }}
+              style={{background:isActive?"rgba(167,139,250,0.12)":"transparent",border:`1px solid ${isActive?"rgba(167,139,250,0.4)":"rgba(255,255,255,0.08)"}`,color:isActive?"#a78bfa":"#aab8c2",padding:"4px 10px",borderRadius:20,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer",display:"flex",alignItems:"center",gap:5,transition:"all 0.15s",whiteSpace:"nowrap"}}>
+              {t}
+              {count > 0 && <span style={{fontSize:9,background:isActive?"rgba(167,139,250,0.2)":"rgba(255,255,255,0.06)",padding:"1px 5px",borderRadius:8,color:isActive?"#a78bfa":"#888"}}>{count}</span>}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Thread list / single thread view */}
+      {openThread === null ? (
+        <div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+            <div style={{fontSize:11,color:"#aab8c2"}}>{tickerThreads.length} thread{tickerThreads.length !== 1 ? "s" : ""} on <span style={{color:"#a78bfa",fontWeight:700}}>{activeTicker}</span></div>
+            <button onClick={() => setShowCompose(c => !c)}
+              style={{background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.3)",color:"#a78bfa",padding:"7px 14px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer",letterSpacing:"0.06em"}}>
+              {showCompose ? "Cancel" : "+ New Thread"}
+            </button>
+          </div>
+
+          {showCompose && (
+            <div style={{background:"rgba(167,139,250,0.04)",border:"1px solid rgba(167,139,250,0.2)",borderRadius:8,padding:"16px",marginBottom:16,animation:"fu 0.2s ease"}}>
+              <div style={{fontSize:9,color:"#a78bfa",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:10}}>New thread · {activeTicker}</div>
+              <input value={newTitle} onChange={e=>setNewTitle(e.target.value)} placeholder="Thread title..." style={{width:"100%",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:13,fontFamily:"'DM Mono',monospace",outline:"none",marginBottom:8}}/>
+              <textarea value={newBody} onChange={e=>setNewBody(e.target.value)} placeholder="Your thoughts... (optional)" rows={3} style={{width:"100%",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none",resize:"vertical",display:"block",marginBottom:10}}/>
+              <div style={{display:"flex",justifyContent:"flex-end",gap:8}}>
+                <button onClick={()=>{setShowCompose(false);setNewTitle("");setNewBody("");}} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#aab8c2",padding:"7px 14px",borderRadius:4,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Cancel</button>
+                <button onClick={postThread} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"7px 18px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Post Thread →</button>
+              </div>
+            </div>
+          )}
+
+          {tickerThreads.length === 0 && (
+            <div style={{textAlign:"center",padding:"48px 20px",color:"#aab8c2",fontSize:13}}>
+              <div style={{fontSize:28,marginBottom:12,opacity:0.3}}>💬</div>
+              No threads yet for {activeTicker}.<br/>
+              <span style={{color:"#a78bfa",cursor:"pointer"}} onClick={()=>setShowCompose(true)}>Start the first one →</span>
+            </div>
+          )}
+
+          {tickerThreads.map(thread => {
+            const score = getScore(thread, thread.id);
+            const vote = votes[thread.id];
+            return (
+              <div key={thread.id} style={{border:"1px solid rgba(255,255,255,0.07)",borderRadius:8,padding:"16px",marginBottom:8,background:"rgba(255,255,255,0.01)",transition:"border-color 0.15s",cursor:"pointer"}}
+                onMouseEnter={e=>e.currentTarget.style.borderColor="rgba(167,139,250,0.2)"}
+                onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(255,255,255,0.07)"}>
+                <div style={{display:"flex",gap:12}}>
+                  {/* Vote column */}
+                  <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,minWidth:28,paddingTop:2}}>
+                    <button onClick={e=>{e.stopPropagation();handleVote(thread.id,"up");}}
+                      style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:vote==="up"?"#00ff88":"#556",lineHeight:1,padding:0}}>▲</button>
+                    <span style={{fontSize:12,fontWeight:600,color:score>0?"#00ff88":score<0?"#ff4466":"#aab8c2"}}>{score}</span>
+                    <button onClick={e=>{e.stopPropagation();handleVote(thread.id,"down");}}
+                      style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:vote==="down"?"#ff4466":"#556",lineHeight:1,padding:0}}>▼</button>
+                  </div>
+                  {/* Thread body */}
+                  <div style={{flex:1,minWidth:0}} onClick={()=>setOpenThread(thread.id)}>
+                    <div style={{fontSize:9,color:"#aab8c2",marginBottom:5,letterSpacing:"0.04em"}}>
+                      <span style={{color:"#a78bfa"}}>{thread.author}</span> · {thread.time}
+                    </div>
+                    <div style={{fontSize:14,color:"#fff",fontWeight:500,marginBottom:6,lineHeight:1.4}}>{thread.title}</div>
+                    {thread.body && <div style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:8}}>{thread.body}</div>}
+                    <div style={{fontSize:11,color:"#556"}}>
+                      💬 {thread.comments.length} comment{thread.comments.length!==1?"s":""} · <span style={{color:"#a78bfa",cursor:"pointer"}}>view thread →</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        // Single thread view
+        (() => {
+          const thread = tickerThreads.find(t => t.id === openThread);
+          if (!thread) return null;
+          const score = getScore(thread, thread.id);
+          const vote = votes[thread.id];
+          return (
+            <div style={{animation:"fu 0.2s ease"}}>
+              <button onClick={()=>setOpenThread(null)} style={{background:"none",border:"none",color:"#a78bfa",fontSize:12,fontFamily:"'DM Mono',monospace",cursor:"pointer",padding:"0 0 16px",display:"flex",alignItems:"center",gap:6}}>← Back to {activeTicker} threads</button>
+              <div style={{border:"1px solid rgba(167,139,250,0.2)",borderRadius:8,padding:"20px",marginBottom:16,background:"rgba(167,139,250,0.03)"}}>
+                <div style={{display:"flex",gap:14}}>
+                  <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,minWidth:28,paddingTop:2}}>
+                    <button onClick={()=>handleVote(thread.id,"up")} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:vote==="up"?"#00ff88":"#556",lineHeight:1,padding:0}}>▲</button>
+                    <span style={{fontSize:13,fontWeight:600,color:score>0?"#00ff88":score<0?"#ff4466":"#aab8c2"}}>{score}</span>
+                    <button onClick={()=>handleVote(thread.id,"down")} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:vote==="down"?"#ff4466":"#556",lineHeight:1,padding:0}}>▼</button>
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:9,color:"#aab8c2",marginBottom:6}}>
+                      <span style={{color:"#a78bfa"}}>{thread.author}</span> · {thread.time} · <span style={{color:"#00ff88",background:"rgba(0,255,136,0.06)",padding:"1px 6px",borderRadius:3}}>{activeTicker}</span>
+                    </div>
+                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",marginBottom:10,lineHeight:1.3}}>{thread.title}</div>
+                    {thread.body && <div style={{fontSize:13,color:"#ccd0d8",lineHeight:1.7}}>{thread.body}</div>}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>{thread.comments.length} comment{thread.comments.length!==1?"s":""}</div>
+
+              {thread.comments.map(comment => {
+                const cscore = getScore(comment, comment.id);
+                const cvote = votes[comment.id];
+                return (
+                  <div key={comment.id} style={{borderLeft:"2px solid rgba(167,139,250,0.15)",paddingLeft:14,marginBottom:14}}>
+                    <div style={{display:"flex",gap:10,alignItems:"flex-start"}}>
+                      <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2,minWidth:22,paddingTop:2}}>
+                        <button onClick={()=>handleVote(comment.id,"up")} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,color:cvote==="up"?"#00ff88":"#556",lineHeight:1,padding:0}}>▲</button>
+                        <span style={{fontSize:10,color:cscore>0?"#00ff88":cscore<0?"#ff4466":"#aab8c2"}}>{cscore}</span>
+                        <button onClick={()=>handleVote(comment.id,"down")} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,color:cvote==="down"?"#ff4466":"#556",lineHeight:1,padding:0}}>▼</button>
+                      </div>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:9,color:"#aab8c2",marginBottom:4}}><span style={{color:"#a78bfa"}}>{comment.author}</span> · {comment.time}</div>
+                        <div style={{fontSize:13,color:"#ccd0d8",lineHeight:1.6}}>{comment.body}</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              <div style={{marginTop:16,display:"flex",gap:8}}>
+                <input
+                  value={newComment[thread.id]||""}
+                  onChange={e=>setNewComment(prev=>({...prev,[thread.id]:e.target.value}))}
+                  onKeyDown={e=>e.key==="Enter"&&postComment(thread.id)}
+                  placeholder="Add a comment..."
+                  style={{flex:1,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}
+                />
+                <button onClick={()=>postComment(thread.id)} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"9px 16px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap"}}>Reply →</button>
+              </div>
+            </div>
+          );
+        })()
+      )}
     </div>
   );
 }
@@ -213,6 +448,7 @@ const formatMktCap = (v) => {
 export default function App() {
   const [page,setPage]=useState("home");
   const [tab,setTab]=useState("stocks");
+  const [feedMode,setFeedMode]=useState("news"); // "news" | "newsletter"
   const [sector,setSector]=useState("All");
   const [search,setSearch]=useState("");
   const [email,setEmail]=useState("");
@@ -242,12 +478,8 @@ export default function App() {
 
   const dismissPopup = () => { setShowExitPopup(false); setPopupDismissed(true); };
 
-  // ── Central subscribe function — calls API directly, no redirect ──
   const subscribe = async (emailAddress, onSuccess) => {
-    if(!emailAddress || !emailAddress.includes('@')) {
-      alert('Please enter a valid email address.');
-      return;
-    }
+    if(!emailAddress || !emailAddress.includes('@')) { alert('Please enter a valid email address.'); return; }
     try {
       const res = await fetch('https://www.orbitalpha.cloud/api/subscribe', {
         method: 'POST',
@@ -255,23 +487,11 @@ export default function App() {
         body: JSON.stringify({ email: emailAddress }),
       });
       const data = await res.json();
-      if(data.success) {
-        onSuccess();
-      } else {
-        alert('Something went wrong. Please try again.');
-      }
-    } catch(e) {
-      alert('Something went wrong. Please try again.');
-    }
+      if(data.success) { onSuccess(); } else { alert('Something went wrong. Please try again.'); }
+    } catch(e) { alert('Something went wrong. Please try again.'); }
   };
 
-  const submitPopup = () => {
-    subscribe(popupEmail, ()=>{
-      setPopupSubmitted(true);
-      setShowExitPopup(false);
-    });
-  };
-
+  const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true); setShowExitPopup(false); }); };
   const sub = () => { subscribe(email, ()=>setSubmitted(true)); };
 
   const SUBSCRIBER_COUNT = 200;
@@ -304,9 +524,7 @@ export default function App() {
         const batch = tickers.slice(i, i+5);
         const results = await Promise.allSettled(batch.map(async t => {
           const [r7, r3, r1] = await Promise.allSettled([
-            fetchQuote(t, "7d"),
-            fetchQuote(t, "3d"),
-            fetchQuote(t, "1d"),
+            fetchQuote(t, "7d"), fetchQuote(t, "3d"), fetchQuote(t, "1d"),
           ]);
           const base = r7.value || r3.value || r1.value;
           if(!base) return null;
@@ -334,17 +552,10 @@ export default function App() {
     } catch(e) { console.log("Fetch error:", e); }
   };
 
-  useEffect(()=>{
-    fetchAllPrices();
-    const interval = setInterval(fetchAllPrices, 300000);
-    return ()=>clearInterval(interval);
-  },[]);
+  useEffect(()=>{ fetchAllPrices(); const interval = setInterval(fetchAllPrices, 300000); return ()=>clearInterval(interval); },[]);
 
   const [clock, setClock] = useState(new Date());
-  useEffect(()=>{
-    const t = setInterval(()=>setClock(new Date()), 1000);
-    return ()=>clearInterval(t);
-  },[]);
+  useEffect(()=>{ const t = setInterval(()=>setClock(new Date()), 1000); return ()=>clearInterval(t); },[]);
 
   const [newsSource, setNewsSource] = useState("");
   const [newsCompany, setNewsCompany] = useState("");
@@ -368,9 +579,7 @@ export default function App() {
               return {
                 date: l.date_str || 'TBD',
                 mission: `${l.provider?.name || ''} – ${l.vehicle?.name || ''} / ${l.missions?.[0]?.name || l.name || ''}`,
-                status,
-                impact: ticker === 'RKLB' ? '+4.2% avg' : ticker === 'ASTS' ? '+12.4% avg' : ticker === 'LUNR' ? '+8.1% avg' : 'Sector avg',
-                ticker,
+                status, impact: ticker === 'RKLB' ? '+4.2% avg' : ticker === 'ASTS' ? '+12.4% avg' : ticker === 'LUNR' ? '+8.1% avg' : 'Sector avg', ticker,
               };
             });
           setLiveLaunches(mapped);
@@ -389,21 +598,14 @@ export default function App() {
     const fetchNews = async () => {
       try {
         const [rssRes, yahooRes] = await Promise.allSettled([
-  fetch('https://orbit-alpha-api.vercel.app/api/news?limit=50').then(r=>r.json()),
-  fetch(`https://orbit-alpha-api.vercel.app/api/yahoonews?t=${Date.now()}`).then(r=>r.json()),
-]);
+          fetch('https://orbit-alpha-api.vercel.app/api/news?limit=50').then(r=>r.json()),
+          fetch(`https://orbit-alpha-api.vercel.app/api/yahoonews?t=${Date.now()}`).then(r=>r.json()),
+        ]);
         const rssItems = rssRes.status==='fulfilled' && Array.isArray(rssRes.value) ? rssRes.value : [];
         const yahooItems = yahooRes.status==='fulfilled' && Array.isArray(yahooRes.value) ? yahooRes.value : [];
-        console.log('RSS items:', rssItems.length, 'Yahoo items:', yahooItems.length);
-console.log('Yahoo HAWK articles:', yahooItems.filter(i=>i.ticker==='HAWK'));
         const seenTitles = new Set();
-const combined = [...yahooItems, ...rssItems]
-  .filter(item => {
-    const key = item.title?.toLowerCase().slice(0, 40);
-    if(!key || seenTitles.has(key)) return false;
-    seenTitles.add(key);
-    return true;
-  })
+        const combined = [...yahooItems, ...rssItems]
+          .filter(item => { const key = item.title?.toLowerCase().slice(0, 40); if(!key || seenTitles.has(key)) return false; seenTitles.add(key); return true; })
           .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
         setNewsItems(combined);
         setNewsLoading(false);
@@ -417,23 +619,12 @@ const combined = [...yahooItems, ...rssItems]
   const isMarketOpen = ()=>{
     const now = new Date();
     const est = new Date(now.toLocaleString("en-US",{timeZone:"America/New_York"}));
-    const day = est.getDay();
-    const h = est.getHours();
-    const m = est.getMinutes();
-    const mins = h*60+m;
+    const day = est.getDay(); const h = est.getHours(); const m = est.getMinutes(); const mins = h*60+m;
     return day>=1 && day<=5 && mins>=570 && mins<960;
   };
 
-  const [watchlist, setWatchlist] = useState(()=>{
-    try { return JSON.parse(localStorage.getItem('oa_watchlist') || '[]'); } catch { return []; }
-  });
-  const toggleWatch = (ticker) => {
-    setWatchlist(prev => {
-      const next = prev.includes(ticker) ? prev.filter(t=>t!==ticker) : [...prev, ticker];
-      localStorage.setItem('oa_watchlist', JSON.stringify(next));
-      return next;
-    });
-  };
+  const [watchlist, setWatchlist] = useState(()=>{ try { return JSON.parse(localStorage.getItem('oa_watchlist') || '[]'); } catch { return []; } });
+  const toggleWatch = (ticker) => { setWatchlist(prev => { const next = prev.includes(ticker) ? prev.filter(t=>t!==ticker) : [...prev, ticker]; localStorage.setItem('oa_watchlist', JSON.stringify(next)); return next; }); };
   const [showWatchlistOnly, setShowWatchlistOnly] = useState(false);
 
   const [stockNews, setStockNews] = useState({});
@@ -448,34 +639,20 @@ const combined = [...yahooItems, ...rssItems]
 
   const [sortCol, setSortCol] = useState(null);
   const [sortDir, setSortDir] = useState("desc");
-  const handleSort = (col) => {
-    if(sortCol===col) setSortDir(d=>d==="desc"?"asc":"desc");
-    else { setSortCol(col); setSortDir("desc"); }
-  };
+  const handleSort = (col) => { if(sortCol===col) setSortDir(d=>d==="desc"?"asc":"desc"); else { setSortCol(col); setSortDir("desc"); } };
 
   const [flashMap, setFlashMap] = useState({});
   const prevPrices = useRef({});
   useEffect(()=>{
     const flashes = {};
-    liveStocks.forEach(s=>{
-      const prev = prevPrices.current[s.ticker];
-      if(prev !== undefined && prev !== s.price) flashes[s.ticker] = s.price > prev ? "up" : "down";
-      prevPrices.current[s.ticker] = s.price;
-    });
-    if(Object.keys(flashes).length > 0) {
-      setFlashMap(flashes);
-      setTimeout(()=>setFlashMap({}), 600);
-    }
+    liveStocks.forEach(s=>{ const prev = prevPrices.current[s.ticker]; if(prev !== undefined && prev !== s.price) flashes[s.ticker] = s.price > prev ? "up" : "down"; prevPrices.current[s.ticker] = s.price; });
+    if(Object.keys(flashes).length > 0) { setFlashMap(flashes); setTimeout(()=>setFlashMap({}), 600); }
   },[liveStocks]);
 
   const [expandedTicker, setExpandedTicker] = useState(null);
 
   const [loading, setLoading] = useState(true);
-  useEffect(()=>{
-    if(isLive) setLoading(false);
-    const t = setTimeout(()=>setLoading(false), 8000);
-    return ()=>clearTimeout(t);
-  },[isLive]);
+  useEffect(()=>{ if(isLive) setLoading(false); const t = setTimeout(()=>setLoading(false), 8000); return ()=>clearTimeout(t); },[isLive]);
 
   const go=(p,t)=>{setPage(p);if(t)setTab(t);setMenuOpen(false);window.scrollTo({top:0,behavior:"smooth"});};
 
@@ -495,6 +672,14 @@ const combined = [...yahooItems, ...rssItems]
     }
     return arr;
   })();
+
+  // ── NAV ITEMS ──
+  const NAV_ITEMS = [
+    ["home","Home"],
+    ["markets","Markets"],
+    ["feed","Feed"],
+    ["threads","Threads"],
+  ];
 
   return (
     <div style={{minHeight:"100vh",background:"#04060e",color:"#dde1ec",fontFamily:"'DM Mono',monospace",fontSize:13,position:"relative",overflowX:"hidden"}}>
@@ -541,6 +726,7 @@ const combined = [...yahooItems, ...rssItems]
         .dt{background:none;border:none;cursor:pointer;padding:8px 12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s;white-space:nowrap}
         .stg{cursor:pointer;font-size:10px;padding:4px 10px;border-radius:3px;border:1px solid rgba(255,255,255,0.08);transition:all 0.15s;white-space:nowrap}.stg:hover{border-color:rgba(0,255,136,0.3);color:#00ff88}
         input,button{outline:none}
+        textarea{outline:none}
         @media(max-width:600px){
           .desk-only{display:none!important}
           .mob-stack{flex-direction:column!important}
@@ -557,6 +743,7 @@ const combined = [...yahooItems, ...rssItems]
       <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:1,overflow:"hidden",opacity:0.02}}><div style={{position:"absolute",width:"100%",height:2,background:"linear-gradient(transparent,rgba(0,255,136,1),transparent)",animation:"sc 10s linear infinite"}}/></div>
       <div style={{position:"relative",zIndex:2}}>
 
+        {/* ── NAV ── */}
         <nav style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.05)",position:"relative"}}>
           <div onClick={()=>go("home")} style={{cursor:"pointer",display:"flex",alignItems:"baseline",flexShrink:0}}>
             <span style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em"}}>ORBIT</span>
@@ -564,12 +751,12 @@ const combined = [...yahooItems, ...rssItems]
             <span style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#00ff88"}}>.</span>
           </div>
           <div className="desk-only" style={{position:"absolute",left:"50%",transform:"translateX(-50%)",display:"flex",gap:28,alignItems:"center"}}>
-            {[["dashboard","Dashboard"],["news","News"],["newsletter","Newsletter"],["about","About"]].map(([p,l])=>(
+            {NAV_ITEMS.map(([p,l])=>(
               <span key={p} onClick={()=>go(p)} style={{fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",cursor:"pointer",color:page===p?"#00ff88":"#aab8c2",borderBottom:page===p?"1px solid #00ff88":"1px solid transparent",paddingBottom:2,transition:"color 0.2s"}}>{l}</span>
             ))}
           </div>
           <div style={{display:"flex",gap:10,alignItems:"center",flexShrink:0}}>
-            <button className="desk-only" onClick={()=>go("newsletter")} style={{background:"rgba(0,255,136,0.07)",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"7px 15px",borderRadius:4,fontSize:10,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free</button>
+            <button className="desk-only" onClick={()=>go("feed","newsletter")} style={{background:"rgba(0,255,136,0.07)",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"7px 15px",borderRadius:4,fontSize:10,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free</button>
             <button className="desk-only" onClick={()=>{ if(navigator.share){navigator.share({title:"Orbit Alpha",text:"Free space stocks dashboard",url:"https://orbitalpha.cloud"});}else{navigator.clipboard.writeText("https://orbitalpha.cloud").then(()=>alert("Link copied!"));}}} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#ccd0d8",padding:"7px 12px",borderRadius:4,fontSize:10,letterSpacing:"0.06em",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Share ↗</button>
             <button onClick={()=>setMenuOpen(!menuOpen)} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#ccd0d8",padding:"6px 10px",borderRadius:4,cursor:"pointer",fontSize:16,display:"none"}} className="mob-menu-btn">{menuOpen?"✕":"☰"}</button>
           </div>
@@ -577,16 +764,16 @@ const combined = [...yahooItems, ...rssItems]
 
         {menuOpen&&(
           <div style={{background:"#070a14",borderBottom:"1px solid rgba(255,255,255,0.06)",padding:"16px 20px",display:"flex",flexDirection:"column",gap:4}}>
-            {[["dashboard","Dashboard"],["news","News"],["newsletter","Newsletter"],["about","About"]].map(([p,l])=>(
+            {NAV_ITEMS.map(([p,l])=>(
               <span key={p} onClick={()=>{go(p);setMenuOpen(false);}} style={{color:page===p?"#00ff88":"#ccd0d8",padding:"10px 0",fontSize:12,letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(255,255,255,0.04)",cursor:"pointer"}}>{l}</span>
             ))}
-            <button onClick={()=>{go("newsletter");setMenuOpen(false);}} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",marginTop:8}}>Subscribe Free →</button>
+            <button onClick={()=>{go("feed");setFeedMode("newsletter");setMenuOpen(false);}} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",marginTop:8}}>Subscribe Free →</button>
           </div>
         )}
 
         <style>{`.mob-menu-btn{display:none!important}@media(max-width:600px){.mob-menu-btn{display:block!important}}`}</style>
 
-        {(page==="home"||page==="dashboard")&&<Ticker stocks={liveStocks}/>}
+        {(page==="home"||page==="markets")&&<TickerStrip stocks={liveStocks}/>}
 
         {page==="home"&&(
           <div onClick={()=>window.open("https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-4","_blank")} style={{background:"rgba(126,184,255,0.06)",borderBottom:"1px solid rgba(126,184,255,0.12)",padding:"8px 20px",textAlign:"center",cursor:"pointer",transition:"background 0.2s"}}
@@ -599,7 +786,7 @@ const combined = [...yahooItems, ...rssItems]
           </div>
         )}
 
-        {(page==="home"||page==="dashboard")&&(
+        {(page==="home"||page==="markets")&&(
           <div style={{background:isLive?"rgba(0,255,136,0.05)":"rgba(255,204,0,0.07)",borderBottom:`1px solid ${isLive?"rgba(0,255,136,0.15)":"rgba(255,204,0,0.15)"}`,padding:"8px 16px",textAlign:"center"}}>
             <div style={{display:"inline-flex",alignItems:"center",gap:8,flexWrap:"wrap",justifyContent:"center"}}>
               <div style={{width:6,height:6,borderRadius:"50%",background:isLive?"#00ff88":"#ffcc00",animation:"bk 1.5s infinite",flexShrink:0}}/>
@@ -611,6 +798,7 @@ const combined = [...yahooItems, ...rssItems]
           </div>
         )}
 
+        {/* ── HOME PAGE ── */}
         {page==="home"&&(
           <div style={{animation:"fu 0.5s ease"}}>
             <section style={{padding:"40px 20px 28px",textAlign:"center",maxWidth:680,margin:"0 auto"}}>
@@ -619,24 +807,25 @@ const combined = [...yahooItems, ...rssItems]
               </h1>
               <p style={{fontSize:13,color:"#aab8c2",maxWidth:380,margin:"0 auto 20px",lineHeight:1.6}}>Live prices, launches, earnings and news. Weekly newsletter every Sunday.</p>
               <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}}>
-                <button onClick={()=>go("dashboard","stocks")} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px 24px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>View Dashboard →</button>
-                <button onClick={()=>go("newsletter")} style={{background:"none",border:"1px solid rgba(255,255,255,0.15)",color:"#aab8c2",padding:"11px 24px",borderRadius:4,fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free →</button>
+                <button onClick={()=>go("markets","stocks")} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px 24px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>View Markets →</button>
+                <button onClick={()=>{go("feed");setFeedMode("newsletter");}} style={{background:"none",border:"1px solid rgba(255,255,255,0.15)",color:"#aab8c2",padding:"11px 24px",borderRadius:4,fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free →</button>
               </div>
             </section>
 
+            {/* Markets preview */}
             <section style={{margin:"0 20px 16px",borderRadius:10,border:"1px solid rgba(0,255,136,0.2)",background:"rgba(0,255,136,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
                 <div>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em",marginBottom:2}}>ORBIT <span style={{color:"#00ff88"}}>DASHBOARD</span></div>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em",marginBottom:2}}>ORBIT <span style={{color:"#00ff88"}}>MARKETS</span></div>
                   <p style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>Live prices, launches, earnings and news — updated automatically.</p>
                 </div>
-                <button onClick={()=>go("dashboard","stocks")} style={{background:"none",border:"1px solid rgba(0,255,136,0.3)",color:"#00ff88",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Dashboard →</button>
+                <button onClick={()=>go("markets","stocks")} style={{background:"none",border:"1px solid rgba(0,255,136,0.3)",color:"#00ff88",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Markets →</button>
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
                 {[
                   {e:"📈",t:"Live Prices",d:"Real-time quotes, 7D charts and market cap. Updated every 5 minutes."},
                   {e:"🚀",t:"Launch Calendar",d:"Upcoming launches with historical price impact per mission."},
-                  {e:"📰",t:"News Feed",d:"Space stock news from 30+ sources, filtered and updated every 5 minutes."},
+                  {e:"📅",t:"Earnings Calendar",d:"Upcoming earnings dates with key metrics to watch."},
                 ].map((f,i)=>(
                   <div key={i} style={{borderRadius:6,padding:"12px",background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)"}}>
                     <div style={{fontSize:16,marginBottom:4}}>{f.e}</div>
@@ -647,13 +836,14 @@ const combined = [...yahooItems, ...rssItems]
               </div>
             </section>
 
+            {/* Feed preview */}
             <section style={{margin:"0 20px 16px",borderRadius:10,border:"1px solid rgba(255,150,50,0.2)",background:"rgba(255,150,50,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
                 <div>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em",marginBottom:2}}>ORBIT <span style={{color:"#ff9632"}}>NEWS</span></div>
-                  <p style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>Live space stock news from 30+ sources — updated every 5 minutes.</p>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em",marginBottom:2}}>ORBIT <span style={{color:"#ff9632"}}>FEED</span></div>
+                  <p style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>Live news from 30+ sources · Weekly newsletter every Sunday — all in one place.</p>
                 </div>
-                <button onClick={()=>go("news")} style={{background:"none",border:"1px solid rgba(255,150,50,0.3)",color:"#ff9632",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View News →</button>
+                <button onClick={()=>go("feed")} style={{background:"none",border:"1px solid rgba(255,150,50,0.3)",color:"#ff9632",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Feed →</button>
               </div>
               {newsLoading&&Array.from({length:3}).map((_,i)=>(
                 <div key={i} style={{padding:"10px 0",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
@@ -675,19 +865,20 @@ const combined = [...yahooItems, ...rssItems]
               ))}
             </section>
 
-            <section style={{margin:"0 20px 40px",borderRadius:10,border:"1px solid rgba(126,184,255,0.2)",background:"rgba(126,184,255,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
+            {/* Threads preview */}
+            <section style={{margin:"0 20px 40px",borderRadius:10,border:"1px solid rgba(167,139,250,0.2)",background:"rgba(167,139,250,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
                 <div>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em",marginBottom:2}}>ORBIT <span style={{color:"#7eb8ff"}}>NEWSLETTER</span></div>
-                  <p style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>Every Sunday — macro overview, broker targets and one stock deep dive. Free.</p>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em",marginBottom:2}}>ORBIT <span style={{color:"#a78bfa"}}>THREADS</span></div>
+                  <p style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>Discuss any space stock with other investors. No account needed.</p>
                 </div>
-                <button onClick={()=>go("newsletter")} style={{background:"none",border:"1px solid rgba(126,184,255,0.3)",color:"#7eb8ff",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Newsletter →</button>
+                <button onClick={()=>go("threads")} style={{background:"none",border:"1px solid rgba(167,139,250,0.3)",color:"#a78bfa",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Threads →</button>
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
                 {[
-                  {e:"🌍",t:"Macro Dive",d:"The week in space equities — what moved and why."},
-                  {e:"🎯",t:"Broker Pulse",d:"All analyst rating and price target changes — dated and sourced."},
-                  {e:"💡",t:"Stock of the Week",d:"One stock — bull case, bear case, honest view on valuation."},
+                  {e:"💬",t:"Per-ticker threads",d:"Every stock has its own discussion board. Find the names you follow."},
+                  {e:"⬆",t:"Vote the best up",d:"Upvote sharp analysis. Downvote noise. The good stuff rises."},
+                  {e:"🔓",t:"No account needed",d:"Just post. Anonymous by default. No signup, no friction."},
                 ].map((f,i)=>(
                   <div key={i} style={{borderRadius:6,padding:"12px",background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)"}}>
                     <div style={{fontSize:16,marginBottom:4}}>{f.e}</div>
@@ -702,8 +893,8 @@ const combined = [...yahooItems, ...rssItems]
               <span style={{fontFamily:"'Syne',sans-serif",fontSize:13,fontWeight:800,color:"#222"}}>ORBIT<span style={{color:"#00ff88"}}>ALPHA</span>.</span>
               <span style={{fontSize:10,color:"#aab8c2"}}>Not financial advice · Data via Yahoo Finance & rocketlaunch.live</span>
               <div style={{display:"flex",gap:16,fontSize:10,color:"#aab8c2",flexWrap:"wrap"}}>
-                <span onClick={()=>go("newsletter")} style={{cursor:"pointer"}} className="hov">Newsletter</span>
-                <span onClick={()=>go("news")} style={{cursor:"pointer"}} className="hov">News</span>
+                <span onClick={()=>go("feed")} style={{cursor:"pointer"}} className="hov">Feed</span>
+                <span onClick={()=>go("threads")} style={{cursor:"pointer"}} className="hov">Threads</span>
                 <span onClick={()=>go("about")} style={{cursor:"pointer"}} className="hov">About</span>
                 <a href="mailto:OrbitAlphaApp@proton.me" style={{color:"#aab8c2",textDecoration:"none"}} className="hov">Contact</a>
               </div>
@@ -711,7 +902,8 @@ const combined = [...yahooItems, ...rssItems]
           </div>
         )}
 
-        {page==="dashboard"&&(
+        {/* ── MARKETS PAGE (was dashboard) ── */}
+        {page==="markets"&&(
           <div style={{animation:"fu 0.3s ease"}}>
             <div style={{padding:"12px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8}}>
               <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -832,10 +1024,11 @@ const combined = [...yahooItems, ...rssItems]
                                 <div><div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>1D Change</div><div style={{fontSize:16,color:s.changePct>=0?"#00ff88":"#ff4466",fontWeight:500}}>{s.changePct>=0?"+":""}{s.changePct.toFixed(2)}%</div></div>
                                 <div><div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>Mkt Cap</div><div style={{fontSize:16,color:"#fff",fontWeight:500}}>{s.mktCap||"—"}</div></div>
                               </div>
-                              <div style={{display:"flex",gap:10,marginTop:8}}>
+                              <div style={{display:"flex",gap:10,marginTop:8,flexWrap:"wrap"}}>
                                 <span style={{fontSize:10,color:"#ccd0d8",background:"rgba(255,255,255,0.04)",padding:"3px 10px",borderRadius:3}}>{s.sector}</span>
                                 <span onClick={()=>window.open(`https://finance.yahoo.com/quote/${s.ticker}`,"_blank")} style={{fontSize:10,color:"#7eb8ff",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(126,184,255,0.2)"}}>View on Yahoo Finance →</span>
-                                <span onClick={()=>go("newsletter")} style={{fontSize:10,color:"#00ff88",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(0,255,136,0.2)"}}>{s.ticker} covered in this week's issue →</span>
+                                <span onClick={()=>{go("feed");setFeedMode("newsletter");}} style={{fontSize:10,color:"#00ff88",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(0,255,136,0.2)"}}>{s.ticker} covered in this week's issue →</span>
+                                <span onClick={()=>go("threads")} style={{fontSize:10,color:"#a78bfa",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(167,139,250,0.2)"}}>Discuss {s.ticker} →</span>
                               </div>
                             </div>
                           )}
@@ -879,20 +1072,9 @@ const combined = [...yahooItems, ...rssItems]
                             </div>
                             <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                               <button onClick={()=>window.open(`https://finance.yahoo.com/quote/${s.ticker}`,"_blank")} style={{flex:1,background:"none",border:"1px solid rgba(126,184,255,0.2)",color:"#7eb8ff",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Yahoo Finance →</button>
-                              <button onClick={()=>go("newsletter")} style={{flex:1,background:"none",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>{s.ticker} in this week's issue →</button>
+                              <button onClick={()=>{go("feed");setFeedMode("newsletter");}} style={{flex:1,background:"none",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>{s.ticker} in newsletter →</button>
+                              <button onClick={()=>go("threads")} style={{flex:1,background:"none",border:"1px solid rgba(167,139,250,0.2)",color:"#a78bfa",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Discuss {s.ticker} →</button>
                             </div>
-                            {stockNews[s.ticker]?.length>0&&(
-                              <div style={{marginTop:10,borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:10}}>
-                                <div style={{fontSize:9,color:"#8899aa",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:8}}>Latest News</div>
-                                {stockNews[s.ticker].map((n,ni)=>(
-                                  <div key={ni} onClick={()=>window.open(n.link,"_blank")} style={{padding:"5px 0",borderBottom:"1px solid rgba(255,255,255,0.04)",cursor:"pointer",display:"flex",justifyContent:"space-between",gap:8}}>
-                                    <span style={{fontSize:11,color:"#aab8c2",flex:1,lineHeight:1.4}}>{n.title}</span>
-                                    <span style={{fontSize:9,color:"#aab8c2",flexShrink:0,whiteSpace:"nowrap"}}>{n.source} →</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            {expandedTicker===s.ticker&&!stockNews[s.ticker]&&<div style={{marginTop:8,fontSize:10,color:"#aab8c2"}}>Loading news...</div>}
                           </div>
                         )}
                       </div>
@@ -900,56 +1082,6 @@ const combined = [...yahooItems, ...rssItems]
                   </div>
                   <style>{`@media(max-width:600px){.desk-only{display:none!important}.mob-cards{display:block!important}}`}</style>
                   {filtered.length===0&&<div style={{padding:"28px",textAlign:"center",color:"#aab8c2",fontSize:12}}>No results.</div>}
-                </div>
-              )}
-
-              {tab==="private"&&(
-                <div className="mob-grid1" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
-                  <div>
-                    <div style={{fontSize:9,color:"#ccd0d8",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>Private Companies</div>
-                    {PRIVATE.map((p,i)=>(
-                      <div key={i} className="hov" style={{border:"1px solid rgba(255,255,255,0.07)",borderRadius:8,padding:"14px",marginBottom:10,background:"rgba(255,255,255,0.01)"}}>
-                        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}>
-                          <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-                            <span style={{fontSize:14,fontWeight:500,color:"#fff"}}>{p.name}</span>
-                            <span style={{fontSize:9,color:"#ffcc00",background:"rgba(255,204,0,0.08)",padding:"1px 6px",borderRadius:3}}>PRIVATE</span>
-                          </div>
-                          <span style={{fontSize:11,color:"#ccd0d8",whiteSpace:"nowrap",marginLeft:8}}>{p.valuation}</span>
-                        </div>
-                        <div style={{fontSize:11,color:"#ccd0d8",lineHeight:1.5,marginBottom:8}}>{p.desc}</div>
-                        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
-                          <div style={{flex:1,height:3,background:"rgba(255,255,255,0.07)",borderRadius:2}}><div style={{width:`${p.sentiment}%`,height:"100%",background:p.sentiment>=65?"#00ff88":"#ffcc00",borderRadius:2}}/></div>
-                          <span style={{fontSize:10,color:p.sentiment>=65?"#00ff88":"#ffcc00"}}>{p.sentiment}%</span>
-                        </div>
-                        <div style={{fontSize:10,color:"#ccd0d8",borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:7}}><span style={{color:"#ccd0d8"}}>LATEST: </span>{p.news}</div>
-                      </div>
-                    ))}
-                    <div style={{border:"1px solid rgba(255,204,0,0.15)",borderRadius:8,padding:13,background:"rgba(255,204,0,0.02)"}}>
-                      <div style={{fontSize:10,color:"#ffcc00",marginBottom:5}}>Want SpaceX exposure?</div>
-                      <div style={{fontSize:11,color:"#ccd0d8",lineHeight:1.5,marginBottom:6}}><strong style={{color:"#ccd0d8"}}>$DXYZ</strong> holds SpaceX equity and trades publicly — at a ~220% premium to NAV.</div>
-                      <div style={{fontSize:10,color:"#ccd0d8"}}>DXYZ price: $38.44 · Short int: 22.3%</div>
-                    </div>
-                  </div>
-                  <div>
-                    <div style={{fontSize:9,color:"#ccd0d8",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>Space Agencies</div>
-                    {AGENCIES.map((a,i)=>(
-                      <div key={i} className="hov" style={{border:"1px solid rgba(255,255,255,0.07)",borderRadius:8,padding:"14px",marginBottom:10,background:"rgba(255,255,255,0.01)"}}>
-                        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-                          <div style={{display:"flex",alignItems:"center",gap:8}}>
-                            <span style={{fontSize:16}}>{a.country}</span>
-                            <span style={{fontSize:13,fontWeight:500,color:"#fff"}}>{a.name}</span>
-                          </div>
-                          <span style={{fontSize:9,color:"#ff9632",background:"rgba(255,150,50,0.08)",padding:"2px 7px",borderRadius:3}}>{a.type}</span>
-                        </div>
-                        <div style={{fontSize:11,color:"#ccd0d8",lineHeight:1.5,marginBottom:8}}>{a.focus}</div>
-                        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
-                          <div style={{flex:1,height:3,background:"rgba(255,255,255,0.07)",borderRadius:2}}><div style={{width:`${a.sentiment}%`,height:"100%",background:a.sentiment>=65?"#00ff88":"#ffcc00",borderRadius:2}}/></div>
-                          <span style={{fontSize:10,color:a.sentiment>=65?"#00ff88":"#ffcc00"}}>{a.sentiment}%</span>
-                        </div>
-                        <div style={{fontSize:10,color:"#ccd0d8",borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:7}}><span style={{color:"#ccd0d8"}}>LATEST: </span>{a.news}</div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               )}
 
@@ -1009,131 +1141,127 @@ const combined = [...yahooItems, ...rssItems]
           </div>
         )}
 
-        {page==="news"&&(
+        {/* ── FEED PAGE (News + Newsletter toggle) ── */}
+        {page==="feed"&&(
           <div style={{animation:"fu 0.3s ease",maxWidth:800,margin:"0 auto",padding:"32px 20px 60px"}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,flexWrap:"wrap",gap:12}}>
-              <div>
-                <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ORBIT <span style={{color:"#ff9632"}}>NEWS</span></div>
-                <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Live space industry news — filtered for relevance to space stocks and investors. Updated every 5 minutes.</p>
-              </div>
-              <div style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"#00ff88",flexShrink:0}}>
-                <div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>LIVE
+            <div style={{marginBottom:24}}>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ORBIT <span style={{color:"#ff9632"}}>FEED</span></div>
+              <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:20}}>News and analysis for space equity investors.</p>
+
+              {/* Toggle */}
+              <div style={{display:"inline-flex",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:6,padding:3,gap:2}}>
+                {[["news","📰 News"],["newsletter","✉ Newsletter"]].map(([mode,label])=>(
+                  <button key={mode} onClick={()=>setFeedMode(mode)}
+                    style={{background:feedMode===mode?"rgba(255,150,50,0.15)":"transparent",border:feedMode===mode?"1px solid rgba(255,150,50,0.3)":"1px solid transparent",color:feedMode===mode?"#ff9632":"#aab8c2",padding:"7px 18px",borderRadius:4,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer",letterSpacing:"0.06em",transition:"all 0.15s",whiteSpace:"nowrap"}}>
+                    {label}
+                  </button>
+                ))}
               </div>
             </div>
-            <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:20}}>
-              {["All","RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","HAWK","SpaceX","Blue Origin","Relativity","Vast","ispace","NASA","ESA","ISRO","Space Force"].map(co=>(
-                <span key={co} onClick={()=>setNewsCompany(co==="All"?"":co)} className="stg" style={{color:newsCompany===(co==="All"?"":co)?"#ff9632":"#ccd0d8",borderColor:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.3)":"rgba(255,255,255,0.2)",background:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.05)":"transparent",fontSize:9}}>{co}</span>
-              ))}
-            </div>
-            {newsLoading&&Array.from({length:8}).map((_,i)=>(
-              <div key={i} style={{padding:"16px 0",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
-                <div className="skeleton" style={{height:13,width:"70%",marginBottom:8}}/>
-                <div className="skeleton" style={{height:10,width:"30%"}}/>
-              </div>
-            ))}
-            {!newsLoading&&(()=>{
-              const COMPANY_KEYWORDS = {
-  RKLB:['Rocket Lab','RKLB','Electron','Neutron','Peter Beck'],
-  ASTS:['AST SpaceMobile','ASTS','BlueBird','Abel Avellan'],
-  LUNR:['Intuitive Machines','LUNR','IM-3','IM-4','lunar lander'],
-  PL:['Planet Labs','PBC','Pelican'],
-  BKSY:['BlackSky','BKSY'],
-  RDW:['Redwire','RDW'],
-  MNTS:['Momentus','MNTS'],
-  SPCE:['Virgin Galactic','SPCE','VSS'],
-  KRMN:['Karman','KRMN'],
-  SATL:['Satellogic','SATL'],
-  KULR:['KULR Technology','KULR'],
-  TSAT:['Telesat','TSAT','Lightspeed'],
-  GSAT:['Globalstar','GSAT'],
-  VSAT:['Viasat','VSAT'],
-  MDA:['MDA Space','MDA Ltd'],
-  SPIR:['Spire Global','SPIR'],
-  GILT:['Gilat Satellite','GILT'],
-  DXYZ:['Destiny Tech','DXYZ'],
-  LMT:['Lockheed Martin','LMT'],
-  FLY:['Firefly Aerospace','FLY','Alpha rocket'],
-  OKLO:['Oklo','OKLO','nuclear microreactor'],
-  BA:['Boeing','BA'],
-  NOC:['Northrop Grumman','NOC'],
-  RTX:['RTX','Raytheon'],
-  HAWK:['HawkEye 360','HAWK','SIGINT','RF intelligence'],
-  SATS:['EchoStar','SATS'],
-  VOYG:['Voyager Technologies','VOYG'],
-  YSS:['York Space','YSS'],
-  SpaceX:['SpaceX','Starship','Falcon','Starlink'],
-  'Blue Origin':['Blue Origin','New Glenn','BE-4'],
-  Relativity:['Relativity Space','Terran'],
-  Vast:['Vast Space','Haven-1'],
-  ispace:['ispace','HAKUTO'],
-  NASA:['NASA','Artemis','ISS'],
-  ESA:['ESA','European Space Agency','Ariane'],
-  ISRO:['ISRO','Gaganyaan','Chandrayaan'],
-  'Space Force':['Space Force','USSF','NSSL','Golden Dome'],
-};
-             return newsItems
-  .filter(item=>!newsSource||item.source===newsSource)
-  .filter(item=>{
-    if(!newsCompany) return true;
-    if(item.ticker === newsCompany) return true;
-    const keywords = COMPANY_KEYWORDS[newsCompany]||[newsCompany];
-    const text = `${item.title} ${item.description}`.toLowerCase();
-    const match = keywords.some(k=>text.includes(k.toLowerCase()));
-    if(newsCompany==='HAWK') console.log('HAWK check:', item.title, '| ticker:', item.ticker, '| match:', match);
-    return match;
-  })
-                .map((item,i)=>(
-                  <div key={i} onClick={()=>window.open(item.link,"_blank")} className="hov" style={{padding:"16px",borderBottom:"1px solid rgba(255,255,255,0.05)",cursor:"pointer",animation:`fu 0.3s ease ${i*0.02}s both`,borderRadius:item.highlight?6:0,border:item.highlight?"1px solid rgba(255,204,0,0.15)":"none",borderBottom:item.highlight?"1px solid rgba(255,204,0,0.15)":"1px solid rgba(255,255,255,0.05)",background:item.highlight?"rgba(255,204,0,0.03)":"transparent",marginBottom:item.highlight?8:0}}>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:8}}>
-                      <div style={{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
-                        <span style={{fontSize:9,padding:"2px 8px",borderRadius:3,flexShrink:0,background:item.source==="SpaceNews"?"rgba(0,255,136,0.08)":item.source==="NASA"?"rgba(126,184,255,0.08)":item.source==="Space.com"?"rgba(255,255,255,0.04)":"rgba(255,204,0,0.08)",color:item.source==="SpaceNews"?"#00ff88":item.source==="NASA"?"#7eb8ff":item.source==="Space.com"?"#888":"#ffcc00"}}>{item.source}</span>
-                        {item.highlight&&<span style={{fontSize:9,padding:"2px 6px",borderRadius:3,background:"rgba(255,204,0,0.1)",color:"#ffcc00",letterSpacing:"0.08em"}}>⚡ KEY STORY</span>}
-                      </div>
-                      <span style={{fontSize:10,color:"#aab8c2",flexShrink:0}}>{item.pubDate?new Date(item.pubDate).toLocaleDateString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):""}</span>
-                    </div>
-                    <div style={{fontSize:14,color:item.highlight?"#fff":"#dde1ec",lineHeight:1.5,fontWeight:item.highlight?600:500,marginBottom:6}}>{item.title}</div>
-                    {item.description&&<div style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>{item.description}</div>}
-                    <div style={{fontSize:10,color:"#ff9632",marginTop:8,opacity:0.8}}>Read full article →</div>
+
+            {/* NEWS MODE */}
+            {feedMode==="news"&&(
+              <div style={{animation:"fu 0.2s ease"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:8}}>
+                  <p style={{fontSize:11,color:"#aab8c2"}}>Live space stock news from 30+ sources — updated every 5 minutes.</p>
+                  <div style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"#00ff88",flexShrink:0}}>
+                    <div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>LIVE
                   </div>
-                ));
-            })()}
-          </div>
-        )}
-
-        {page==="newsletter"&&(
-          <div style={{animation:"fu 0.3s ease",maxWidth:800,margin:"0 auto",padding:"32px 20px 60px"}}>
-            <div style={{marginBottom:28}}>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ORBIT <span style={{color:"#7eb8ff"}}>NEWSLETTER</span></div>
-              <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:16}}>Every Sunday — macro overview, broker target changes and one stock deep dive. Free.</p>
-              {submitted ? (
-                <div style={{fontSize:13,color:"#00ff88",padding:"10px 0"}}>✓ You're subscribed. Welcome to Orbit Alpha.</div>
-              ) : (
-                <div style={{display:"flex",gap:8,maxWidth:400}}>
-                  <input value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&sub()} placeholder="your@email.com" style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",color:"#fff",padding:"10px 14px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}/>
-                  <button onClick={sub} style={{background:"#7eb8ff",color:"#04060e",border:"none",padding:"10px 22px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap"}}>Join Free →</button>
                 </div>
-              )}
-            </div>
-            <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
-            <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
-            {[
-              {issue:4,date:"11 May 2026",headline:"RKLB record quarter. HawkEye 360 arrives. ASTS Falcon 9 launch confirmed.",summary:"RKLB +30% on record $200M revenue · HawkEye 360 IPO prices at top of range · ASTS BlueBird 8-10 mid-June launch · RKLB deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-4",live:true},
-              {issue:3,date:"4 May 2026",headline:"SpaceX goes retail. LUNR's $1B moment. The sector re-rates.",summary:"NYSE Space Summit · SpaceX IPO retail allocation · ASTS FCC win vs BlueBird 7 fallout · LUNR deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-3",live:true},
-              {issue:2,date:"25 Apr 2026",headline:"ASTS BlueBird 7 fails — what it means for your portfolio.",summary:"BlueBird 7 orbital failure · Stifel raises RKLB to $105 · Starship update · ASTS deep dive: bull case, bear case",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-2",live:true},
-              {issue:1,date:"19 Apr 2026",headline:"The week space went mainstream.",summary:"RKLB +9% on CEO conviction · SpaceX $1.75T IPO filing · Artemis II · RKLB deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-1",live:true},
-            ].map((issue,i)=>(
-              <div key={i} className="hov" onClick={()=>issue.live&&window.open(issue.url,"_blank")} style={{border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:"20px",marginBottom:10,background:"rgba(255,255,255,0.01)",cursor:issue.live?"pointer":"default",opacity:issue.live?1:0.5,position:"relative"}}>
-                {!issue.live&&<span style={{position:"absolute",top:12,right:12,fontSize:9,color:"#ffcc00",background:"rgba(255,204,0,0.08)",border:"1px solid rgba(255,204,0,0.2)",padding:"2px 8px",borderRadius:3,letterSpacing:"0.1em"}}>COMING SUNDAY</span>}
-                {i===0&&issue.live&&<span style={{position:"absolute",top:12,right:12,fontSize:9,color:"#00ff88",background:"rgba(0,255,136,0.08)",border:"1px solid rgba(0,255,136,0.2)",padding:"2px 8px",borderRadius:3,letterSpacing:"0.1em"}}>LATEST</span>}
-                <div style={{fontSize:10,color:"#7eb8ff",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:6}}>Issue #{issue.issue} · {issue.date}</div>
-                <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:800,color:"#fff",marginBottom:6,lineHeight:1.3}}>{issue.headline}</div>
-                <div style={{fontSize:11,color:"#aab8c2",lineHeight:1.6,marginBottom:issue.live?10:0}}>{issue.summary}</div>
-                {issue.live&&<div style={{fontSize:10,color:"#7eb8ff",opacity:0.7}}>Read issue →</div>}
+                <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:20}}>
+                  {["All","RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","HAWK","SpaceX","Blue Origin","Relativity","Vast","ispace","NASA","ESA","ISRO","Space Force"].map(co=>(
+                    <span key={co} onClick={()=>setNewsCompany(co==="All"?"":co)} className="stg" style={{color:newsCompany===(co==="All"?"":co)?"#ff9632":"#ccd0d8",borderColor:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.3)":"rgba(255,255,255,0.2)",background:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.05)":"transparent",fontSize:9}}>{co}</span>
+                  ))}
+                </div>
+                {newsLoading&&Array.from({length:8}).map((_,i)=>(
+                  <div key={i} style={{padding:"16px 0",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
+                    <div className="skeleton" style={{height:13,width:"70%",marginBottom:8}}/><div className="skeleton" style={{height:10,width:"30%"}}/>
+                  </div>
+                ))}
+                {!newsLoading&&(()=>{
+                  const COMPANY_KEYWORDS = {
+                    RKLB:['Rocket Lab','RKLB','Electron','Neutron','Peter Beck'],
+                    ASTS:['AST SpaceMobile','ASTS','BlueBird','Abel Avellan'],
+                    LUNR:['Intuitive Machines','LUNR','IM-3','IM-4','lunar lander'],
+                    PL:['Planet Labs','PBC','Pelican'],BKSY:['BlackSky','BKSY'],RDW:['Redwire','RDW'],
+                    MNTS:['Momentus','MNTS'],SPCE:['Virgin Galactic','SPCE','VSS'],KRMN:['Karman','KRMN'],
+                    SATL:['Satellogic','SATL'],KULR:['KULR Technology','KULR'],TSAT:['Telesat','TSAT','Lightspeed'],
+                    GSAT:['Globalstar','GSAT'],VSAT:['Viasat','VSAT'],MDA:['MDA Space','MDA Ltd'],
+                    SPIR:['Spire Global','SPIR'],GILT:['Gilat Satellite','GILT'],DXYZ:['Destiny Tech','DXYZ'],
+                    LMT:['Lockheed Martin','LMT'],FLY:['Firefly Aerospace','FLY','Alpha rocket'],
+                    OKLO:['Oklo','OKLO','nuclear microreactor'],BA:['Boeing','BA'],NOC:['Northrop Grumman','NOC'],
+                    RTX:['RTX','Raytheon'],HAWK:['HawkEye 360','HAWK','SIGINT','RF intelligence'],
+                    SATS:['EchoStar','SATS'],VOYG:['Voyager Technologies','VOYG'],YSS:['York Space','YSS'],
+                    SpaceX:['SpaceX','Starship','Falcon','Starlink'],'Blue Origin':['Blue Origin','New Glenn','BE-4'],
+                    Relativity:['Relativity Space','Terran'],Vast:['Vast Space','Haven-1'],ispace:['ispace','HAKUTO'],
+                    NASA:['NASA','Artemis','ISS'],ESA:['ESA','European Space Agency','Ariane'],
+                    ISRO:['ISRO','Gaganyaan','Chandrayaan'],'Space Force':['Space Force','USSF','NSSL','Golden Dome'],
+                  };
+                  return newsItems
+                    .filter(item=>!newsSource||item.source===newsSource)
+                    .filter(item=>{
+                      if(!newsCompany) return true;
+                      if(item.ticker === newsCompany) return true;
+                      const keywords = COMPANY_KEYWORDS[newsCompany]||[newsCompany];
+                      const text = `${item.title} ${item.description}`.toLowerCase();
+                      return keywords.some(k=>text.includes(k.toLowerCase()));
+                    })
+                    .map((item,i)=>(
+                      <div key={i} onClick={()=>window.open(item.link,"_blank")} className="hov" style={{padding:"16px",borderBottom:"1px solid rgba(255,255,255,0.05)",cursor:"pointer",animation:`fu 0.3s ease ${i*0.02}s both`,borderRadius:item.highlight?6:0,border:item.highlight?"1px solid rgba(255,204,0,0.15)":"none",borderBottom:item.highlight?"1px solid rgba(255,204,0,0.15)":"1px solid rgba(255,255,255,0.05)",background:item.highlight?"rgba(255,204,0,0.03)":"transparent",marginBottom:item.highlight?8:0}}>
+                        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:8}}>
+                          <div style={{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
+                            <span style={{fontSize:9,padding:"2px 8px",borderRadius:3,flexShrink:0,background:item.source==="SpaceNews"?"rgba(0,255,136,0.08)":item.source==="NASA"?"rgba(126,184,255,0.08)":item.source==="Space.com"?"rgba(255,255,255,0.04)":"rgba(255,204,0,0.08)",color:item.source==="SpaceNews"?"#00ff88":item.source==="NASA"?"#7eb8ff":item.source==="Space.com"?"#888":"#ffcc00"}}>{item.source}</span>
+                            {item.highlight&&<span style={{fontSize:9,padding:"2px 6px",borderRadius:3,background:"rgba(255,204,0,0.1)",color:"#ffcc00",letterSpacing:"0.08em"}}>⚡ KEY STORY</span>}
+                          </div>
+                          <span style={{fontSize:10,color:"#aab8c2",flexShrink:0}}>{item.pubDate?new Date(item.pubDate).toLocaleDateString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):""}</span>
+                        </div>
+                        <div style={{fontSize:14,color:item.highlight?"#fff":"#dde1ec",lineHeight:1.5,fontWeight:item.highlight?600:500,marginBottom:6}}>{item.title}</div>
+                        {item.description&&<div style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>{item.description}</div>}
+                        <div style={{fontSize:10,color:"#ff9632",marginTop:8,opacity:0.8}}>Read full article →</div>
+                      </div>
+                    ));
+                })()}
               </div>
-            ))}
+            )}
+
+            {/* NEWSLETTER MODE */}
+            {feedMode==="newsletter"&&(
+              <div style={{animation:"fu 0.2s ease"}}>
+                <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:20}}>Every Sunday — macro overview, broker target changes and one stock deep dive. Free.</p>
+                {submitted ? (
+                  <div style={{fontSize:13,color:"#00ff88",padding:"10px 0 20px"}}>✓ You're subscribed. Welcome to Orbit Alpha.</div>
+                ) : (
+                  <div style={{display:"flex",gap:8,maxWidth:400,marginBottom:28}}>
+                    <input value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&sub()} placeholder="your@email.com" style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",color:"#fff",padding:"10px 14px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}/>
+                    <button onClick={sub} style={{background:"#ff9632",color:"#04060e",border:"none",padding:"10px 22px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap"}}>Join Free →</button>
+                  </div>
+                )}
+                <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
+                <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
+                {[
+                  {issue:4,date:"11 May 2026",headline:"RKLB record quarter. HawkEye 360 arrives. ASTS Falcon 9 launch confirmed.",summary:"RKLB +30% on record $200M revenue · HawkEye 360 IPO prices at top of range · ASTS BlueBird 8-10 mid-June launch · RKLB deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-4",live:true},
+                  {issue:3,date:"4 May 2026",headline:"SpaceX goes retail. LUNR's $1B moment. The sector re-rates.",summary:"NYSE Space Summit · SpaceX IPO retail allocation · ASTS FCC win vs BlueBird 7 fallout · LUNR deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-3",live:true},
+                  {issue:2,date:"25 Apr 2026",headline:"ASTS BlueBird 7 fails — what it means for your portfolio.",summary:"BlueBird 7 orbital failure · Stifel raises RKLB to $105 · Starship update · ASTS deep dive: bull case, bear case",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-2",live:true},
+                  {issue:1,date:"19 Apr 2026",headline:"The week space went mainstream.",summary:"RKLB +9% on CEO conviction · SpaceX $1.75T IPO filing · Artemis II · RKLB deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-1",live:true},
+                ].map((issue,i)=>(
+                  <div key={i} className="hov" onClick={()=>issue.live&&window.open(issue.url,"_blank")} style={{border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:"20px",marginBottom:10,background:"rgba(255,255,255,0.01)",cursor:issue.live?"pointer":"default",opacity:issue.live?1:0.5,position:"relative"}}>
+                    {!issue.live&&<span style={{position:"absolute",top:12,right:12,fontSize:9,color:"#ffcc00",background:"rgba(255,204,0,0.08)",border:"1px solid rgba(255,204,0,0.2)",padding:"2px 8px",borderRadius:3,letterSpacing:"0.1em"}}>COMING SUNDAY</span>}
+                    {i===0&&issue.live&&<span style={{position:"absolute",top:12,right:12,fontSize:9,color:"#00ff88",background:"rgba(0,255,136,0.08)",border:"1px solid rgba(0,255,136,0.2)",padding:"2px 8px",borderRadius:3,letterSpacing:"0.1em"}}>LATEST</span>}
+                    <div style={{fontSize:10,color:"#ff9632",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:6}}>Issue #{issue.issue} · {issue.date}</div>
+                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:800,color:"#fff",marginBottom:6,lineHeight:1.3}}>{issue.headline}</div>
+                    <div style={{fontSize:11,color:"#aab8c2",lineHeight:1.6,marginBottom:issue.live?10:0}}>{issue.summary}</div>
+                    {issue.live&&<div style={{fontSize:10,color:"#ff9632",opacity:0.7}}>Read issue →</div>}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
+        {/* ── THREADS PAGE ── */}
+        {page==="threads"&&<ThreadsPage go={go}/>}
+
+        {/* ── ABOUT PAGE ── */}
         {page==="about"&&(
           <div style={{animation:"fu 0.3s ease",maxWidth:640,margin:"0 auto",padding:"32px 20px 60px"}}>
             <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ABOUT <span style={{color:"#00ff88"}}>ORBIT ALPHA</span></div>
