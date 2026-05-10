@@ -100,27 +100,7 @@ const SPARKDATA = {
 };
 
 const SECTORS = ["All","Launch","Comms","Earth Obs","Hardware","Lunar","Tourism","Transport","Defence","Energy","ETF","Private Access"];
-
-// ── THREADS DATA (stored in-memory, no login required) ──
 const TICKER_LIST = ["RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","UFO","ARKX","HAWK","VOYG","YSS","SATS"];
-
-const SEED_THREADS = {
-  RKLB: [
-    { id:"t1", author:"orbital_dan", time:"2h ago", title:"Neutron timeline — what are realistic expectations now?", body:"After Q1 earnings Neutron looks like late 2027 at best. Does that change the thesis materially or is Electron + Space Systems enough to hold?", upvotes:24, downvotes:2, comments:[
-      { id:"c1", author:"spaceInvest88", time:"1h ago", body:"Electron cadence alone is printing money. Neutron is optionality not the core case.", upvotes:11, downvotes:0 },
-      { id:"c2", author:"bearish_gravity", time:"45m ago", body:"Disagree — at current valuation you're paying for Neutron. If it slips to 2028 the multiple doesn't hold.", upvotes:7, downvotes:3 },
-    ]},
-    { id:"t2", author:"launchwatch", time:"5h ago", title:"Back-to-back launches this month — operational excellence or luck?", body:"Two successful Electron missions in 10 days. The manufacturing cadence story is real. Anyone tracking their launch rate vs Rocket Lab's own guidance?", upvotes:18, downvotes:1, comments:[] },
-  ],
-  ASTS: [
-    { id:"t3", author:"bb_watcher", time:"3h ago", title:"BlueBird 8-10 mid-June — what's the expected pop?", body:"Historical avg on ASTS launches is +12% per the dashboard. But Block 2 is different scale. Anyone modelling the coverage impact?", upvotes:31, downvotes:4, comments:[
-      { id:"c3", author:"telecomanalyst", time:"2h ago", body:"Block 2 is transformational. BB7 delay scared people off but the fundamentals haven't changed.", upvotes:14, downvotes:1 },
-    ]},
-  ],
-  LUNR: [
-    { id:"t4", author:"moonbull", time:"6h ago", title:"$1B guidance — credible or wishful thinking?", body:"Management confirmed $900M–$1B for 2026. The NASA contract pipeline is there but execution has been bumpy. How much do you trust this?", upvotes:12, downvotes:5, comments:[] },
-  ],
-};
 
 function Sparkline({ data, positive }) {
   const [hoverIdx, setHoverIdx] = useState(null);
@@ -159,16 +139,6 @@ function Sparkline({ data, positive }) {
   );
 }
 
-function SentBar({ value }) {
-  const color=value>=65?"#00ff88":value>=45?"#ffcc00":"#ff4466";
-  return (
-    <div style={{display:"flex",alignItems:"center",gap:5}}>
-      <div style={{flex:1,height:3,background:"rgba(255,255,255,0.07)",borderRadius:2}}><div style={{width:`${value}%`,height:"100%",background:color,borderRadius:2}}/></div>
-      <span style={{fontSize:10,color,minWidth:22}}>{value}</span>
-    </div>
-  );
-}
-
 function Stars() {
   const stars = [
     {x:5,y:8},{x:12,y:22},{x:18,y:5},{x:25,y:35},{x:31,y:14},{x:38,y:48},{x:44,y:7},{x:51,y:28},{x:57,y:62},{x:63,y:18},
@@ -180,12 +150,7 @@ function Stars() {
   return (
     <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:0}}>
       {stars.map((st,i)=>(
-        <div key={i} style={{
-          position:"absolute",left:`${st.x}%`,top:`${st.y}%`,
-          width:i%3===0?1.8:i%3===1?1.2:1,height:i%3===0?1.8:i%3===1?1.2:1,
-          borderRadius:"50%",background:"#fff",
-          opacity:i%3===0?0.18:i%3===1?0.14:0.10,
-        }}/>
+        <div key={i} style={{position:"absolute",left:`${st.x}%`,top:`${st.y}%`,width:i%3===0?1.8:i%3===1?1.2:1,height:i%3===0?1.8:i%3===1?1.2:1,borderRadius:"50%",background:"#fff",opacity:i%3===0?0.18:i%3===1?0.14:0.10}}/>
       ))}
     </div>
   );
@@ -207,7 +172,6 @@ function TickerStrip({ stocks }) {
 }
 
 // ── THREADS PAGE ──
-
 function ThreadsPage({ go }) {
   const [threads, setThreads] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -220,6 +184,28 @@ function ThreadsPage({ go }) {
   const [votes, setVotes] = useState({});
   const [posting, setPosting] = useState(false);
 
+  // ── Username state ──
+  const [username, setUsername] = useState(()=>localStorage.getItem('oa_username')||"");
+  const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
+  const [usernameInput, setUsernameInput] = useState("");
+  const [pendingAction, setPendingAction] = useState(null);
+
+  const saveUsername = () => {
+    const u = usernameInput.trim().replace(/\s+/g,"_").slice(0,20);
+    if(!u) return;
+    localStorage.setItem('oa_username', u);
+    setUsername(u);
+    setShowUsernamePrompt(false);
+    setUsernameInput("");
+    if(pendingAction) { pendingAction(); setPendingAction(null); }
+  };
+
+  const requireUsername = (action) => {
+    if(username) { action(); return; }
+    setPendingAction(()=>action);
+    setShowUsernamePrompt(true);
+  };
+
   const API = "https://orbit-alpha-api.vercel.app/api/threads";
 
   const fetchThreads = async (ticker) => {
@@ -228,19 +214,13 @@ function ThreadsPage({ go }) {
       const res = await fetch(`${API}?ticker=${ticker}`);
       const data = await res.json();
       setThreads(Array.isArray(data) ? data : []);
-    } catch (e) {
-      setThreads([]);
-    }
+    } catch (e) { setThreads([]); }
     setLoading(false);
   };
 
   useEffect(() => { fetchThreads(activeTicker); }, [activeTicker]);
 
-  const switchTicker = (t) => {
-    setActiveTicker(t);
-    setOpenThread(null);
-    setShowCompose(false);
-  };
+  const switchTicker = (t) => { setActiveTicker(t); setOpenThread(null); setShowCompose(false); };
 
   const formatTime = (iso) => {
     try {
@@ -260,7 +240,7 @@ function ThreadsPage({ go }) {
       const res = await fetch(`${API}?ticker=${activeTicker}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "thread", thread: { title: newTitle.trim(), body: newBody.trim() } }),
+        body: JSON.stringify({ type: "thread", author: username, thread: { title: newTitle.trim(), body: newBody.trim() } }),
       });
       const data = await res.json();
       setThreads(Array.isArray(data) ? data : []);
@@ -277,7 +257,7 @@ function ThreadsPage({ go }) {
       const res = await fetch(`${API}?ticker=${activeTicker}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "comment", threadId, comment: text }),
+        body: JSON.stringify({ type: "comment", author: username, threadId, comment: text }),
       });
       const data = await res.json();
       setThreads(Array.isArray(data) ? data : []);
@@ -287,8 +267,7 @@ function ThreadsPage({ go }) {
   };
 
   const handleVote = async (targetId, dir) => {
-    const current = votes[targetId];
-    if (current === dir) return;
+    if (votes[targetId] === dir) return;
     setVotes(prev => ({ ...prev, [targetId]: dir }));
     try {
       const res = await fetch(`${API}?ticker=${activeTicker}`, {
@@ -311,9 +290,42 @@ function ThreadsPage({ go }) {
 
   return (
     <div style={{animation:"fu 0.3s ease",maxWidth:800,margin:"0 auto",padding:"32px 20px 60px"}}>
+
+      {/* ── Username modal ── */}
+      {showUsernamePrompt && (
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
+          <div style={{background:"#0d1220",border:"1px solid rgba(167,139,250,0.3)",borderRadius:10,padding:"28px",maxWidth:360,width:"100%",animation:"fu 0.2s ease"}}>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:"#fff",marginBottom:6}}>Pick a username</div>
+            <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:16}}>Shows on all your posts. Stored in your browser — no signup needed.</p>
+            <input
+              autoFocus
+              value={usernameInput}
+              onChange={e=>setUsernameInput(e.target.value.replace(/\s+/g,"_").slice(0,20))}
+              onKeyDown={e=>e.key==="Enter"&&saveUsername()}
+              placeholder="e.g. launchpad_77"
+              style={{width:"100%",background:"rgba(255,255,255,0.06)",border:"1px solid rgba(167,139,250,0.3)",color:"#fff",padding:"10px 14px",borderRadius:4,fontSize:13,fontFamily:"'DM Mono',monospace",outline:"none",marginBottom:8}}
+            />
+            <div style={{fontSize:10,color:"#aab8c2",marginBottom:16}}>Max 20 chars · spaces become underscores</div>
+            <div style={{display:"flex",gap:8}}>
+              <button onClick={()=>{setShowUsernamePrompt(false);setPendingAction(null);setUsernameInput("");}} style={{flex:1,background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#aab8c2",padding:"10px",borderRadius:4,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Cancel</button>
+              <button onClick={saveUsername} disabled={!usernameInput.trim()} style={{flex:2,background:"#a78bfa",color:"#04060e",border:"none",padding:"10px",borderRadius:4,fontSize:12,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",opacity:usernameInput.trim()?1:0.4}}>Set Username →</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{marginBottom:20}}>
         <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ORBIT <span style={{color:"#a78bfa"}}>THREADS</span></div>
-        <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Discuss any space stock. No account needed — just post.</p>
+        <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+          <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Discuss any space stock.</p>
+          {username ? (
+            <span style={{fontSize:11,color:"#aab8c2"}}>
+              Posting as <span style={{color:"#a78bfa"}}>{username}</span> · <span onClick={()=>{setUsernameInput(username);setShowUsernamePrompt(true);}} style={{color:"#a78bfa",cursor:"pointer",textDecoration:"underline"}}>change</span>
+            </span>
+          ) : (
+            <span onClick={()=>setShowUsernamePrompt(true)} style={{fontSize:11,color:"#a78bfa",cursor:"pointer",textDecoration:"underline"}}>Set a username to post</span>
+          )}
+        </div>
       </div>
 
       {/* Ticker selector */}
@@ -333,7 +345,7 @@ function ThreadsPage({ go }) {
         <div>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
             <div style={{fontSize:11,color:"#aab8c2"}}>{loading ? "Loading..." : `${threads.length} thread${threads.length!==1?"s":""} on `}<span style={{color:"#a78bfa",fontWeight:700}}>{!loading&&activeTicker}</span></div>
-            <button onClick={() => setShowCompose(c => !c)}
+            <button onClick={() => requireUsername(() => setShowCompose(c => !c))}
               style={{background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.3)",color:"#a78bfa",padding:"7px 14px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer",letterSpacing:"0.06em"}}>
               {showCompose ? "Cancel" : "+ New Thread"}
             </button>
@@ -341,12 +353,12 @@ function ThreadsPage({ go }) {
 
           {showCompose && (
             <div style={{background:"rgba(167,139,250,0.04)",border:"1px solid rgba(167,139,250,0.2)",borderRadius:8,padding:"16px",marginBottom:16,animation:"fu 0.2s ease"}}>
-              <div style={{fontSize:9,color:"#a78bfa",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:10}}>New thread · {activeTicker}</div>
+              <div style={{fontSize:9,color:"#a78bfa",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:10}}>New thread · {activeTicker} · posting as <span style={{color:"#fff"}}>{username}</span></div>
               <input value={newTitle} onChange={e=>setNewTitle(e.target.value)} placeholder="Thread title..." style={{width:"100%",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:13,fontFamily:"'DM Mono',monospace",outline:"none",marginBottom:8}}/>
               <textarea value={newBody} onChange={e=>setNewBody(e.target.value)} placeholder="Your thoughts... (optional)" rows={3} style={{width:"100%",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none",resize:"vertical",display:"block",marginBottom:10}}/>
               <div style={{display:"flex",justifyContent:"flex-end",gap:8}}>
                 <button onClick={()=>{setShowCompose(false);setNewTitle("");setNewBody("");}} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#aab8c2",padding:"7px 14px",borderRadius:4,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Cancel</button>
-                <button onClick={postThread} disabled={posting} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"7px 18px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",opacity:posting?0.6:1}}>{posting?"Posting...":"Post Thread →"}</button>
+                <button onClick={() => requireUsername(postThread)} disabled={posting} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"7px 18px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",opacity:posting?0.6:1}}>{posting?"Posting...":"Post Thread →"}</button>
               </div>
             </div>
           )}
@@ -362,7 +374,7 @@ function ThreadsPage({ go }) {
             <div style={{textAlign:"center",padding:"48px 20px",color:"#aab8c2",fontSize:13}}>
               <div style={{fontSize:28,marginBottom:12,opacity:0.3}}>💬</div>
               No threads yet for {activeTicker}.<br/>
-              <span style={{color:"#a78bfa",cursor:"pointer"}} onClick={()=>setShowCompose(true)}>Start the first one →</span>
+              <span style={{color:"#a78bfa",cursor:"pointer"}} onClick={()=>requireUsername(()=>setShowCompose(true))}>Start the first one →</span>
             </div>
           )}
 
@@ -437,8 +449,14 @@ function ThreadsPage({ go }) {
               })}
 
               <div style={{marginTop:16,display:"flex",gap:8}}>
-                <input value={newComment[thread.id]||""} onChange={e=>setNewComment(prev=>({...prev,[thread.id]:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&postComment(thread.id)} placeholder="Add a comment..." style={{flex:1,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}/>
-                <button onClick={()=>postComment(thread.id)} disabled={posting} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"9px 16px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",opacity:posting?0.6:1}}>{posting?"...":"Reply →"}</button>
+                <input
+                  value={newComment[thread.id]||""}
+                  onChange={e=>setNewComment(prev=>({...prev,[thread.id]:e.target.value}))}
+                  onKeyDown={e=>e.key==="Enter"&&requireUsername(()=>postComment(thread.id))}
+                  placeholder={username ? "Add a comment..." : "Set a username to reply..."}
+                  style={{flex:1,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}
+                />
+                <button onClick={()=>requireUsername(()=>postComment(thread.id))} disabled={posting} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"9px 16px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",opacity:posting?0.6:1}}>{posting?"...":"Reply →"}</button>
               </div>
             </div>
           );
@@ -447,6 +465,7 @@ function ThreadsPage({ go }) {
     </div>
   );
 }
+
 const PROXY_URL = "https://orbit-alpha-api.vercel.app/api/quote";
 const ALL_TICKERS = STOCKS.map(s=>s.ticker);
 
@@ -461,23 +480,20 @@ const formatMktCap = (v) => {
 export default function App() {
   const [page,setPage]=useState("home");
   const [tab,setTab]=useState("stocks");
-  const [feedMode,setFeedMode]=useState("news"); // "news" | "newsletter"
+  const [feedMode,setFeedMode]=useState("news");
   const [sector,setSector]=useState("All");
   const [search,setSearch]=useState("");
   const [email,setEmail]=useState("");
   const [submitted,setSubmitted]=useState(false);
   const [menuOpen,setMenuOpen]=useState(false);
   const [liveStocks,setLiveStocks]=useState(STOCKS);
-
   const [showExitPopup, setShowExitPopup] = useState(false);
   const [popupDismissed, setPopupDismissed] = useState(false);
   const [popupEmail, setPopupEmail] = useState("");
   const [popupSubmitted, setPopupSubmitted] = useState(false);
 
   useEffect(()=>{
-    const handleMouseLeave = (e) => {
-      if(e.clientY <= 0 && !popupDismissed && !popupSubmitted) setShowExitPopup(true);
-    };
+    const handleMouseLeave = (e) => { if(e.clientY <= 0 && !popupDismissed && !popupSubmitted) setShowExitPopup(true); };
     const handleScroll = () => {
       if(popupDismissed || popupSubmitted) return;
       const scrolled = window.scrollY + window.innerHeight;
@@ -495,8 +511,7 @@ export default function App() {
     if(!emailAddress || !emailAddress.includes('@')) { alert('Please enter a valid email address.'); return; }
     try {
       const res = await fetch('https://www.orbitalpha.cloud/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: emailAddress }),
       });
       const data = await res.json();
@@ -536,27 +551,20 @@ export default function App() {
       for(let i=0; i<tickers.length; i+=5) {
         const batch = tickers.slice(i, i+5);
         const results = await Promise.allSettled(batch.map(async t => {
-          const [r7, r3, r1] = await Promise.allSettled([
-            fetchQuote(t, "7d"), fetchQuote(t, "3d"), fetchQuote(t, "1d"),
-          ]);
+          const [r7, r3, r1] = await Promise.allSettled([fetchQuote(t,"7d"),fetchQuote(t,"3d"),fetchQuote(t,"1d")]);
           const base = r7.value || r3.value || r1.value;
           if(!base) return null;
-          return { ...base, spark7d: r7.value?.sparkline || [], spark3d: r3.value?.sparkline || [], spark1d: r1.value?.sparkline || [] };
+          return { ...base, spark7d: r7.value?.sparkline||[], spark3d: r3.value?.sparkline||[], spark1d: r1.value?.sparkline||[] };
         }));
         const updates = {};
         results.forEach(r => {
           if(r.status==="fulfilled" && r.value) {
             const d = r.value;
-            updates[d.ticker] = {
-              price: d.price, changePct: d.changePct, change: d.change,
-              ...(d.mktCap && {mktCap: d.mktCap}),
-              ...(d.volume && {volume: d.volume}),
-              spark7d: d.spark7d, spark3d: d.spark3d, spark1d: d.spark1d, liveSparkline: d.spark7d,
-            };
+            updates[d.ticker] = { price:d.price, changePct:d.changePct, change:d.change, ...(d.mktCap&&{mktCap:d.mktCap}), ...(d.volume&&{volume:d.volume}), spark7d:d.spark7d, spark3d:d.spark3d, spark1d:d.spark1d, liveSparkline:d.spark7d };
           }
         });
         if(Object.keys(updates).length > 0) {
-          setLiveStocks(prev => prev.map(s => updates[s.ticker] ? {...s, ...updates[s.ticker]} : s));
+          setLiveStocks(prev => prev.map(s => updates[s.ticker] ? {...s,...updates[s.ticker]} : s));
           setLastUpdated(new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}));
           setIsLive(true);
         }
@@ -584,16 +592,9 @@ export default function App() {
           const mapped = data.result
             .filter(l => { if(!l.sort_date) return true; return l.sort_date > now; })
             .map(l => {
-              const ticker =
-                l.provider?.slug?.includes('rocket-lab') ? 'RKLB' :
-                l.name?.includes('BlueBird') || l.missions?.[0]?.name?.includes('BlueBird') ? 'ASTS' :
-                l.name?.includes('Intuitive') || l.missions?.[0]?.name?.includes('IM-') ? 'LUNR' : null;
+              const ticker = l.provider?.slug?.includes('rocket-lab') ? 'RKLB' : l.name?.includes('BlueBird')||l.missions?.[0]?.name?.includes('BlueBird') ? 'ASTS' : l.name?.includes('Intuitive')||l.missions?.[0]?.name?.includes('IM-') ? 'LUNR' : null;
               const status = l.result === 1 ? 'SUCCESS' : l.win_open ? 'GO' : 'TBD';
-              return {
-                date: l.date_str || 'TBD',
-                mission: `${l.provider?.name || ''} – ${l.vehicle?.name || ''} / ${l.missions?.[0]?.name || l.name || ''}`,
-                status, impact: ticker === 'RKLB' ? '+4.2% avg' : ticker === 'ASTS' ? '+12.4% avg' : ticker === 'LUNR' ? '+8.1% avg' : 'Sector avg', ticker,
-              };
+              return { date:l.date_str||'TBD', mission:`${l.provider?.name||''} – ${l.vehicle?.name||''} / ${l.missions?.[0]?.name||l.name||''}`, status, impact:ticker==='RKLB'?'+4.2% avg':ticker==='ASTS'?'+12.4% avg':ticker==='LUNR'?'+8.1% avg':'Sector avg', ticker };
             });
           setLiveLaunches(mapped);
         }
@@ -618,10 +619,9 @@ export default function App() {
         const yahooItems = yahooRes.status==='fulfilled' && Array.isArray(yahooRes.value) ? yahooRes.value : [];
         const seenTitles = new Set();
         const combined = [...yahooItems, ...rssItems]
-          .filter(item => { const key = item.title?.toLowerCase().slice(0, 40); if(!key || seenTitles.has(key)) return false; seenTitles.add(key); return true; })
-          .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-        setNewsItems(combined);
-        setNewsLoading(false);
+          .filter(item => { const key = item.title?.toLowerCase().slice(0,40); if(!key||seenTitles.has(key)) return false; seenTitles.add(key); return true; })
+          .sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate));
+        setNewsItems(combined); setNewsLoading(false);
       } catch(e) { console.log('News fetch error:', e); setNewsLoading(false); }
     };
     fetchNews();
@@ -632,12 +632,12 @@ export default function App() {
   const isMarketOpen = ()=>{
     const now = new Date();
     const est = new Date(now.toLocaleString("en-US",{timeZone:"America/New_York"}));
-    const day = est.getDay(); const h = est.getHours(); const m = est.getMinutes(); const mins = h*60+m;
+    const day=est.getDay(); const h=est.getHours(); const m=est.getMinutes(); const mins=h*60+m;
     return day>=1 && day<=5 && mins>=570 && mins<960;
   };
 
-  const [watchlist, setWatchlist] = useState(()=>{ try { return JSON.parse(localStorage.getItem('oa_watchlist') || '[]'); } catch { return []; } });
-  const toggleWatch = (ticker) => { setWatchlist(prev => { const next = prev.includes(ticker) ? prev.filter(t=>t!==ticker) : [...prev, ticker]; localStorage.setItem('oa_watchlist', JSON.stringify(next)); return next; }); };
+  const [watchlist, setWatchlist] = useState(()=>{ try { return JSON.parse(localStorage.getItem('oa_watchlist')||'[]'); } catch { return []; } });
+  const toggleWatch = (ticker) => { setWatchlist(prev => { const next = prev.includes(ticker) ? prev.filter(t=>t!==ticker) : [...prev,ticker]; localStorage.setItem('oa_watchlist',JSON.stringify(next)); return next; }); };
   const [showWatchlistOnly, setShowWatchlistOnly] = useState(false);
 
   const [stockNews, setStockNews] = useState({});
@@ -646,7 +646,7 @@ export default function App() {
     try {
       const res = await fetch(`https://orbit-alpha-api.vercel.app/api/yahoonews?ticker=${ticker}`);
       const data = await res.json();
-      setStockNews(prev => ({...prev, [ticker]: data.slice(0,3)}));
+      setStockNews(prev => ({...prev,[ticker]:data.slice(0,3)}));
     } catch(e) {}
   };
 
@@ -658,14 +658,13 @@ export default function App() {
   const prevPrices = useRef({});
   useEffect(()=>{
     const flashes = {};
-    liveStocks.forEach(s=>{ const prev = prevPrices.current[s.ticker]; if(prev !== undefined && prev !== s.price) flashes[s.ticker] = s.price > prev ? "up" : "down"; prevPrices.current[s.ticker] = s.price; });
-    if(Object.keys(flashes).length > 0) { setFlashMap(flashes); setTimeout(()=>setFlashMap({}), 600); }
+    liveStocks.forEach(s=>{ const prev=prevPrices.current[s.ticker]; if(prev!==undefined&&prev!==s.price) flashes[s.ticker]=s.price>prev?"up":"down"; prevPrices.current[s.ticker]=s.price; });
+    if(Object.keys(flashes).length>0){ setFlashMap(flashes); setTimeout(()=>setFlashMap({}),600); }
   },[liveStocks]);
 
   const [expandedTicker, setExpandedTicker] = useState(null);
-
   const [loading, setLoading] = useState(true);
-  useEffect(()=>{ if(isLive) setLoading(false); const t = setTimeout(()=>setLoading(false), 8000); return ()=>clearTimeout(t); },[isLive]);
+  useEffect(()=>{ if(isLive) setLoading(false); const t=setTimeout(()=>setLoading(false),8000); return ()=>clearTimeout(t); },[isLive]);
 
   const go=(p,t)=>{setPage(p);if(t)setTab(t);setMenuOpen(false);window.scrollTo({top:0,behavior:"smooth"});};
 
@@ -678,21 +677,15 @@ export default function App() {
     });
     if(sortCol) {
       arr = [...arr].sort((a,b)=>{
-        let av = sortCol==="price" ? a.price : sortCol==="changePct" ? a.changePct : sortCol==="mktCap" ? (parseFloat(a.mktCap?.replace(/[^0-9.]/g,""))||0) : 0;
-        let bv = sortCol==="price" ? b.price : sortCol==="changePct" ? b.changePct : sortCol==="mktCap" ? (parseFloat(b.mktCap?.replace(/[^0-9.]/g,""))||0) : 0;
-        return sortDir==="desc" ? bv-av : av-bv;
+        let av=sortCol==="price"?a.price:sortCol==="changePct"?a.changePct:sortCol==="mktCap"?(parseFloat(a.mktCap?.replace(/[^0-9.]/g,""))||0):0;
+        let bv=sortCol==="price"?b.price:sortCol==="changePct"?b.changePct:sortCol==="mktCap"?(parseFloat(b.mktCap?.replace(/[^0-9.]/g,""))||0):0;
+        return sortDir==="desc"?bv-av:av-bv;
       });
     }
     return arr;
   })();
 
-  // ── NAV ITEMS ──
-  const NAV_ITEMS = [
-    ["home","Home"],
-    ["markets","Markets"],
-    ["feed","Feed"],
-    ["threads","Threads ✦"],
-  ];
+  const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"],["threads","Threads"]];
 
   return (
     <div style={{minHeight:"100vh",background:"#04060e",color:"#dde1ec",fontFamily:"'DM Mono',monospace",fontSize:13,position:"relative",overflowX:"hidden"}}>
@@ -726,8 +719,7 @@ export default function App() {
         @keyframes flashUp{0%{background:rgba(0,255,136,0.3)}100%{background:transparent}}
         @keyframes flashDown{0%{background:rgba(255,68,102,0.3)}100%{background:transparent}}
         @keyframes shimmer{0%{opacity:0.4}50%{opacity:0.8}100%{opacity:0.4}}
-        .flash-up{animation:flashUp 0.6s ease}
-        .flash-down{animation:flashDown 0.6s ease}
+        .flash-up{animation:flashUp 0.6s ease}.flash-down{animation:flashDown 0.6s ease}
         .skeleton{background:rgba(255,255,255,0.06);border-radius:3px;animation:shimmer 1.5s infinite}
         @keyframes ts{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
         @keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -738,17 +730,11 @@ export default function App() {
         .hov:hover{background:rgba(255,255,255,0.03)!important;cursor:pointer}
         .dt{background:none;border:none;cursor:pointer;padding:8px 12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s;white-space:nowrap}
         .stg{cursor:pointer;font-size:10px;padding:4px 10px;border-radius:3px;border:1px solid rgba(255,255,255,0.08);transition:all 0.15s;white-space:nowrap}.stg:hover{border-color:rgba(0,255,136,0.3);color:#00ff88}
-        input,button{outline:none}
-        textarea{outline:none}
+        input,button,textarea{outline:none}
         @media(max-width:600px){
-          .desk-only{display:none!important}
-          .mob-stack{flex-direction:column!important}
-          .mob-full{width:100%!important;max-width:100%!important}
-          .mob-pad{padding:48px 18px 40px!important}
-          .mob-grid2{grid-template-columns:1fr 1fr!important}
-          .mob-grid1{grid-template-columns:1fr!important}
-          .mob-text-sm{font-size:11px!important}
-          .mob-hide{display:none!important}
+          .desk-only{display:none!important}.mob-stack{flex-direction:column!important}.mob-full{width:100%!important;max-width:100%!important}
+          .mob-pad{padding:48px 18px 40px!important}.mob-grid2{grid-template-columns:1fr 1fr!important}.mob-grid1{grid-template-columns:1fr!important}
+          .mob-text-sm{font-size:11px!important}.mob-hide{display:none!important}
         }
       `}</style>
 
@@ -756,7 +742,6 @@ export default function App() {
       <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:1,overflow:"hidden",opacity:0.02}}><div style={{position:"absolute",width:"100%",height:2,background:"linear-gradient(transparent,rgba(0,255,136,1),transparent)",animation:"sc 10s linear infinite"}}/></div>
       <div style={{position:"relative",zIndex:2}}>
 
-        {/* ── NAV ── */}
         <nav style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.05)",position:"relative"}}>
           <div onClick={()=>go("home")} style={{cursor:"pointer",display:"flex",alignItems:"baseline",flexShrink:0}}>
             <span style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em"}}>ORBIT</span>
@@ -769,7 +754,7 @@ export default function App() {
             ))}
           </div>
           <div style={{display:"flex",gap:10,alignItems:"center",flexShrink:0}}>
-            <button className="desk-only" onClick={()=>go("feed","newsletter")} style={{background:"rgba(0,255,136,0.07)",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"7px 15px",borderRadius:4,fontSize:10,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free</button>
+            <button className="desk-only" onClick={()=>go("feed")} style={{background:"rgba(0,255,136,0.07)",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"7px 15px",borderRadius:4,fontSize:10,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free</button>
             <button className="desk-only" onClick={()=>{ if(navigator.share){navigator.share({title:"Orbit Alpha",text:"Free space stocks dashboard",url:"https://orbitalpha.cloud"});}else{navigator.clipboard.writeText("https://orbitalpha.cloud").then(()=>alert("Link copied!"));}}} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#ccd0d8",padding:"7px 12px",borderRadius:4,fontSize:10,letterSpacing:"0.06em",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Share ↗</button>
             <button onClick={()=>setMenuOpen(!menuOpen)} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#ccd0d8",padding:"6px 10px",borderRadius:4,cursor:"pointer",fontSize:16,display:"none"}} className="mob-menu-btn">{menuOpen?"✕":"☰"}</button>
           </div>
@@ -803,15 +788,13 @@ export default function App() {
           <div style={{background:isLive?"rgba(0,255,136,0.05)":"rgba(255,204,0,0.07)",borderBottom:`1px solid ${isLive?"rgba(0,255,136,0.15)":"rgba(255,204,0,0.15)"}`,padding:"8px 16px",textAlign:"center"}}>
             <div style={{display:"inline-flex",alignItems:"center",gap:8,flexWrap:"wrap",justifyContent:"center"}}>
               <div style={{width:6,height:6,borderRadius:"50%",background:isLive?"#00ff88":"#ffcc00",animation:"bk 1.5s infinite",flexShrink:0}}/>
-              {isLive
-                ? <span style={{fontSize:11,color:"#00ff88",letterSpacing:"0.04em"}}>LIVE DATA · Updated {lastUpdated}</span>
-                : <span style={{fontSize:11,color:"#ffcc00",letterSpacing:"0.04em"}}>⚠ DEMO DATA ONLY — All prices and metrics are illustrative. Live data coming soon.</span>
-              }
+              {isLive ? <span style={{fontSize:11,color:"#00ff88",letterSpacing:"0.04em"}}>LIVE DATA · Updated {lastUpdated}</span>
+                : <span style={{fontSize:11,color:"#ffcc00",letterSpacing:"0.04em"}}>⚠ DEMO DATA ONLY — All prices and metrics are illustrative.</span>}
             </div>
           </div>
         )}
 
-        {/* ── HOME PAGE ── */}
+        {/* ── HOME ── */}
         {page==="home"&&(
           <div style={{animation:"fu 0.5s ease"}}>
             <section style={{padding:"40px 20px 28px",textAlign:"center",maxWidth:680,margin:"0 auto"}}>
@@ -825,7 +808,6 @@ export default function App() {
               </div>
             </section>
 
-            {/* Markets preview */}
             <section style={{margin:"0 20px 16px",borderRadius:10,border:"1px solid rgba(0,255,136,0.2)",background:"rgba(0,255,136,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
                 <div>
@@ -835,11 +817,7 @@ export default function App() {
                 <button onClick={()=>go("markets","stocks")} style={{background:"none",border:"1px solid rgba(0,255,136,0.3)",color:"#00ff88",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Markets →</button>
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
-                {[
-                  {e:"📈",t:"Live Prices",d:"Real-time quotes, 7D charts and market cap. Updated every 5 minutes."},
-                  {e:"🚀",t:"Launch Calendar",d:"Upcoming launches with historical price impact per mission."},
-                  {e:"📅",t:"Earnings Calendar",d:"Upcoming earnings dates with key metrics to watch."},
-                ].map((f,i)=>(
+                {[{e:"📈",t:"Live Prices",d:"Real-time quotes, 7D charts and market cap. Updated every 5 minutes."},{e:"🚀",t:"Launch Calendar",d:"Upcoming launches with historical price impact per mission."},{e:"📅",t:"Earnings Calendar",d:"Upcoming earnings dates with key metrics to watch."}].map((f,i)=>(
                   <div key={i} style={{borderRadius:6,padding:"12px",background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)"}}>
                     <div style={{fontSize:16,marginBottom:4}}>{f.e}</div>
                     <div style={{fontSize:11,color:"#fff",marginBottom:3,fontWeight:500}}>{f.t}</div>
@@ -849,7 +827,6 @@ export default function App() {
               </div>
             </section>
 
-            {/* Feed preview */}
             <section style={{margin:"0 20px 16px",borderRadius:10,border:"1px solid rgba(255,150,50,0.2)",background:"rgba(255,150,50,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
                 <div>
@@ -858,12 +835,7 @@ export default function App() {
                 </div>
                 <button onClick={()=>go("feed")} style={{background:"none",border:"1px solid rgba(255,150,50,0.3)",color:"#ff9632",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Feed →</button>
               </div>
-              {newsLoading&&Array.from({length:3}).map((_,i)=>(
-                <div key={i} style={{padding:"10px 0",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
-                  <div className="skeleton" style={{height:11,width:"70%",marginBottom:6}}/>
-                  <div className="skeleton" style={{height:9,width:"25%"}}/>
-                </div>
-              ))}
+              {newsLoading&&Array.from({length:3}).map((_,i)=>(<div key={i} style={{padding:"10px 0",borderBottom:"1px solid rgba(255,255,255,0.04)"}}><div className="skeleton" style={{height:11,width:"70%",marginBottom:6}}/><div className="skeleton" style={{height:9,width:"25%"}}/></div>))}
               {!newsLoading&&newsItems.slice(0,4).map((item,i)=>(
                 <div key={i} onClick={()=>window.open(item.link,"_blank")} className="hov" style={{padding:"10px 0",borderBottom:"1px solid rgba(255,255,255,0.04)",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
                   <div style={{flex:1,minWidth:0}}>
@@ -878,21 +850,16 @@ export default function App() {
               ))}
             </section>
 
-            {/* Threads preview */}
             <section style={{margin:"0 20px 40px",borderRadius:10,border:"1px solid rgba(167,139,250,0.2)",background:"rgba(167,139,250,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
                 <div>
                   <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em",marginBottom:2}}>ORBIT <span style={{color:"#a78bfa"}}>THREADS</span></div>
-                  <p style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>Discuss any space stock with other investors. No account needed.</p>
+                  <p style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>Discuss any space stock with other investors. Pick a username and post.</p>
                 </div>
-                <span style={{fontSize:9,color:"#a78bfa",background:"rgba(167,139,250,0.08)",border:"1px solid rgba(167,139,250,0.2)",padding:"4px 12px",borderRadius:3,letterSpacing:"0.12em"}}>COMING SOON</span>
+                <button onClick={()=>go("threads")} style={{background:"none",border:"1px solid rgba(167,139,250,0.3)",color:"#a78bfa",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Threads →</button>
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
-                {[
-                  {e:"💬",t:"Per-ticker threads",d:"Every stock has its own discussion board. Find the names you follow."},
-                  {e:"⬆",t:"Vote the best up",d:"Upvote sharp analysis. Downvote noise. The good stuff rises."},
-                  {e:"🔓",t:"No account needed",d:"Just post. Anonymous by default. No signup, no friction."},
-                ].map((f,i)=>(
+                {[{e:"💬",t:"Per-ticker threads",d:"Every stock has its own discussion board. Find the names you follow."},{e:"⬆",t:"Vote the best up",d:"Upvote sharp analysis. Downvote noise. The good stuff rises."},{e:"🪪",t:"Pick a username",d:"No signup needed. Set a handle once and it sticks in your browser."}].map((f,i)=>(
                   <div key={i} style={{borderRadius:6,padding:"12px",background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)"}}>
                     <div style={{fontSize:16,marginBottom:4}}>{f.e}</div>
                     <div style={{fontSize:11,color:"#fff",marginBottom:3,fontWeight:500}}>{f.t}</div>
@@ -907,7 +874,7 @@ export default function App() {
               <span style={{fontSize:10,color:"#aab8c2"}}>Not financial advice · Data via Yahoo Finance & rocketlaunch.live</span>
               <div style={{display:"flex",gap:16,fontSize:10,color:"#aab8c2",flexWrap:"wrap"}}>
                 <span onClick={()=>go("feed")} style={{cursor:"pointer"}} className="hov">Feed</span>
-                <span style={{opacity:0.4}}>Threads</span>
+                <span onClick={()=>go("threads")} style={{cursor:"pointer"}} className="hov">Threads</span>
                 <span onClick={()=>go("about")} style={{cursor:"pointer"}} className="hov">About</span>
                 <a href="mailto:OrbitAlphaApp@proton.me" style={{color:"#aab8c2",textDecoration:"none"}} className="hov">Contact</a>
               </div>
@@ -915,15 +882,13 @@ export default function App() {
           </div>
         )}
 
-        {/* ── MARKETS PAGE (was dashboard) ── */}
+        {/* ── MARKETS ── */}
         {page==="markets"&&(
           <div style={{animation:"fu 0.3s ease"}}>
             <div style={{padding:"12px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8}}>
-              <div style={{display:"flex",alignItems:"center",gap:10}}>
-                <div style={{display:"flex",alignItems:"center",gap:5,background:isMarketOpen()?"rgba(0,255,136,0.08)":"rgba(255,68,102,0.08)",border:`1px solid ${isMarketOpen()?"rgba(0,255,136,0.2)":"rgba(255,68,102,0.2)"}`,borderRadius:4,padding:"3px 10px"}}>
-                  <div style={{width:5,height:5,borderRadius:"50%",background:isMarketOpen()?"#00ff88":"#ff4466",animation:"bk 1.5s infinite"}}/>
-                  <span style={{fontSize:10,color:isMarketOpen()?"#00ff88":"#ff4466",letterSpacing:"0.08em"}}>{isMarketOpen()?"MARKET OPEN":"MARKET CLOSED"}</span>
-                </div>
+              <div style={{display:"flex",alignItems:"center",gap:5,background:isMarketOpen()?"rgba(0,255,136,0.08)":"rgba(255,68,102,0.08)",border:`1px solid ${isMarketOpen()?"rgba(0,255,136,0.2)":"rgba(255,68,102,0.2)"}`,borderRadius:4,padding:"3px 10px"}}>
+                <div style={{width:5,height:5,borderRadius:"50%",background:isMarketOpen()?"#00ff88":"#ff4466",animation:"bk 1.5s infinite"}}/>
+                <span style={{fontSize:10,color:isMarketOpen()?"#00ff88":"#ff4466",letterSpacing:"0.08em"}}>{isMarketOpen()?"MARKET OPEN":"MARKET CLOSED"}</span>
               </div>
               <span style={{fontSize:10,color:"#aab8c2",fontFamily:"monospace"}}>
                 {clock.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}).toUpperCase()} · {clock.toLocaleTimeString("en-US",{timeZone:"America/New_York",hour:"2-digit",minute:"2-digit",second:"2-digit"})} EST
@@ -940,7 +905,7 @@ export default function App() {
               {tab==="stocks"&&(
                 <div>
                   {(()=>{
-                    const gainers = [...liveStocks].filter(s=>typeof s.changePct==="number").sort((a,b)=>b.changePct-a.changePct).slice(0,5);
+                    const gainers=[...liveStocks].filter(s=>typeof s.changePct==="number").sort((a,b)=>b.changePct-a.changePct).slice(0,5);
                     if(gainers.length===0) return null;
                     return (
                       <div style={{marginBottom:16}}>
@@ -958,19 +923,15 @@ export default function App() {
                     );
                   })()}
                   {isLive&&(()=>{
-                    const sorted = [...liveStocks].filter(s=>s.type==="stock"&&typeof s.changePct==="number");
-                    const gainer = sorted.sort((a,b)=>b.changePct-a.changePct)[0];
-                    const loser = sorted.sort((a,b)=>a.changePct-b.changePct)[0];
-                    const byVolume = [...liveStocks].filter(s=>s.type==="stock"&&typeof s.volume==="number"&&s.volume>0).sort((a,b)=>b.volume-a.volume)[0];
+                    const sorted=[...liveStocks].filter(s=>s.type==="stock"&&typeof s.changePct==="number");
+                    const gainer=sorted.sort((a,b)=>b.changePct-a.changePct)[0];
+                    const loser=sorted.sort((a,b)=>a.changePct-b.changePct)[0];
+                    const byVolume=[...liveStocks].filter(s=>s.type==="stock"&&typeof s.volume==="number"&&s.volume>0).sort((a,b)=>b.volume-a.volume)[0];
                     return (
                       <div style={{marginBottom:14}}>
                         <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:8}}>Today · 1D</div>
                         <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
-                          {[
-                            {label:"Top Gainer",s:gainer,c:"#00ff88",val:s=>`+${s.changePct.toFixed(1)}%`},
-                            {label:"Top Loser",s:loser,c:"#ff4466",val:s=>`${s.changePct.toFixed(1)}%`},
-                            {label:"Highest Volume",s:byVolume,c:"#7eb8ff",val:s=>s.volume>=1e6?`${(s.volume/1e6).toFixed(1)}M`:s.volume>=1e3?`${(s.volume/1e3).toFixed(0)}K`:`${s.volume}`}
-                          ].map(({label,s,c,val})=>s?(
+                          {[{label:"Top Gainer",s:gainer,c:"#00ff88",val:s=>`+${s.changePct.toFixed(1)}%`},{label:"Top Loser",s:loser,c:"#ff4466",val:s=>`${s.changePct.toFixed(1)}%`},{label:"Highest Volume",s:byVolume,c:"#7eb8ff",val:s=>s.volume>=1e6?`${(s.volume/1e6).toFixed(1)}M`:s.volume>=1e3?`${(s.volume/1e3).toFixed(0)}K`:`${s.volume}`}].map(({label,s,c,val})=>s?(
                             <div key={label} onClick={()=>setExpandedTicker(expandedTicker===s.ticker?null:s.ticker)} className="hov" style={{border:`1px solid ${c}22`,borderRadius:6,padding:"10px 14px",background:`${c}08`,cursor:"pointer"}}>
                               <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>{label}</div>
                               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -988,9 +949,7 @@ export default function App() {
                     <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search ticker or name..." style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#ddd",padding:"8px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",width:200}}/>
                     <button onClick={()=>setShowWatchlistOnly(w=>!w)} style={{background:showWatchlistOnly?"rgba(255,204,0,0.1)":"transparent",border:`1px solid ${showWatchlistOnly?"rgba(255,204,0,0.4)":"rgba(255,255,255,0.08)"}`,color:showWatchlistOnly?"#ffcc00":"#aab8c2",padding:"7px 12px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer",letterSpacing:"0.08em"}}>★ Watchlist</button>
                     <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-                      {SECTORS.map(s=>(
-                        <span key={s} className="stg" onClick={()=>setSector(s)} style={{color:sector===s?"#00ff88":"#aab8c2",borderColor:sector===s?"rgba(0,255,136,0.3)":"rgba(255,255,255,0.2)",background:sector===s?"rgba(0,255,136,0.05)":"transparent"}}>{s}</span>
-                      ))}
+                      {SECTORS.map(s=>(<span key={s} className="stg" onClick={()=>setSector(s)} style={{color:sector===s?"#00ff88":"#aab8c2",borderColor:sector===s?"rgba(0,255,136,0.3)":"rgba(255,255,255,0.2)",background:sector===s?"rgba(0,255,136,0.05)":"transparent"}}>{s}</span>))}
                     </div>
                   </div>
                   <div className="desk-only" style={{overflowX:"auto"}}>
@@ -998,18 +957,16 @@ export default function App() {
                       <div style={{display:"grid",gridTemplateColumns:"68px 1fr 82px 72px 72px 80px",gap:6,padding:"7px 8px",fontSize:9,color:"#dde1ec",letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
                         <span>Ticker</span><span>Name</span>
                         {[["price","Price"],["changePct","1D Chg%"],["mktCap","Mkt Cap"]].map(([col,label])=>(
-                          <span key={col} onClick={()=>handleSort(col)} style={{cursor:"pointer",color:sortCol===col?"#00ff88":"#fff",userSelect:"none"}}>
-                            {label}{sortCol===col?(sortDir==="desc"?" ↓":" ↑"):""}
-                          </span>
+                          <span key={col} onClick={()=>handleSort(col)} style={{cursor:"pointer",color:sortCol===col?"#00ff88":"#fff",userSelect:"none"}}>{label}{sortCol===col?(sortDir==="desc"?" ↓":" ↑"):""}</span>
                         ))}
                         <span style={{textAlign:"center",color:"#aab8c2"}}>7D</span>
                       </div>
-                      {loading && Array.from({length:8}).map((_,i)=>(
+                      {loading&&Array.from({length:8}).map((_,i)=>(
                         <div key={i} style={{display:"grid",gridTemplateColumns:"68px 1fr 82px 72px 72px 80px",gap:6,padding:"12px 8px",borderBottom:"1px solid rgba(255,255,255,0.04)",alignItems:"center"}}>
                           <div className="skeleton" style={{height:12,width:40}}/><div className="skeleton" style={{height:12,width:120}}/><div className="skeleton" style={{height:12,width:60}}/><div className="skeleton" style={{height:12,width:50}}/><div className="skeleton" style={{height:12,width:55}}/><div className="skeleton" style={{height:24,width:72}}/>
                         </div>
                       ))}
-                      {!loading && filtered.map(s=>(
+                      {!loading&&filtered.map(s=>(
                         <div key={s.ticker}>
                           <div className={`hov ${flashMap[s.ticker]==="up"?"flash-up":flashMap[s.ticker]==="down"?"flash-down":""}`}
                             onClick={()=>{ setExpandedTicker(expandedTicker===s.ticker?null:s.ticker); if(expandedTicker!==s.ticker) fetchStockNews(s.ticker); }}
@@ -1019,14 +976,9 @@ export default function App() {
                               <span style={{fontWeight:700,color:"#00ff88",fontSize:12}}>{s.ticker}</span>
                               {s.type==="etf"&&<span style={{fontSize:8,color:"#7eb8ff",background:"rgba(126,184,255,0.1)",padding:"1px 3px",borderRadius:2}}>ETF</span>}
                             </div>
-                            <div>
-                              <div style={{fontSize:11,color:"#fff"}}>{s.name}</div>
-                              <div style={{fontSize:9,color:"#aab8c2",marginTop:1}}>{s.sector}</div>
-                            </div>
+                            <div><div style={{fontSize:11,color:"#fff"}}>{s.name}</div><div style={{fontSize:9,color:"#aab8c2",marginTop:1}}>{s.sector}</div></div>
                             <span style={{fontSize:13,color:"#fff",fontWeight:500}}>${s.price.toFixed(2)}</span>
-                            <span style={{fontSize:11,fontWeight:600,padding:"2px 6px",borderRadius:4,background:s.changePct>=0?"rgba(0,255,136,0.12)":"rgba(255,68,102,0.12)",color:s.changePct>=0?"#00ff88":"#ff4466",display:"inline-block",textAlign:"center"}}>
-                              {s.changePct>=0?"+":""}{s.changePct.toFixed(1)}%
-                            </span>
+                            <span style={{fontSize:11,fontWeight:600,padding:"2px 6px",borderRadius:4,background:s.changePct>=0?"rgba(0,255,136,0.12)":"rgba(255,68,102,0.12)",color:s.changePct>=0?"#00ff88":"#ff4466",display:"inline-block",textAlign:"center"}}>{s.changePct>=0?"+":""}{s.changePct.toFixed(1)}%</span>
                             <span style={{color:"#dde1ec",fontSize:10}}>{s.mktCap}</span>
                             <Sparkline data={s.spark7d||s.liveSparkline||SPARKDATA[s.ticker]} positive={s.changePct>=0}/>
                           </div>
@@ -1102,9 +1054,7 @@ export default function App() {
                 <div>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:8}}>
                     <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase"}}>Upcoming Launches · Historical Price Impact</div>
-                    <div style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"#00ff88"}}>
-                      <div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>LIVE · rocketlaunch.live
-                    </div>
+                    <div style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"#00ff88"}}><div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>LIVE · rocketlaunch.live</div>
                   </div>
                   {liveLaunches.map((l,i)=>(
                     <div key={i} style={{border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:"14px",marginBottom:8,background:"rgba(255,255,255,0.01)"}}>
@@ -1140,28 +1090,22 @@ export default function App() {
                           <div style={{fontSize:9,color:"#aab8c2",marginTop:2}}>{e.time}</div>
                         </div>
                       </div>
-                      <div style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>
-                        <span style={{color:"#aab8c2",marginRight:6,letterSpacing:"0.08em",fontSize:9,textTransform:"uppercase"}}>Watch:</span>{e.watch}
-                      </div>
+                      <div style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}><span style={{color:"#aab8c2",marginRight:6,letterSpacing:"0.08em",fontSize:9,textTransform:"uppercase"}}>Watch:</span>{e.watch}</div>
                     </div>
                   ))}
-                  <div style={{padding:"12px",textAlign:"center",fontSize:10,color:"#ccd0d8",borderTop:"1px solid rgba(255,255,255,0.04)",marginTop:8}}>
-                    Estimates sourced from analyst consensus · Updated weekly · Not financial advice
-                  </div>
+                  <div style={{padding:"12px",textAlign:"center",fontSize:10,color:"#ccd0d8",borderTop:"1px solid rgba(255,255,255,0.04)",marginTop:8}}>Estimates sourced from analyst consensus · Updated weekly · Not financial advice</div>
                 </div>
               )}
             </div>
           </div>
         )}
 
-        {/* ── FEED PAGE (News + Newsletter toggle) ── */}
+        {/* ── FEED ── */}
         {page==="feed"&&(
           <div style={{animation:"fu 0.3s ease",maxWidth:800,margin:"0 auto",padding:"32px 20px 60px"}}>
             <div style={{marginBottom:24}}>
               <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ORBIT <span style={{color:"#ff9632"}}>FEED</span></div>
               <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:20}}>News and analysis for space equity investors.</p>
-
-              {/* Toggle */}
               <div style={{display:"inline-flex",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:6,padding:3,gap:2}}>
                 {[["news","📰 News"],["newsletter","✉ Newsletter"]].map(([mode,label])=>(
                   <button key={mode} onClick={()=>setFeedMode(mode)}
@@ -1172,51 +1116,38 @@ export default function App() {
               </div>
             </div>
 
-            {/* NEWS MODE */}
             {feedMode==="news"&&(
               <div style={{animation:"fu 0.2s ease"}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:8}}>
                   <p style={{fontSize:11,color:"#aab8c2"}}>Live space stock news from 30+ sources — updated every 5 minutes.</p>
-                  <div style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"#00ff88",flexShrink:0}}>
-                    <div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>LIVE
-                  </div>
+                  <div style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"#00ff88",flexShrink:0}}><div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>LIVE</div>
                 </div>
                 <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:20}}>
                   {["All","RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","HAWK","SpaceX","Blue Origin","Relativity","Vast","ispace","NASA","ESA","ISRO","Space Force"].map(co=>(
                     <span key={co} onClick={()=>setNewsCompany(co==="All"?"":co)} className="stg" style={{color:newsCompany===(co==="All"?"":co)?"#ff9632":"#ccd0d8",borderColor:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.3)":"rgba(255,255,255,0.2)",background:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.05)":"transparent",fontSize:9}}>{co}</span>
                   ))}
                 </div>
-                {newsLoading&&Array.from({length:8}).map((_,i)=>(
-                  <div key={i} style={{padding:"16px 0",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
-                    <div className="skeleton" style={{height:13,width:"70%",marginBottom:8}}/><div className="skeleton" style={{height:10,width:"30%"}}/>
-                  </div>
-                ))}
+                {newsLoading&&Array.from({length:8}).map((_,i)=>(<div key={i} style={{padding:"16px 0",borderBottom:"1px solid rgba(255,255,255,0.05)"}}><div className="skeleton" style={{height:13,width:"70%",marginBottom:8}}/><div className="skeleton" style={{height:10,width:"30%"}}/></div>))}
                 {!newsLoading&&(()=>{
                   const COMPANY_KEYWORDS = {
-                    RKLB:['Rocket Lab','RKLB','Electron','Neutron','Peter Beck'],
-                    ASTS:['AST SpaceMobile','ASTS','BlueBird','Abel Avellan'],
-                    LUNR:['Intuitive Machines','LUNR','IM-3','IM-4','lunar lander'],
-                    PL:['Planet Labs','PBC','Pelican'],BKSY:['BlackSky','BKSY'],RDW:['Redwire','RDW'],
-                    MNTS:['Momentus','MNTS'],SPCE:['Virgin Galactic','SPCE','VSS'],KRMN:['Karman','KRMN'],
-                    SATL:['Satellogic','SATL'],KULR:['KULR Technology','KULR'],TSAT:['Telesat','TSAT','Lightspeed'],
-                    GSAT:['Globalstar','GSAT'],VSAT:['Viasat','VSAT'],MDA:['MDA Space','MDA Ltd'],
-                    SPIR:['Spire Global','SPIR'],GILT:['Gilat Satellite','GILT'],DXYZ:['Destiny Tech','DXYZ'],
-                    LMT:['Lockheed Martin','LMT'],FLY:['Firefly Aerospace','FLY','Alpha rocket'],
-                    OKLO:['Oklo','OKLO','nuclear microreactor'],BA:['Boeing','BA'],NOC:['Northrop Grumman','NOC'],
-                    RTX:['RTX','Raytheon'],HAWK:['HawkEye 360','HAWK','SIGINT','RF intelligence'],
-                    SATS:['EchoStar','SATS'],VOYG:['Voyager Technologies','VOYG'],YSS:['York Space','YSS'],
-                    SpaceX:['SpaceX','Starship','Falcon','Starlink'],'Blue Origin':['Blue Origin','New Glenn','BE-4'],
-                    Relativity:['Relativity Space','Terran'],Vast:['Vast Space','Haven-1'],ispace:['ispace','HAKUTO'],
-                    NASA:['NASA','Artemis','ISS'],ESA:['ESA','European Space Agency','Ariane'],
+                    RKLB:['Rocket Lab','RKLB','Electron','Neutron','Peter Beck'],ASTS:['AST SpaceMobile','ASTS','BlueBird','Abel Avellan'],
+                    LUNR:['Intuitive Machines','LUNR','IM-3','IM-4','lunar lander'],PL:['Planet Labs','PBC','Pelican'],BKSY:['BlackSky','BKSY'],RDW:['Redwire','RDW'],
+                    MNTS:['Momentus','MNTS'],SPCE:['Virgin Galactic','SPCE','VSS'],KRMN:['Karman','KRMN'],SATL:['Satellogic','SATL'],KULR:['KULR Technology','KULR'],
+                    TSAT:['Telesat','TSAT','Lightspeed'],GSAT:['Globalstar','GSAT'],VSAT:['Viasat','VSAT'],MDA:['MDA Space','MDA Ltd'],SPIR:['Spire Global','SPIR'],
+                    GILT:['Gilat Satellite','GILT'],DXYZ:['Destiny Tech','DXYZ'],LMT:['Lockheed Martin','LMT'],FLY:['Firefly Aerospace','FLY','Alpha rocket'],
+                    OKLO:['Oklo','OKLO','nuclear microreactor'],BA:['Boeing','BA'],NOC:['Northrop Grumman','NOC'],RTX:['RTX','Raytheon'],
+                    HAWK:['HawkEye 360','HAWK','SIGINT','RF intelligence'],SATS:['EchoStar','SATS'],VOYG:['Voyager Technologies','VOYG'],YSS:['York Space','YSS'],
+                    SpaceX:['SpaceX','Starship','Falcon','Starlink'],'Blue Origin':['Blue Origin','New Glenn','BE-4'],Relativity:['Relativity Space','Terran'],
+                    Vast:['Vast Space','Haven-1'],ispace:['ispace','HAKUTO'],NASA:['NASA','Artemis','ISS'],ESA:['ESA','European Space Agency','Ariane'],
                     ISRO:['ISRO','Gaganyaan','Chandrayaan'],'Space Force':['Space Force','USSF','NSSL','Golden Dome'],
                   };
                   return newsItems
                     .filter(item=>!newsSource||item.source===newsSource)
                     .filter(item=>{
                       if(!newsCompany) return true;
-                      if(item.ticker === newsCompany) return true;
-                      const keywords = COMPANY_KEYWORDS[newsCompany]||[newsCompany];
-                      const text = `${item.title} ${item.description}`.toLowerCase();
+                      if(item.ticker===newsCompany) return true;
+                      const keywords=COMPANY_KEYWORDS[newsCompany]||[newsCompany];
+                      const text=`${item.title} ${item.description}`.toLowerCase();
                       return keywords.some(k=>text.includes(k.toLowerCase()));
                     })
                     .map((item,i)=>(
@@ -1237,7 +1168,6 @@ export default function App() {
               </div>
             )}
 
-            {/* NEWSLETTER MODE */}
             {feedMode==="newsletter"&&(
               <div style={{animation:"fu 0.2s ease"}}>
                 <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:20}}>Every Sunday — macro overview, broker target changes and one stock deep dive. Free.</p>
@@ -1271,10 +1201,10 @@ export default function App() {
           </div>
         )}
 
-        {/* ── THREADS PAGE ── */}
+        {/* ── THREADS ── */}
         {page==="threads"&&<ThreadsPage go={go}/>}
 
-        {/* ── ABOUT PAGE ── */}
+        {/* ── ABOUT ── */}
         {page==="about"&&(
           <div style={{animation:"fu 0.3s ease",maxWidth:640,margin:"0 auto",padding:"32px 20px 60px"}}>
             <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ABOUT <span style={{color:"#00ff88"}}>ORBIT ALPHA</span></div>
