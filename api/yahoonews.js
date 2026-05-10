@@ -1,13 +1,12 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
-
   const SPACE_TICKERS = [
     'RKLB', 'ASTS', 'LUNR', 'PL', 'BKSY', 'RDW', 'MNTS', 'SPCE',
     'KRMN', 'SATL', 'KULR', 'GSAT', 'VSAT', 'MDA', 'SPIR', 'DXYZ',
-    'LMT', 'FLY', 'OKLO', 'BA', 'NOC', 'RTX', 'UFO', 'ARKX'
+    'LMT', 'FLY', 'OKLO', 'BA', 'NOC', 'RTX', 'UFO', 'ARKX',
+    'TSAT', 'HAWK', 'GILT', 'SATS', 'VOYG', 'YSS',
   ];
-
   const HIGH_SIGNAL_KEYWORDS = [
     'contract', 'IPO', 'earnings', 'revenue', 'quarterly', 'analyst',
     'price target', 'upgrade', 'downgrade', 'acquisition', 'partnership',
@@ -15,15 +14,12 @@ export default async function handler(req, res) {
     'billion', 'million contract', 'NASA award', 'FCC', 'record revenue',
     'guidance', 'beat', 'miss', 'forecast',
   ];
-
   const isHighSignal = (title) => {
     const text = title.toLowerCase();
     return HIGH_SIGNAL_KEYWORDS.some(k => text.includes(k.toLowerCase()));
   };
-
   const seenUrls = new Set();
   const allNews = [];
-
   const fetchTickerNews = async (ticker) => {
     try {
       const newsUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${ticker}&newsCount=5&enableFuzzyQuery=false`;
@@ -45,10 +41,9 @@ export default async function handler(req, res) {
       return [];
     }
   };
-
   try {
     const { ticker } = req.query;
-    const tickers = ticker ? [ticker] : SPACE_TICKERS.slice(0, 10);
+    const tickers = ticker ? [ticker] : SPACE_TICKERS;
     const results = await Promise.allSettled(tickers.map(t => fetchTickerNews(t)));
     results.forEach(r => {
       if(r.status === 'fulfilled') {
@@ -60,9 +55,8 @@ export default async function handler(req, res) {
         });
       }
     });
-
     allNews.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-    res.status(200).json(allNews.slice(0, 40));
+    res.status(200).json(allNews.slice(0, 60));
   } catch(e) {
     res.status(500).json({ error: e.message });
   }
