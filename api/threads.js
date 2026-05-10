@@ -1,12 +1,25 @@
 const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-async function redis(command, ...args) {
-  const res = await fetch(`${REDIS_URL}/${command}/${args.map(a => encodeURIComponent(JSON.stringify(a))).join("/")}`, {
+async function redisGet(key) {
+  const res = await fetch(`${REDIS_URL}/get/${encodeURIComponent(key)}`, {
     headers: { Authorization: `Bearer ${REDIS_TOKEN}` },
   });
   const data = await res.json();
-  return data.result;
+  if (!data.result) return null;
+  return JSON.parse(data.result);
+}
+
+async function redisSet(key, value) {
+  const res = await fetch(`${REDIS_URL}/set/${encodeURIComponent(key)}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${REDIS_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ value: JSON.stringify(value) }),
+  });
+  return res.json();
 }
 
 export default async function handler(req, res) {
@@ -18,11 +31,12 @@ export default async function handler(req, res) {
   const { ticker } = req.query;
   if (!ticker) return res.status(400).json({ error: "ticker required" });
 
+  const key = `threads:${ticker}`;
+
   if (req.method === "GET") {
     try {
-      const raw = await redis("get", `threads:${ticker}`);
-      const threads = raw ? JSON.parse(raw) : [];
-      return res.status(200).json(threads);
+      const threads = await redisGet(key);
+      return res.status(200).json(threads || []);
     } catch (e) {
       return res.status(500).json({ error: e.message });
     }
@@ -30,18 +44,16 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
     try {
-      const { type, thread, comment, threadId } = req.body;
-
-      const raw = await redis("get", `threads:${ticker}`);
-      const threads = raw ? JSON.parse(raw) : [];
+      const threads = (await redisGet(key)) || [];
+      const { type, author, thread, comment, threadId, targetId, dir } = req.body;
 
       if (type === "thread") {
         const newThread = {
           id: `t${Date.now()}`,
-          author: "anonymous",
+          author: author || "anonymous",
           time: new Date().toISOString(),
-          title: thread.title?.slice(0, 200) || "",
-          body: thread.body?.slice(0, 1000) || "",
+          title: (thread?.title || "").slice(0, 200),
+          body: (thread?.body || "").slice(0, 1000),
           upvotes: 0,
           downvotes: 0,
           comments: [],
@@ -54,9 +66,9 @@ export default async function handler(req, res) {
         if (t) {
           t.comments.push({
             id: `c${Date.now()}`,
-            author: "anonymous",
+            author: author || "anonymous",
             time: new Date().toISOString(),
-            body: comment?.slice(0, 500) || "",
+            body: (comment || "").slice(0, 500),
             upvotes: 0,
             downvotes: 0,
           });
@@ -64,14 +76,13 @@ export default async function handler(req, res) {
       }
 
       if (type === "vote") {
-        const { targetId, dir } = req.body;
         for (const t of threads) {
           if (t.id === targetId) {
             if (dir === "up") t.upvotes += 1;
             if (dir === "down") t.downvotes += 1;
             break;
           }
-          for (const c of t.comments) {
+          for (const c of t.comments || []) {
             if (c.id === targetId) {
               if (dir === "up") c.upvotes += 1;
               if (dir === "down") c.downvotes += 1;
@@ -81,7 +92,7 @@ export default async function handler(req, res) {
         }
       }
 
-      await redis("set", `threads:${ticker}`, JSON.stringify(threads));
+      await redisSet(key, threads);
       return res.status(200).json(threads);
     } catch (e) {
       return res.status(500).json({ error: e.message });
