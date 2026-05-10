@@ -44,7 +44,13 @@ export default async function handler(req, res) {
   try {
     const { ticker } = req.query;
     const tickers = ticker ? [ticker] : SPACE_TICKERS;
-    const results = await Promise.allSettled(tickers.map(t => fetchTickerNews(t)));
+const results = [];
+for (let i = 0; i < tickers.length; i += 5) {
+  const batch = tickers.slice(i, i + 5);
+  const batchResults = await Promise.allSettled(batch.map(t => fetchTickerNews(t)));
+  results.push(...batchResults);
+  if (i + 5 < tickers.length) await new Promise(r => setTimeout(r, 300));
+}
     results.forEach(r => {
       if(r.status === 'fulfilled') {
         r.value.forEach(article => {
