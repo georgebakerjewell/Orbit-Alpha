@@ -654,7 +654,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   useEffect(()=>{ if(isLive) setLoading(false); const t = setTimeout(()=>setLoading(false), 8000); return ()=>clearTimeout(t); },[isLive]);
 
-  const go=(p,t)=>{setPage(p);if(t)setTab(t);setMenuOpen(false);window.scrollTo({top:0,behavior:"smooth"});};
+  const go=(p,t)=>{if(p==="threads"){alert("Threads — coming soon. We're building the backend now.");return;}setPage(p);if(t)setTab(t);setMenuOpen(false);window.scrollTo({top:0,behavior:"smooth"});};
 
   const filtered = (() => {
     let arr = liveStocks.filter(s=>{
@@ -678,7 +678,7 @@ export default function App() {
     ["home","Home"],
     ["markets","Markets"],
     ["feed","Feed"],
-    ["threads","Threads"],
+    ["threads","Threads ✦"],
   ];
 
   return (
@@ -872,7 +872,7 @@ export default function App() {
                   <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em",marginBottom:2}}>ORBIT <span style={{color:"#a78bfa"}}>THREADS</span></div>
                   <p style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>Discuss any space stock with other investors. No account needed.</p>
                 </div>
-                <button onClick={()=>go("threads")} style={{background:"none",border:"1px solid rgba(167,139,250,0.3)",color:"#a78bfa",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Threads →</button>
+                <span style={{fontSize:9,color:"#a78bfa",background:"rgba(167,139,250,0.08)",border:"1px solid rgba(167,139,250,0.2)",padding:"4px 12px",borderRadius:3,letterSpacing:"0.12em"}}>COMING SOON</span>
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
                 {[
@@ -894,7 +894,7 @@ export default function App() {
               <span style={{fontSize:10,color:"#aab8c2"}}>Not financial advice · Data via Yahoo Finance & rocketlaunch.live</span>
               <div style={{display:"flex",gap:16,fontSize:10,color:"#aab8c2",flexWrap:"wrap"}}>
                 <span onClick={()=>go("feed")} style={{cursor:"pointer"}} className="hov">Feed</span>
-                <span onClick={()=>go("threads")} style={{cursor:"pointer"}} className="hov">Threads</span>
+                <span style={{opacity:0.4}}>Threads</span>
                 <span onClick={()=>go("about")} style={{cursor:"pointer"}} className="hov">About</span>
                 <a href="mailto:OrbitAlphaApp@proton.me" style={{color:"#aab8c2",textDecoration:"none"}} className="hov">Contact</a>
               </div>
