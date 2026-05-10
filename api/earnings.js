@@ -3,8 +3,9 @@ export default async function handler(req, res) {
 
   const SPACE_TICKERS = new Set([
     'RKLB','ASTS','LUNR','PL','BKSY','RDW','MNTS','SPCE',
-    'KRMN','KULR','GSAT','VSAT','MDA','SPIR','DXYZ',
-    'LMT','FLY','OKLO','BA','NOC','RTX'
+    'KRMN','SATL','KULR','GSAT','VSAT','MDA','SPIR','DXYZ',
+    'LMT','FLY','OKLO','BA','NOC','RTX','TSAT','HAWK',
+    'GILT','SATS','VOYG','YSS','KRMN','UFO','ARKX',
   ]);
 
   try {
