@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-  const { ticker } = req.query;
+  const { ticker, limit = 50 } = req.query;
 
   const GOOGLE_QUERIES = ticker ? [
     { q: `${ticker} stock` },
@@ -30,6 +30,11 @@ export default async function handler(req, res) {
     { q: 'Boeing BA space' },
     { q: 'Northrop Grumman NOC space' },
     { q: 'RTX Raytheon space' },
+    { q: 'HawkEye 360 HAWK stock' },
+    { q: 'EchoStar SATS stock' },
+    { q: 'Voyager Technologies VOYG stock' },
+    { q: 'York Space YSS stock' },
+    { q: 'Gilat Satellite GILT stock' },
     { q: 'SpaceX IPO 2026' },
     { q: 'Blue Origin New Glenn' },
     { q: 'Relativity Space Terran' },
@@ -39,13 +44,6 @@ export default async function handler(req, res) {
     { q: 'ESA European Space Agency' },
     { q: 'ISRO India space' },
     { q: 'US Space Force USSF' },
-    { q: 'UFO ARKX space ETF' },
-  ];
-
-  const RSS_FEEDS = [
-    { url: 'https://spacenews.com/feed/?posts_per_page=30', source: 'SpaceNews' },
-    { url: 'https://www.nasa.gov/rss/dyn/breaking_news.rss', source: 'NASA' },
-    { url: 'https://www.space.com/feeds/all', source: 'Space.com' },
   ];
 
   const HIGH_SIGNAL_KEYWORDS = [
@@ -62,18 +60,63 @@ export default async function handler(req, res) {
     'best photos', 'flower moon', 'stormtroopers',
   ];
 
-  const RELEVANT_KEYWORDS = [
-    'Rocket Lab', 'AST SpaceMobile', 'Intuitive Machines', 'Planet Labs',
-    'BlackSky', 'Redwire', 'Momentus', 'Virgin Galactic', 'Karman',
-    'Spire Global', 'Lockheed Martin', 'Northrop Grumman', 'Globalstar', 'Viasat',
-    'SpaceX', 'Blue Origin', 'Relativity Space', 'Vast Space', 'Firefly',
-    'Sierra Space', 'Axiom', 'ispace', 'Astrobotic', 'ULA', 'Arianespace',
-    'ISRO', 'ESA', 'JAXA', 'NASA', 'Space Force', 'MDA Space', 'Oklo',
-    'Telesat', 'Satellogic', 'KULR', 'Destiny Tech', 'Boeing space',
-    'satellite launch', 'rocket launch', 'orbital', 'lunar', 'moon landing',
-    'Starlink', 'Starship', 'Falcon', 'Electron', 'Neutron', 'New Glenn',
-    'space station', 'ISS', 'Artemis', 'NASA contract', 'space contract',
-    'LEO', 'constellation', 'satellite broadband', 'direct-to-device',
-    'space economy', 'space IPO', 'commercial space', 'space defense',
-    'reusable rocket', 'BlueBird', 'RKLB', 'ASTS', 'LUNR',
-  ];
+  const isHighSignal = (text) =>
+    HIGH_SIGNAL_KEYWORDS.some(k => text.toLowerCase().includes(k.toLowerCase()));
+
+  const isExcluded = (text) =>
+    EXCLUDE_KEYWORDS.some(k => text.toLowerCase().includes(k.toLowerCase()));
+
+  const fetchGoogleNews = async ({ q }) => {
+    try {
+      const url = `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=en-US&gl=US&ceid=US:en`;
+      const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+      const text = await res.text();
+      const items = [];
+      const itemMatches = text.matchAll(/<item>([\s\S]*?)<\/item>/g);
+      for (const match of itemMatches) {
+        const item = match[1];
+        const title = item.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/)?.[1] ||
+                      item.match(/<title>(.*?)<\/title>/)?.[1] || '';
+        const link = item.match(/<link>(.*?)<\/link>/)?.[1] ||
+                     item.match(/<guid>(.*?)<\/guid>/)?.[1] || '';
+        const pubDate = item.match(/<pubDate>(.*?)<\/pubDate>/)?.[1] || '';
+        const source = item.match(/<source[^>]*>(.*?)<\/source>/)?.[1] || 'Google News';
+        if (title && link && !isExcluded(title)) {
+          items.push({
+            title: title.trim(),
+            link: link.trim(),
+            pubDate,
+            description: '',
+            source: source.trim(),
+            highlight: isHighSignal(title),
+          });
+        }
+      }
+      return items;
+    } catch(e) {
+      return [];
+    }
+  };
+
+  try {
+    const seenUrls = new Set();
+    const allNews = [];
+
+    const results = await Promise.allSettled(GOOGLE_QUERIES.map(q => fetchGoogleNews(q)));
+    results.forEach(r => {
+      if (r.status === 'fulfilled') {
+        r.value.forEach(article => {
+          if (article.link && !seenUrls.has(article.link)) {
+            seenUrls.add(article.link);
+            allNews.push(article);
+          }
+        });
+      }
+    });
+
+    allNews.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+    res.status(200).json(allNews.slice(0, parseInt(limit)));
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+}
