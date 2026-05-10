@@ -395,7 +395,7 @@ export default function App() {
 
 const [rssRes, yahooRes] = await Promise.allSettled([
   withTimeout(fetch('https://orbit-alpha-api.vercel.app/api/news?limit=50').then(r=>r.json()), 8000),
-  withTimeout(fetch('https://orbit-alpha-api.vercel.app/api/yahoonews').then(r=>r.json()), 8000),
+  withTimeout(fetch(`https://orbit-alpha-api.vercel.app/api/yahoonews?t=${Date.now()}`).then(r=>r.json()), 8000),
 ]);
         const rssItems = rssRes.status==='fulfilled' && Array.isArray(rssRes.value) ? rssRes.value : [];
         const yahooItems = yahooRes.status==='fulfilled' && Array.isArray(yahooRes.value) ? yahooRes.value : [];
