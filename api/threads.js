@@ -14,6 +14,18 @@ async function redis(command, args) {
   return data.result;
 }
 
+function parseThreads(raw) {
+  if (!raw) return [];
+  try {
+    let parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+    // Handle double-encoded JSON
+    if (typeof parsed === "string") parsed = JSON.parse(parsed);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+}
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -28,8 +40,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
       const raw = await redis("GET", [key]);
-      const threads = raw ? JSON.parse(raw) : [];
-      return res.status(200).json(threads);
+      return res.status(200).json(parseThreads(raw));
     } catch (e) {
       console.error("GET error:", e);
       return res.status(500).json({ error: e.message });
@@ -39,7 +50,7 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
       const raw = await redis("GET", [key]);
-      const threads = raw ? JSON.parse(raw) : [];
+      const threads = parseThreads(raw);
       const { type, author, thread, comment, threadId, targetId, dir } = req.body;
 
       if (type === "thread") {
@@ -86,14 +97,8 @@ export default async function handler(req, res) {
         }
       }
 
-      const serialized = JSON.stringify(threads);
-      await redis("SET", [key, serialized]);
-
-      // Verify the write actually worked
-      const verify = await redis("GET", [key]);
-      const saved = verify ? JSON.parse(verify) : [];
-
-      return res.status(200).json(saved);
+      await redis("SET", [key, JSON.stringify(threads)]);
+      return res.status(200).json(threads);
     } catch (e) {
       console.error("POST error:", e);
       return res.status(500).json({ error: e.message });
