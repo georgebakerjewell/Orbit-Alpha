@@ -1074,15 +1074,17 @@ const combined = [...yahooItems, ...rssItems]
   ISRO:['ISRO','Gaganyaan','Chandrayaan'],
   'Space Force':['Space Force','USSF','NSSL','Golden Dome'],
 };
-              return newsItems
-                .filter(item=>!newsSource||item.source===newsSource)
-                .filter(item=>{
-  if(!newsCompany) return true;
-  if(item.ticker === newsCompany) return true;
-  const keywords = COMPANY_KEYWORDS[newsCompany]||[newsCompany];
-  const text = `${item.title} ${item.description}`.toLowerCase();
-  return keywords.some(k=>text.includes(k.toLowerCase()));
-})
+             return newsItems
+  .filter(item=>!newsSource||item.source===newsSource)
+  .filter(item=>{
+    if(!newsCompany) return true;
+    if(item.ticker === newsCompany) return true;
+    const keywords = COMPANY_KEYWORDS[newsCompany]||[newsCompany];
+    const text = `${item.title} ${item.description}`.toLowerCase();
+    const match = keywords.some(k=>text.includes(k.toLowerCase()));
+    if(newsCompany==='HAWK') console.log('HAWK check:', item.title, '| ticker:', item.ticker, '| match:', match);
+    return match;
+  })
                 .map((item,i)=>(
                   <div key={i} onClick={()=>window.open(item.link,"_blank")} className="hov" style={{padding:"16px",borderBottom:"1px solid rgba(255,255,255,0.05)",cursor:"pointer",animation:`fu 0.3s ease ${i*0.02}s both`,borderRadius:item.highlight?6:0,border:item.highlight?"1px solid rgba(255,204,0,0.15)":"none",borderBottom:item.highlight?"1px solid rgba(255,204,0,0.15)":"1px solid rgba(255,255,255,0.05)",background:item.highlight?"rgba(255,204,0,0.03)":"transparent",marginBottom:item.highlight?8:0}}>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:8}}>
