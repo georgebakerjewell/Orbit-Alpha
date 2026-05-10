@@ -207,8 +207,10 @@ function TickerStrip({ stocks }) {
 }
 
 // ── THREADS PAGE ──
+
 function ThreadsPage({ go }) {
-  const [threads, setThreads] = useState(SEED_THREADS);
+  const [threads, setThreads] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeTicker, setActiveTicker] = useState("RKLB");
   const [openThread, setOpenThread] = useState(null);
   const [showCompose, setShowCompose] = useState(false);
@@ -216,99 +218,121 @@ function ThreadsPage({ go }) {
   const [newBody, setNewBody] = useState("");
   const [newComment, setNewComment] = useState({});
   const [votes, setVotes] = useState({});
+  const [posting, setPosting] = useState(false);
 
-  const tickerThreads = threads[activeTicker] || [];
+  const API = "https://orbit-alpha-api.vercel.app/api/threads";
 
-  const handleVote = (id, dir) => {
-    setVotes(prev => {
-      const current = prev[id];
-      if (current === dir) return { ...prev, [id]: null };
-      return { ...prev, [id]: dir };
-    });
+  const fetchThreads = async (ticker) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API}?ticker=${ticker}`);
+      const data = await res.json();
+      setThreads(Array.isArray(data) ? data : []);
+    } catch (e) {
+      setThreads([]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchThreads(activeTicker); }, [activeTicker]);
+
+  const switchTicker = (t) => {
+    setActiveTicker(t);
+    setOpenThread(null);
+    setShowCompose(false);
+  };
+
+  const formatTime = (iso) => {
+    try {
+      const d = new Date(iso);
+      const diff = (Date.now() - d) / 1000;
+      if (diff < 60) return "just now";
+      if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+      if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+      return d.toLocaleDateString("en-GB", {day:"numeric",month:"short"});
+    } catch { return ""; }
+  };
+
+  const postThread = async () => {
+    if (!newTitle.trim() || posting) return;
+    setPosting(true);
+    try {
+      const res = await fetch(`${API}?ticker=${activeTicker}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "thread", thread: { title: newTitle.trim(), body: newBody.trim() } }),
+      });
+      const data = await res.json();
+      setThreads(Array.isArray(data) ? data : []);
+      setNewTitle(""); setNewBody(""); setShowCompose(false);
+    } catch (e) {}
+    setPosting(false);
+  };
+
+  const postComment = async (threadId) => {
+    const text = newComment[threadId]?.trim();
+    if (!text || posting) return;
+    setPosting(true);
+    try {
+      const res = await fetch(`${API}?ticker=${activeTicker}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "comment", threadId, comment: text }),
+      });
+      const data = await res.json();
+      setThreads(Array.isArray(data) ? data : []);
+      setNewComment(prev => ({ ...prev, [threadId]: "" }));
+    } catch (e) {}
+    setPosting(false);
+  };
+
+  const handleVote = async (targetId, dir) => {
+    const current = votes[targetId];
+    if (current === dir) return;
+    setVotes(prev => ({ ...prev, [targetId]: dir }));
+    try {
+      const res = await fetch(`${API}?ticker=${activeTicker}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "vote", targetId, dir }),
+      });
+      const data = await res.json();
+      setThreads(Array.isArray(data) ? data : []);
+    } catch (e) {}
   };
 
   const getScore = (item, id) => {
     const vote = votes[id];
-    let score = item.upvotes - item.downvotes;
+    let score = (item.upvotes || 0) - (item.downvotes || 0);
     if (vote === "up") score += 1;
     if (vote === "down") score -= 1;
     return score;
   };
 
-  const postThread = () => {
-    if (!newTitle.trim()) return;
-    const thread = {
-      id: `t${Date.now()}`,
-      author: "anonymous",
-      time: "just now",
-      title: newTitle.trim(),
-      body: newBody.trim(),
-      upvotes: 0,
-      downvotes: 0,
-      comments: [],
-    };
-    setThreads(prev => ({
-      ...prev,
-      [activeTicker]: [thread, ...(prev[activeTicker] || [])],
-    }));
-    setNewTitle("");
-    setNewBody("");
-    setShowCompose(false);
-  };
-
-  const postComment = (threadId) => {
-    const text = newComment[threadId]?.trim();
-    if (!text) return;
-    const comment = {
-      id: `c${Date.now()}`,
-      author: "anonymous",
-      time: "just now",
-      body: text,
-      upvotes: 0,
-      downvotes: 0,
-    };
-    setThreads(prev => ({
-      ...prev,
-      [activeTicker]: (prev[activeTicker] || []).map(t =>
-        t.id === threadId ? { ...t, comments: [...t.comments, comment] } : t
-      ),
-    }));
-    setNewComment(prev => ({ ...prev, [threadId]: "" }));
-  };
-
-  const tickersWithThreads = TICKER_LIST.filter(t => threads[t]?.length > 0);
-  const otherTickers = TICKER_LIST.filter(t => !threads[t]?.length);
-  const sortedTickers = [...tickersWithThreads, ...otherTickers];
-
   return (
     <div style={{animation:"fu 0.3s ease",maxWidth:800,margin:"0 auto",padding:"32px 20px 60px"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,flexWrap:"wrap",gap:12}}>
-        <div>
-          <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ORBIT <span style={{color:"#a78bfa"}}>THREADS</span></div>
-          <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Discuss any space stock. No account needed — just post.</p>
-        </div>
+      <div style={{marginBottom:20}}>
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ORBIT <span style={{color:"#a78bfa"}}>THREADS</span></div>
+        <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Discuss any space stock. No account needed — just post.</p>
       </div>
 
       {/* Ticker selector */}
       <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:20,paddingBottom:16,borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
-        {sortedTickers.map(t => {
-          const count = threads[t]?.length || 0;
+        {TICKER_LIST.map(t => {
           const isActive = activeTicker === t;
           return (
-            <button key={t} onClick={() => { setActiveTicker(t); setOpenThread(null); setShowCompose(false); }}
-              style={{background:isActive?"rgba(167,139,250,0.12)":"transparent",border:`1px solid ${isActive?"rgba(167,139,250,0.4)":"rgba(255,255,255,0.08)"}`,color:isActive?"#a78bfa":"#aab8c2",padding:"4px 10px",borderRadius:20,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer",display:"flex",alignItems:"center",gap:5,transition:"all 0.15s",whiteSpace:"nowrap"}}>
+            <button key={t} onClick={() => switchTicker(t)}
+              style={{background:isActive?"rgba(167,139,250,0.12)":"transparent",border:`1px solid ${isActive?"rgba(167,139,250,0.4)":"rgba(255,255,255,0.08)"}`,color:isActive?"#a78bfa":"#aab8c2",padding:"4px 10px",borderRadius:20,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>
               {t}
-              {count > 0 && <span style={{fontSize:9,background:isActive?"rgba(167,139,250,0.2)":"rgba(255,255,255,0.06)",padding:"1px 5px",borderRadius:8,color:isActive?"#a78bfa":"#888"}}>{count}</span>}
             </button>
           );
         })}
       </div>
 
-      {/* Thread list / single thread view */}
       {openThread === null ? (
         <div>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-            <div style={{fontSize:11,color:"#aab8c2"}}>{tickerThreads.length} thread{tickerThreads.length !== 1 ? "s" : ""} on <span style={{color:"#a78bfa",fontWeight:700}}>{activeTicker}</span></div>
+            <div style={{fontSize:11,color:"#aab8c2"}}>{loading ? "Loading..." : `${threads.length} thread${threads.length!==1?"s":""} on `}<span style={{color:"#a78bfa",fontWeight:700}}>{!loading&&activeTicker}</span></div>
             <button onClick={() => setShowCompose(c => !c)}
               style={{background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.3)",color:"#a78bfa",padding:"7px 14px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer",letterSpacing:"0.06em"}}>
               {showCompose ? "Cancel" : "+ New Thread"}
@@ -322,12 +346,19 @@ function ThreadsPage({ go }) {
               <textarea value={newBody} onChange={e=>setNewBody(e.target.value)} placeholder="Your thoughts... (optional)" rows={3} style={{width:"100%",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none",resize:"vertical",display:"block",marginBottom:10}}/>
               <div style={{display:"flex",justifyContent:"flex-end",gap:8}}>
                 <button onClick={()=>{setShowCompose(false);setNewTitle("");setNewBody("");}} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#aab8c2",padding:"7px 14px",borderRadius:4,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Cancel</button>
-                <button onClick={postThread} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"7px 18px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Post Thread →</button>
+                <button onClick={postThread} disabled={posting} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"7px 18px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",opacity:posting?0.6:1}}>{posting?"Posting...":"Post Thread →"}</button>
               </div>
             </div>
           )}
 
-          {tickerThreads.length === 0 && (
+          {loading && Array.from({length:3}).map((_,i)=>(
+            <div key={i} style={{border:"1px solid rgba(255,255,255,0.07)",borderRadius:8,padding:"16px",marginBottom:8}}>
+              <div className="skeleton" style={{height:12,width:"60%",marginBottom:8}}/>
+              <div className="skeleton" style={{height:10,width:"40%"}}/>
+            </div>
+          ))}
+
+          {!loading && threads.length === 0 && (
             <div style={{textAlign:"center",padding:"48px 20px",color:"#aab8c2",fontSize:13}}>
               <div style={{fontSize:28,marginBottom:12,opacity:0.3}}>💬</div>
               No threads yet for {activeTicker}.<br/>
@@ -335,32 +366,24 @@ function ThreadsPage({ go }) {
             </div>
           )}
 
-          {tickerThreads.map(thread => {
+          {!loading && threads.map(thread => {
             const score = getScore(thread, thread.id);
             const vote = votes[thread.id];
             return (
-              <div key={thread.id} style={{border:"1px solid rgba(255,255,255,0.07)",borderRadius:8,padding:"16px",marginBottom:8,background:"rgba(255,255,255,0.01)",transition:"border-color 0.15s",cursor:"pointer"}}
+              <div key={thread.id} style={{border:"1px solid rgba(255,255,255,0.07)",borderRadius:8,padding:"16px",marginBottom:8,background:"rgba(255,255,255,0.01)",transition:"border-color 0.15s"}}
                 onMouseEnter={e=>e.currentTarget.style.borderColor="rgba(167,139,250,0.2)"}
                 onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(255,255,255,0.07)"}>
                 <div style={{display:"flex",gap:12}}>
-                  {/* Vote column */}
                   <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,minWidth:28,paddingTop:2}}>
-                    <button onClick={e=>{e.stopPropagation();handleVote(thread.id,"up");}}
-                      style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:vote==="up"?"#00ff88":"#556",lineHeight:1,padding:0}}>▲</button>
+                    <button onClick={e=>{e.stopPropagation();handleVote(thread.id,"up");}} style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:vote==="up"?"#00ff88":"#556",lineHeight:1,padding:0}}>▲</button>
                     <span style={{fontSize:12,fontWeight:600,color:score>0?"#00ff88":score<0?"#ff4466":"#aab8c2"}}>{score}</span>
-                    <button onClick={e=>{e.stopPropagation();handleVote(thread.id,"down");}}
-                      style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:vote==="down"?"#ff4466":"#556",lineHeight:1,padding:0}}>▼</button>
+                    <button onClick={e=>{e.stopPropagation();handleVote(thread.id,"down");}} style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:vote==="down"?"#ff4466":"#556",lineHeight:1,padding:0}}>▼</button>
                   </div>
-                  {/* Thread body */}
-                  <div style={{flex:1,minWidth:0}} onClick={()=>setOpenThread(thread.id)}>
-                    <div style={{fontSize:9,color:"#aab8c2",marginBottom:5,letterSpacing:"0.04em"}}>
-                      <span style={{color:"#a78bfa"}}>{thread.author}</span> · {thread.time}
-                    </div>
+                  <div style={{flex:1,minWidth:0,cursor:"pointer"}} onClick={()=>setOpenThread(thread.id)}>
+                    <div style={{fontSize:9,color:"#aab8c2",marginBottom:5}}><span style={{color:"#a78bfa"}}>{thread.author}</span> · {formatTime(thread.time)}</div>
                     <div style={{fontSize:14,color:"#fff",fontWeight:500,marginBottom:6,lineHeight:1.4}}>{thread.title}</div>
                     {thread.body && <div style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:8}}>{thread.body}</div>}
-                    <div style={{fontSize:11,color:"#556"}}>
-                      💬 {thread.comments.length} comment{thread.comments.length!==1?"s":""} · <span style={{color:"#a78bfa",cursor:"pointer"}}>view thread →</span>
-                    </div>
+                    <div style={{fontSize:11,color:"#556"}}>💬 {thread.comments?.length||0} comment{(thread.comments?.length||0)!==1?"s":""} · <span style={{color:"#a78bfa"}}>view thread →</span></div>
                   </div>
                 </div>
               </div>
@@ -368,9 +391,8 @@ function ThreadsPage({ go }) {
           })}
         </div>
       ) : (
-        // Single thread view
         (() => {
-          const thread = tickerThreads.find(t => t.id === openThread);
+          const thread = threads.find(t => t.id === openThread);
           if (!thread) return null;
           const score = getScore(thread, thread.id);
           const vote = votes[thread.id];
@@ -385,18 +407,16 @@ function ThreadsPage({ go }) {
                     <button onClick={()=>handleVote(thread.id,"down")} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:vote==="down"?"#ff4466":"#556",lineHeight:1,padding:0}}>▼</button>
                   </div>
                   <div style={{flex:1}}>
-                    <div style={{fontSize:9,color:"#aab8c2",marginBottom:6}}>
-                      <span style={{color:"#a78bfa"}}>{thread.author}</span> · {thread.time} · <span style={{color:"#00ff88",background:"rgba(0,255,136,0.06)",padding:"1px 6px",borderRadius:3}}>{activeTicker}</span>
-                    </div>
+                    <div style={{fontSize:9,color:"#aab8c2",marginBottom:6}}><span style={{color:"#a78bfa"}}>{thread.author}</span> · {formatTime(thread.time)} · <span style={{color:"#00ff88",background:"rgba(0,255,136,0.06)",padding:"1px 6px",borderRadius:3}}>{activeTicker}</span></div>
                     <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",marginBottom:10,lineHeight:1.3}}>{thread.title}</div>
                     {thread.body && <div style={{fontSize:13,color:"#ccd0d8",lineHeight:1.7}}>{thread.body}</div>}
                   </div>
                 </div>
               </div>
 
-              <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>{thread.comments.length} comment{thread.comments.length!==1?"s":""}</div>
+              <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>{thread.comments?.length||0} comment{(thread.comments?.length||0)!==1?"s":""}</div>
 
-              {thread.comments.map(comment => {
+              {(thread.comments||[]).map(comment => {
                 const cscore = getScore(comment, comment.id);
                 const cvote = votes[comment.id];
                 return (
@@ -408,7 +428,7 @@ function ThreadsPage({ go }) {
                         <button onClick={()=>handleVote(comment.id,"down")} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,color:cvote==="down"?"#ff4466":"#556",lineHeight:1,padding:0}}>▼</button>
                       </div>
                       <div style={{flex:1}}>
-                        <div style={{fontSize:9,color:"#aab8c2",marginBottom:4}}><span style={{color:"#a78bfa"}}>{comment.author}</span> · {comment.time}</div>
+                        <div style={{fontSize:9,color:"#aab8c2",marginBottom:4}}><span style={{color:"#a78bfa"}}>{comment.author}</span> · {formatTime(comment.time)}</div>
                         <div style={{fontSize:13,color:"#ccd0d8",lineHeight:1.6}}>{comment.body}</div>
                       </div>
                     </div>
@@ -417,14 +437,8 @@ function ThreadsPage({ go }) {
               })}
 
               <div style={{marginTop:16,display:"flex",gap:8}}>
-                <input
-                  value={newComment[thread.id]||""}
-                  onChange={e=>setNewComment(prev=>({...prev,[thread.id]:e.target.value}))}
-                  onKeyDown={e=>e.key==="Enter"&&postComment(thread.id)}
-                  placeholder="Add a comment..."
-                  style={{flex:1,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}
-                />
-                <button onClick={()=>postComment(thread.id)} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"9px 16px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap"}}>Reply →</button>
+                <input value={newComment[thread.id]||""} onChange={e=>setNewComment(prev=>({...prev,[thread.id]:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&postComment(thread.id)} placeholder="Add a comment..." style={{flex:1,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}/>
+                <button onClick={()=>postComment(thread.id)} disabled={posting} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"9px 16px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",opacity:posting?0.6:1}}>{posting?"...":"Reply →"}</button>
               </div>
             </div>
           );
@@ -433,7 +447,6 @@ function ThreadsPage({ go }) {
     </div>
   );
 }
-
 const PROXY_URL = "https://orbit-alpha-api.vercel.app/api/quote";
 const ALL_TICKERS = STOCKS.map(s=>s.ticker);
 
@@ -654,7 +667,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   useEffect(()=>{ if(isLive) setLoading(false); const t = setTimeout(()=>setLoading(false), 8000); return ()=>clearTimeout(t); },[isLive]);
 
-  const go=(p,t)=>{if(p==="threads"){alert("Threads — coming soon. We're building the backend now.");return;}setPage(p);if(t)setTab(t);setMenuOpen(false);window.scrollTo({top:0,behavior:"smooth"});};
+  const go=(p,t)=>{setPage(p);if(t)setTab(t);setMenuOpen(false);window.scrollTo({top:0,behavior:"smooth"});};
 
   const filtered = (() => {
     let arr = liveStocks.filter(s=>{
