@@ -400,13 +400,13 @@ const [rssRes, yahooRes] = await Promise.allSettled([
         const rssItems = rssRes.status==='fulfilled' && Array.isArray(rssRes.value) ? rssRes.value : [];
         const yahooItems = yahooRes.status==='fulfilled' && Array.isArray(yahooRes.value) ? yahooRes.value : [];
         const seenTitles = new Set();
-        const combined = [...rssItems, ...yahooItems]
-          .filter(item => {
-            const key = item.title?.toLowerCase().slice(0, 40);
-            if(!key || seenTitles.has(key)) return false;
-            seenTitles.add(key);
-            return true;
-          })
+const combined = [...yahooItems, ...rssItems]
+  .filter(item => {
+    const key = item.title?.toLowerCase().slice(0, 40);
+    if(!key || seenTitles.has(key)) return false;
+    seenTitles.add(key);
+    return true;
+  })
           .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
         setNewsItems(combined);
         setNewsLoading(false);
