@@ -1,25 +1,17 @@
 const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-async function redisGet(key) {
-  const res = await fetch(`${REDIS_URL}/get/${encodeURIComponent(key)}`, {
-    headers: { Authorization: `Bearer ${REDIS_TOKEN}` },
-  });
-  const data = await res.json();
-  if (!data.result) return null;
-  return JSON.parse(data.result);
-}
-
-async function redisSet(key, value) {
-  const res = await fetch(`${REDIS_URL}/set/${encodeURIComponent(key)}`, {
+async function redis(command, args) {
+  const res = await fetch(`${REDIS_URL}`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${REDIS_TOKEN}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ value: JSON.stringify(value) }),
+    body: JSON.stringify([command, ...args]),
   });
-  return res.json();
+  const data = await res.json();
+  return data.result;
 }
 
 export default async function handler(req, res) {
@@ -35,20 +27,23 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const threads = await redisGet(key);
-      return res.status(200).json(threads || []);
+      const raw = await redis("GET", [key]);
+      const threads = raw ? JSON.parse(raw) : [];
+      return res.status(200).json(threads);
     } catch (e) {
+      console.error("GET error:", e);
       return res.status(500).json({ error: e.message });
     }
   }
 
   if (req.method === "POST") {
     try {
-      const threads = (await redisGet(key)) || [];
+      const raw = await redis("GET", [key]);
+      const threads = raw ? JSON.parse(raw) : [];
       const { type, author, thread, comment, threadId, targetId, dir } = req.body;
 
       if (type === "thread") {
-        const newThread = {
+        threads.unshift({
           id: `t${Date.now()}`,
           author: author || "anonymous",
           time: new Date().toISOString(),
@@ -57,8 +52,7 @@ export default async function handler(req, res) {
           upvotes: 0,
           downvotes: 0,
           comments: [],
-        };
-        threads.unshift(newThread);
+        });
       }
 
       if (type === "comment") {
@@ -92,9 +86,16 @@ export default async function handler(req, res) {
         }
       }
 
-      await redisSet(key, threads);
-      return res.status(200).json(threads);
+      const serialized = JSON.stringify(threads);
+      await redis("SET", [key, serialized]);
+
+      // Verify the write actually worked
+      const verify = await redis("GET", [key]);
+      const saved = verify ? JSON.parse(verify) : [];
+
+      return res.status(200).json(saved);
     } catch (e) {
+      console.error("POST error:", e);
       return res.status(500).json({ error: e.message });
     }
   }
