@@ -102,7 +102,13 @@ export default async function handler(req, res) {
     const seenUrls = new Set();
     const allNews = [];
 
-    const results = await Promise.allSettled(GOOGLE_QUERIES.map(q => fetchGoogleNews(q)));
+    const results = [];
+for (let i = 0; i < GOOGLE_QUERIES.length; i += 5) {
+  const batch = GOOGLE_QUERIES.slice(i, i + 5);
+  const batchResults = await Promise.allSettled(batch.map(q => fetchGoogleNews(q)));
+  results.push(...batchResults);
+  if (i + 5 < GOOGLE_QUERIES.length) await new Promise(r => setTimeout(r, 300));
+}
     results.forEach(r => {
       if (r.status === 'fulfilled') {
         r.value.forEach(article => {
