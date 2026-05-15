@@ -1,21 +1,4 @@
 // api/cron/fake-activity.js
-// ─────────────────────────────────────────────────────────────────────────────
-// Vercel Cron Job — runs on a schedule and posts fake threads/comments
-// to random tickers to simulate organic forum activity.
-//
-// Setup:
-//   1. Add to vercel.json:
-//      { "crons": [{ "path": "/api/cron/fake-activity", "schedule": "0 9,13,17,21 * * *" }] }
-//      (runs at 9am, 1pm, 5pm, 9pm UTC every day)
-//
-//   2. Set env vars in Vercel dashboard:
-//      ANTHROPIC_API_KEY=sk-ant-...
-//      UPSTASH_REDIS_REST_URL=https://...
-//      UPSTASH_REDIS_REST_TOKEN=...
-//      CRON_SECRET=any-random-string   (optional but recommended)
-//
-//   3. Deploy. Done.
-// ─────────────────────────────────────────────────────────────────────────────
 
 const ACTIVE_TICKERS = [
   // High activity (appear 5x)
@@ -41,21 +24,49 @@ const USERNAMES = [
   "VelocityVince", "StarLinkKiller", "GeoOrbitGuy", "LunarLong",
   "BuyTheDip2049", "ShotgunShorts", "BearInOrbit", "RealTalkRocket",
   "GovContractGuru", "TechnicalTerry", "NeutronWatch", "anonymous",
-  "anonymous", "anonymous", "anonymous", // weight anonymous higher
+  "anonymous", "anonymous", "anonymous",
 ];
 
 function randomFrom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// Decide what action to take this run
 function pickAction() {
   const r = Math.random();
-  if (r < 0.25) return "new_thread";    // 25% chance: post a new thread
-  if (r < 0.85) return "new_comment";   // 60% chance: comment on existing thread
-  return "vote_bump";                    // 15% chance: just bump some vote counts
+  if (r < 0.25) return "new_thread";
+  if (r < 0.85) return "new_comment";
+  return "vote_bump";
 }
 
+// ── Redis helper — matches threads.js exactly ─────────────────────────────────
+async function redis(command, args) {
+  const res = await fetch(process.env.UPSTASH_REDIS_REST_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify([command, ...args]),
+  });
+  const data = await res.json();
+  return data.result;
+}
+
+async function getThreads(ticker) {
+  const raw = await redis("GET", [`threads:${ticker}`]);
+  if (!raw) return [];
+  try {
+    let parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+    if (typeof parsed === "string") parsed = JSON.parse(parsed);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
+}
+
+async function saveThreads(ticker, threads) {
+  await redis("SET", [`threads:${ticker}`, JSON.stringify(threads)]);
+}
+
+// ── Claude API ────────────────────────────────────────────────────────────────
 async function callClaude(prompt) {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -74,43 +85,18 @@ async function callClaude(prompt) {
   return data.content?.[0]?.text || "";
 }
 
-async function getThreads(ticker) {
-  const res = await fetch(
-    `${process.env.UPSTASH_REDIS_REST_URL}/get/threads:${ticker}`,
-    { headers: { Authorization: `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}` } }
-  );
-  const { result } = await res.json();
-  if (!result) return [];
-  try { return JSON.parse(result); } catch { return []; }
-}
-
-
-async function saveThreads(ticker, threads) {
-  await fetch(
-    `${process.env.UPSTASH_REDIS_REST_URL}/set/threads:${ticker}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,
-      },
-      body: JSON.stringify([JSON.stringify(threads)]),
-    }
-  );
-}
-
-// ── Action: post a new thread ─────────────────────────────────────────────────
+// ── Actions ───────────────────────────────────────────────────────────────────
 async function postNewThread(ticker) {
   const author = randomFrom(USERNAMES);
-  const prompt = `You are a retail investor posting on a stock forum about ${ticker}. 
-Write a SHORT forum post (title + optional body) about ${ticker} stock. 
+  const prompt = `You are a retail investor posting on a stock forum about ${ticker}.
+Write a SHORT forum post (title + optional body) about ${ticker} stock.
 
 Rules:
 - Title: 5-12 words, casual, opinionated, like a real Reddit post
-- Body: 0-3 sentences max. Sometimes leave it blank (just a title post).
+- Body: 0-3 sentences max. Sometimes leave it blank.
 - Sound like a real person: mix of informed takes, casual vibes, occasional typos
 - Mix of bullish, bearish, neutral, or just asking a question
-- Reference real things: earnings, launch cadence, valuation, competitors, catalysts
+- Reference real things: earnings, valuation, competitors, catalysts
 - DO NOT use hashtags or emojis except occasionally in body
 - Output ONLY valid JSON: {"title":"...","body":"..."} — nothing else, no markdown`;
 
@@ -119,7 +105,6 @@ Rules:
   try {
     parsed = JSON.parse(raw.trim());
   } catch {
-    // fallback if Claude adds extra text
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) return null;
     try { parsed = JSON.parse(match[0]); } catch { return null; }
@@ -137,22 +122,18 @@ Rules:
   };
 
   const threads = await getThreads(ticker);
-  const updated = [thread, ...threads];
-  await saveThreads(ticker, updated);
+  await saveThreads(ticker, [thread, ...threads]);
   return { action: "new_thread", ticker, title: thread.title };
 }
 
-// ── Action: post a comment on an existing thread ──────────────────────────────
 async function postComment(ticker) {
   const threads = await getThreads(ticker);
   if (threads.length === 0) return null;
 
-  // pick a recent thread (bias towards first 5)
   const pool = threads.slice(0, Math.min(5, threads.length));
   const thread = randomFrom(pool);
   const author = randomFrom(USERNAMES);
 
-  // show Claude existing comments for context
   const existingComments = (thread.comments || [])
     .slice(-3)
     .map(c => `${c.author}: ${c.body}`)
@@ -164,7 +145,7 @@ Thread title: "${thread.title}"
 ${thread.body ? `Thread body: "${thread.body}"` : ""}
 ${existingComments ? `Recent comments:\n${existingComments}` : ""}
 
-Write ONE short comment replying to this thread. 
+Write ONE short comment replying to this thread.
 
 Rules:
 - 1-3 sentences MAX. Often just 1. Sometimes just 2-5 words ("agreed", "this", "lol same").
@@ -194,34 +175,25 @@ Rules:
   return { action: "new_comment", ticker, threadTitle: thread.title, body: newComment.body };
 }
 
-// ── Action: bump some vote counts (simulates organic voting) ─────────────────
 async function bumpVotes(ticker) {
   const threads = await getThreads(ticker);
   if (threads.length === 0) return null;
 
-  const updated = threads.map(thread => {
-    // randomly upvote the thread itself
-    const threadUpBump = Math.random() < 0.4 ? Math.floor(Math.random() * 3) + 1 : 0;
-    // randomly upvote some comments
-    const updatedComments = (thread.comments || []).map(c => ({
+  const updated = threads.map(thread => ({
+    ...thread,
+    upvotes: thread.upvotes + (Math.random() < 0.4 ? Math.floor(Math.random() * 3) + 1 : 0),
+    comments: (thread.comments || []).map(c => ({
       ...c,
       upvotes: c.upvotes + (Math.random() < 0.3 ? Math.floor(Math.random() * 2) + 1 : 0),
-    }));
-    return { ...thread, upvotes: thread.upvotes + threadUpBump, comments: updatedComments };
-  });
+    })),
+  }));
 
   await saveThreads(ticker, updated);
   return { action: "vote_bump", ticker };
 }
 
-// ── Main handler ─────────────────────────────────────────────────────────────
+// ── Handler ───────────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
-  // Basic auth check (Vercel sends this header for cron jobs)
-  const authHeader = req.headers.authorization;
-  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   const ticker = randomFrom(ACTIVE_TICKERS);
   const action = pickAction();
 
