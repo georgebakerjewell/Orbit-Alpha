@@ -84,6 +84,7 @@ async function getThreads(ticker) {
   try { return JSON.parse(result); } catch { return []; }
 }
 
+
 async function saveThreads(ticker, threads) {
   await fetch(
     `${process.env.UPSTASH_REDIS_REST_URL}/set/threads:${ticker}`,
@@ -93,7 +94,7 @@ async function saveThreads(ticker, threads) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,
       },
-      body: JSON.stringify({ value: JSON.stringify(threads) }),
+      body: JSON.stringify([JSON.stringify(threads)]),
     }
   );
 }
