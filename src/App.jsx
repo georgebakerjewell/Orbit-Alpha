@@ -101,6 +101,24 @@ const SPARKDATA = {
 
 const SECTORS = ["All","Launch","Comms","Earth Obs","Hardware","Lunar","Tourism","Transport","Defence","Energy","ETF","Private Access"];
 
+// ── URL hash helpers ──────────────────────────────────────────────────────────
+function readHash() {
+  const hash = window.location.hash.replace("#", "");
+  const [page, tab, feedMode] = hash.split("/");
+  return {
+    page: page || "home",
+    tab: tab || "stocks",
+    feedMode: feedMode || "news",
+  };
+}
+
+function writeHash(page, tab, feedMode) {
+  const parts = [page];
+  if (page === "markets") parts.push(tab || "stocks");
+  if (page === "feed") parts.push(tab || "stocks", feedMode || "news");
+  window.location.hash = parts.join("/");
+}
+
 function Sparkline({ data, positive }) {
   const [hoverIdx, setHoverIdx] = useState(null);
   if (!data || data.length===0) return <div style={{width:"100%",height:28}}/>;
@@ -190,10 +208,10 @@ function hotScore(thread) {
 }
 
 function ThreadsPage({ go }) {
-  const [allThreads, setAllThreads]       = useState({});   // { TICKER: [...] }
+  const [allThreads, setAllThreads]       = useState({});
   const [loading, setLoading]             = useState(false);
   const [activeTicker, setActiveTicker]   = useState("ALL");
-  const [openThread, setOpenThread]       = useState(null);  // { ticker, id }
+  const [openThread, setOpenThread]       = useState(null);
   const [showCompose, setShowCompose]     = useState(false);
   const [newTitle, setNewTitle]           = useState("");
   const [newBody, setNewBody]             = useState("");
@@ -201,9 +219,8 @@ function ThreadsPage({ go }) {
   const [votes, setVotes]                 = useState({});
   const [posting, setPosting]             = useState(false);
   const [sortBy, setSortBy]               = useState("hot");
-  const [timeFilter, setTimeFilter]       = useState("all"); // all | today | week | month
+  const [timeFilter, setTimeFilter]       = useState("all");
 
-  // username
   const [username, setUsername]           = useState(() => localStorage.getItem("oa_username") || "");
   const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
   const [usernameInput, setUsernameInput] = useState("");
@@ -211,7 +228,6 @@ function ThreadsPage({ go }) {
 
   const API = "/api/threads";
 
-  // ── username helpers ────────────────────────────────────────────────────────
   const saveUsername = () => {
     const u = usernameInput.trim().replace(/\s+/g, "_").slice(0, 20);
     if (!u) return;
@@ -228,7 +244,6 @@ function ThreadsPage({ go }) {
     setShowUsernamePrompt(true);
   };
 
-  // ── fetching ────────────────────────────────────────────────────────────────
   const fetchTicker = async (ticker) => {
     try {
       const res  = await fetch(`${API}?ticker=${ticker}`);
@@ -240,14 +255,13 @@ function ThreadsPage({ go }) {
   const fetchAll = async () => {
     setLoading(true);
     if (activeTicker === "ALL") {
-      // fetch all tickers in parallel (batched to avoid hammering the server)
       const batches = [];
       for (let i = 0; i < TICKER_LIST.length; i += 6) batches.push(TICKER_LIST.slice(i, i + 6));
       const results = {};
       for (const batch of batches) {
         const settled = await Promise.allSettled(batch.map(t => fetchTicker(t)));
         settled.forEach((r, i) => { results[batch[i]] = r.status === "fulfilled" ? r.value : []; });
-        await new Promise(r => setTimeout(r, 200)); // small delay between batches
+        await new Promise(r => setTimeout(r, 200));
       }
       setAllThreads(results);
     } else {
@@ -259,7 +273,6 @@ function ThreadsPage({ go }) {
 
   useEffect(() => { fetchAll(); }, [activeTicker]);
 
-  // ── derived thread list ─────────────────────────────────────────────────────
   const rawThreads = activeTicker === "ALL"
     ? Object.values(allThreads).flat()
     : (allThreads[activeTicker] || []);
@@ -277,13 +290,12 @@ function ThreadsPage({ go }) {
     if (sortBy === "new")      return new Date(b.time) - new Date(a.time);
     if (sortBy === "top")      return ((b.upvotes||0)-(b.downvotes||0)) - ((a.upvotes||0)-(a.downvotes||0));
     if (sortBy === "comments") return (b.comments?.length||0) - (a.comments?.length||0);
-    return hotScore(b) - hotScore(a); // "hot"
+    return hotScore(b) - hotScore(a);
   });
 
-  // ── post helpers ────────────────────────────────────────────────────────────
   const postThread = async () => {
     if (!newTitle.trim() || posting) return;
-    const ticker = activeTicker === "ALL" ? "RKLB" : activeTicker; // default to RKLB if posting from All
+    const ticker = activeTicker === "ALL" ? "RKLB" : activeTicker;
     setPosting(true);
     try {
       const res  = await fetch(`${API}?ticker=${ticker}`, {
@@ -348,20 +360,16 @@ function ThreadsPage({ go }) {
     } catch { return ""; }
   };
 
-  // ── open thread lookup ──────────────────────────────────────────────────────
   const openThreadData = openThread
     ? (allThreads[openThread.ticker] || []).find(t => t.id === openThread.id)
     : null;
 
-  // ── colours ─────────────────────────────────────────────────────────────────
   const purple = "#a78bfa";
   const purpleFaint = "rgba(167,139,250,0.15)";
 
-  // ═══════════════════════════════════════════════════════════════════════════
   return (
     <div style={{ animation: "fu 0.3s ease", maxWidth: 820, margin: "0 auto", padding: "32px 20px 80px" }}>
 
-      {/* ── Username modal ── */}
       {showUsernamePrompt && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
           <div style={{ background: "#0d1220", border: `1px solid ${purpleFaint}`, borderRadius: 12, padding: 28, maxWidth: 360, width: "100%", animation: "fu 0.2s ease" }}>
@@ -389,7 +397,6 @@ function ThreadsPage({ go }) {
         </div>
       )}
 
-      {/* ── Header ── */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 10 }}>
           <div>
@@ -413,11 +420,9 @@ function ThreadsPage({ go }) {
         </div>
       </div>
 
-      {/* ── Ticker selector ── */}
       {!openThread && (
         <div style={{ marginBottom: 16 }}>
           <div style={{ display: "flex", gap: 4, flexWrap: "wrap", paddingBottom: 12, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-            {/* ALL pill */}
             <button onClick={() => { setActiveTicker("ALL"); setShowCompose(false); }}
               style={{
                 background: activeTicker === "ALL" ? "rgba(167,139,250,0.15)" : "transparent",
@@ -428,12 +433,9 @@ function ThreadsPage({ go }) {
               }}>
               ALL
             </button>
-            {/* divider dot */}
             <span style={{ color: "#334", fontSize: 11, alignSelf: "center", margin: "0 2px" }}>·</span>
-            {/* Individual tickers */}
             {TICKER_LIST.map(t => {
               const isActive = activeTicker === t;
-              // count threads for badge
               const count = (allThreads[t] || []).length;
               return (
                 <button key={t} onClick={() => { setActiveTicker(t); setShowCompose(false); setOpenThread(null); }}
@@ -456,7 +458,6 @@ function ThreadsPage({ go }) {
         </div>
       )}
 
-      {/* ── Thread view (open) ── */}
       {openThread && openThreadData && (() => {
         const thread = openThreadData;
         const ticker = openThread.ticker;
@@ -469,16 +470,13 @@ function ThreadsPage({ go }) {
               ← Back to <span style={{ color: "#fff" }}>{activeTicker === "ALL" ? ticker : activeTicker}</span> threads
             </button>
 
-            {/* Thread body */}
             <div style={{ border: `1px solid rgba(167,139,250,0.25)`, borderRadius: 10, padding: "20px 22px", marginBottom: 20, background: "rgba(167,139,250,0.03)" }}>
               <div style={{ display: "flex", gap: 14 }}>
-                {/* Vote column */}
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, minWidth: 28, paddingTop: 2 }}>
                   <button onClick={() => handleVote(ticker, thread.id, "up")} style={voteBtn(vote === "up", "#00ff88")}>▲</button>
                   <span style={{ fontSize: 14, fontWeight: 700, color: score > 0 ? "#00ff88" : score < 0 ? "#ff4466" : "#aab8c2" }}>{score}</span>
                   <button onClick={() => handleVote(ticker, thread.id, "down")} style={voteBtn(vote === "down", "#ff4466")}>▼</button>
                 </div>
-                {/* Content */}
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", marginBottom: 8 }}>
                     <span style={{ fontSize: 9, color: purple }}>{thread.author}</span>
@@ -492,7 +490,6 @@ function ThreadsPage({ go }) {
               </div>
             </div>
 
-            {/* Comments */}
             <div style={{ fontSize: 9, color: "#aab8c2", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 14 }}>
               {thread.comments?.length || 0} comment{(thread.comments?.length || 0) !== 1 ? "s" : ""}
             </div>
@@ -501,7 +498,7 @@ function ThreadsPage({ go }) {
               const cs   = getScore(comment, comment.id);
               const cvote = votes[comment.id];
               return (
-                <div key={comment.id} style={{ borderLeft: `2px solid ${purpleFaint}`, paddingLeft: 16, marginBottom: 16 }}>
+                <div key={comment.id} style={{ borderLeft: `2px solid rgba(167,139,250,0.15)`, paddingLeft: 16, marginBottom: 16 }}>
                   <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, minWidth: 22, paddingTop: 2 }}>
                       <button onClick={() => handleVote(ticker, comment.id, "up")} style={voteBtn(cvote === "up", "#00ff88", 12)}>▲</button>
@@ -521,7 +518,6 @@ function ThreadsPage({ go }) {
               );
             })}
 
-            {/* Comment input */}
             <div style={{ marginTop: 20, display: "flex", gap: 8 }}>
               <input
                 value={newComment[thread.id] || ""}
@@ -539,10 +535,8 @@ function ThreadsPage({ go }) {
         );
       })()}
 
-      {/* ── Thread list view ── */}
       {!openThread && (
         <div>
-          {/* Compose box */}
           {showCompose && (
             <div style={{ background: "rgba(167,139,250,0.04)", border: `1px solid rgba(167,139,250,0.2)`, borderRadius: 10, padding: "18px 20px", marginBottom: 16, animation: "fu 0.2s ease" }}>
               <div style={{ fontSize: 9, color: purple, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
@@ -568,9 +562,7 @@ function ThreadsPage({ go }) {
             </div>
           )}
 
-          {/* Sort + filter bar */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
-            {/* Sort tabs */}
             <div style={{ display: "flex", gap: 2, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, padding: 3 }}>
               {SORT_OPTIONS.map(opt => (
                 <button key={opt.id} onClick={() => setSortBy(opt.id)}
@@ -580,7 +572,6 @@ function ThreadsPage({ go }) {
               ))}
             </div>
 
-            {/* Time filter */}
             <div style={{ display: "flex", gap: 4 }}>
               {[["all","All time"],["today","Today"],["week","This week"],["month","This month"]].map(([val,label]) => (
                 <button key={val} onClick={() => setTimeFilter(val)}
@@ -591,7 +582,6 @@ function ThreadsPage({ go }) {
             </div>
           </div>
 
-          {/* Stats row */}
           <div style={{ fontSize: 11, color: "#aab8c2", marginBottom: 14 }}>
             {loading
               ? <span style={{ color: "#334" }}>Loading{activeTicker === "ALL" ? " all tickers..." : ` ${activeTicker}...`}</span>
@@ -599,7 +589,6 @@ function ThreadsPage({ go }) {
             }
           </div>
 
-          {/* Skeletons */}
           {loading && Array.from({ length: 4 }).map((_, i) => (
             <div key={i} style={{ border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "18px", marginBottom: 8, display: "flex", gap: 14 }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 5, alignItems: "center", minWidth: 28 }}>
@@ -616,7 +605,6 @@ function ThreadsPage({ go }) {
             </div>
           ))}
 
-          {/* Empty state */}
           {!loading && sorted.length === 0 && (
             <div style={{ textAlign: "center", padding: "56px 20px" }}>
               <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.25 }}>💬</div>
@@ -629,7 +617,6 @@ function ThreadsPage({ go }) {
             </div>
           )}
 
-          {/* Thread cards */}
           {!loading && sorted.map(thread => {
             const ticker = thread._ticker || activeTicker;
             const score  = getScore(thread, thread.id);
@@ -641,37 +628,30 @@ function ThreadsPage({ go }) {
                 onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(167,139,250,0.22)"; e.currentTarget.style.background = "rgba(167,139,250,0.02)"; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)"; e.currentTarget.style.background = "rgba(255,255,255,0.01)"; }}>
                 <div style={{ display: "flex", gap: 14 }}>
-                  {/* Vote column */}
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, minWidth: 28, paddingTop: 2, flexShrink: 0 }}>
                     <button onClick={e => { e.stopPropagation(); handleVote(ticker, thread.id, "up"); }} style={voteBtn(vote === "up", "#00ff88", 13)}>▲</button>
                     <span style={{ fontSize: 12, fontWeight: 700, color: score > 0 ? "#00ff88" : score < 0 ? "#ff4466" : "#aab8c2", lineHeight: 1 }}>{score}</span>
                     <button onClick={e => { e.stopPropagation(); handleVote(ticker, thread.id, "down"); }} style={voteBtn(vote === "down", "#ff4466", 13)}>▼</button>
                   </div>
 
-                  {/* Content */}
                   <div style={{ flex: 1, minWidth: 0, cursor: "pointer" }} onClick={() => setOpenThread({ ticker, id: thread.id })}>
-                    {/* Meta row */}
                     <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", marginBottom: 6 }}>
                       <span style={{ fontSize: 9, color: purple, fontWeight: 600 }}>{thread.author}</span>
                       <span style={{ fontSize: 9, color: "#334" }}>·</span>
                       <span style={{ fontSize: 9, color: "#aab8c2" }}>{formatTime(thread.time)}</span>
-                      {/* Show ticker badge when in ALL view */}
                       {activeTicker === "ALL" && (
                         <span style={{ fontSize: 9, color: "#00ff88", background: "rgba(0,255,136,0.07)", padding: "1px 7px", borderRadius: 4, fontWeight: 600 }}>{ticker}</span>
                       )}
                     </div>
 
-                    {/* Title */}
                     <div style={{ fontSize: 14, color: "#fff", fontWeight: 600, marginBottom: 5, lineHeight: 1.4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{thread.title}</div>
 
-                    {/* Body preview */}
                     {thread.body && (
                       <div style={{ fontSize: 12, color: "#aab8c2", lineHeight: 1.6, marginBottom: 8, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                         {thread.body}
                       </div>
                     )}
 
-                    {/* Footer row */}
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
                       <span style={{ fontSize: 11, color: "#556" }}>
                         💬 <span style={{ color: commentCount > 0 ? "#aab8c2" : "#334" }}>{commentCount}</span> {commentCount === 1 ? "comment" : "comments"}
@@ -690,7 +670,6 @@ function ThreadsPage({ go }) {
   );
 }
 
-// tiny helper — keeps vote button styles DRY
 function voteBtn(active, color, size = 14) {
   return {
     background: "none", border: "none", cursor: "pointer",
@@ -711,9 +690,29 @@ const formatMktCap = (v) => {
 };
 
 export default function App() {
-  const [page,setPage]=useState("home");
-  const [tab,setTab]=useState("stocks");
-  const [feedMode,setFeedMode]=useState("news");
+  // ── Initialise from URL hash ────────────────────────────────────────────────
+  const initialState = readHash();
+  const [page,setPage]=useState(initialState.page);
+  const [tab,setTab]=useState(initialState.tab);
+  const [feedMode,setFeedMode]=useState(initialState.feedMode);
+
+  // Sync state → hash whenever page/tab/feedMode changes
+  useEffect(() => {
+    writeHash(page, tab, feedMode);
+  }, [page, tab, feedMode]);
+
+  // Listen for browser back/forward navigation
+  useEffect(() => {
+    const onHashChange = () => {
+      const s = readHash();
+      setPage(s.page);
+      setTab(s.tab);
+      setFeedMode(s.feedMode);
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
   const [sector,setSector]=useState("All");
   const [search,setSearch]=useState("");
   const [email,setEmail]=useState("");
@@ -899,7 +898,18 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   useEffect(()=>{ if(isLive) setLoading(false); const t=setTimeout(()=>setLoading(false),8000); return ()=>clearTimeout(t); },[isLive]);
 
-  const go=(p,t)=>{setPage(p);if(t)setTab(t);setMenuOpen(false);window.scrollTo({top:0,behavior:"smooth"});};
+  // ── Navigation helper ───────────────────────────────────────────────────────
+  // go(page, tab, feedMode?) — also handles the special "subscribe" shortcut
+  const go=(p,t,fm)=>{
+    setPage(p);
+    if(t) setTab(t);
+    if(fm) setFeedMode(fm);
+    setMenuOpen(false);
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+
+  // Dedicated subscribe helper — goes to feed / newsletter tab
+  const goSubscribe = () => go("feed", "news", "newsletter");
 
   const filtered = (() => {
     let arr = liveStocks.filter(s=>{
@@ -987,7 +997,8 @@ export default function App() {
             ))}
           </div>
           <div style={{display:"flex",gap:10,alignItems:"center",flexShrink:0}}>
-            <button className="desk-only" onClick={()=>go("feed")} style={{background:"rgba(0,255,136,0.07)",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"7px 15px",borderRadius:4,fontSize:10,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free</button>
+            {/* FIX: Subscribe button now navigates to feed/newsletter */}
+            <button className="desk-only" onClick={goSubscribe} style={{background:"rgba(0,255,136,0.07)",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"7px 15px",borderRadius:4,fontSize:10,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free</button>
             <button className="desk-only" onClick={()=>{ if(navigator.share){navigator.share({title:"Orbit Alpha",text:"Free space stocks dashboard",url:"https://orbitalpha.cloud"});}else{navigator.clipboard.writeText("https://orbitalpha.cloud").then(()=>alert("Link copied!"));}}} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#ccd0d8",padding:"7px 12px",borderRadius:4,fontSize:10,letterSpacing:"0.06em",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Share ↗</button>
             <button onClick={()=>setMenuOpen(!menuOpen)} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#ccd0d8",padding:"6px 10px",borderRadius:4,cursor:"pointer",fontSize:16,display:"none"}} className="mob-menu-btn">{menuOpen?"✕":"☰"}</button>
           </div>
@@ -998,7 +1009,8 @@ export default function App() {
             {NAV_ITEMS.map(([p,l])=>(
               <span key={p} onClick={()=>{go(p);setMenuOpen(false);}} style={{color:page===p?"#00ff88":"#ccd0d8",padding:"10px 0",fontSize:12,letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(255,255,255,0.04)",cursor:"pointer"}}>{l}</span>
             ))}
-            <button onClick={()=>{go("feed");setFeedMode("newsletter");setMenuOpen(false);}} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",marginTop:8}}>Subscribe Free →</button>
+            {/* FIX: Mobile subscribe also goes to newsletter */}
+            <button onClick={()=>{goSubscribe();setMenuOpen(false);}} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",marginTop:8}}>Subscribe Free →</button>
           </div>
         )}
 
@@ -1037,7 +1049,8 @@ export default function App() {
               <p style={{fontSize:13,color:"#aab8c2",maxWidth:380,margin:"0 auto 20px",lineHeight:1.6}}>Live prices, launches, earnings and news. Weekly newsletter every Sunday.</p>
               <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}}>
                 <button onClick={()=>go("markets","stocks")} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px 24px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>View Markets →</button>
-                <button onClick={()=>{go("feed");setFeedMode("newsletter");}} style={{background:"none",border:"1px solid rgba(255,255,255,0.15)",color:"#aab8c2",padding:"11px 24px",borderRadius:4,fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free →</button>
+                {/* FIX: this hero subscribe button also goes to newsletter */}
+                <button onClick={goSubscribe} style={{background:"none",border:"1px solid rgba(255,255,255,0.15)",color:"#aab8c2",padding:"11px 24px",borderRadius:4,fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free →</button>
               </div>
             </section>
 
@@ -1225,7 +1238,7 @@ export default function App() {
                               <div style={{display:"flex",gap:10,marginTop:8,flexWrap:"wrap"}}>
                                 <span style={{fontSize:10,color:"#ccd0d8",background:"rgba(255,255,255,0.04)",padding:"3px 10px",borderRadius:3}}>{s.sector}</span>
                                 <span onClick={()=>window.open(`https://finance.yahoo.com/quote/${s.ticker}`,"_blank")} style={{fontSize:10,color:"#7eb8ff",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(126,184,255,0.2)"}}>View on Yahoo Finance →</span>
-                                <span onClick={()=>{go("feed");setFeedMode("newsletter");}} style={{fontSize:10,color:"#00ff88",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(0,255,136,0.2)"}}>{s.ticker} covered in this week's issue →</span>
+                                <span onClick={goSubscribe} style={{fontSize:10,color:"#00ff88",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(0,255,136,0.2)"}}>{s.ticker} covered in this week's issue →</span>
                                 <span onClick={()=>go("threads")} style={{fontSize:10,color:"#a78bfa",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(167,139,250,0.2)"}}>Discuss {s.ticker} →</span>
                               </div>
                             </div>
@@ -1270,7 +1283,7 @@ export default function App() {
                             </div>
                             <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                               <button onClick={()=>window.open(`https://finance.yahoo.com/quote/${s.ticker}`,"_blank")} style={{flex:1,background:"none",border:"1px solid rgba(126,184,255,0.2)",color:"#7eb8ff",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Yahoo Finance →</button>
-                              <button onClick={()=>{go("feed");setFeedMode("newsletter");}} style={{flex:1,background:"none",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>{s.ticker} in newsletter →</button>
+                              <button onClick={goSubscribe} style={{flex:1,background:"none",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>{s.ticker} in newsletter →</button>
                               <button onClick={()=>go("threads")} style={{flex:1,background:"none",border:"1px solid rgba(167,139,250,0.2)",color:"#a78bfa",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Discuss {s.ticker} →</button>
                             </div>
                           </div>
