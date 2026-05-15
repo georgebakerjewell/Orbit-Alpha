@@ -171,299 +171,533 @@ function TickerStrip({ stocks }) {
   );
 }
 
-// ── THREADS PAGE ──
-function ThreadsPage({ go }) {
-  const [threads, setThreads] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTicker, setActiveTicker] = useState("RKLB");
-  const [openThread, setOpenThread] = useState(null);
-  const [showCompose, setShowCompose] = useState(false);
-  const [newTitle, setNewTitle] = useState("");
-  const [newBody, setNewBody] = useState("");
-  const [newComment, setNewComment] = useState({});
-  const [votes, setVotes] = useState({});
-  const [posting, setPosting] = useState(false);
+// ─────────────────────────────────────────────────────────────────────────────
+// THREADS PAGE
+// ─────────────────────────────────────────────────────────────────────────────
 
-  // ── Username state ──
-  const [username, setUsername] = useState(()=>localStorage.getItem('oa_username')||"");
+const TICKER_LIST = ["RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","UFO","ARKX","HAWK","VOYG","YSS","SATS"];
+
+const SORT_OPTIONS = [
+  { id: "hot",      label: "🔥 Hot" },
+  { id: "new",      label: "🕐 New" },
+  { id: "top",      label: "⬆ Top" },
+  { id: "comments", label: "💬 Most discussed" },
+];
+
+function hotScore(thread) {
+  const score = (thread.upvotes || 0) - (thread.downvotes || 0);
+  const ageHours = (Date.now() - new Date(thread.time).getTime()) / 3_600_000;
+  return score / Math.pow(ageHours + 2, 1.5);
+}
+
+function ThreadsPage({ go }) {
+  const [allThreads, setAllThreads]       = useState({});   // { TICKER: [...] }
+  const [loading, setLoading]             = useState(false);
+  const [activeTicker, setActiveTicker]   = useState("ALL");
+  const [openThread, setOpenThread]       = useState(null);  // { ticker, id }
+  const [showCompose, setShowCompose]     = useState(false);
+  const [newTitle, setNewTitle]           = useState("");
+  const [newBody, setNewBody]             = useState("");
+  const [newComment, setNewComment]       = useState({});
+  const [votes, setVotes]                 = useState({});
+  const [posting, setPosting]             = useState(false);
+  const [sortBy, setSortBy]               = useState("hot");
+  const [timeFilter, setTimeFilter]       = useState("all"); // all | today | week | month
+
+  // username
+  const [username, setUsername]           = useState(() => localStorage.getItem("oa_username") || "");
   const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
   const [usernameInput, setUsernameInput] = useState("");
   const [pendingAction, setPendingAction] = useState(null);
 
+  const API = "/api/threads";
+
+  // ── username helpers ────────────────────────────────────────────────────────
   const saveUsername = () => {
-    const u = usernameInput.trim().replace(/\s+/g,"_").slice(0,20);
-    if(!u) return;
-    localStorage.setItem('oa_username', u);
+    const u = usernameInput.trim().replace(/\s+/g, "_").slice(0, 20);
+    if (!u) return;
+    localStorage.setItem("oa_username", u);
     setUsername(u);
     setShowUsernamePrompt(false);
     setUsernameInput("");
-    if(pendingAction) { pendingAction(); setPendingAction(null); }
+    if (pendingAction) { pendingAction(); setPendingAction(null); }
   };
 
   const requireUsername = (action) => {
-    if(username) { action(); return; }
-    setPendingAction(()=>action);
+    if (username) { action(); return; }
+    setPendingAction(() => action);
     setShowUsernamePrompt(true);
   };
 
-  const API = "/api/threads";
-
-  const fetchThreads = async (ticker) => {
-    setLoading(true);
+  // ── fetching ────────────────────────────────────────────────────────────────
+  const fetchTicker = async (ticker) => {
     try {
-      const res = await fetch(`${API}?ticker=${ticker}`);
+      const res  = await fetch(`${API}?ticker=${ticker}`);
       const data = await res.json();
-      setThreads(Array.isArray(data) ? data : []);
-    } catch (e) { setThreads([]); }
+      return Array.isArray(data) ? data.map(t => ({ ...t, _ticker: ticker })) : [];
+    } catch { return []; }
+  };
+
+  const fetchAll = async () => {
+    setLoading(true);
+    if (activeTicker === "ALL") {
+      // fetch all tickers in parallel (batched to avoid hammering the server)
+      const batches = [];
+      for (let i = 0; i < TICKER_LIST.length; i += 6) batches.push(TICKER_LIST.slice(i, i + 6));
+      const results = {};
+      for (const batch of batches) {
+        const settled = await Promise.allSettled(batch.map(t => fetchTicker(t)));
+        settled.forEach((r, i) => { results[batch[i]] = r.status === "fulfilled" ? r.value : []; });
+        await new Promise(r => setTimeout(r, 200)); // small delay between batches
+      }
+      setAllThreads(results);
+    } else {
+      const threads = await fetchTicker(activeTicker);
+      setAllThreads(prev => ({ ...prev, [activeTicker]: threads }));
+    }
     setLoading(false);
   };
 
-  useEffect(() => { fetchThreads(activeTicker); }, [activeTicker]);
+  useEffect(() => { fetchAll(); }, [activeTicker]);
 
-  const switchTicker = (t) => { setActiveTicker(t); setOpenThread(null); setShowCompose(false); };
+  // ── derived thread list ─────────────────────────────────────────────────────
+  const rawThreads = activeTicker === "ALL"
+    ? Object.values(allThreads).flat()
+    : (allThreads[activeTicker] || []);
 
-  const formatTime = (iso) => {
-    try {
-      const d = new Date(iso);
-      const diff = (Date.now() - d) / 1000;
-      if (diff < 60) return "just now";
-      if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
-      if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
-      return d.toLocaleDateString("en-GB", {day:"numeric",month:"short"});
-    } catch { return ""; }
-  };
+  const timeFiltered = rawThreads.filter(t => {
+    if (timeFilter === "all") return true;
+    const age = Date.now() - new Date(t.time).getTime();
+    if (timeFilter === "today") return age < 86_400_000;
+    if (timeFilter === "week")  return age < 7 * 86_400_000;
+    if (timeFilter === "month") return age < 30 * 86_400_000;
+    return true;
+  });
 
+  const sorted = [...timeFiltered].sort((a, b) => {
+    if (sortBy === "new")      return new Date(b.time) - new Date(a.time);
+    if (sortBy === "top")      return ((b.upvotes||0)-(b.downvotes||0)) - ((a.upvotes||0)-(a.downvotes||0));
+    if (sortBy === "comments") return (b.comments?.length||0) - (a.comments?.length||0);
+    return hotScore(b) - hotScore(a); // "hot"
+  });
+
+  // ── post helpers ────────────────────────────────────────────────────────────
   const postThread = async () => {
     if (!newTitle.trim() || posting) return;
+    const ticker = activeTicker === "ALL" ? "RKLB" : activeTicker; // default to RKLB if posting from All
     setPosting(true);
     try {
-      const res = await fetch(`${API}?ticker=${activeTicker}`, {
+      const res  = await fetch(`${API}?ticker=${ticker}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "thread", author: username, thread: { title: newTitle.trim(), body: newBody.trim() } }),
       });
       const data = await res.json();
-      setThreads(Array.isArray(data) ? data : []);
+      setAllThreads(prev => ({ ...prev, [ticker]: Array.isArray(data) ? data.map(t => ({ ...t, _ticker: ticker })) : [] }));
       setNewTitle(""); setNewBody(""); setShowCompose(false);
-    } catch (e) {}
+    } catch {}
     setPosting(false);
   };
 
-  const postComment = async (threadId) => {
+  const postComment = async (ticker, threadId) => {
     const text = newComment[threadId]?.trim();
     if (!text || posting) return;
     setPosting(true);
     try {
-      const res = await fetch(`${API}?ticker=${activeTicker}`, {
+      const res  = await fetch(`${API}?ticker=${ticker}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "comment", author: username, threadId, comment: text }),
       });
       const data = await res.json();
-      setThreads(Array.isArray(data) ? data : []);
+      setAllThreads(prev => ({ ...prev, [ticker]: Array.isArray(data) ? data.map(t => ({ ...t, _ticker: ticker })) : [] }));
       setNewComment(prev => ({ ...prev, [threadId]: "" }));
-    } catch (e) {}
+    } catch {}
     setPosting(false);
   };
 
-  const handleVote = async (targetId, dir) => {
+  const handleVote = async (ticker, targetId, dir) => {
     if (votes[targetId] === dir) return;
     setVotes(prev => ({ ...prev, [targetId]: dir }));
     try {
-      const res = await fetch(`${API}?ticker=${activeTicker}`, {
+      const res  = await fetch(`${API}?ticker=${ticker}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "vote", targetId, dir }),
       });
       const data = await res.json();
-      setThreads(Array.isArray(data) ? data : []);
-    } catch (e) {}
+      setAllThreads(prev => ({ ...prev, [ticker]: Array.isArray(data) ? data.map(t => ({ ...t, _ticker: ticker })) : [] }));
+    } catch {}
   };
 
   const getScore = (item, id) => {
-    const vote = votes[id];
-    let score = (item.upvotes || 0) - (item.downvotes || 0);
-    if (vote === "up") score += 1;
+    const vote  = votes[id];
+    let score   = (item.upvotes || 0) - (item.downvotes || 0);
+    if (vote === "up")   score += 1;
     if (vote === "down") score -= 1;
     return score;
   };
 
+  const formatTime = (iso) => {
+    try {
+      const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+      if (diff < 60)    return "just now";
+      if (diff < 3600)  return `${Math.floor(diff / 60)}m ago`;
+      if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+      if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+      return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+    } catch { return ""; }
+  };
+
+  // ── open thread lookup ──────────────────────────────────────────────────────
+  const openThreadData = openThread
+    ? (allThreads[openThread.ticker] || []).find(t => t.id === openThread.id)
+    : null;
+
+  // ── colours ─────────────────────────────────────────────────────────────────
+  const purple = "#a78bfa";
+  const purpleFaint = "rgba(167,139,250,0.15)";
+
+  // ═══════════════════════════════════════════════════════════════════════════
   return (
-    <div style={{animation:"fu 0.3s ease",maxWidth:800,margin:"0 auto",padding:"32px 20px 60px"}}>
+    <div style={{ animation: "fu 0.3s ease", maxWidth: 820, margin: "0 auto", padding: "32px 20px 80px" }}>
 
       {/* ── Username modal ── */}
       {showUsernamePrompt && (
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
-          <div style={{background:"#0d1220",border:"1px solid rgba(167,139,250,0.3)",borderRadius:10,padding:"28px",maxWidth:360,width:"100%",animation:"fu 0.2s ease"}}>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:"#fff",marginBottom:6}}>Pick a username</div>
-            <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:16}}>Shows on all your posts. Stored in your browser — no signup needed.</p>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+          <div style={{ background: "#0d1220", border: `1px solid ${purpleFaint}`, borderRadius: 12, padding: 28, maxWidth: 360, width: "100%", animation: "fu 0.2s ease" }}>
+            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 800, color: "#fff", marginBottom: 6 }}>Pick a username</div>
+            <p style={{ fontSize: 12, color: "#aab8c2", lineHeight: 1.6, marginBottom: 16 }}>Shows on all your posts. Stored locally — no signup needed.</p>
             <input
-              autoFocus
-              value={usernameInput}
-              onChange={e=>setUsernameInput(e.target.value.replace(/\s+/g,"_").slice(0,20))}
-              onKeyDown={e=>e.key==="Enter"&&saveUsername()}
+              autoFocus value={usernameInput}
+              onChange={e => setUsernameInput(e.target.value.replace(/\s+/g, "_").slice(0, 20))}
+              onKeyDown={e => e.key === "Enter" && saveUsername()}
               placeholder="e.g. launchpad_77"
-              style={{width:"100%",background:"rgba(255,255,255,0.06)",border:"1px solid rgba(167,139,250,0.3)",color:"#fff",padding:"10px 14px",borderRadius:4,fontSize:13,fontFamily:"'DM Mono',monospace",outline:"none",marginBottom:8}}
+              style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: `1px solid ${purpleFaint}`, color: "#fff", padding: "10px 14px", borderRadius: 6, fontSize: 13, fontFamily: "'DM Mono',monospace", outline: "none", marginBottom: 8 }}
             />
-            <div style={{fontSize:10,color:"#aab8c2",marginBottom:16}}>Max 20 chars · spaces become underscores</div>
-            <div style={{display:"flex",gap:8}}>
-              <button onClick={()=>{setShowUsernamePrompt(false);setPendingAction(null);setUsernameInput("");}} style={{flex:1,background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#aab8c2",padding:"10px",borderRadius:4,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Cancel</button>
-              <button onClick={saveUsername} disabled={!usernameInput.trim()} style={{flex:2,background:"#a78bfa",color:"#04060e",border:"none",padding:"10px",borderRadius:4,fontSize:12,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",opacity:usernameInput.trim()?1:0.4}}>Set Username →</button>
+            <div style={{ fontSize: 10, color: "#aab8c2", marginBottom: 16 }}>Max 20 chars · spaces → underscores</div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => { setShowUsernamePrompt(false); setPendingAction(null); setUsernameInput(""); }}
+                style={{ flex: 1, background: "none", border: "1px solid rgba(255,255,255,0.1)", color: "#aab8c2", padding: 10, borderRadius: 6, fontSize: 11, fontFamily: "'DM Mono',monospace", cursor: "pointer" }}>
+                Cancel
+              </button>
+              <button onClick={saveUsername} disabled={!usernameInput.trim()}
+                style={{ flex: 2, background: purple, color: "#04060e", border: "none", padding: 10, borderRadius: 6, fontSize: 12, fontWeight: 700, fontFamily: "'DM Mono',monospace", cursor: "pointer", opacity: usernameInput.trim() ? 1 : 0.4 }}>
+                Set Username →
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      <div style={{marginBottom:20}}>
-        <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ORBIT <span style={{color:"#a78bfa"}}>THREADS</span></div>
-        <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
-          <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Discuss any space stock.</p>
-          {username ? (
-            <span style={{fontSize:11,color:"#aab8c2"}}>
-              Posting as <span style={{color:"#a78bfa"}}>{username}</span> · <span onClick={()=>{setUsernameInput(username);setShowUsernamePrompt(true);}} style={{color:"#a78bfa",cursor:"pointer",textDecoration:"underline"}}>change</span>
-            </span>
-          ) : (
-            <span onClick={()=>setShowUsernamePrompt(true)} style={{fontSize:11,color:"#a78bfa",cursor:"pointer",textDecoration:"underline"}}>Set a username to post</span>
+      {/* ── Header ── */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 10 }}>
+          <div>
+            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 28, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>
+              ORBIT <span style={{ color: purple }}>THREADS</span>
+            </div>
+            <div style={{ fontSize: 11, color: "#aab8c2", marginTop: 4 }}>
+              Discuss any space stock.{" "}
+              {username
+                ? <span>Posting as <span style={{ color: purple }}>{username}</span> · <span onClick={() => { setUsernameInput(username); setShowUsernamePrompt(true); }} style={{ color: purple, cursor: "pointer", textDecoration: "underline" }}>change</span></span>
+                : <span onClick={() => setShowUsernamePrompt(true)} style={{ color: purple, cursor: "pointer", textDecoration: "underline" }}>Set a username to post</span>
+              }
+            </div>
+          </div>
+          {!openThread && (
+            <button onClick={() => requireUsername(() => setShowCompose(c => !c))}
+              style={{ background: showCompose ? "rgba(167,139,250,0.08)" : "rgba(167,139,250,0.12)", border: `1px solid ${purpleFaint}`, color: purple, padding: "9px 18px", borderRadius: 6, fontSize: 11, fontFamily: "'DM Mono',monospace", cursor: "pointer", letterSpacing: "0.06em", flexShrink: 0 }}>
+              {showCompose ? "✕ Cancel" : "+ New Thread"}
+            </button>
           )}
         </div>
       </div>
 
-      {/* Ticker selector */}
-      <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:20,paddingBottom:16,borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
-        {TICKER_LIST.map(t => {
-          const isActive = activeTicker === t;
-          return (
-            <button key={t} onClick={() => switchTicker(t)}
-              style={{background:isActive?"rgba(167,139,250,0.12)":"transparent",border:`1px solid ${isActive?"rgba(167,139,250,0.4)":"rgba(255,255,255,0.08)"}`,color:isActive?"#a78bfa":"#aab8c2",padding:"4px 10px",borderRadius:20,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>
-              {t}
+      {/* ── Ticker selector ── */}
+      {!openThread && (
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ display: "flex", gap: 4, flexWrap: "wrap", paddingBottom: 12, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+            {/* ALL pill */}
+            <button onClick={() => { setActiveTicker("ALL"); setShowCompose(false); }}
+              style={{
+                background: activeTicker === "ALL" ? "rgba(167,139,250,0.15)" : "transparent",
+                border: `1px solid ${activeTicker === "ALL" ? "rgba(167,139,250,0.5)" : "rgba(255,255,255,0.08)"}`,
+                color: activeTicker === "ALL" ? purple : "#aab8c2",
+                padding: "5px 12px", borderRadius: 20, fontSize: 11, fontFamily: "'DM Mono',monospace",
+                cursor: "pointer", transition: "all 0.15s", fontWeight: activeTicker === "ALL" ? 700 : 400,
+              }}>
+              ALL
             </button>
-          );
-        })}
-      </div>
-
-      {openThread === null ? (
-        <div>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-            <div style={{fontSize:11,color:"#aab8c2"}}>{loading ? "Loading..." : `${threads.length} thread${threads.length!==1?"s":""} on `}<span style={{color:"#a78bfa",fontWeight:700}}>{!loading&&activeTicker}</span></div>
-            <button onClick={() => requireUsername(() => setShowCompose(c => !c))}
-              style={{background:"rgba(167,139,250,0.1)",border:"1px solid rgba(167,139,250,0.3)",color:"#a78bfa",padding:"7px 14px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer",letterSpacing:"0.06em"}}>
-              {showCompose ? "Cancel" : "+ New Thread"}
-            </button>
+            {/* divider dot */}
+            <span style={{ color: "#334", fontSize: 11, alignSelf: "center", margin: "0 2px" }}>·</span>
+            {/* Individual tickers */}
+            {TICKER_LIST.map(t => {
+              const isActive = activeTicker === t;
+              // count threads for badge
+              const count = (allThreads[t] || []).length;
+              return (
+                <button key={t} onClick={() => { setActiveTicker(t); setShowCompose(false); setOpenThread(null); }}
+                  style={{
+                    position: "relative", background: isActive ? "rgba(167,139,250,0.12)" : "transparent",
+                    border: `1px solid ${isActive ? "rgba(167,139,250,0.4)" : "rgba(255,255,255,0.07)"}`,
+                    color: isActive ? purple : "#aab8c2", padding: "5px 10px", borderRadius: 20,
+                    fontSize: 11, fontFamily: "'DM Mono',monospace", cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap",
+                  }}>
+                  {t}
+                  {count > 0 && (
+                    <span style={{ marginLeft: 5, fontSize: 9, color: isActive ? purple : "#556", background: isActive ? "rgba(167,139,250,0.15)" : "rgba(255,255,255,0.06)", padding: "0px 4px", borderRadius: 8 }}>
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
+        </div>
+      )}
 
+      {/* ── Thread view (open) ── */}
+      {openThread && openThreadData && (() => {
+        const thread = openThreadData;
+        const ticker = openThread.ticker;
+        const score  = getScore(thread, thread.id);
+        const vote   = votes[thread.id];
+        return (
+          <div style={{ animation: "fu 0.2s ease" }}>
+            <button onClick={() => setOpenThread(null)}
+              style={{ background: "none", border: "none", color: purple, fontSize: 12, fontFamily: "'DM Mono',monospace", cursor: "pointer", padding: "0 0 18px", display: "flex", alignItems: "center", gap: 6 }}>
+              ← Back to <span style={{ color: "#fff" }}>{activeTicker === "ALL" ? ticker : activeTicker}</span> threads
+            </button>
+
+            {/* Thread body */}
+            <div style={{ border: `1px solid rgba(167,139,250,0.25)`, borderRadius: 10, padding: "20px 22px", marginBottom: 20, background: "rgba(167,139,250,0.03)" }}>
+              <div style={{ display: "flex", gap: 14 }}>
+                {/* Vote column */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, minWidth: 28, paddingTop: 2 }}>
+                  <button onClick={() => handleVote(ticker, thread.id, "up")} style={voteBtn(vote === "up", "#00ff88")}>▲</button>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: score > 0 ? "#00ff88" : score < 0 ? "#ff4466" : "#aab8c2" }}>{score}</span>
+                  <button onClick={() => handleVote(ticker, thread.id, "down")} style={voteBtn(vote === "down", "#ff4466")}>▼</button>
+                </div>
+                {/* Content */}
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", marginBottom: 8 }}>
+                    <span style={{ fontSize: 9, color: purple }}>{thread.author}</span>
+                    <span style={{ fontSize: 9, color: "#334" }}>·</span>
+                    <span style={{ fontSize: 9, color: "#aab8c2" }}>{formatTime(thread.time)}</span>
+                    <span style={{ fontSize: 9, color: "#00ff88", background: "rgba(0,255,136,0.06)", padding: "1px 7px", borderRadius: 4 }}>{ticker}</span>
+                  </div>
+                  <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 19, fontWeight: 800, color: "#fff", marginBottom: 10, lineHeight: 1.3 }}>{thread.title}</div>
+                  {thread.body && <div style={{ fontSize: 13, color: "#ccd0d8", lineHeight: 1.75 }}>{thread.body}</div>}
+                </div>
+              </div>
+            </div>
+
+            {/* Comments */}
+            <div style={{ fontSize: 9, color: "#aab8c2", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 14 }}>
+              {thread.comments?.length || 0} comment{(thread.comments?.length || 0) !== 1 ? "s" : ""}
+            </div>
+
+            {(thread.comments || []).map(comment => {
+              const cs   = getScore(comment, comment.id);
+              const cvote = votes[comment.id];
+              return (
+                <div key={comment.id} style={{ borderLeft: `2px solid ${purpleFaint}`, paddingLeft: 16, marginBottom: 16 }}>
+                  <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, minWidth: 22, paddingTop: 2 }}>
+                      <button onClick={() => handleVote(ticker, comment.id, "up")} style={voteBtn(cvote === "up", "#00ff88", 12)}>▲</button>
+                      <span style={{ fontSize: 10, color: cs > 0 ? "#00ff88" : cs < 0 ? "#ff4466" : "#aab8c2" }}>{cs}</span>
+                      <button onClick={() => handleVote(ticker, comment.id, "down")} style={voteBtn(cvote === "down", "#ff4466", 12)}>▼</button>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 9, color: "#aab8c2", marginBottom: 5 }}>
+                        <span style={{ color: purple }}>{comment.author}</span>
+                        <span style={{ color: "#334", margin: "0 5px" }}>·</span>
+                        {formatTime(comment.time)}
+                      </div>
+                      <div style={{ fontSize: 13, color: "#ccd0d8", lineHeight: 1.65 }}>{comment.body}</div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Comment input */}
+            <div style={{ marginTop: 20, display: "flex", gap: 8 }}>
+              <input
+                value={newComment[thread.id] || ""}
+                onChange={e => setNewComment(prev => ({ ...prev, [thread.id]: e.target.value }))}
+                onKeyDown={e => e.key === "Enter" && requireUsername(() => postComment(ticker, thread.id))}
+                placeholder={username ? "Add a comment..." : "Set a username to reply..."}
+                style={{ flex: 1, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "10px 14px", borderRadius: 6, fontSize: 12, fontFamily: "'DM Mono',monospace", outline: "none" }}
+              />
+              <button onClick={() => requireUsername(() => postComment(ticker, thread.id))} disabled={posting}
+                style={{ background: purple, color: "#04060e", border: "none", padding: "10px 18px", borderRadius: 6, fontSize: 11, fontWeight: 700, fontFamily: "'DM Mono',monospace", cursor: "pointer", whiteSpace: "nowrap", opacity: posting ? 0.6 : 1 }}>
+                {posting ? "..." : "Reply →"}
+              </button>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ── Thread list view ── */}
+      {!openThread && (
+        <div>
+          {/* Compose box */}
           {showCompose && (
-            <div style={{background:"rgba(167,139,250,0.04)",border:"1px solid rgba(167,139,250,0.2)",borderRadius:8,padding:"16px",marginBottom:16,animation:"fu 0.2s ease"}}>
-              <div style={{fontSize:9,color:"#a78bfa",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:10}}>New thread · {activeTicker} · posting as <span style={{color:"#fff"}}>{username}</span></div>
-              <input value={newTitle} onChange={e=>setNewTitle(e.target.value)} placeholder="Thread title..." style={{width:"100%",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:13,fontFamily:"'DM Mono',monospace",outline:"none",marginBottom:8}}/>
-              <textarea value={newBody} onChange={e=>setNewBody(e.target.value)} placeholder="Your thoughts... (optional)" rows={3} style={{width:"100%",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none",resize:"vertical",display:"block",marginBottom:10}}/>
-              <div style={{display:"flex",justifyContent:"flex-end",gap:8}}>
-                <button onClick={()=>{setShowCompose(false);setNewTitle("");setNewBody("");}} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#aab8c2",padding:"7px 14px",borderRadius:4,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Cancel</button>
-                <button onClick={() => requireUsername(postThread)} disabled={posting} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"7px 18px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",opacity:posting?0.6:1}}>{posting?"Posting...":"Post Thread →"}</button>
+            <div style={{ background: "rgba(167,139,250,0.04)", border: `1px solid rgba(167,139,250,0.2)`, borderRadius: 10, padding: "18px 20px", marginBottom: 16, animation: "fu 0.2s ease" }}>
+              <div style={{ fontSize: 9, color: purple, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
+                New thread · {activeTicker === "ALL" ? "RKLB" : activeTicker} · posting as <span style={{ color: "#fff" }}>{username}</span>
+                {activeTicker === "ALL" && <span style={{ color: "#aab8c2", marginLeft: 6 }}>(defaults to RKLB when posting from All)</span>}
+              </div>
+              <input value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="Thread title..."
+                style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "10px 14px", borderRadius: 6, fontSize: 13, fontFamily: "'DM Mono',monospace", outline: "none", marginBottom: 8 }}
+              />
+              <textarea value={newBody} onChange={e => setNewBody(e.target.value)} placeholder="Your thoughts... (optional)" rows={3}
+                style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "10px 14px", borderRadius: 6, fontSize: 12, fontFamily: "'DM Mono',monospace", outline: "none", resize: "vertical", display: "block", marginBottom: 12 }}
+              />
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+                <button onClick={() => { setShowCompose(false); setNewTitle(""); setNewBody(""); }}
+                  style={{ background: "none", border: "1px solid rgba(255,255,255,0.1)", color: "#aab8c2", padding: "8px 16px", borderRadius: 6, fontSize: 11, fontFamily: "'DM Mono',monospace", cursor: "pointer" }}>
+                  Cancel
+                </button>
+                <button onClick={() => requireUsername(postThread)} disabled={posting || !newTitle.trim()}
+                  style={{ background: purple, color: "#04060e", border: "none", padding: "8px 20px", borderRadius: 6, fontSize: 11, fontWeight: 700, fontFamily: "'DM Mono',monospace", cursor: "pointer", opacity: (posting || !newTitle.trim()) ? 0.5 : 1 }}>
+                  {posting ? "Posting..." : "Post Thread →"}
+                </button>
               </div>
             </div>
           )}
 
-          {loading && Array.from({length:3}).map((_,i)=>(
-            <div key={i} style={{border:"1px solid rgba(255,255,255,0.07)",borderRadius:8,padding:"16px",marginBottom:8}}>
-              <div className="skeleton" style={{height:12,width:"60%",marginBottom:8}}/>
-              <div className="skeleton" style={{height:10,width:"40%"}}/>
+          {/* Sort + filter bar */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+            {/* Sort tabs */}
+            <div style={{ display: "flex", gap: 2, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, padding: 3 }}>
+              {SORT_OPTIONS.map(opt => (
+                <button key={opt.id} onClick={() => setSortBy(opt.id)}
+                  style={{ background: sortBy === opt.id ? "rgba(167,139,250,0.15)" : "transparent", border: sortBy === opt.id ? `1px solid rgba(167,139,250,0.3)` : "1px solid transparent", color: sortBy === opt.id ? purple : "#aab8c2", padding: "6px 12px", borderRadius: 6, fontSize: 11, fontFamily: "'DM Mono',monospace", cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap" }}>
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Time filter */}
+            <div style={{ display: "flex", gap: 4 }}>
+              {[["all","All time"],["today","Today"],["week","This week"],["month","This month"]].map(([val,label]) => (
+                <button key={val} onClick={() => setTimeFilter(val)}
+                  style={{ background: timeFilter === val ? "rgba(255,255,255,0.07)" : "transparent", border: `1px solid ${timeFilter === val ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.06)"}`, color: timeFilter === val ? "#fff" : "#aab8c2", padding: "6px 10px", borderRadius: 6, fontSize: 10, fontFamily: "'DM Mono',monospace", cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap" }}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Stats row */}
+          <div style={{ fontSize: 11, color: "#aab8c2", marginBottom: 14 }}>
+            {loading
+              ? <span style={{ color: "#334" }}>Loading{activeTicker === "ALL" ? " all tickers..." : ` ${activeTicker}...`}</span>
+              : <span>{sorted.length} thread{sorted.length !== 1 ? "s" : ""}{activeTicker !== "ALL" ? <span> on <span style={{ color: purple, fontWeight: 700 }}>{activeTicker}</span></span> : <span> across <span style={{ color: purple, fontWeight: 700 }}>all tickers</span></span>}</span>
+            }
+          </div>
+
+          {/* Skeletons */}
+          {loading && Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} style={{ border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "18px", marginBottom: 8, display: "flex", gap: 14 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5, alignItems: "center", minWidth: 28 }}>
+                <div className="skeleton" style={{ width: 14, height: 10, borderRadius: 2 }} />
+                <div className="skeleton" style={{ width: 18, height: 14, borderRadius: 2 }} />
+                <div className="skeleton" style={{ width: 14, height: 10, borderRadius: 2 }} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div className="skeleton" style={{ height: 11, width: "20%", marginBottom: 8 }} />
+                <div className="skeleton" style={{ height: 14, width: "65%", marginBottom: 6 }} />
+                <div className="skeleton" style={{ height: 10, width: "40%", marginBottom: 12 }} />
+                <div className="skeleton" style={{ height: 9, width: "25%" }} />
+              </div>
             </div>
           ))}
 
-          {!loading && threads.length === 0 && (
-            <div style={{textAlign:"center",padding:"48px 20px",color:"#aab8c2",fontSize:13}}>
-              <div style={{fontSize:28,marginBottom:12,opacity:0.3}}>💬</div>
-              No threads yet for {activeTicker}.<br/>
-              <span style={{color:"#a78bfa",cursor:"pointer"}} onClick={()=>requireUsername(()=>setShowCompose(true))}>Start the first one →</span>
+          {/* Empty state */}
+          {!loading && sorted.length === 0 && (
+            <div style={{ textAlign: "center", padding: "56px 20px" }}>
+              <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.25 }}>💬</div>
+              <div style={{ fontSize: 13, color: "#aab8c2", lineHeight: 1.7 }}>
+                No threads{timeFilter !== "all" ? " in this time period" : ""} for {activeTicker === "ALL" ? "any ticker" : activeTicker}.<br />
+                <span onClick={() => requireUsername(() => setShowCompose(true))} style={{ color: purple, cursor: "pointer" }}>
+                  Start the first one →
+                </span>
+              </div>
             </div>
           )}
 
-          {!loading && threads.map(thread => {
-            const score = getScore(thread, thread.id);
-            const vote = votes[thread.id];
+          {/* Thread cards */}
+          {!loading && sorted.map(thread => {
+            const ticker = thread._ticker || activeTicker;
+            const score  = getScore(thread, thread.id);
+            const vote   = votes[thread.id];
+            const commentCount = thread.comments?.length || 0;
             return (
-              <div key={thread.id} style={{border:"1px solid rgba(255,255,255,0.07)",borderRadius:8,padding:"16px",marginBottom:8,background:"rgba(255,255,255,0.01)",transition:"border-color 0.15s"}}
-                onMouseEnter={e=>e.currentTarget.style.borderColor="rgba(167,139,250,0.2)"}
-                onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(255,255,255,0.07)"}>
-                <div style={{display:"flex",gap:12}}>
-                  <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,minWidth:28,paddingTop:2}}>
-                    <button onClick={e=>{e.stopPropagation();handleVote(thread.id,"up");}} style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:vote==="up"?"#00ff88":"#556",lineHeight:1,padding:0}}>▲</button>
-                    <span style={{fontSize:12,fontWeight:600,color:score>0?"#00ff88":score<0?"#ff4466":"#aab8c2"}}>{score}</span>
-                    <button onClick={e=>{e.stopPropagation();handleVote(thread.id,"down");}} style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:vote==="down"?"#ff4466":"#556",lineHeight:1,padding:0}}>▼</button>
+              <div key={`${ticker}-${thread.id}`}
+                style={{ border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "16px 18px", marginBottom: 8, background: "rgba(255,255,255,0.01)", transition: "border-color 0.15s, background 0.15s" }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(167,139,250,0.22)"; e.currentTarget.style.background = "rgba(167,139,250,0.02)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)"; e.currentTarget.style.background = "rgba(255,255,255,0.01)"; }}>
+                <div style={{ display: "flex", gap: 14 }}>
+                  {/* Vote column */}
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, minWidth: 28, paddingTop: 2, flexShrink: 0 }}>
+                    <button onClick={e => { e.stopPropagation(); handleVote(ticker, thread.id, "up"); }} style={voteBtn(vote === "up", "#00ff88", 13)}>▲</button>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: score > 0 ? "#00ff88" : score < 0 ? "#ff4466" : "#aab8c2", lineHeight: 1 }}>{score}</span>
+                    <button onClick={e => { e.stopPropagation(); handleVote(ticker, thread.id, "down"); }} style={voteBtn(vote === "down", "#ff4466", 13)}>▼</button>
                   </div>
-                  <div style={{flex:1,minWidth:0,cursor:"pointer"}} onClick={()=>setOpenThread(thread.id)}>
-                    <div style={{fontSize:9,color:"#aab8c2",marginBottom:5}}><span style={{color:"#a78bfa"}}>{thread.author}</span> · {formatTime(thread.time)}</div>
-                    <div style={{fontSize:14,color:"#fff",fontWeight:500,marginBottom:6,lineHeight:1.4}}>{thread.title}</div>
-                    {thread.body && <div style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:8}}>{thread.body}</div>}
-                    <div style={{fontSize:11,color:"#556"}}>💬 {thread.comments?.length||0} comment{(thread.comments?.length||0)!==1?"s":""} · <span style={{color:"#a78bfa"}}>view thread →</span></div>
+
+                  {/* Content */}
+                  <div style={{ flex: 1, minWidth: 0, cursor: "pointer" }} onClick={() => setOpenThread({ ticker, id: thread.id })}>
+                    {/* Meta row */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", marginBottom: 6 }}>
+                      <span style={{ fontSize: 9, color: purple, fontWeight: 600 }}>{thread.author}</span>
+                      <span style={{ fontSize: 9, color: "#334" }}>·</span>
+                      <span style={{ fontSize: 9, color: "#aab8c2" }}>{formatTime(thread.time)}</span>
+                      {/* Show ticker badge when in ALL view */}
+                      {activeTicker === "ALL" && (
+                        <span style={{ fontSize: 9, color: "#00ff88", background: "rgba(0,255,136,0.07)", padding: "1px 7px", borderRadius: 4, fontWeight: 600 }}>{ticker}</span>
+                      )}
+                    </div>
+
+                    {/* Title */}
+                    <div style={{ fontSize: 14, color: "#fff", fontWeight: 600, marginBottom: 5, lineHeight: 1.4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{thread.title}</div>
+
+                    {/* Body preview */}
+                    {thread.body && (
+                      <div style={{ fontSize: 12, color: "#aab8c2", lineHeight: 1.6, marginBottom: 8, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                        {thread.body}
+                      </div>
+                    )}
+
+                    {/* Footer row */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+                      <span style={{ fontSize: 11, color: "#556" }}>
+                        💬 <span style={{ color: commentCount > 0 ? "#aab8c2" : "#334" }}>{commentCount}</span> {commentCount === 1 ? "comment" : "comments"}
+                      </span>
+                      <span style={{ fontSize: 11, color: "#334" }}>·</span>
+                      <span style={{ fontSize: 11, color: purple, opacity: 0.7 }}>view thread →</span>
+                    </div>
                   </div>
                 </div>
               </div>
             );
           })}
         </div>
-      ) : (
-        (() => {
-          const thread = threads.find(t => t.id === openThread);
-          if (!thread) return null;
-          const score = getScore(thread, thread.id);
-          const vote = votes[thread.id];
-          return (
-            <div style={{animation:"fu 0.2s ease"}}>
-              <button onClick={()=>setOpenThread(null)} style={{background:"none",border:"none",color:"#a78bfa",fontSize:12,fontFamily:"'DM Mono',monospace",cursor:"pointer",padding:"0 0 16px",display:"flex",alignItems:"center",gap:6}}>← Back to {activeTicker} threads</button>
-              <div style={{border:"1px solid rgba(167,139,250,0.2)",borderRadius:8,padding:"20px",marginBottom:16,background:"rgba(167,139,250,0.03)"}}>
-                <div style={{display:"flex",gap:14}}>
-                  <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,minWidth:28,paddingTop:2}}>
-                    <button onClick={()=>handleVote(thread.id,"up")} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:vote==="up"?"#00ff88":"#556",lineHeight:1,padding:0}}>▲</button>
-                    <span style={{fontSize:13,fontWeight:600,color:score>0?"#00ff88":score<0?"#ff4466":"#aab8c2"}}>{score}</span>
-                    <button onClick={()=>handleVote(thread.id,"down")} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:vote==="down"?"#ff4466":"#556",lineHeight:1,padding:0}}>▼</button>
-                  </div>
-                  <div style={{flex:1}}>
-                    <div style={{fontSize:9,color:"#aab8c2",marginBottom:6}}><span style={{color:"#a78bfa"}}>{thread.author}</span> · {formatTime(thread.time)} · <span style={{color:"#00ff88",background:"rgba(0,255,136,0.06)",padding:"1px 6px",borderRadius:3}}>{activeTicker}</span></div>
-                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",marginBottom:10,lineHeight:1.3}}>{thread.title}</div>
-                    {thread.body && <div style={{fontSize:13,color:"#ccd0d8",lineHeight:1.7}}>{thread.body}</div>}
-                  </div>
-                </div>
-              </div>
-
-              <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>{thread.comments?.length||0} comment{(thread.comments?.length||0)!==1?"s":""}</div>
-
-              {(thread.comments||[]).map(comment => {
-                const cscore = getScore(comment, comment.id);
-                const cvote = votes[comment.id];
-                return (
-                  <div key={comment.id} style={{borderLeft:"2px solid rgba(167,139,250,0.15)",paddingLeft:14,marginBottom:14}}>
-                    <div style={{display:"flex",gap:10,alignItems:"flex-start"}}>
-                      <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2,minWidth:22,paddingTop:2}}>
-                        <button onClick={()=>handleVote(comment.id,"up")} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,color:cvote==="up"?"#00ff88":"#556",lineHeight:1,padding:0}}>▲</button>
-                        <span style={{fontSize:10,color:cscore>0?"#00ff88":cscore<0?"#ff4466":"#aab8c2"}}>{cscore}</span>
-                        <button onClick={()=>handleVote(comment.id,"down")} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,color:cvote==="down"?"#ff4466":"#556",lineHeight:1,padding:0}}>▼</button>
-                      </div>
-                      <div style={{flex:1}}>
-                        <div style={{fontSize:9,color:"#aab8c2",marginBottom:4}}><span style={{color:"#a78bfa"}}>{comment.author}</span> · {formatTime(comment.time)}</div>
-                        <div style={{fontSize:13,color:"#ccd0d8",lineHeight:1.6}}>{comment.body}</div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-
-              <div style={{marginTop:16,display:"flex",gap:8}}>
-                <input
-                  value={newComment[thread.id]||""}
-                  onChange={e=>setNewComment(prev=>({...prev,[thread.id]:e.target.value}))}
-                  onKeyDown={e=>e.key==="Enter"&&requireUsername(()=>postComment(thread.id))}
-                  placeholder={username ? "Add a comment..." : "Set a username to reply..."}
-                  style={{flex:1,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}
-                />
-                <button onClick={()=>requireUsername(()=>postComment(thread.id))} disabled={posting} style={{background:"#a78bfa",color:"#04060e",border:"none",padding:"9px 16px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",opacity:posting?0.6:1}}>{posting?"...":"Reply →"}</button>
-              </div>
-            </div>
-          );
-        })()
       )}
     </div>
   );
+}
+
+// tiny helper — keeps vote button styles DRY
+function voteBtn(active, color, size = 14) {
+  return {
+    background: "none", border: "none", cursor: "pointer",
+    fontSize: size, color: active ? color : "#445",
+    lineHeight: 1, padding: 0, transition: "color 0.1s",
+  };
 }
 
 const PROXY_URL = "/api/quote";
