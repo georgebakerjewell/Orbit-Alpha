@@ -31,14 +31,7 @@ function randomFrom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function pickAction() {
-  const r = Math.random();
-  if (r < 0.25) return "new_thread";
-  if (r < 0.85) return "new_comment";
-  return "vote_bump";
-}
-
-// ── Redis helper — matches threads.js exactly ─────────────────────────────────
+// ── Redis helper ──────────────────────────────────────────────────────────────
 async function redis(command, args) {
   const res = await fetch(process.env.UPSTASH_REDIS_REST_URL, {
     method: "POST",
@@ -53,13 +46,15 @@ async function redis(command, args) {
 }
 
 async function getThreads(ticker) {
-  const raw = await redis("GET", [`threads:${ticker}`]);
-  if (!raw) return [];
   try {
+    const raw = await redis("GET", [`threads:${ticker}`]);
+    if (!raw) return [];
     let parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
     if (typeof parsed === "string") parsed = JSON.parse(parsed);
     return Array.isArray(parsed) ? parsed : [];
-  } catch (e) { return []; }
+  } catch (e) {
+    return [];
+  }
 }
 
 async function saveThreads(ticker, threads) {
@@ -104,10 +99,10 @@ Rules:
   let parsed;
   try {
     parsed = JSON.parse(raw.trim());
-  } catch {
+  } catch (e) {
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) return null;
-    try { parsed = JSON.parse(match[0]); } catch { return null; }
+    try { parsed = JSON.parse(match[0]); } catch (e2) { return null; }
   }
 
   const thread = {
@@ -128,7 +123,8 @@ Rules:
 
 async function postComment(ticker) {
   const threads = await getThreads(ticker);
-  if (threads.length === 0) return null;
+  // if no threads exist yet, post a new thread instead
+  if (!threads || threads.length === 0) return postNewThread(ticker);
 
   const pool = threads.slice(0, Math.min(5, threads.length));
   const thread = randomFrom(pool);
@@ -155,7 +151,7 @@ Rules:
 - Output ONLY the comment text — nothing else, no quotes, no JSON`;
 
   const comment = await callClaude(prompt);
-  if (!comment || comment.length > 300) return null;
+  if (!comment || comment.length > 300) return postNewThread(ticker);
 
   const newComment = {
     id: `c${Date.now()}`,
@@ -177,7 +173,7 @@ Rules:
 
 async function bumpVotes(ticker) {
   const threads = await getThreads(ticker);
-  if (threads.length === 0) return null;
+  if (!threads || threads.length === 0) return postNewThread(ticker);
 
   const updated = threads.map(thread => ({
     ...thread,
@@ -195,7 +191,8 @@ async function bumpVotes(ticker) {
 // ── Handler ───────────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
   const ticker = randomFrom(ACTIVE_TICKERS);
-  const action = pickAction();
+  const r = Math.random();
+  const action = r < 0.25 ? "new_thread" : r < 0.85 ? "new_comment" : "vote_bump";
 
   let result;
   try {
@@ -203,10 +200,10 @@ export default async function handler(req, res) {
     if (action === "new_comment") result = await postComment(ticker);
     if (action === "vote_bump")   result = await bumpVotes(ticker);
   } catch (e) {
-    console.error("Cron error:", e);
+    console.error("Cron error:", e.message);
     return res.status(500).json({ error: e.message });
   }
 
-  console.log("Cron result:", result);
+  console.log("Cron result:", JSON.stringify(result));
   return res.status(200).json({ ok: true, result });
 }
