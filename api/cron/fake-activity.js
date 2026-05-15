@@ -1,18 +1,15 @@
 // api/cron/fake-activity.js
 
 const ACTIVE_TICKERS = [
-  // High activity (appear 5x)
   "RKLB","RKLB","RKLB","RKLB","RKLB",
   "ASTS","ASTS","ASTS","ASTS","ASTS",
   "LMT","LMT","LMT","LMT","LMT",
   "BA","BA","BA","BA","BA",
-  // Medium activity (appear 3x)
   "LUNR","LUNR","LUNR",
   "OKLO","OKLO","OKLO",
   "SPCE","SPCE","SPCE",
   "DXYZ","DXYZ","DXYZ",
   "HAWK","HAWK","HAWK",
-  // Low activity (appear 1x)
   "PL","BKSY","RDW","MNTS","KRMN",
   "SATL","KULR","TSAT","GSAT","VSAT",
   "MDA","SPIR","GILT","FLY","NOC",
@@ -128,24 +125,21 @@ const TICKER_CONTEXT = {
   KULR: `KULR Technology (KULR). Thermal management for batteries and electronics.
 - Lithium-ion battery thermal runaway prevention technology
 - Customers: NASA, US military, commercial electronics
-- Small cap, high volatility, revenue growing from near zero. Benefits from EV/energy storage.`,
+- Small cap, high volatility, revenue growing from near zero.`,
 
   KRMN: `Karman Space (KRMN). Space and defense hardware manufacturer.
 - Makes structural components, fairings, thermal protection for rockets and spacecraft
-- Customers: SpaceX, ULA, US government. IPO'd 2025.
-- Revenue ~$400M, profitable. Beneficiary of launch market growth.`,
+- Customers: SpaceX, ULA, US government. IPO'd 2025. Revenue ~$400M, profitable.`,
 
   UFO: `Procure Space ETF (UFO). Space sector ETF launched 2019.
-- Holds publicly traded space companies globally
-- Top holdings: SES, Iridium, DigitalBridge, Viasat. ~$60M AUM. Expense ratio 0.75%.`,
+- Holds publicly traded space companies globally. ~$60M AUM. Expense ratio 0.75%.`,
 
   ARKX: `ARK Space Exploration ETF (ARKX). Actively managed space ETF by ARK Invest.
-- Holds space-adjacent companies: Amazon (Kuiper), Iridium, Trimble, Kratos
-- Controversial for including non-pure-play companies. ~$200M AUM.`,
+- Holds space-adjacent companies: Amazon (Kuiper), Iridium, Trimble, Kratos. ~$200M AUM.`,
 
   SATS: `EchoStar (SATS). Satellite technology and services.
 - Owns Hughes Network Systems: satellite internet provider
-- DISH Network merger completed 2024. Significant debt. Competing with Starlink on rural broadband.`,
+- DISH Network merger completed 2024. Competing with Starlink on rural broadband.`,
 
   VOYG: `Voyager Technologies (VOYG). Space and defense systems company.
 - Components and systems for spacecraft and defense. Recent IPO. Growing on DoD space spending.`,
@@ -156,143 +150,45 @@ const TICKER_CONTEXT = {
 
   TSAT: `Telesat (TSAT). Canadian satellite operator.
 - Telesat Lightspeed: planned 198-satellite LEO broadband constellation, financing unresolved
-- Legacy GEO satellites providing current revenue. High debt. Canadian government anchor customer.`,
+- Legacy GEO satellites providing current revenue. High debt.`,
 
   MNTS: `Momentus (MNTS). In-space transportation company.
 - Vigoride space tug: orbital transfer vehicle for last-mile satellite delivery
-- Several missions with mixed results. Very small revenue, high burn rate. Micro-cap, speculative.`,
+- Several missions with mixed results. Very small revenue, high burn rate. Speculative micro-cap.`,
 
   RDW: `Redwire (RDW). Space infrastructure and manufacturing.
 - Makes solar arrays, structure, 3D printing hardware for spacecraft
-- ISS customer: multiple payloads aboard station. UK expansion via European acquisitions.
-- Revenue ~$250M annual. Government and commercial customers.`,
+- ISS customer, UK expansion. Revenue ~$250M annual.`,
 
   SATL: `Satellogic (SATL). Earth observation company.
 - Sub-meter resolution satellites, high revisit rate. South American company on Nasdaq.
-- Small revenue, cash constrained. High risk, speculative.`,
+- Small revenue, cash constrained. High risk.`,
 
   GILT: `Gilat Satellite Networks (GILT). Satellite ground systems and VSAT.
 - VSAT terminals, network equipment, satellite broadband infrastructure
-- Customers: telecom operators, governments, rural broadband. Israeli company on Nasdaq.
-- Revenue ~$250M annual, profitable but slow-growing.`,
-};
-
-const COMPANY_KEYWORDS = {
-  RKLB: ["Rocket Lab","RKLB","Electron","Neutron","Peter Beck"],
-  ASTS: ["AST SpaceMobile","ASTS","BlueBird","Abel Avellan"],
-  LUNR: ["Intuitive Machines","LUNR","IM-3","IM-4","lunar lander"],
-  PL:   ["Planet Labs","PBC","Pelican"],
-  BKSY: ["BlackSky","BKSY"],
-  RDW:  ["Redwire","RDW"],
-  MNTS: ["Momentus","MNTS"],
-  SPCE: ["Virgin Galactic","SPCE","VSS"],
-  KRMN: ["Karman","KRMN"],
-  SATL: ["Satellogic","SATL"],
-  KULR: ["KULR Technology","KULR"],
-  TSAT: ["Telesat","TSAT","Lightspeed"],
-  GSAT: ["Globalstar","GSAT"],
-  VSAT: ["Viasat","VSAT"],
-  MDA:  ["MDA Space","MDA"],
-  SPIR: ["Spire Global","SPIR"],
-  GILT: ["Gilat Satellite","GILT"],
-  DXYZ: ["Destiny Tech","DXYZ"],
-  LMT:  ["Lockheed Martin","LMT"],
-  FLY:  ["Firefly Aerospace","FLY","Blue Ghost"],
-  OKLO: ["Oklo","OKLO","microreactor"],
-  BA:   ["Boeing","BA","Starliner"],
-  NOC:  ["Northrop Grumman","NOC","B-21"],
-  RTX:  ["RTX","Raytheon","Pratt & Whitney"],
-  UFO:  ["Procure Space ETF","UFO"],
-  ARKX: ["ARK Space","ARKX"],
-  HAWK: ["HawkEye 360","HAWK"],
-  VOYG: ["Voyager Technologies","VOYG"],
-  YSS:  ["York Space","YSS"],
-  SATS: ["EchoStar","SATS","Hughes"],
+- Israeli company on Nasdaq. Revenue ~$250M annual, profitable but slow-growing.`,
 };
 
 const USERNAMES = [
-  "NeutronStar99", "Apogee_Al", "OrbitalOliver", "Perihelion_Pete",
-  "VelocityVince", "StarLinkKiller", "GeoOrbitGuy", "LunarLong",
-  "BuyTheDip2049", "ShotgunShorts", "BearInOrbit", "RealTalkRocket",
-  "GovContractGuru", "TechnicalTerry", "NeutronWatch",
-
-  "matthew_b",
-  "Chris M",
-  "james87",
-  "oldmanriver",
-  "tomk_1991",
-  "Lisa P",
-  "benjamin",
-  "Mike from Dallas",
-  "sarah_connor",
-  "DaveR",
-  "Peter H",
-  "jonny_5",
-  "Rach",
-  "Alan",
-  "theothersteve",
-  "Will M.",
-  "NinaK",
-  "Rob_1978",
-  "Claire",
-  "Samir",
-  "Jules",
-  "Tommy Two Tabs",
-  "Mark H",
-  "ellie_rose",
-  "Daniel",
-  "KieranL",
-  "Big Dave",
-  "paul_w",
-  "RebeccaS",
-  "notthatjames",
-  "Terry from accounts",
-  "Laura_22",
-  "Gaz",
-  "Ollie",
-  "Martin P",
-  "Nick.",
-  "JennyT",
-  "Ahmed",
-  "Steve probably",
-  "charliebrown",
-  "George K",
-  "Molly",
-  "andrew_uk",
-  "Brian",
-  "Hannah B",
-  "Si",
-  "Jackie",
-  "PhilW",
-  "Dom",
-  "Rory",
-  "kate_m",
-  "DanTheMan",
-  "Lucy",
-  "Mr Spreadsheet",
-  "gareth1975",
-  "joel",
-  "Amy",
-  "Patrick",
-  "Luke S",
-  "Vanessa",
-  "Tim in Ohio",
-  "Barry",
-  "Eddie",
-  "Fiona C",
-  "Nathan",
-  "TheRealAlan",
-  "Mick",
-  "Olivia",
-  "SeanP",
-  "Rachel",
-  "Kev",
-  "anonymous",
-  "anonymous",
-  "anonymous",
-  "anonymous",
-  "anonymous",
-  "anonymous"
+  "NeutronStar99","Apogee_Al","OrbitalOliver","Perihelion_Pete",
+  "VelocityVince","StarLinkKiller","GeoOrbitGuy","LunarLong",
+  "BuyTheDip2049","ShotgunShorts","BearInOrbit","RealTalkRocket",
+  "GovContractGuru","TechnicalTerry","NeutronWatch",
+  "matthew_b","ChrisM","james87","oldmanriver","tomk_1991",
+  "LisaP","benjamin","MikeDallas","sarah_c","DaveR",
+  "PeterH","jonny_5","Rach","Alan","theothersteve",
+  "WillM","NinaK","Rob_1978","Claire","Samir",
+  "Jules","TommyTwoTabs","MarkH","ellie_rose","Daniel",
+  "KieranL","BigDave","paul_w","RebeccaS","notthatjames",
+  "LauraT","Gaz","Ollie","MartinP","Nick_",
+  "JennyT","Ahmed","SteveProbably","charliebrown","GeorgeK",
+  "Molly","andrew_uk","Brian","HannahB","Si",
+  "PhilW","Dom","Rory","kate_m","DanTheMan",
+  "Lucy","MrSpreadsheet","gareth1975","joel","Amy",
+  "Patrick","LukeS","Vanessa","TimOhio","Barry",
+  "Eddie","FionaC","Nathan","TheRealAlan","Mick",
+  "Olivia","SeanP","Rachel","Kev",
+  "anonymous","anonymous","anonymous","anonymous","anonymous","anonymous",
 ];
 
 function randomFrom(arr) {
@@ -303,51 +199,32 @@ function getContext(ticker) {
   return TICKER_CONTEXT[ticker] || `${ticker} is a publicly traded space or defense company.`;
 }
 
-// ── Fetch recent news for a ticker from your own news API ─────────────────────
+// ── Fetch recent news from your site's own feed ───────────────────────────────
 async function getRecentNews(ticker) {
   try {
-    const baseUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "https://orbitalpha.cloud";
-
-    const keywords = COMPANY_KEYWORDS[ticker] || [ticker];
-
-    // fetch from your Yahoo news endpoint
-    const res = await fetch(`${baseUrl}/api/yahoonews?ticker=${ticker}`, {
+    const baseUrl = "https://orbitalpha.cloud";
+    const res = await fetch(`${baseUrl}/api/news?ticker=${ticker}&limit=8`, {
       headers: { "User-Agent": "orbitalpha-cron/1.0" },
     });
-
     if (!res.ok) return "";
-
     const items = await res.json();
     if (!Array.isArray(items) || items.length === 0) return "";
-
-    // filter to only items mentioning this ticker's keywords
-    const relevant = items
-      .filter(item => {
-        const text = `${item.title || ""} ${item.description || ""}`.toLowerCase();
-        return keywords.some(k => text.includes(k.toLowerCase()));
-      })
-      .slice(0, 5);
-
-    if (relevant.length === 0) return "";
-
-    const headlines = relevant
+    const headlines = items
+      .slice(0, 5)
       .map(item => {
         const date = item.pubDate
-          ? new Date(item.pubDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+          ? new Date(item.pubDate).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
           : "";
-        return `- ${date ? `[${date}] ` : ""}${item.title}`;
+        return `- ${date ? `[${date}] ` : ""}${item.title}${item.highlight ? " ⚡" : ""}`;
       })
       .join("\n");
-
     return `\nRecent news headlines about ${ticker}:\n${headlines}\n`;
   } catch (e) {
     return "";
   }
 }
 
-// ── Redis helper ──────────────────────────────────────────────────────────────
+// ── Redis ─────────────────────────────────────────────────────────────────────
 async function redis(command, args) {
   const res = await fetch(process.env.UPSTASH_REDIS_REST_URL, {
     method: "POST",
@@ -377,7 +254,7 @@ async function saveThreads(ticker, threads) {
   await redis("SET", [`threads:${ticker}`, JSON.stringify(threads)]);
 }
 
-// ── Claude API ────────────────────────────────────────────────────────────────
+// ── Claude ────────────────────────────────────────────────────────────────────
 async function callClaude(prompt) {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -399,10 +276,8 @@ async function callClaude(prompt) {
 // ── Actions ───────────────────────────────────────────────────────────────────
 async function postNewThread(ticker) {
   const author = randomFrom(USERNAMES);
-  const [context, news] = await Promise.all([
-    getContext(ticker),
-    getRecentNews(ticker),
-  ]);
+  const context = getContext(ticker);
+  const news = await getRecentNews(ticker);
 
   const prompt = `You are a retail investor posting on a stock discussion forum.
 
@@ -414,7 +289,7 @@ Write a short forum post (title + optional body) about ${ticker}.
 Rules:
 - Title: 5-12 words, casual and opinionated, like a real Reddit post
 - Body: 0-3 sentences max. Sometimes leave blank.
-- If recent news headlines are provided above, you may reference them — but only facts explicitly stated in the headlines or background, never invented details
+- If recent news headlines are provided, reference them — but only facts explicitly in the headlines or background, never invented details
 - Sound like a real retail investor: mix of sharp takes, casual language, occasional typos fine
 - Can be bullish, bearish, neutral, or just a question
 - No hashtags. Occasional emoji in body only.
@@ -453,11 +328,8 @@ async function postComment(ticker) {
   const pool = threads.slice(0, Math.min(5, threads.length));
   const thread = randomFrom(pool);
   const author = randomFrom(USERNAMES);
-
-  const [context, news] = await Promise.all([
-    getContext(ticker),
-    getRecentNews(ticker),
-  ]);
+  const context = getContext(ticker);
+  const news = await getRecentNews(ticker);
 
   const existingComments = (thread.comments || [])
     .slice(-3)
