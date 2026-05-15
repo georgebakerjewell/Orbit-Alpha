@@ -59,7 +59,7 @@ async function getThreads(ticker) {
     let parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
     if (typeof parsed === "string") parsed = JSON.parse(parsed);
     return Array.isArray(parsed) ? parsed : [];
-  } catch { return []; }
+  } catch (e) { return []; }
 }
 
 async function saveThreads(ticker, threads) {
