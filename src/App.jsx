@@ -777,31 +777,42 @@ export default function App() {
     } catch(e) { return null; }
   };
 
+  const fetchOneTicker = async (t) => {
+    const [r7, r3, r1] = await Promise.allSettled([fetchQuote(t,"7d"),fetchQuote(t,"3d"),fetchQuote(t,"1d")]);
+    const base = r7.value || r3.value || r1.value;
+    if(!base) return null;
+    return { ...base, spark7d: r7.value?.sparkline||[], spark3d: r3.value?.sparkline||[], spark1d: r1.value?.sparkline||[] };
+  };
+
+  const applyUpdates = (results) => {
+    const updates = {};
+    results.forEach(r => {
+      if(r.status==="fulfilled" && r.value) {
+        const d = r.value;
+        updates[d.ticker] = { price:d.price, changePct:d.changePct, change:d.change, ...(d.mktCap&&{mktCap:d.mktCap}), ...(d.volume&&{volume:d.volume}), spark7d:d.spark7d, spark3d:d.spark3d, spark1d:d.spark1d, liveSparkline:d.spark7d };
+      }
+    });
+    if(Object.keys(updates).length > 0) {
+      setLiveStocks(prev => prev.map(s => updates[s.ticker] ? {...s,...updates[s.ticker]} : s));
+      setLastUpdated(new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}));
+      setIsLive(true);
+    }
+  };
+
   const fetchAllPrices = async () => {
     try {
       const tickers = ALL_TICKERS.slice(0,35);
-      for(let i=0; i<tickers.length; i+=5) {
-        const batch = tickers.slice(i, i+5);
-        const results = await Promise.allSettled(batch.map(async t => {
-          const [r7, r3, r1] = await Promise.allSettled([fetchQuote(t,"7d"),fetchQuote(t,"3d"),fetchQuote(t,"1d")]);
-          const base = r7.value || r3.value || r1.value;
-          if(!base) return null;
-          return { ...base, spark7d: r7.value?.sparkline||[], spark3d: r3.value?.sparkline||[], spark1d: r1.value?.sparkline||[] };
-        }));
-        const updates = {};
-        results.forEach(r => {
-          if(r.status==="fulfilled" && r.value) {
-            const d = r.value;
-            updates[d.ticker] = { price:d.price, changePct:d.changePct, change:d.change, ...(d.mktCap&&{mktCap:d.mktCap}), ...(d.volume&&{volume:d.volume}), spark7d:d.spark7d, spark3d:d.spark3d, spark1d:d.spark1d, liveSparkline:d.spark7d };
-          }
-        });
-        if(Object.keys(updates).length > 0) {
-          setLiveStocks(prev => prev.map(s => updates[s.ticker] ? {...s,...updates[s.ticker]} : s));
-          setLastUpdated(new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}));
-          setIsLive(true);
-        }
-        if(i+5 < tickers.length) await new Promise(r => setTimeout(r, 800));
-      }
+      // Priority tickers: fetch all at once immediately so the page feels live within ~1-2s
+      const PRIORITY = ["RKLB","ASTS","LUNR","PL","HAWK","BKSY","RDW","SPCE","OKLO","LMT"];
+      const rest = tickers.filter(t => !PRIORITY.includes(t));
+
+      // Round 1: all priority tickers in parallel — no delay, paint live data fast
+      const priorityResults = await Promise.allSettled(PRIORITY.map(fetchOneTicker));
+      applyUpdates(priorityResults);
+
+      // Round 2: remaining tickers in parallel — no artificial delay
+      const restResults = await Promise.allSettled(rest.map(fetchOneTicker));
+      applyUpdates(restResults);
     } catch(e) { console.log("Fetch error:", e); }
   };
 
@@ -896,7 +907,7 @@ export default function App() {
 
   const [expandedTicker, setExpandedTicker] = useState(null);
   const [loading, setLoading] = useState(true);
-  useEffect(()=>{ if(isLive) setLoading(false); const t=setTimeout(()=>setLoading(false),8000); return ()=>clearTimeout(t); },[isLive]);
+  useEffect(()=>{ if(isLive) setLoading(false); const t=setTimeout(()=>setLoading(false),3000); return ()=>clearTimeout(t); },[isLive]);
 
   // ── Navigation helper ───────────────────────────────────────────────────────
   // go(page, tab, feedMode?) — also handles the special "subscribe" shortcut
