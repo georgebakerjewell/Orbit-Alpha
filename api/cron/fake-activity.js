@@ -94,7 +94,7 @@ async function saveThreads(ticker, threads) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,
       },
-      body: JSON.stringify(["SET", `threads:${ticker}`, JSON.stringify(threads)]),
+      body: JSON.stringify([JSON.stringify(threads)]),
     }
   );
 }
