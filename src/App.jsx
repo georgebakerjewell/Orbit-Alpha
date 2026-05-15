@@ -100,7 +100,6 @@ const SPARKDATA = {
 };
 
 const SECTORS = ["All","Launch","Comms","Earth Obs","Hardware","Lunar","Tourism","Transport","Defence","Energy","ETF","Private Access"];
-const TICKER_LIST = ["RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","UFO","ARKX","HAWK","VOYG","YSS","SATS"];
 
 function Sparkline({ data, positive }) {
   const [hoverIdx, setHoverIdx] = useState(null);
