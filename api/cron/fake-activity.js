@@ -19,261 +19,195 @@ const ACTIVE_TICKERS = [
   "RTX","UFO","ARKX","SATS","VOYG","YSS",
 ];
 
-// Real context per ticker — used to ground Claude's output in facts
 const TICKER_CONTEXT = {
-  RKLB: `Rocket Lab (RKLB). Small/medium launch company. Key facts:
-- Electron rocket: 55+ launches, ~$8M per launch, small sat dedicated launch
-- Neutron rocket: medium lift, 13,000kg to LEO, 8m fairing, LOX/methane, targeting first launch 2026, RTLS reusable first stage, Archimedes engine in testing at Stennis
-- Space Systems segment: makes satellites, spacecraft components, reaction wheels, solar panels — already segment-profitable
+  RKLB: `Rocket Lab (RKLB). Small/medium launch company.
+- Electron rocket: 55+ launches, ~$8M per launch, small sat dedicated launch, reusable first stage
+- Neutron rocket: medium lift, 13,000kg to LEO, 8m fairing, LOX/methane, targeting first launch 2026, RTLS reusable, Archimedes engine testing at Stennis
+- Space Systems: satellites, components, reaction wheels, solar panels — segment-profitable
 - Q1 2026: revenue $122M (+78% YoY), backlog $1.07B
-- Government contracts: VICTUS HAZE (US Space Force 24hr responsive launch), HASTE hypersonic test program
+- VICTUS HAZE (US Space Force 24hr responsive launch), HASTE hypersonic program
 - NSSL Phase 3 Lane 1 winner alongside SpaceX
-- Short interest ~12%, Stifel PT $105, consensus ~$26
-- CEO Peter Beck, based in Long Beach CA and NZ, listed on Nasdaq`,
+- Short interest ~12%, Stifel PT $105, consensus ~$26. CEO Peter Beck.`,
 
-  ASTS: `AST SpaceMobile (ASTS). Space-based cellular broadband direct to standard mobile phones. Key facts:
-- BlueBird satellites: Block 1 (5 sats) launched Sep 2024, provided first voice calls from space to unmodified phones
-- Block 2: BlueBird 7 failed to reach orbit Feb 2026 (launch anomaly), BlueBird 8-10 targeting mid-June 2026 via SpaceX Falcon 9
-- Partners: AT&T, Verizon, Rakuten, Vodafone, others — revenue share model
-- FCC approval received for commercial operations in US
-- TAM: every mobile phone user without reliable coverage globally
-- Cash runway: ~$800M after recent equity raise, still pre-revenue at scale
-- CEO Abel Avellan, HQ Midland TX`,
+  ASTS: `AST SpaceMobile (ASTS). Space-based cellular broadband direct to standard phones.
+- BlueBird Block 1 (5 sats) launched Sep 2024, first voice calls from space to unmodified phones
+- BlueBird 7 failed to reach orbit Feb 2026, BlueBird 8-10 targeting mid-June 2026 via SpaceX
+- Partners: AT&T, Verizon, Rakuten, Vodafone. FCC approval received.
+- ~$800M cash after equity raise, pre-revenue at scale. CEO Abel Avellan.`,
 
-  LUNR: `Intuitive Machines (LUNR). Lunar lander company. Key facts:
-- IM-1 (Feb 2024): first US soft landing on moon since Apollo, landed but tipped on its side, partial mission success
-- IM-2 (early 2026): carried NASA PRIME-1 ice drill, landed near south pole
-- IM-3: scheduled late 2026, carries NASA comms relay payload
-- NASA CLPS contract: ~$4.8B total pool for lunar deliveries, LUNR is primary awardee
-- 2026 revenue guidance: $900M-$1B (includes Near Space Network contract)
-- Also builds space infrastructure: lunar data relay network, OMES orbital services
-- High short interest ~22%, very volatile stock
-- CEO Steve Altemus, HQ Houston TX`,
+  LUNR: `Intuitive Machines (LUNR). Lunar services company.
+- IM-1 (Feb 2024): first US Moon landing since Apollo, tipped on side, partial success
+- IM-2 (early 2026): landed near lunar south pole, carried NASA ice drill
+- IM-3: scheduled late 2026, carries NASA comms relay
+- NASA Near Space Network contract: $4.82B, 10 years
+- 2026 revenue guidance $900M-$1B. High short interest ~22%. CEO Steve Altemus.`,
 
-  OKLO: `Oklo (OKLO). Advanced nuclear fission company, microreactor focused. Key facts:
-- Aurora microreactor design: compact fast fission reactor, 15MW target output
-- NRC license application resubmitted 2024 after initial rejection, still pending approval
-- Power purchase agreements signed: data center customers, US government sites
-- Backed by Sam Altman (OpenAI CEO) who is board chair
-- No revenue yet, pre-commercial stage
-- Tailwinds: AI data center power demand driving nuclear interest
-- Merged with AltC Acquisition Corp to go public 2024
-- HQ Santa Clara CA`,
+  OKLO: `Oklo (OKLO). Advanced fission microreactor company.
+- Aurora microreactor: 15MW target, compact fast fission design
+- NRC license application resubmitted 2024, pending approval
+- Power purchase agreements with data centers and US government sites
+- Backed by Sam Altman (OpenAI CEO, board chair). Pre-revenue, pre-commercial. HQ Santa Clara.`,
 
-  SPCE: `Virgin Galactic (SPCE). Space tourism company. Key facts:
-- VSS Unity (SpaceShipTwo): completed commercial flights 2023, then grounded for Delta class vehicle development
-- Delta class vehicle: next gen spaceship, targeting 2026 commercial service restart
-- Burned through most original capital, multiple dilutive raises
-- Very high burn rate, limited near-term revenue until Delta flies
-- Stock down significantly from 2021 peak of $55+
-- Founder Richard Branson, HQ Truth or Consequences NM
-- Controversial: many retail investors burned by timeline slippage`,
+  SPCE: `Virgin Galactic (SPCE). Space tourism company.
+- VSS Unity completed commercial flights 2023, now grounded for Delta class vehicle development
+- Delta class vehicle targeting 2026 commercial service restart
+- Very high burn rate, multiple dilutive raises, down significantly from 2021 peak of $55+
+- Founder Richard Branson, HQ Truth or Consequences NM.`,
 
-  HAWK: `HawkEye 360 (HAWK). RF signals intelligence from space. Key facts:
-- Operates clusters of small satellites that detect, geolocate and characterize RF signals
+  HAWK: `HawkEye 360 (HAWK). RF signals intelligence from space.
+- Detects, geolocates and characterizes RF signals from satellite clusters
 - Customers: US DoD, intelligence community, maritime domain awareness
 - IPO priced at top of range 2026, stock +30% on debut
-- Revenue growing rapidly on government contract wins
-- Proprietary signal detection tech, hard to replicate
-- HQ Herndon VA`,
+- Proprietary signal detection tech, hard to replicate. HQ Herndon VA.`,
 
-  BA: `Boeing (BA). Aerospace and defense giant. Key facts:
-- Starliner CST-100: crewed capsule had helium leaks and thruster failures on ISS mission Jun 2024, crew (Butch Wilmore and Suni Williams) stranded on ISS for 9 months, returned via SpaceX Dragon Mar 2025
-- 737 MAX: ongoing quality and safety scrutiny, DOJ investigation, production rate issues
-- Defense: fixed-price contracts causing billions in losses (KC-46, T-7A, Starliner)
-- New CEO Kelly Ortberg since Aug 2024, trying to stabilize
-- Strike by machinists Sep-Nov 2024, cost $5B+
-- Credit rating near junk, raised $24B equity Nov 2024 to avoid downgrade
-- Space: SLS rocket contractor for NASA Artemis`,
+  BA: `Boeing (BA). Aerospace and defense giant.
+- Starliner: helium leaks and thruster failures Jun 2024, crew stranded on ISS 9 months, returned via SpaceX Mar 2025
+- 737 MAX: ongoing quality/safety scrutiny, DOJ investigation, production issues
+- Defense: fixed-price contracts causing billions in losses
+- New CEO Kelly Ortberg since Aug 2024. Machinists strike Sep-Nov 2024 cost $5B+.
+- Raised $24B equity Nov 2024. Space: SLS rocket contractor for NASA Artemis.`,
 
-  LMT: `Lockheed Martin (LMT). Largest US defense contractor. Key facts:
-- F-35 fighter jet: ~$100B+ program, deliveries ongoing to US and allies
-- Orion spacecraft: NASA Artemis crew capsule
-- Sikorsky helicopters: Black Hawk, CH-53K
-- Space: GPS satellites, missile defense systems, hypersonics
-- Revenue ~$70B/year, very consistent margins
-- Benefits from increased NATO defense spending post-Ukraine war
-- CEO Jim Taiclet
-- Dividend payer, relatively defensive stock`,
+  LMT: `Lockheed Martin (LMT). Largest US defense contractor.
+- F-35: ~$100B+ program, ongoing deliveries to US and allies
+- Orion spacecraft for NASA Artemis. Sikorsky helicopters (Black Hawk, CH-53K).
+- GPS satellites, missile defense, hypersonics. Revenue ~$70B/year.
+- Benefits from increased NATO spending. CEO Jim Taiclet. Dividend payer.`,
 
-  PL: `Planet Labs (PL). Daily Earth observation from space. Key facts:
-- Operates world's largest constellation of Earth imaging satellites (~200 Doves + SkySat)
-- Images entire land surface of Earth every day
+  PL: `Planet Labs (PL). Daily Earth observation from space.
+- ~200 Dove + SkySat satellites, images entire land surface daily
 - Pelican satellites: next gen high resolution, launching 2025-2026
-- Customers: government, agriculture, forestry, insurance, financial analytics
-- Revenue ~$220M annual run rate, still not profitable
-- Transitioning from low-res daily to high-res tasking to improve margins
-- CEO Will Marshall, HQ San Francisco`,
+- Revenue ~$220M annual run rate, not yet profitable
+- Transitioning to high-res tasking to improve margins. CEO Will Marshall.`,
 
-  BKSY: `BlackSky Technology (BKSY). Space-based intelligence and analytics. Key facts:
-- Operates high-revisit imaging satellites over strategic locations
-- AI analytics platform on top of imagery
+  BKSY: `BlackSky Technology (BKSY). Space-based intelligence and analytics.
+- High-revisit imaging satellites over strategic locations, AI analytics platform
 - Customers: US government, intelligence agencies, commercial
-- Revenue ~$100M annual, growing on defence contract wins
-- Competes with Planet Labs but more focused on analytics than raw data
-- HQ Herndon VA`,
+- Revenue ~$100M annual, growing on defence contract wins. HQ Herndon VA.`,
 
-  DXYZ: `Destiny Tech100 (DXYZ). Closed-end fund providing retail access to private tech companies. Key facts:
-- Holdings include SpaceX, OpenAI, Stripe, Anthropic, Epic Games among others
-- SpaceX is largest holding ~30%+ of portfolio
-- Trades at significant premium to NAV (often 100-300% premium) due to scarcity of SpaceX access
-- Premium compresses when SpaceX IPO speculation cools
-- Not a direct SpaceX investment but closest public proxy
-- ~$1.1B market cap`,
+  DXYZ: `Destiny Tech100 (DXYZ). Closed-end fund with exposure to private tech companies.
+- Holdings include SpaceX (~30%+), OpenAI, Stripe, Anthropic, Epic Games
+- Closest public proxy for SpaceX exposure
+- Trades at large premium to NAV (often 100-300%) due to SpaceX scarcity
+- Premium compresses when SpaceX IPO speculation cools. ~$1.1B market cap.`,
 
-  FLY: `Firefly Aerospace (FLY). Small launch and lunar lander company. Key facts:
+  FLY: `Firefly Aerospace (FLY). Small launch and lunar lander company.
 - Alpha rocket: reached orbit 2022, several successful launches since
-- Blue Ghost lunar lander: landed on Moon successfully Feb 2026, mission success, operated for full lunar day
-- NASA CLPS contract winner
-- Medium launch vehicle in development
-- Private company that went public via SPAC 2025
-- Competes with Rocket Lab on small launch`,
+- Blue Ghost lunar lander: successfully landed on Moon Feb 2026, operated full lunar day
+- NASA CLPS contract winner. Medium launch vehicle in development. Recent IPO 2025.`,
 
-  LUNR: `Intuitive Machines (LUNR). Lunar services company. Key facts:
-- IM-1 mission: landed Feb 2024, first US Moon landing since 1972, tipped on landing
-- IM-2: landed near lunar south pole early 2026
-- NASA Near Space Network contract: $4.82B, 10 years, provides lunar comms relay
-- 2026 revenue guidance $900M-$1B
-- Very high short interest, volatile`,
+  NOC: `Northrop Grumman (NOC). Major US defense and space contractor.
+- B-21 Raider stealth bomber: low-rate initial production, first new US bomber in 30 years
+- Built James Webb Space Telescope
+- Sentinel ICBM modernization program. Revenue ~$40B/year. Benefits from nuclear modernization.`,
 
-  NOC: `Northrop Grumman (NOC). Major US defense and space contractor. Key facts:
-- B-21 Raider stealth bomber: in low-rate initial production, first new US bomber in 30 years
-- James Webb Space Telescope: built the observatory
-- GBSD/Sentinel: intercontinental ballistic missile modernization program
-- Space systems: missile warning satellites, classified programs
-- Revenue ~$40B/year, stable margins
-- Benefits from nuclear modernization spending`,
+  RTX: `RTX Corp (RTX). Defense and aerospace conglomerate.
+- Pratt & Whitney GTF engine powder metal defect: massive inspection/repair program, costing billions
+- Raytheon missiles (Patriot, AMRAAM, Stinger): high demand from Ukraine war and allies rearming
+- Collins Aerospace: avionics, interiors, systems. Revenue ~$70B/year.`,
 
-  RTX: `RTX Corp (RTX). Defense and aerospace conglomerate. Key facts:
-- Pratt & Whitney engines: GTF engine had powder metal defect issue, massive inspection/repair program ongoing costing billions
-- Raytheon missiles: Patriot, AMRAAM, Stinger — high demand from Ukraine war and allies rearming
-- Collins Aerospace: avionics, interiors, systems
-- Revenue ~$70B/year
-- GTF issue still dragging margins but resolving through 2026`,
+  MDA: `MDA Space (MDA). Canadian space tech company.
+- Canadarm3: robotic arm for NASA Gateway lunar space station
+- CHORUS: planned broadband LEO constellation
+- SAR imaging satellites. Revenue ~$1B CAD annually. Strong NASA relationships.`,
 
-  MDA: `MDA Space (MDA). Canadian space tech company. Key facts:
-- Canadarm3: robotic arm for NASA Gateway lunar space station, major contract
-- CHORUS satellite constellation: planned broadband LEO constellation
-- Radar satellites: SAR imaging
-- Listed on TSX, also traded OTC in US
-- Revenue ~$1B Canadian annually, growing
-- Strong government/NASA relationships`,
+  SPIR: `Spire Global (SPIR). Space-based data and analytics.
+- LEMUR satellites: maritime AIS tracking, weather data, aviation ADSB
+- GNSS-R: GPS signal reflection for soil moisture, ocean winds
+- Revenue ~$120M annual. Government and commercial data contracts.`,
 
-  SPIR: `Spire Global (SPIR). Space-based data and analytics. Key facts:
-- LEMUR satellites: constellation for maritime AIS tracking, weather data, aviation ADSB
-- GNSS-R: GPS signal reflection for soil moisture, ocean winds — unique dataset
-- Government and commercial data contracts
-- Revenue ~$120M annual, pursuing profitability
-- Competes with Planet on some government contracts`,
-
-  GSAT: `Globalstar (GSAT). Satellite communications company. Key facts:
-- Apple partnership: provides satellite SOS for iPhone 14/15/16 emergency messaging
+  GSAT: `Globalstar (GSAT). Satellite communications company.
+- Apple partnership: satellite SOS for iPhone 14/15/16 emergency messaging
 - Apple deal provides ~85% of revenue guarantees through 2026+
-- LEO constellation, voice and data services
-- New satellite constellation planned with Apple funding
-- High debt load historically
-- Stock sensitive to Apple news`,
+- New satellite constellation planned with Apple funding. High legacy debt.`,
 
-  VSAT: `Viasat (VSAT). Satellite internet and government comms. Key facts:
-- ViaSat-3 Americas: launched 2023, experienced reflector deployment failure, partial capacity
-- Government segment: tactical data links, in-flight connectivity for military
-- In-flight WiFi: commercial airlines
-- Acquired Inmarsat 2023 for $7.3B, integration ongoing, added significant debt
-- Revenue ~$4B annual but margins under pressure from ViaSat-3 issue and Inmarsat integration`,
+  VSAT: `Viasat (VSAT). Satellite internet and government comms.
+- ViaSat-3 Americas: launched 2023, reflector deployment failure, partial capacity only
+- Acquired Inmarsat 2023 for $7.3B, significant integration debt
+- Government tactical data links, in-flight WiFi. Revenue ~$4B but margins under pressure.`,
 
-  KULR: `KULR Technology (KULR). Thermal management for batteries and electronics. Key facts:
-- Lithium-ion battery safety: thermal runaway prevention technology
-- Customers: NASA, US military, commercial
-- Small cap, high volatility
-- Revenue growing from near zero but still small
-- Benefits from EV and energy storage tailwinds`,
+  KULR: `KULR Technology (KULR). Thermal management for batteries and electronics.
+- Lithium-ion battery thermal runaway prevention technology
+- Customers: NASA, US military, commercial electronics
+- Small cap, high volatility, revenue growing from near zero. Benefits from EV/energy storage.`,
 
-  KRMN: `Karman Space (KRMN). Space and defense hardware manufacturer. Key facts:
-- Makes structural components, fairings, thermal protection systems for rockets and spacecraft
-- Customers: SpaceX, ULA, US government
-- IPO'd 2025
-- Revenue ~$400M, profitable
-- Beneficiary of launch market growth`,
+  KRMN: `Karman Space (KRMN). Space and defense hardware manufacturer.
+- Makes structural components, fairings, thermal protection for rockets and spacecraft
+- Customers: SpaceX, ULA, US government. IPO'd 2025.
+- Revenue ~$400M, profitable. Beneficiary of launch market growth.`,
 
-  UFO: `Procure Space ETF (UFO). Space sector ETF. Key facts:
+  UFO: `Procure Space ETF (UFO). Space sector ETF launched 2019.
 - Holds publicly traded space companies globally
-- Top holdings: SES, Iridium, Maxar (acquired), DigitalBridge, Viasat, Intelsat
-- ~$60M AUM, relatively small ETF
-- Expense ratio 0.75%
-- Launched 2019, one of first pure-play space ETFs`,
+- Top holdings: SES, Iridium, DigitalBridge, Viasat. ~$60M AUM. Expense ratio 0.75%.`,
 
-  ARKX: `ARK Space Exploration ETF (ARKX). Actively managed space ETF by Cathie Wood's ARK Invest. Key facts:
-- Holds space-adjacent companies as well as pure plays
-- Top holdings include Amazon (Project Kuiper), Iridium, Trimble, Kratos
-- Controversial: includes non-pure-play space companies like Netflix (uses satellites for content)
-- ~$200M AUM
-- Actively managed, higher turnover than passive ETFs`,
+  ARKX: `ARK Space Exploration ETF (ARKX). Actively managed space ETF by ARK Invest.
+- Holds space-adjacent companies: Amazon (Kuiper), Iridium, Trimble, Kratos
+- Controversial for including non-pure-play companies. ~$200M AUM.`,
 
-  SATS: `EchoStar (SATS). Satellite technology and services company. Key facts:
+  SATS: `EchoStar (SATS). Satellite technology and services.
 - Owns Hughes Network Systems: satellite internet provider
-- DISH Network merger completed 2024, combined entity
-- Significant debt load
-- Competes with Starlink on rural broadband
-- Revenue declining as Starlink takes market share`,
+- DISH Network merger completed 2024. Significant debt. Competing with Starlink on rural broadband.`,
 
-  VOYG: `Voyager Technologies (VOYG). Space and defense systems company. Key facts:
-- Makes components and systems for spacecraft and defense applications
-- Government and commercial customers
-- Recent IPO, growing revenue
-- Beneficiary of increased DoD space spending`,
+  VOYG: `Voyager Technologies (VOYG). Space and defense systems company.
+- Components and systems for spacecraft and defense. Recent IPO. Growing on DoD space spending.`,
 
-  YSS: `York Space Systems (YSS). Satellite manufacturer. Key facts:
+  YSS: `York Space Systems (YSS). Satellite manufacturer.
 - S-CLASS satellite bus: standardized, mass-produced small satellites
-- US Space Force and commercial customers
-- Factory-style production approach to drive down costs
-- Recent IPO 2025
-- Revenue growing on government contracts`,
+- US Space Force and commercial customers. Factory production approach. IPO'd 2025.`,
 
-  TSAT: `Telesat (TSAT). Canadian satellite operator. Key facts:
-- Telesat Lightspeed: planned LEO broadband constellation, 198 satellites
-- Legacy GEO satellites providing revenue
-- Significant financing needed for Lightspeed, still unresolved
-- Canadian government customer anchor
-- High debt, execution risk on Lightspeed`,
+  TSAT: `Telesat (TSAT). Canadian satellite operator.
+- Telesat Lightspeed: planned 198-satellite LEO broadband constellation, financing unresolved
+- Legacy GEO satellites providing current revenue. High debt. Canadian government anchor customer.`,
 
-  MNTS: `Momentus (MNTS). In-space transportation and services. Key facts:
+  MNTS: `Momentus (MNTS). In-space transportation company.
 - Vigoride space tug: orbital transfer vehicle for last-mile satellite delivery
-- Several missions flown with mixed results
-- Very small revenue, high burn rate
-- Multiple setbacks including regulatory issues with original CEO
-- High risk, highly speculative micro-cap`,
+- Several missions with mixed results. Very small revenue, high burn rate. Micro-cap, speculative.`,
 
-  RDW: `Redwire (RDW). Space infrastructure and manufacturing company. Key facts:
+  RDW: `Redwire (RDW). Space infrastructure and manufacturing.
 - Makes solar arrays, structure, 3D printing hardware for spacecraft
-- ISS customer: multiple payloads and experiments aboard station
-- UK expansion: acquired several European space companies
-- Revenue ~$250M annual, growing
-- Government and commercial customers`,
+- ISS customer: multiple payloads aboard station. UK expansion via European acquisitions.
+- Revenue ~$250M annual. Government and commercial customers.`,
 
-  SATL: `Satellogic (SATL). Earth observation company. Key facts:
-- Sub-meter resolution satellites, high revisit rate
-- South American company (Uruguay/Argentina), listed on Nasdaq
-- Government and commercial customers globally
-- Revenue small, cash constrained
-- High risk, speculative`,
+  SATL: `Satellogic (SATL). Earth observation company.
+- Sub-meter resolution satellites, high revisit rate. South American company on Nasdaq.
+- Small revenue, cash constrained. High risk, speculative.`,
 
-  GILT: `Gilat Satellite Networks (GILT). Satellite ground systems and VSAT. Key facts:
-- Makes VSAT terminals, network equipment, satellite broadband infrastructure
-- Customers: telecom operators, governments, rural broadband
-- Israeli company, listed on Nasdaq
-- Profitable, consistent but slow-growing
-- Revenue ~$250M annual`,
+  GILT: `Gilat Satellite Networks (GILT). Satellite ground systems and VSAT.
+- VSAT terminals, network equipment, satellite broadband infrastructure
+- Customers: telecom operators, governments, rural broadband. Israeli company on Nasdaq.
+- Revenue ~$250M annual, profitable but slow-growing.`,
+};
 
-  MARS: `Roundhill Space & Tech ETF (MARS). Space and technology ETF. Key facts:
-- Holds mix of space and tech companies
-- Includes both large and small cap exposure
-- Relatively new ETF`,
-
-  ROKT: `SPDR Kensho Final Frontiers ETF (ROKT). Space and ocean exploration ETF. Key facts:
-- Tracks Kensho Final Frontiers index
-- Holds companies in space, ocean and polar exploration
-- Includes defense, satellite, and launch companies
-- ~$100M AUM`,
+const COMPANY_KEYWORDS = {
+  RKLB: ["Rocket Lab","RKLB","Electron","Neutron","Peter Beck"],
+  ASTS: ["AST SpaceMobile","ASTS","BlueBird","Abel Avellan"],
+  LUNR: ["Intuitive Machines","LUNR","IM-3","IM-4","lunar lander"],
+  PL:   ["Planet Labs","PBC","Pelican"],
+  BKSY: ["BlackSky","BKSY"],
+  RDW:  ["Redwire","RDW"],
+  MNTS: ["Momentus","MNTS"],
+  SPCE: ["Virgin Galactic","SPCE","VSS"],
+  KRMN: ["Karman","KRMN"],
+  SATL: ["Satellogic","SATL"],
+  KULR: ["KULR Technology","KULR"],
+  TSAT: ["Telesat","TSAT","Lightspeed"],
+  GSAT: ["Globalstar","GSAT"],
+  VSAT: ["Viasat","VSAT"],
+  MDA:  ["MDA Space","MDA"],
+  SPIR: ["Spire Global","SPIR"],
+  GILT: ["Gilat Satellite","GILT"],
+  DXYZ: ["Destiny Tech","DXYZ"],
+  LMT:  ["Lockheed Martin","LMT"],
+  FLY:  ["Firefly Aerospace","FLY","Blue Ghost"],
+  OKLO: ["Oklo","OKLO","microreactor"],
+  BA:   ["Boeing","BA","Starliner"],
+  NOC:  ["Northrop Grumman","NOC","B-21"],
+  RTX:  ["RTX","Raytheon","Pratt & Whitney"],
+  UFO:  ["Procure Space ETF","UFO"],
+  ARKX: ["ARK Space","ARKX"],
+  HAWK: ["HawkEye 360","HAWK"],
+  VOYG: ["Voyager Technologies","VOYG"],
+  YSS:  ["York Space","YSS"],
+  SATS: ["EchoStar","SATS","Hughes"],
 };
 
 const USERNAMES = [
@@ -369,6 +303,50 @@ function getContext(ticker) {
   return TICKER_CONTEXT[ticker] || `${ticker} is a publicly traded space or defense company.`;
 }
 
+// ── Fetch recent news for a ticker from your own news API ─────────────────────
+async function getRecentNews(ticker) {
+  try {
+    const baseUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "https://orbitalpha.cloud";
+
+    const keywords = COMPANY_KEYWORDS[ticker] || [ticker];
+
+    // fetch from your Yahoo news endpoint
+    const res = await fetch(`${baseUrl}/api/yahoonews?ticker=${ticker}`, {
+      headers: { "User-Agent": "orbitalpha-cron/1.0" },
+    });
+
+    if (!res.ok) return "";
+
+    const items = await res.json();
+    if (!Array.isArray(items) || items.length === 0) return "";
+
+    // filter to only items mentioning this ticker's keywords
+    const relevant = items
+      .filter(item => {
+        const text = `${item.title || ""} ${item.description || ""}`.toLowerCase();
+        return keywords.some(k => text.includes(k.toLowerCase()));
+      })
+      .slice(0, 5);
+
+    if (relevant.length === 0) return "";
+
+    const headlines = relevant
+      .map(item => {
+        const date = item.pubDate
+          ? new Date(item.pubDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+          : "";
+        return `- ${date ? `[${date}] ` : ""}${item.title}`;
+      })
+      .join("\n");
+
+    return `\nRecent news headlines about ${ticker}:\n${headlines}\n`;
+  } catch (e) {
+    return "";
+  }
+}
+
 // ── Redis helper ──────────────────────────────────────────────────────────────
 async function redis(command, args) {
   const res = await fetch(process.env.UPSTASH_REDIS_REST_URL, {
@@ -421,23 +399,26 @@ async function callClaude(prompt) {
 // ── Actions ───────────────────────────────────────────────────────────────────
 async function postNewThread(ticker) {
   const author = randomFrom(USERNAMES);
-  const context = getContext(ticker);
+  const [context, news] = await Promise.all([
+    getContext(ticker),
+    getRecentNews(ticker),
+  ]);
 
   const prompt = `You are a retail investor posting on a stock discussion forum.
 
-Here is accurate background information about ${ticker}:
+Background facts about ${ticker}:
 ${context}
-
+${news}
 Write a short forum post (title + optional body) about ${ticker}.
 
 Rules:
 - Title: 5-12 words, casual and opinionated, like a real Reddit post
-- Body: 0-3 sentences max. Sometimes leave blank — title-only posts are fine.
-- Only reference facts from the context above — do not invent numbers or events
+- Body: 0-3 sentences max. Sometimes leave blank.
+- If recent news headlines are provided above, you may reference them — but only facts explicitly stated in the headlines or background, never invented details
 - Sound like a real retail investor: mix of sharp takes, casual language, occasional typos fine
 - Can be bullish, bearish, neutral, or just a question
 - No hashtags. Occasional emoji in body only.
-- Output ONLY valid JSON: {"title":"...","body":"..."} — nothing else, no markdown fences`;
+- Output ONLY valid JSON: {"title":"...","body":"..."} — nothing else, no markdown`;
 
   const raw = await callClaude(prompt);
   let parsed;
@@ -472,7 +453,11 @@ async function postComment(ticker) {
   const pool = threads.slice(0, Math.min(5, threads.length));
   const thread = randomFrom(pool);
   const author = randomFrom(USERNAMES);
-  const context = getContext(ticker);
+
+  const [context, news] = await Promise.all([
+    getContext(ticker),
+    getRecentNews(ticker),
+  ]);
 
   const existingComments = (thread.comments || [])
     .slice(-3)
@@ -481,9 +466,9 @@ async function postComment(ticker) {
 
   const prompt = `You are a retail investor commenting on a stock forum thread about ${ticker}.
 
-Here is accurate background information about ${ticker}:
+Background facts about ${ticker}:
 ${context}
-
+${news}
 Thread title: "${thread.title}"
 ${thread.body ? `Thread body: "${thread.body}"` : ""}
 ${existingComments ? `Recent comments:\n${existingComments}` : ""}
@@ -491,8 +476,8 @@ ${existingComments ? `Recent comments:\n${existingComments}` : ""}
 Write ONE short comment replying to this thread.
 
 Rules:
-- 1-3 sentences MAX. Often just 1. Sometimes just 2-6 words ("agreed", "this exactly", "lol same", "not sure about that").
-- Only reference facts from the context above — do not invent numbers or events
+- 1-3 sentences MAX. Often just 1. Sometimes just 2-6 words ("agreed", "this exactly", "lol same").
+- Only reference facts from the background or news above — never invent numbers or events
 - Sound like a real person: casual, sometimes slightly off-topic, occasional typos fine
 - Mix of styles: sharp insight, basic reaction, dumb question, mild disagreement, one-liner
 - No hashtags
