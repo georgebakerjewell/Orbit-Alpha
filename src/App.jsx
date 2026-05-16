@@ -755,7 +755,10 @@ export default function App() {
         body: JSON.stringify({ email: emailAddress }),
       });
       const data = await res.json();
-      if(data.success) { onSuccess(); } else { alert('Something went wrong. Please try again.'); }
+      if(data.success) { 
+  window.rdt && window.rdt('track', 'SignUp');
+  onSuccess(); 
+} else { alert('Something went wrong. Please try again.'); }
     } catch(e) { alert('Something went wrong. Please try again.'); }
   };
 
