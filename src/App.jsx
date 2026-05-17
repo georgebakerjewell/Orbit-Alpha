@@ -754,7 +754,7 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-5"
   const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true); setShowExitPopup(false); }); };
   const sub = () => { subscribe(email, ()=>setSubmitted(true)); };
 
-  const SUBSCRIBER_COUNT = 200;
+  const SUBSCRIBER_COUNT = 300;
   const [lastUpdated,setLastUpdated]=useState(null);
   const [isLive,setIsLive]=useState(false);
 
