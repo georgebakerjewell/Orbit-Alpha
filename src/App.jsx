@@ -728,9 +728,6 @@ export default function App() {
 const latestIssueLive = true;
 const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-5";
 
-useEffect(()=>{
-  const handleMouseLeave = (e) => { if(e.clientY <= 0 && !popupDismissed && !popupSubmitted) setShowExitPopup(true); };
-
   useEffect(()=>{
     const handleMouseLeave = (e) => { if(e.clientY <= 0 && !popupDismissed && !popupSubmitted) setShowExitPopup(true); };
     const handleScroll = () => {
