@@ -726,11 +726,13 @@ export default function App() {
   const [latestIssueLive, setLatestIssueLive] = useState(false);
   const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-5";
 
-  useEffect(()=>{
-    fetch(LATEST_ISSUE_URL, { method: "HEAD" })
-      .then(res => { if(res.ok) setLatestIssueLive(true); })
-      .catch(()=>{});
-  }, []);
+  useEffect(() => {
+  fetch(`${LATEST_ISSUE_URL}?t=${Date.now()}`)
+    .then(res => {
+      if (res.ok) setLatestIssueLive(true);
+    })
+    .catch(() => {});
+}, []);
 
   useEffect(()=>{
     const handleMouseLeave = (e) => { if(e.clientY <= 0 && !popupDismissed && !popupSubmitted) setShowExitPopup(true); };
