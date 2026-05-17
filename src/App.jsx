@@ -723,16 +723,13 @@ export default function App() {
   const [popupDismissed, setPopupDismissed] = useState(false);
   const [popupEmail, setPopupEmail] = useState("");
   const [popupSubmitted, setPopupSubmitted] = useState(false);
-  const [latestIssueLive, setLatestIssueLive] = useState(false);
-  const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-5";
 
-  useEffect(() => {
-  fetch(`${LATEST_ISSUE_URL}?t=${Date.now()}`)
-    .then(res => {
-      if (res.ok) setLatestIssueLive(true);
-    })
-    .catch(() => {});
-}, []);
+// Issue #5 is now published, so keep this live.
+const latestIssueLive = true;
+const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-5";
+
+useEffect(()=>{
+  const handleMouseLeave = (e) => { if(e.clientY <= 0 && !popupDismissed && !popupSubmitted) setShowExitPopup(true); };
 
   useEffect(()=>{
     const handleMouseLeave = (e) => { if(e.clientY <= 0 && !popupDismissed && !popupSubmitted) setShowExitPopup(true); };
