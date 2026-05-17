@@ -728,18 +728,11 @@ export default function App() {
 const latestIssueLive = true;
 const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-5";
 
-  useEffect(()=>{
-    const handleMouseLeave = (e) => { if(e.clientY <= 0 && !popupDismissed && !popupSubmitted) setShowExitPopup(true); };
-    const handleScroll = () => {
-      if(popupDismissed || popupSubmitted) return;
-      const scrolled = window.scrollY + window.innerHeight;
-      const total = document.documentElement.scrollHeight;
-      if(scrolled / total >= 0.9) setShowExitPopup(true);
-    };
-    document.addEventListener('mouseleave', handleMouseLeave);
-    window.addEventListener('scroll', handleScroll, {passive:true});
-    return ()=>{ document.removeEventListener('mouseleave', handleMouseLeave); window.removeEventListener('scroll', handleScroll); };
-  },[popupDismissed, popupSubmitted]);
+ useEffect(()=>{
+  if(popupDismissed || popupSubmitted) return;
+  const timer = setTimeout(()=>{ setShowExitPopup(true); }, 5000);
+  return ()=>clearTimeout(timer);
+},[popupDismissed, popupSubmitted]);
 
   const dismissPopup = () => { setShowExitPopup(false); setPopupDismissed(true); };
 
@@ -952,28 +945,28 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-5"
     <div style={{minHeight:"100vh",background:"#04060e",color:"#dde1ec",fontFamily:"'DM Mono',monospace",fontSize:13,position:"relative",overflowX:"hidden"}}>
 
       {showExitPopup&&(
-        <div style={{position:"fixed",bottom:24,right:24,zIndex:9999,animation:"fu 0.3s ease",maxWidth:340,width:"calc(100% - 48px)"}}>
-          <div style={{background:"#0d1220",border:"1px solid rgba(0,255,136,0.2)",borderRadius:8,padding:"24px",boxShadow:"0 8px 40px rgba(0,0,0,0.6)"}}>
-            <button onClick={dismissPopup} style={{position:"absolute",top:10,right:14,background:"none",border:"none",color:"#ccd0d8",fontSize:18,cursor:"pointer",lineHeight:1}}>×</button>
-            <div style={{fontSize:9,color:"#00ff88",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:8}}>Free Weekly Newsletter</div>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:800,color:"#fff",lineHeight:1.2,marginBottom:8}}>The only weekly covering every space stock.</div>
-            <div style={{fontSize:11,color:"#aab8c2",lineHeight:1.6,marginBottom:16}}>Macro overview · Broker target changes · One stock deep dive. Every Sunday morning.</div>
-            {popupSubmitted ? (
-              <div style={{fontSize:13,color:"#00ff88",padding:"10px 0"}}>✓ You're subscribed. Welcome to Orbit Alpha.</div>
-            ) : (
-              <>
-                <div style={{display:"flex",gap:6,marginBottom:12}}>
-                  <input value={popupEmail} onChange={e=>setPopupEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&submitPopup()} placeholder="your@email.com" style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.12)",color:"#fff",padding:"9px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none",minWidth:0}}/>
-                  <button onClick={submitPopup} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"9px 14px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>Join →</button>
-                </div>
-                <div style={{fontSize:10,color:"#aab8c2",display:"flex",alignItems:"center",gap:6}}>
-                  <span style={{color:"#00ff88"}}>✓</span> {SUBSCRIBER_COUNT}+ subscribers · Free · Unsubscribe anytime
-                </div>
-              </>
-            )}
+  <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:20,backdropFilter:"blur(4px)"}}>
+    <div style={{background:"#0d1220",border:"1px solid rgba(0,255,136,0.25)",borderRadius:12,padding:"32px",maxWidth:420,width:"100%",position:"relative",animation:"fu 0.3s ease",boxShadow:"0 20px 60px rgba(0,0,0,0.8)"}}>
+      <button onClick={dismissPopup} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"#aab8c2",fontSize:20,cursor:"pointer",lineHeight:1}}>×</button>
+      <div style={{fontSize:9,color:"#00ff88",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:10}}>Free Weekly Newsletter</div>
+      <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:"#fff",lineHeight:1.2,marginBottom:10}}>The only weekly covering every space stock.</div>
+      <div style={{fontSize:12,color:"#aab8c2",lineHeight:1.7,marginBottom:20}}>Macro overview · Broker target changes · One stock deep dive. Every Sunday morning. Free.</div>
+      {popupSubmitted ? (
+        <div style={{fontSize:13,color:"#00ff88",padding:"10px 0"}}>✓ You're subscribed. Welcome to Orbit Alpha.</div>
+      ) : (
+        <>
+          <div style={{display:"flex",gap:8,marginBottom:14}}>
+            <input value={popupEmail} onChange={e=>setPopupEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&submitPopup()} placeholder="your@email.com" style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",color:"#fff",padding:"11px 14px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none",minWidth:0}}/>
+            <button onClick={submitPopup} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px 18px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>Join Free →</button>
           </div>
-        </div>
+          <div style={{fontSize:10,color:"#aab8c2",display:"flex",alignItems:"center",gap:6}}>
+            <span style={{color:"#00ff88"}}>✓</span> {SUBSCRIBER_COUNT}+ subscribers · Unsubscribe anytime
+          </div>
+        </>
       )}
+    </div>
+  </div>
+)}
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&display=swap');
