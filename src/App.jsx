@@ -724,10 +724,11 @@ export default function App() {
   const [popupEmail, setPopupEmail] = useState("");
   const [popupSubmitted, setPopupSubmitted] = useState(false);
 
-// Issue #5 is now published, so keep this live.
+// Issue #6 is now published, so keep this live.
+// This can point to the Issue #6 URL before Beehiiv has fully generated the page.
 const latestIssueLive = true;
-const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-5";
-
+const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6";
+  
  useEffect(()=>{
   if(popupDismissed || popupSubmitted) return;
   const timer = setTimeout(()=>{ setShowExitPopup(true); }, 5000);
