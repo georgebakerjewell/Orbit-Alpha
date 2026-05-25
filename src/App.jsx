@@ -970,7 +970,7 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6"
 )}
 
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@600;700;800&display=swap');
         @keyframes flashUp{0%{background:rgba(0,255,136,0.3)}100%{background:transparent}}
         @keyframes flashDown{0%{background:rgba(255,68,102,0.3)}100%{background:transparent}}
         @keyframes shimmer{0%{opacity:0.4}50%{opacity:0.8}100%{opacity:0.4}}
@@ -999,7 +999,7 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6"
 
         <nav style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.05)",position:"relative"}}>
           <div onClick={()=>go("home")} style={{cursor:"pointer",display:"flex",alignItems:"baseline",flexShrink:0}}>
-            <span style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em"}}>ORBIT</span>
+            <span style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:"#fff",letterSpacing:"-0.01em"}}>ORBIT</span>
             <span style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#00ff88",letterSpacing:"-0.02em"}}>ALPHA</span>
             <span style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#00ff88"}}>.</span>
           </div>
@@ -1055,7 +1055,7 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6"
         {page==="home"&&(
           <div style={{animation:"fu 0.5s ease"}}>
             <section style={{padding:"40px 20px 28px",textAlign:"center",maxWidth:680,margin:"0 auto"}}>
-              <h1 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,6vw,48px)",fontWeight:800,lineHeight:1.05,letterSpacing:"-0.03em",color:"#fff",marginBottom:10}}>
+              <h1 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,6vw,48px)",fontWeight:700,lineHeight:1.1,letterSpacing:"-0.015em",color:"#fff",marginBottom:10}}>
                 The data layer for<br/><span style={{color:"#00ff88"}}>space equity</span> investors.
               </h1>
               <p style={{fontSize:13,color:"#aab8c2",maxWidth:380,margin:"0 auto 20px",lineHeight:1.6}}>Live prices, launches, earnings and news. Weekly newsletter every Sunday.</p>
@@ -1069,8 +1069,8 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6"
             <section style={{margin:"0 20px 16px",borderRadius:10,border:"1px solid rgba(0,255,136,0.2)",background:"rgba(0,255,136,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
                 <div>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em",marginBottom:2}}>ORBIT <span style={{color:"#00ff88"}}>MARKETS</span></div>
-                  <p style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>Live prices, launches, earnings and news — updated automatically.</p>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:"#fff",letterSpacing:"-0.01em",marginBottom:4}}>ORBIT <span style={{color:"#00ff88"}}>MARKETS</span></div>
+                  <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Live prices, launches, earnings and news — updated automatically.</p>
                 </div>
                 <button onClick={()=>go("markets","stocks")} style={{background:"none",border:"1px solid rgba(0,255,136,0.3)",color:"#00ff88",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Markets →</button>
               </div>
@@ -1088,8 +1088,8 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6"
             <section style={{margin:"0 20px 16px",borderRadius:10,border:"1px solid rgba(255,150,50,0.2)",background:"rgba(255,150,50,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
                 <div>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em",marginBottom:2}}>ORBIT <span style={{color:"#ff9632"}}>FEED</span></div>
-                  <p style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>Live news from 30+ sources · Weekly newsletter every Sunday — all in one place.</p>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:"#fff",letterSpacing:"-0.01em",marginBottom:4}}>ORBIT <span style={{color:"#ff9632"}}>FEED</span></div>
+                  <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Live news from 30+ sources · Weekly newsletter every Sunday — all in one place.</p>
                 </div>
                 <button onClick={()=>go("feed")} style={{background:"none",border:"1px solid rgba(255,150,50,0.3)",color:"#ff9632",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Feed →</button>
               </div>
@@ -1111,8 +1111,8 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6"
             <section style={{margin:"0 20px 40px",borderRadius:10,border:"1px solid rgba(167,139,250,0.2)",background:"rgba(167,139,250,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
                 <div>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#fff",letterSpacing:"-0.02em",marginBottom:2}}>ORBIT <span style={{color:"#a78bfa"}}>THREADS</span></div>
-                  <p style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}>Discuss any space stock with other investors. Pick a username and post.</p>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:"#fff",letterSpacing:"-0.01em",marginBottom:4}}>ORBIT <span style={{color:"#a78bfa"}}>THREADS</span></div>
+                  <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Discuss any space stock with other investors. Pick a username and post.</p>
                 </div>
                 <button onClick={()=>go("threads")} style={{background:"none",border:"1px solid rgba(167,139,250,0.3)",color:"#a78bfa",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Threads →</button>
               </div>
@@ -1234,8 +1234,8 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6"
                               <span style={{fontWeight:700,color:"#00ff88",fontSize:12}}>{s.ticker}</span>
                               {s.type==="etf"&&<span style={{fontSize:8,color:"#7eb8ff",background:"rgba(126,184,255,0.1)",padding:"1px 3px",borderRadius:2}}>ETF</span>}
                             </div>
-                            <div><div style={{fontSize:11,color:"#fff"}}>{s.name}</div><div style={{fontSize:9,color:"#aab8c2",marginTop:1}}>{s.sector}</div></div>
-                            <span style={{fontSize:13,color:"#fff",fontWeight:500}}>${s.price.toFixed(2)}</span>
+                            <div><div style={{fontSize:12,color:"#fff"}}>{s.name}</div><div style={{fontSize:9,color:"#aab8c2",marginTop:1}}>{s.sector}</div></div>
+                            <span style={{fontSize:14,color:"#fff",fontWeight:500}}>${s.price.toFixed(2)}</span>
                             <span style={{fontSize:11,fontWeight:600,padding:"2px 6px",borderRadius:4,background:s.changePct>=0?"rgba(0,255,136,0.12)":"rgba(255,68,102,0.12)",color:s.changePct>=0?"#00ff88":"#ff4466",display:"inline-block",textAlign:"center"}}>{s.changePct>=0?"+":""}{s.changePct.toFixed(1)}%</span>
                             <span style={{color:"#dde1ec",fontSize:10}}>{s.mktCap}</span>
                             <Sparkline data={s.spark7d||s.liveSparkline||SPARKDATA[s.ticker]} positive={s.changePct>=0}/>
@@ -1348,7 +1348,7 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6"
                           <div style={{fontSize:9,color:"#aab8c2",marginTop:2}}>{e.time}</div>
                         </div>
                       </div>
-                      <div style={{fontSize:11,color:"#aab8c2",lineHeight:1.5}}><span style={{color:"#aab8c2",marginRight:6,letterSpacing:"0.08em",fontSize:9,textTransform:"uppercase"}}>Watch:</span>{e.watch}</div>
+                      <div style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}><span style={{color:"#aab8c2",marginRight:6,letterSpacing:"0.08em",fontSize:9,textTransform:"uppercase"}}>Watch:</span>{e.watch}</div>
                     </div>
                   ))}
                   <div style={{padding:"12px",textAlign:"center",fontSize:10,color:"#ccd0d8",borderTop:"1px solid rgba(255,255,255,0.04)",marginTop:8}}>Estimates sourced from analyst consensus · Updated weekly · Not financial advice</div>
@@ -1417,7 +1417,7 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6"
                           </div>
                           <span style={{fontSize:10,color:"#aab8c2",flexShrink:0}}>{item.pubDate?new Date(item.pubDate).toLocaleDateString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):""}</span>
                         </div>
-                        <div style={{fontSize:14,color:item.highlight?"#fff":"#dde1ec",lineHeight:1.5,fontWeight:item.highlight?600:500,marginBottom:6}}>{item.title}</div>
+                        <div style={{fontSize:14,color:item.highlight?"#fff":"#dde1ec",lineHeight:1.65,fontWeight:item.highlight?500:400,fontFamily:"'DM Mono',monospace",marginBottom:6}}>{item.title}</div>
                         {item.description&&<div style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>{item.description}</div>}
                         <div style={{fontSize:10,color:"#ff9632",marginTop:8,opacity:0.8}}>Read full article →</div>
                       </div>
@@ -1451,7 +1451,7 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6"
                     {!issue.live&&<span style={{position:"absolute",top:12,right:12,fontSize:9,color:"#ffcc00",background:"rgba(255,204,0,0.08)",border:"1px solid rgba(255,204,0,0.2)",padding:"2px 8px",borderRadius:3,letterSpacing:"0.1em"}}>COMING SUNDAY</span>}
                     {i===0&&issue.live&&<span style={{position:"absolute",top:12,right:12,fontSize:9,color:"#00ff88",background:"rgba(0,255,136,0.08)",border:"1px solid rgba(0,255,136,0.2)",padding:"2px 8px",borderRadius:3,letterSpacing:"0.1em"}}>LATEST</span>}
                     <div style={{fontSize:10,color:"#ff9632",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:6}}>Issue #{issue.issue} · {issue.date}</div>
-                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:800,color:"#fff",marginBottom:6,lineHeight:1.3}}>{issue.headline}</div>
+                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:700,color:"#fff",marginBottom:6,lineHeight:1.4}}>{issue.headline}</div>
                     <div style={{fontSize:11,color:"#aab8c2",lineHeight:1.6,marginBottom:issue.live?10:0}}>{issue.summary}</div>
                     {issue.live&&<div style={{fontSize:10,color:"#ff9632",opacity:0.7}}>Read issue →</div>}
                   </div>
