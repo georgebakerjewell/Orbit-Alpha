@@ -1035,7 +1035,7 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-7"
             onMouseEnter={e=>{ if(latestIssueLive) e.currentTarget.style.background="rgba(126,184,255,0.1)"; }}
             onMouseLeave={e=>e.currentTarget.style.background="rgba(126,184,255,0.06)"}>
             <span style={{fontSize:11,color:"#7eb8ff",letterSpacing:"0.04em"}}>
-              📬 <strong>Issue #6 {latestIssueLive?"is live":"— coming Sunday"}</strong> — SpaceX sets the benchmark · RKLB files $3bn ATM · MARS ETF deep dive
+              📬 <strong>Issue #7 {latestIssueLive?"is live":"— coming Sunday"}</strong> — The biggest IPO in history drops June 12. SPCX ≠ SPCE
               {latestIssueLive&&<span style={{marginLeft:10,opacity:0.6}}>Read now →</span>}
             </span>
           </div>
