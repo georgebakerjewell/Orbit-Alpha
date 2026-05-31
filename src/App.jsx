@@ -724,10 +724,10 @@ export default function App() {
   const [popupEmail, setPopupEmail] = useState("");
   const [popupSubmitted, setPopupSubmitted] = useState(false);
 
-// Issue #6 is now published, so keep this live.
-// This can point to the Issue #6 URL even if Beehiiv temporarily shows 404 before the page is fully live.
+// Issue #7 is now published, so keep this live.
+// This can point to the Issue #7 URL even if Beehiiv temporarily shows 404 before the page is fully live.
 const latestIssueLive = true;
-const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6";
+const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-7";
   
  useEffect(()=>{
   if(popupDismissed || popupSubmitted) return;
@@ -1440,7 +1440,8 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6"
                 <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
                 <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
                 {[
-                  {issue:6,date:"22 May 2026",headline:"SpaceX sets the benchmark. RKLB files $3bn ATM. Space ETFs heat up.",summary:"SpaceX IPO filing · RKLB $3bn ATM · LUNR lunar contracts · Redwire defence wins · Vast satellite buses · York/Solestial · MARS ETF deep dive",url:LATEST_ISSUE_URL,live:latestIssueLive},
+                  {issue:6,date:"22 May 2026",headline:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",summary:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",url:LATEST_ISSUE_URL,live:latestIssueLive},  
+                  {issue:6,date:"22 May 2026",headline:"SpaceX sets the benchmark. RKLB files $3bn ATM. Space ETFs heat up.",summary:"SpaceX IPO filing · RKLB $3bn ATM · LUNR lunar contracts · Redwire defence wins · Vast satellite buses · York/Solestial · MARS ETF deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6",live:true},
                   {issue:5,date:"15 May 2026",headline:"The week space stopped asking permission.",summary:"Golden Dome · RKLB through every analyst target · LUNR record quarter + Goonhilly · ASTS T-Mobile/AT&T/Verizon JV · SpaceX S-1 this week · LUNR deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-5",live:true},
                   {issue:4,date:"11 May 2026",headline:"RKLB record quarter. HawkEye 360 arrives. ASTS Falcon 9 launch confirmed.",summary:"RKLB +30% on record $200M revenue · HawkEye 360 IPO prices at top of range · ASTS BlueBird 8-10 mid-June launch · RKLB deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-4",live:true},
                   {issue:3,date:"4 May 2026",headline:"SpaceX goes retail. LUNR's $1B moment. The sector re-rates.",summary:"NYSE Space Summit · SpaceX IPO retail allocation · ASTS FCC win vs BlueBird 7 fallout · LUNR deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-3",live:true},
