@@ -724,10 +724,10 @@ export default function App() {
   const [popupEmail, setPopupEmail] = useState("");
   const [popupSubmitted, setPopupSubmitted] = useState(false);
 
-// Issue #7 is now published, so keep this live.
-// This can point to the Issue #7 URL even if Beehiiv temporarily shows 404 before the page is fully live.
+// Issue #8 is now published, so keep this live.
+// This can point to the Issue #8 URL even if Beehiiv temporarily shows 404 before the page is fully live.
 const latestIssueLive = true;
-const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-7";
+const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-8";
   
  useEffect(()=>{
   if(popupDismissed || popupSubmitted) return;
@@ -1035,7 +1035,7 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-7"
             onMouseEnter={e=>{ if(latestIssueLive) e.currentTarget.style.background="rgba(126,184,255,0.1)"; }}
             onMouseLeave={e=>e.currentTarget.style.background="rgba(126,184,255,0.06)"}>
             <span style={{fontSize:11,color:"#7eb8ff",letterSpacing:"0.04em"}}>
-              📬 <strong>Issue #7 {latestIssueLive?"is live":"— coming Sunday"}</strong> — The biggest IPO in history drops June 12. SPCX ≠ SPCE
+              📬 <strong>Issue #8 {latestIssueLive?"is live":"— coming Sunday"}</strong> — Caught between last week's explosion and next week's IPO.
               {latestIssueLive&&<span style={{marginLeft:10,opacity:0.6}}>Read now →</span>}
             </span>
           </div>
@@ -1440,7 +1440,8 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-7"
                 <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
                 <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
                 {[
-                  {issue:6,date:"22 May 2026",headline:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",summary:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",url:LATEST_ISSUE_URL,live:latestIssueLive},  
+                  {issue:8,date:"07 June 2026",headline:"Caught between last week's explosion and next week's IPO.",summary:"Caught between last week's explosion and next week's IPO.",url:LATEST_ISSUE_URL,live:latestIssueLive},    
+                  {issue:7,date:"31 May 2026",headline:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",summary:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-7",live:true},
                   {issue:6,date:"22 May 2026",headline:"SpaceX sets the benchmark. RKLB files $3bn ATM. Space ETFs heat up.",summary:"SpaceX IPO filing · RKLB $3bn ATM · LUNR lunar contracts · Redwire defence wins · Vast satellite buses · York/Solestial · MARS ETF deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6",live:true},
                   {issue:5,date:"15 May 2026",headline:"The week space stopped asking permission.",summary:"Golden Dome · RKLB through every analyst target · LUNR record quarter + Goonhilly · ASTS T-Mobile/AT&T/Verizon JV · SpaceX S-1 this week · LUNR deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-5",live:true},
                   {issue:4,date:"11 May 2026",headline:"RKLB record quarter. HawkEye 360 arrives. ASTS Falcon 9 launch confirmed.",summary:"RKLB +30% on record $200M revenue · HawkEye 360 IPO prices at top of range · ASTS BlueBird 8-10 mid-June launch · RKLB deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-4",live:true},
