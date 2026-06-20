@@ -720,7 +720,14 @@ export default function App() {
   const [menuOpen,setMenuOpen]=useState(false);
   const [liveStocks,setLiveStocks]=useState(STOCKS);
   const [showExitPopup, setShowExitPopup] = useState(false);
-  const [popupDismissed, setPopupDismissed] = useState(false);
+  const [popupDismissed, setPopupDismissed] = useState(() => {
+  try {
+    const dismissed = localStorage.getItem('oa_popup_dismissed');
+    if (!dismissed) return false;
+    if (dismissed === 'subscribed') return true;
+    return Date.now() - parseInt(dismissed) < 30 * 86_400_000;
+  } catch { return false; }
+});
   const [popupEmail, setPopupEmail] = useState("");
   const [popupSubmitted, setPopupSubmitted] = useState(false);
 
@@ -731,11 +738,11 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-9"
   
  useEffect(()=>{
   if(popupDismissed || popupSubmitted) return;
-  const timer = setTimeout(()=>{ setShowExitPopup(true); }, 5000);
+  const timer = setTimeout(()=>{ setShowExitPopup(true); }, 45000);
   return ()=>clearTimeout(timer);
 },[popupDismissed, popupSubmitted]);
 
-  const dismissPopup = () => { setShowExitPopup(false); setPopupDismissed(true); };
+  const dismissPopup = () => { setShowExitPopup(false); setPopupDismissed(true); try { localStorage.setItem('oa_popup_dismissed', Date.now().toString()); } catch {} };
 
   const subscribe = async (emailAddress, onSuccess) => {
     if(!emailAddress || !emailAddress.includes('@')) { alert('Please enter a valid email address.'); return; }
@@ -752,7 +759,7 @@ const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-9"
     } catch(e) { alert('Something went wrong. Please try again.'); }
   };
 
-  const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true); setShowExitPopup(false); }); };
+const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true); setShowExitPopup(false); try { localStorage.setItem('oa_popup_dismissed', 'subscribed'); } catch {} }); };
   const sub = () => { subscribe(email, ()=>setSubmitted(true)); };
 
   const SUBSCRIBER_COUNT = 300;
