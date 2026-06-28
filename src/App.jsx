@@ -15,6 +15,7 @@ const EARNINGS = [
 ];
 
 const STOCKS = [
+  { ticker:"SPCX", name:"SpaceX", price:153.23, changePct:-1.5, mktCap:"272B", short:"4.1%", sentiment:74, mentions:5200, sector:"Launch", type:"large" },
   { ticker:"RKLB", name:"Rocket Lab", price:24.82, changePct:15.9, mktCap:"11.2B", short:"12.4%", sentiment:78, mentions:1842, sector:"Launch", type:"stock" },
   { ticker:"ASTS", name:"AST SpaceMobile", price:31.17, changePct:4.1, mktCap:"6.8B", short:"18.2%", sentiment:65, mentions:2103, sector:"Comms", type:"stock" },
   { ticker:"LUNR", name:"Intuitive Machines", price:8.44, changePct:-6.8, mktCap:"0.9B", short:"22.1%", sentiment:44, mentions:731, sector:"Lunar", type:"stock" },
@@ -51,7 +52,6 @@ const STOCKS = [
 ];
 
 const PRIVATE = [
-  { name:"SpaceX", desc:"Starship, Starlink, Falcon 9. The dominant force in commercial launch.", valuation:"~$350B", sentiment:88, news:"Starship IFT-7 targeting Apr 28. Starlink V3 constellation deployment ongoing." },
   { name:"Blue Origin", desc:"New Glenn orbital rocket, New Shepard tourism. Jeff Bezos backed.", valuation:"~$12B", sentiment:52, news:"New Glenn manifesting commercial payloads for H2 2026." },
   { name:"Relativity Space", desc:"3D-printed rockets. Terran R in development targeting orbital 2026.", valuation:"~$4.2B", sentiment:58, news:"Terran R propulsion test milestone confirmed Q1 2026." },
   { name:"Vast Space", desc:"Commercial space stations. Haven-1 targeting 2026 launch via SpaceX.", valuation:"~$3.5B", sentiment:63, news:"Haven-1 launch window confirmed late 2026, crew selection underway." },
@@ -76,7 +76,7 @@ const LAUNCHES = [
 ];
 
 const SPARKDATA = {
-  RKLB:[18,19,17,20,21,19,22,24,23,24.82], ASTS:[28,27,29,30,29,28,30,31,30,31.17],
+  SPCX:[160,158,154,152,148,150,153,151,152,153.23], RKLB:[18,19,17,20,21,19,22,24,23,24.82], ASTS:[28,27,29,30,29,28,30,31,30,31.17],
   LUNR:[10,9.5,9,8.8,9.2,9,8.5,8.6,8.5,8.44], PL:[3.5,3.6,3.7,3.6,3.8,3.9,3.8,3.9,3.9,3.91],
   RDW:[10,10.2,10.5,10.8,11,10.7,11,11.1,11.2,11.23], MNTS:[2.2,2.1,2,1.95,1.9,1.88,1.85,1.82,1.83,1.82],
   SPCE:[2.5,2.4,2.3,2.25,2.2,2.2,2.15,2.1,2.12,2.14], BKSY:[5.2,5.5,5.8,5.9,6.1,5.9,6.0,6.1,6.0,6.14],
@@ -192,7 +192,7 @@ function TickerStrip({ stocks }) {
 // THREADS PAGE
 // ─────────────────────────────────────────────────────────────────────────────
 
-const TICKER_LIST = ["RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","UFO","ARKX","HAWK","VOYG","YSS","SATS"];
+const TICKER_LIST = ["SPCX","RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","UFO","ARKX","HAWK","VOYG","YSS","SATS"];
 
 const SORT_OPTIONS = [
   { id: "hot",      label: "🔥 Hot" },
@@ -811,7 +811,7 @@ const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true);
     try {
       const tickers = ALL_TICKERS.slice(0,35);
       // Priority tickers: fetch all at once immediately so the page feels live within ~1-2s
-      const PRIORITY = ["RKLB","ASTS","LUNR","PL","HAWK","BKSY","RDW","SPCE","OKLO","LMT"];
+      const PRIORITY = ["SPCX","RKLB","ASTS","LUNR","PL","HAWK","BKSY","RDW","SPCE","OKLO","LMT"];
       const rest = tickers.filter(t => !PRIORITY.includes(t));
 
       // Round 1: all priority tickers in parallel — no delay, paint live data fast
@@ -1388,7 +1388,7 @@ const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true);
                   <div style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"#00ff88",flexShrink:0}}><div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>LIVE</div>
                 </div>
                 <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:20}}>
-                  {["All","RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","HAWK","SpaceX","Blue Origin","Relativity","Vast","ispace","NASA","ESA","ISRO","Space Force"].map(co=>(
+                 {["All","SPCX","RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","HAWK","Blue Origin","Relativity","Vast","ispace","NASA","ESA","ISRO","Space Force"].map(co=>(
                     <span key={co} onClick={()=>setNewsCompany(co==="All"?"":co)} className="stg" style={{color:newsCompany===(co==="All"?"":co)?"#ff9632":"#ccd0d8",borderColor:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.3)":"rgba(255,255,255,0.2)",background:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.05)":"transparent",fontSize:9}}>{co}</span>
                   ))}
                 </div>
@@ -1402,7 +1402,7 @@ const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true);
                     GILT:['Gilat Satellite','GILT'],DXYZ:['Destiny Tech','DXYZ'],LMT:['Lockheed Martin','LMT'],FLY:['Firefly Aerospace','FLY','Alpha rocket'],
                     OKLO:['Oklo','OKLO','nuclear microreactor'],BA:['Boeing','BA'],NOC:['Northrop Grumman','NOC'],RTX:['RTX','Raytheon'],
                     HAWK:['HawkEye 360','HAWK','SIGINT','RF intelligence'],SATS:['EchoStar','SATS'],VOYG:['Voyager Technologies','VOYG'],YSS:['York Space','YSS'],
-                    SpaceX:['SpaceX','Starship','Falcon','Starlink'],'Blue Origin':['Blue Origin','New Glenn','BE-4'],Relativity:['Relativity Space','Terran'],
+                    SpaceX:['SPCX','SpaceX','Starship','Falcon','Starlink'],'Blue Origin':['Blue Origin','New Glenn','BE-4'],Relativity:['Relativity Space','Terran'],
                     Vast:['Vast Space','Haven-1'],ispace:['ispace','HAKUTO'],NASA:['NASA','Artemis','ISS'],ESA:['ESA','European Space Agency','Ariane'],
                     ISRO:['ISRO','Gaganyaan','Chandrayaan'],'Space Force':['Space Force','USSF','NSSL','Golden Dome'],
                   };
