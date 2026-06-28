@@ -731,10 +731,10 @@ export default function App() {
   const [popupEmail, setPopupEmail] = useState("");
   const [popupSubmitted, setPopupSubmitted] = useState(false);
 
-// Issue #10 is now published, so keep this live.
-// This can point to the Issue #9 URL even if Beehiiv temporarily shows 404 before the page is fully live.
+// Issue #11 is now published, so keep this live.
+// This can point to the Issue #11 URL even if Beehiiv temporarily shows 404 before the page is fully live.
 const latestIssueLive = true;
-const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-10";
+const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-11";
   
  useEffect(()=>{
   if(popupDismissed || popupSubmitted) return;
@@ -1447,7 +1447,8 @@ const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true);
                 <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
                 <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
                 {[
-                  {issue:10,date:'07 June 2026',headline:'Upgraded and dumped in the same 48 hours',summary:'Upgraded and dumped in the same 48 hours.',url:LATEST_ISSUE_URL,live:latestIssueLive},  
+                  {issue:11,date:'07 June 2026',headline:'Wall Street bought the bonds and dumped the stock.',summary:'Wall Street bought the bonds and dumped the stock.',url:LATEST_ISSUE_URL,live:latestIssueLive},  
+                  {issue:10,date:'07 June 2026',headline:'Upgraded and dumped in the same 48 hours',summary:'Upgraded and dumped in the same 48 hours.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-10",live:true}, 
                   {issue:9,date:'07 June 2026',headline:'The week "space" stopped being one trade.',summary:'The week "space" stopped being one trade.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-9",live:true},    
                   {issue:8,date:"07 June 2026",headline:"Caught between last week's explosion and next week's IPO.",summary:"Caught between last week's explosion and next week's IPO.",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-8",live:true}, 
                   {issue:7,date:"31 May 2026",headline:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",summary:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-7",live:true},
