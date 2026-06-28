@@ -1042,7 +1042,7 @@ const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true);
             onMouseEnter={e=>{ if(latestIssueLive) e.currentTarget.style.background="rgba(126,184,255,0.1)"; }}
             onMouseLeave={e=>e.currentTarget.style.background="rgba(126,184,255,0.06)"}>
             <span style={{fontSize:11,color:"#7eb8ff",letterSpacing:"0.04em"}}>
-              📬 <strong>Issue #10 {latestIssueLive?"is live":"— coming Sunday"}</strong> — Upgraded and dumped in the same 48 hours
+              📬 <strong>Issue #11 {latestIssueLive?"is live":"— coming Sunday"}</strong> — Upgraded and dumped in the same 48 hours
               {latestIssueLive&&<span style={{marginLeft:10,opacity:0.6}}>Read now →</span>}
             </span>
           </div>
@@ -1447,9 +1447,9 @@ const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true);
                 <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
                 <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
                 {[
-                  {issue:11,date:'07 June 2026',headline:'Wall Street bought the bonds and dumped the stock.',summary:'Wall Street bought the bonds and dumped the stock.',url:LATEST_ISSUE_URL,live:latestIssueLive},  
-                  {issue:10,date:'07 June 2026',headline:'Upgraded and dumped in the same 48 hours',summary:'Upgraded and dumped in the same 48 hours.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-10",live:true}, 
-                  {issue:9,date:'07 June 2026',headline:'The week "space" stopped being one trade.',summary:'The week "space" stopped being one trade.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-9",live:true},    
+                  {issue:11,date:'28 June 2026',headline:'Wall Street bought the bonds and dumped the stock.',summary:'Wall Street bought the bonds and dumped the stock.',url:LATEST_ISSUE_URL,live:latestIssueLive},  
+                  {issue:10,date:'21 June 2026',headline:'Upgraded and dumped in the same 48 hours',summary:'Upgraded and dumped in the same 48 hours.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-10",live:true}, 
+                  {issue:9,date:'14 June 2026',headline:'The week "space" stopped being one trade.',summary:'The week "space" stopped being one trade.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-9",live:true},    
                   {issue:8,date:"07 June 2026",headline:"Caught between last week's explosion and next week's IPO.",summary:"Caught between last week's explosion and next week's IPO.",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-8",live:true}, 
                   {issue:7,date:"31 May 2026",headline:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",summary:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-7",live:true},
                   {issue:6,date:"22 May 2026",headline:"SpaceX sets the benchmark. RKLB files $3bn ATM. Space ETFs heat up.",summary:"SpaceX IPO filing · RKLB $3bn ATM · LUNR lunar contracts · Redwire defence wins · Vast satellite buses · York/Solestial · MARS ETF deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6",live:true},
