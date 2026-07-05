@@ -1042,7 +1042,7 @@ const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true);
             onMouseEnter={e=>{ if(latestIssueLive) e.currentTarget.style.background="rgba(126,184,255,0.1)"; }}
             onMouseLeave={e=>e.currentTarget.style.background="rgba(126,184,255,0.06)"}>
             <span style={{fontSize:11,color:"#7eb8ff",letterSpacing:"0.04em"}}>
-              📬 <strong>Issue #11 {latestIssueLive?"is live":"— coming Sunday"}</strong> — Upgraded and dumped in the same 48 hours
+              📬 <strong>Issue #12 {latestIssueLive?"is live":"— coming Sunday"}</strong> — The week the sector stopped selling and started buying.
               {latestIssueLive&&<span style={{marginLeft:10,opacity:0.6}}>Read now →</span>}
             </span>
           </div>
