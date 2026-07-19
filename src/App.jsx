@@ -731,10 +731,10 @@ export default function App() {
   const [popupEmail, setPopupEmail] = useState("");
   const [popupSubmitted, setPopupSubmitted] = useState(false);
 
-// Issue #13 is now published, so keep this live.
-// This can point to the Issue #13 URL even if Beehiiv temporarily shows 404 before the page is fully live.
+// Issue #14 is now published, so keep this live.
+// This can point to the Issue #14 URL even if Beehiiv temporarily shows 404 before the page is fully live.
 const latestIssueLive = true;
-const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-13";
+const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-14";
   
  useEffect(()=>{
   if(popupDismissed || popupSubmitted) return;
@@ -1042,7 +1042,7 @@ const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true);
             onMouseEnter={e=>{ if(latestIssueLive) e.currentTarget.style.background="rgba(126,184,255,0.1)"; }}
             onMouseLeave={e=>e.currentTarget.style.background="rgba(126,184,255,0.06)"}>
             <span style={{fontSize:11,color:"#7eb8ff",letterSpacing:"0.04em"}}>
-              📬 <strong>Issue #13 {latestIssueLive?"is live":"— coming Sunday"}</strong> — The index funds bought. Everyone else sold.
+              📬 <strong>Issue #14 {latestIssueLive?"is live":"— coming Sunday"}</strong> — Below the IPO price. Below the floor. Below everything.
               {latestIssueLive&&<span style={{marginLeft:10,opacity:0.6}}>Read now →</span>}
             </span>
           </div>
@@ -1447,7 +1447,8 @@ const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true);
                 <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
                 <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
                 {[
-                  {issue:13,date:'12 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'The index funds bought. Everyone else sold.',url:LATEST_ISSUE_URL,live:latestIssueLive},  
+                  {issue:14,date:'19 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'Below the IPO price. Below the floor. Below everything.',url:LATEST_ISSUE_URL,live:latestIssueLive},  
+                  {issue:13,date:'12 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'The index funds bought. Everyone else sold.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-13",live:true},  
                   {issue:12,date:'05 July 2026',headline:'The week the sector stopped selling and started buying.',summary:'The week the sector stopped selling and started buying.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-12",live:true},   
                   {issue:11,date:'28 June 2026',headline:'Wall Street bought the bonds and dumped the stock.',summary:'Wall Street bought the bonds and dumped the stock.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-11",live:true}, 
                   {issue:10,date:'21 June 2026',headline:'Upgraded and dumped in the same 48 hours',summary:'Upgraded and dumped in the same 48 hours.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-10",live:true}, 
