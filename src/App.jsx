@@ -947,8 +947,8 @@ const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true);
     return arr;
   })();
 
-  const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"],["threads","Threads"]];
-
+const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"]];
+  
   return (
     <div style={{minHeight:"100vh",background:"#04060e",color:"#dde1ec",fontFamily:"'DM Mono',monospace",fontSize:13,position:"relative",overflowX:"hidden"}}>
 
