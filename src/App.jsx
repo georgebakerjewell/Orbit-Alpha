@@ -1447,7 +1447,7 @@ const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"]];
                 <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
                 <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All s</div>
                 {[
-                  {issue:14,date:'26 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'Starship flew. The stock didn't care.',url:LATEST__URL,live:latestLive},  
+                  {issue:15,date:'26 July 2026',headline:'Starship flew. The stock didn't care.',summary:'Starship flew. The stock didn't care.',url:LATEST__URL,live:latestLive},  
                   {issue:14,date:'19 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'Below the IPO price. Below the floor. Below everything.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha--14",live:true},  
                   {issue:13,date:'12 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'The index funds bought. Everyone else sold.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha--13",live:true},  
                   {issue:12,date:'05 July 2026',headline:'The week the sector stopped selling and started buying.',summary:'The week the sector stopped selling and started buying.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-12",live:true},   
