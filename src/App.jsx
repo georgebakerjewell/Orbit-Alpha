@@ -731,10 +731,10 @@ export default function App() {
   const [popupEmail, setPopupEmail] = useState("");
   const [popupSubmitted, setPopupSubmitted] = useState(false);
 
-//  #15 is now published, so keep this live.
-// This can point to the  #15 URL even if Beehiiv temporarily shows 404 before the page is fully live.
-const latestLive = true;
-const LATEST__URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha--15";
+// Issue #15 is now published, so keep this live.
+// This can point to the Issue #15 URL even if Beehiiv temporarily shows 404 before the page is fully live.
+const latestIssueLive = true;
+const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-15";
   
  useEffect(()=>{
   if(popupDismissed || popupSubmitted) return;
@@ -1038,12 +1038,12 @@ const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"]];
         {(page==="home"||page==="markets")&&<TickerStrip stocks={liveStocks}/>}
 
         {page==="home"&&(
-          <div onClick={()=>latestLive&&window.open(LATEST__URL,"_blank")} style={{background:"rgba(126,184,255,0.06)",borderBottom:"1px solid rgba(126,184,255,0.12)",padding:"8px 20px",textAlign:"center",cursor:latestLive?"pointer":"default",transition:"background 0.2s"}}
-            onMouseEnter={e=>{ if(latestLive) e.currentTarget.style.background="rgba(126,184,255,0.1)"; }}
+          <div onClick={()=>latestIssueLive&&window.open(LATEST_ISSUE_URL,"_blank")} style={{background:"rgba(126,184,255,0.06)",borderBottom:"1px solid rgba(126,184,255,0.12)",padding:"8px 20px",textAlign:"center",cursor:latestIssueLive?"pointer":"default",transition:"background 0.2s"}}
+            onMouseEnter={e=>{ if(latestIssueLive) e.currentTarget.style.background="rgba(126,184,255,0.1)"; }}
             onMouseLeave={e=>e.currentTarget.style.background="rgba(126,184,255,0.06)"}>
             <span style={{fontSize:11,color:"#7eb8ff",letterSpacing:"0.04em"}}>
-              📬 <strong> #15 {latestLive?"is live":"— coming Sunday"}</strong> — Starship flew. The stock didn't care.
-              {latestLive&&<span style={{marginLeft:10,opacity:0.6}}>Read now →</span>}
+              📬 <strong>Issue #15 {latestIssueLive?"is live":"— coming Sunday"}</strong> — Starship flew. The stock didn't care.
+              {latestIssueLive&&<span style={{marginLeft:10,opacity:0.6}}>Read now →</span>}
             </span>
           </div>
         )}
@@ -1257,7 +1257,7 @@ const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"]];
                               <div style={{display:"flex",gap:10,marginTop:8,flexWrap:"wrap"}}>
                                 <span style={{fontSize:10,color:"#ccd0d8",background:"rgba(255,255,255,0.04)",padding:"3px 10px",borderRadius:3}}>{s.sector}</span>
                                 <span onClick={()=>window.open(`https://finance.yahoo.com/quote/${s.ticker}`,"_blank")} style={{fontSize:10,color:"#7eb8ff",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(126,184,255,0.2)"}}>View on Yahoo Finance →</span>
-                                <span onClick={goSubscribe} style={{fontSize:10,color:"#00ff88",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(0,255,136,0.2)"}}>{s.ticker} covered in this week's  →</span>
+                                <span onClick={goSubscribe} style={{fontSize:10,color:"#00ff88",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(0,255,136,0.2)"}}>{s.ticker} covered in this week's issue →</span>
                                 <span onClick={()=>go("threads")} style={{fontSize:10,color:"#a78bfa",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(167,139,250,0.2)"}}>Discuss {s.ticker} →</span>
                               </div>
                             </div>
@@ -1445,11 +1445,11 @@ const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"]];
                   </div>
                 )}
                 <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
-                <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All s</div>
+                <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
                 {[
-                  {issue:15,date:'26 July 2026',headline:'Starship flew. The stock didn't care.',summary:'Starship flew. The stock didn't care.',url:LATEST__URL,live:latestLive},  
-                  {issue:14,date:'19 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'Below the IPO price. Below the floor. Below everything.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha--14",live:true},  
-                  {issue:13,date:'12 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'The index funds bought. Everyone else sold.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha--13",live:true},  
+                  {issue:15,date:'26 July 2026',headline:'Starship flew. The stock didn't care.',summary:'Starship flew. The stock didn't care.',url:LATEST_ISSUE_URL,live:latestIssueLive},  
+                  {issue:14,date:'19 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'Below the IPO price. Below the floor. Below everything.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-14",live:true},
+                  {issue:13,date:'12 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'The index funds bought. Everyone else sold.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-13",live:true},  
                   {issue:12,date:'05 July 2026',headline:'The week the sector stopped selling and started buying.',summary:'The week the sector stopped selling and started buying.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-12",live:true},   
                   {issue:11,date:'28 June 2026',headline:'Wall Street bought the bonds and dumped the stock.',summary:'Wall Street bought the bonds and dumped the stock.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-11",live:true}, 
                   {issue:10,date:'21 June 2026',headline:'Upgraded and dumped in the same 48 hours',summary:'Upgraded and dumped in the same 48 hours.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-10",live:true}, 
