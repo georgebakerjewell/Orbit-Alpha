@@ -731,10 +731,10 @@ export default function App() {
   const [popupEmail, setPopupEmail] = useState("");
   const [popupSubmitted, setPopupSubmitted] = useState(false);
 
-// Issue #15 is now published, so keep this live.
+// Issue #17 is now published, so keep this live.
 // This can point to the Issue #15 URL even if Beehiiv temporarily shows 404 before the page is fully live.
 const latestIssueLive = true;
-const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-15";
+const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-17";
   
  useEffect(()=>{
   if(popupDismissed || popupSubmitted) return;
@@ -1042,7 +1042,7 @@ const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"]];
             onMouseEnter={e=>{ if(latestIssueLive) e.currentTarget.style.background="rgba(126,184,255,0.1)"; }}
             onMouseLeave={e=>e.currentTarget.style.background="rgba(126,184,255,0.06)"}>
             <span style={{fontSize:11,color:"#7eb8ff",letterSpacing:"0.04em"}}>
-              📬 <strong>Issue #15 {latestIssueLive?"is live":"— coming Sunday"}</strong> — Starship flew. The stock didn't care.
+              📬 <strong>Issue #17 {latestIssueLive?"is live":"— coming Sunday"}</strong> — $7.8 billion in revenue. The only space stock that fell.
               {latestIssueLive&&<span style={{marginLeft:10,opacity:0.6}}>Read now →</span>}
             </span>
           </div>
@@ -1447,8 +1447,10 @@ const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"]];
                 <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
                 <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
                 {[
-                  {issue:15,date:'26 July 2026',headline:"Starship flew. The stock didn't care.",summary:"Starship flew. The stock didn't care.",url:LATEST_ISSUE_URL,live:latestIssueLive},  
-                  {issue:14,date:'19 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'Below the IPO price. Below the floor. Below everything.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-14",live:true},
+                  {issue:17,date:'09 August 2026',headline:"$7.8 billion in revenue. The only space stock that fell.",summary:"$7.8 billion in revenue. The only space stock that fell.",url:LATEST_ISSUE_URL,live:latestIssueLive},  
+                  {issue:16,date:'02 August 2026',headline:"The bottom before the answer.",summary:"The bottom before the answer..",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-16",live:true},  
+                  {issue:15,date:'26 July 2026',headline:"Starship flew. The stock didn't care.",summary:"Starship flew. The stock didn't care.",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-15",live:true},
+                  {issue:14,date:'19 July 2026',headline:"Below the IPO price. Below the floor. Below everything."',summary:"Below the IPO price. Below the floor. Below everything.",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-14",live:true},
                   {issue:13,date:'12 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'The index funds bought. Everyone else sold.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-13",live:true},  
                   {issue:12,date:'05 July 2026',headline:'The week the sector stopped selling and started buying.',summary:'The week the sector stopped selling and started buying.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-12",live:true},   
                   {issue:11,date:'28 June 2026',headline:'Wall Street bought the bonds and dumped the stock.',summary:'Wall Street bought the bonds and dumped the stock.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-11",live:true}, 
