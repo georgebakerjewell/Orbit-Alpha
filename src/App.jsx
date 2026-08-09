@@ -732,7 +732,7 @@ export default function App() {
   const [popupSubmitted, setPopupSubmitted] = useState(false);
 
 // Issue #17 is now published, so keep this live.
-// This can point to the Issue #15 URL even if Beehiiv temporarily shows 404 before the page is fully live.
+// This can point to the Issue #17 URL even if Beehiiv temporarily shows 404 before the page is fully live.
 const latestIssueLive = true;
 const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-17";
   
