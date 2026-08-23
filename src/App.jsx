@@ -1115,31 +1115,11 @@ const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"]];
               ))}
             </section>
 
-            <section style={{margin:"0 20px 40px",borderRadius:10,border:"1px solid rgba(167,139,250,0.2)",background:"rgba(167,139,250,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
-                <div>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:"#fff",letterSpacing:"-0.01em",marginBottom:4}}>ORBIT <span style={{color:"#a78bfa"}}>THREADS</span></div>
-                  <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Discuss any space stock with other investors. Pick a username and post.</p>
-                </div>
-                <button onClick={()=>go("threads")} style={{background:"none",border:"1px solid rgba(167,139,250,0.3)",color:"#a78bfa",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Threads →</button>
-              </div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
-                {[{e:"💬",t:"Per-ticker threads",d:"Every stock has its own discussion board. Find the names you follow."},{e:"⬆",t:"Vote the best up",d:"Upvote sharp analysis. Downvote noise. The good stuff rises."},{e:"🪪",t:"Pick a username",d:"No signup needed. Set a handle once and it sticks in your browser."}].map((f,i)=>(
-                  <div key={i} style={{borderRadius:6,padding:"12px",background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)"}}>
-                    <div style={{fontSize:16,marginBottom:4}}>{f.e}</div>
-                    <div style={{fontSize:11,color:"#fff",marginBottom:3,fontWeight:500}}>{f.t}</div>
-                    <div style={{fontSize:10,color:"#aab8c2",lineHeight:1.5}}>{f.d}</div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
             <footer style={{padding:"24px 20px",borderTop:"1px solid rgba(255,255,255,0.04)",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
               <span style={{fontFamily:"'Syne',sans-serif",fontSize:13,fontWeight:800,color:"#222"}}>ORBIT<span style={{color:"#00ff88"}}>ALPHA</span>.</span>
               <span style={{fontSize:10,color:"#aab8c2"}}>Not financial advice · Data via Yahoo Finance & rocketlaunch.live</span>
               <div style={{display:"flex",gap:16,fontSize:10,color:"#aab8c2",flexWrap:"wrap"}}>
                 <span onClick={()=>go("feed")} style={{cursor:"pointer"}} className="hov">Feed</span>
-                <span onClick={()=>go("threads")} style={{cursor:"pointer"}} className="hov">Threads</span>
                 <span onClick={()=>go("about")} style={{cursor:"pointer"}} className="hov">About</span>
                 <a href="mailto:OrbitAlphaApp@proton.me" style={{color:"#aab8c2",textDecoration:"none"}} className="hov">Contact</a>
               </div>
