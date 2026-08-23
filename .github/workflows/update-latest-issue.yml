@@ -2,7 +2,8 @@ name: Update latest newsletter issue
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 16 * * 0"   # ~5pm UK time (4pm in winter GMT), every Sunday
+    - cron: "0 6 * * *"    # daily safety-net check, in case Sunday's run is ever missed
   workflow_dispatch: {}
 
 permissions:
