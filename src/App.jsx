@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import issuesData from "./issues.json";
 
 const BEEHIIV_URL = "https://orbit-alpha.beehiiv.com/subscribe";
 
@@ -731,10 +732,9 @@ export default function App() {
   const [popupEmail, setPopupEmail] = useState("");
   const [popupSubmitted, setPopupSubmitted] = useState(false);
 
-// Issue #17 is now published, so keep this live.
-// This can point to the Issue #17 URL even if Beehiiv temporarily shows 404 before the page is fully live.
-const latestIssueLive = true;
-const LATEST_ISSUE_URL = "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-17";
+const latestIssue = issuesData[0];
+const latestIssueLive = latestIssue.live;
+const LATEST_ISSUE_URL = latestIssue.url;
   
  useEffect(()=>{
   if(popupDismissed || popupSubmitted) return;
@@ -1042,7 +1042,7 @@ const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"]];
             onMouseEnter={e=>{ if(latestIssueLive) e.currentTarget.style.background="rgba(126,184,255,0.1)"; }}
             onMouseLeave={e=>e.currentTarget.style.background="rgba(126,184,255,0.06)"}>
             <span style={{fontSize:11,color:"#7eb8ff",letterSpacing:"0.04em"}}>
-              📬 <strong>Issue #17 {latestIssueLive?"is live":"— coming Sunday"}</strong> — $7.8 billion in revenue. The only space stock that fell.
+              📬 <strong>Issue #{latestIssue.issue} {latestIssueLive?"is live":"— coming Sunday"}</strong> — {latestIssue.headline}
               {latestIssueLive&&<span style={{marginLeft:10,opacity:0.6}}>Read now →</span>}
             </span>
           </div>
@@ -1446,25 +1446,7 @@ const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"]];
                 )}
                 <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
                 <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
-                {[
-                  {issue:17,date:'09 August 2026',headline:"$7.8 billion in revenue. The only space stock that fell.",summary:"$7.8 billion in revenue. The only space stock that fell.",url:LATEST_ISSUE_URL,live:latestIssueLive},  
-                  {issue:16,date:'02 August 2026',headline:"The bottom before the answer.",summary:"The bottom before the answer..",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-16",live:true},  
-                  {issue:15,date:'26 July 2026',headline:"Starship flew. The stock didn't care.",summary:"Starship flew. The stock didn't care.",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-15",live:true},
-                  {issue:14,date:'19 July 2026',headline:"Below the IPO price. Below the floor. Below everything.",summary:"Below the IPO price. Below the floor. Below everything.",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-14",live:true},
-                  {issue:13,date:'12 July 2026',headline:'The index funds bought. Everyone else sold.',summary:'The index funds bought. Everyone else sold.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-13",live:true},  
-                  {issue:12,date:'05 July 2026',headline:'The week the sector stopped selling and started buying.',summary:'The week the sector stopped selling and started buying.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-12",live:true},   
-                  {issue:11,date:'28 June 2026',headline:'Wall Street bought the bonds and dumped the stock.',summary:'Wall Street bought the bonds and dumped the stock.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-11",live:true}, 
-                  {issue:10,date:'21 June 2026',headline:'Upgraded and dumped in the same 48 hours',summary:'Upgraded and dumped in the same 48 hours.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-10",live:true}, 
-                  {issue:9,date:'14 June 2026',headline:'The week "space" stopped being one trade.',summary:'The week "space" stopped being one trade.',url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-9",live:true},    
-                  {issue:8,date:"07 June 2026",headline:"Caught between last week's explosion and next week's IPO.",summary:"Caught between last week's explosion and next week's IPO.",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-8",live:true}, 
-                  {issue:7,date:"31 May 2026",headline:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",summary:"The biggest IPO in history drops June 12. SPCX ≠ SPCE.",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-7",live:true},
-                  {issue:6,date:"22 May 2026",headline:"SpaceX sets the benchmark. RKLB files $3bn ATM. Space ETFs heat up.",summary:"SpaceX IPO filing · RKLB $3bn ATM · LUNR lunar contracts · Redwire defence wins · Vast satellite buses · York/Solestial · MARS ETF deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-6",live:true},
-                  {issue:5,date:"15 May 2026",headline:"The week space stopped asking permission.",summary:"Golden Dome · RKLB through every analyst target · LUNR record quarter + Goonhilly · ASTS T-Mobile/AT&T/Verizon JV · SpaceX S-1 this week · LUNR deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-5",live:true},
-                  {issue:4,date:"11 May 2026",headline:"RKLB record quarter. HawkEye 360 arrives. ASTS Falcon 9 launch confirmed.",summary:"RKLB +30% on record $200M revenue · HawkEye 360 IPO prices at top of range · ASTS BlueBird 8-10 mid-June launch · RKLB deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-4",live:true},
-                  {issue:3,date:"4 May 2026",headline:"SpaceX goes retail. LUNR's $1B moment. The sector re-rates.",summary:"NYSE Space Summit · SpaceX IPO retail allocation · ASTS FCC win vs BlueBird 7 fallout · LUNR deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-3",live:true},
-                  {issue:2,date:"25 Apr 2026",headline:"ASTS BlueBird 7 fails — what it means for your portfolio.",summary:"BlueBird 7 orbital failure · Stifel raises RKLB to $105 · Starship update · ASTS deep dive: bull case, bear case",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-2",live:true},
-                  {issue:1,date:"19 Apr 2026",headline:"The week space went mainstream.",summary:"RKLB +9% on CEO conviction · SpaceX $1.75T IPO filing · Artemis II · RKLB deep dive",url:"https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-1",live:true},
-                ].map((issue,i)=>(
+                 {issuesData.map((issue,i)=>(
                   <div key={i} className="hov" onClick={()=>issue.live&&window.open(issue.url,"_blank")} style={{border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:"20px",marginBottom:10,background:"rgba(255,255,255,0.01)",cursor:issue.live?"pointer":"default",opacity:issue.live?1:0.5,position:"relative"}}>
                     {!issue.live&&<span style={{position:"absolute",top:12,right:12,fontSize:9,color:"#ffcc00",background:"rgba(255,204,0,0.08)",border:"1px solid rgba(255,204,0,0.2)",padding:"2px 8px",borderRadius:3,letterSpacing:"0.1em"}}>COMING SUNDAY</span>}
                     {i===0&&issue.live&&<span style={{position:"absolute",top:12,right:12,fontSize:9,color:"#00ff88",background:"rgba(0,255,136,0.08)",border:"1px solid rgba(0,255,136,0.2)",padding:"2px 8px",borderRadius:3,letterSpacing:"0.1em"}}>LATEST</span>}
