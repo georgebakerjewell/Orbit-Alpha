@@ -18,7 +18,12 @@ function decodeEntities(str) {
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
     .replace(/&#8217;/g, "'")
+    .replace(/&#8216;/g, "'")
+    .replace(/&#8220;/g, '"')
+    .replace(/&#8221;/g, '"')
     .replace(/&#8211;/g, "–")
     .replace(/&#8212;/g, "—")
     .replace(/&nbsp;/g, " ")
@@ -26,21 +31,17 @@ function decodeEntities(str) {
     .trim();
 }
 
+// Beehiiv puts the hook line as plain text right after "MARKET OVERVIEW</span><br>",
+// inside the same <h3> tag, up to the closing </h3>.
 function extractHeadline(html) {
   if (!html) return null;
-  const marketIdx = html.search(/MARKET\s+OVERVIEW/i);
-  if (marketIdx === -1) return null;
-  const after = html.slice(marketIdx + 15, marketIdx + 1500);
-  const headingMatch = after.match(/<(h[1-6]|strong|b)[^>]*>([\s\S]*?)<\/\1>/i);
-  let text = headingMatch ? headingMatch[2] : null;
-  if (!text) return null;
-  text = decodeEntities(text.replace(/<[^>]+>/g, ""));
-  if (!text || text.length < 8 || text.length > 200) return null;
+  const match = html.match(/MARKET\s+OVERVIEW<\/span><br\s*\/?>([\s\S]*?)<\/h3>/i);
+  if (!match) return null;
+  let text = decodeEntities(match[1].replace(/<[^>]+>/g, ""));
+  // Strip a leading emoji (e.g. 🌎) and the space after it, if present.
+  text = text.replace(/^[\p{Extended_Pictographic}\u200d\uFE0F\s]+/u, "").trim();
+  if (!text || text.length < 8 || text.length > 400) return null;
   return text;
-}
-
-function stripHtml(html) {
-  return decodeEntities((html || "").replace(/<[^>]+>/g, ""));
 }
 
 async function main() {
@@ -55,8 +56,8 @@ async function main() {
   const title = decodeEntities(extractTag(item, "title"));
   const link = extractTag(item, "link").trim();
   const pubDate = extractTag(item, "pubDate");
-  const rawDescription = extractTag(item, "description");
   const rawContent = extractTag(item, "content:encoded");
+  const rawDescription = extractTag(item, "description");
   const bodyHtml = rawContent || rawDescription;
 
   const issueMatch = title.match(/Issue\s*#?\s*(\d+)/i);
@@ -81,13 +82,12 @@ async function main() {
   const extractedHeadline = extractHeadline(bodyHtml);
   const fallback = `Issue #${issueNum} is live — read the full breakdown.`;
   const headline = extractedHeadline || fallback;
-  const plainSummary = stripHtml(rawDescription).slice(0, 200) || headline;
 
   const newEntry = {
     issue: issueNum,
     date: dateFormatted,
     headline,
-    summary: plainSummary,
+    summary: headline,
     url: link,
     live: true,
   };
@@ -96,7 +96,7 @@ async function main() {
   writeFileSync(ISSUES_PATH, JSON.stringify(issues, null, 2) + "\n");
   console.log(`Added Issue #${issueNum}: "${headline}"`);
   if (!extractedHeadline) {
-    console.log("Note: fell back to generic headline — the MARKET OVERVIEW pattern wasn't found in the feed content as expected.");
+    console.log("Note: fell back to generic headline — the MARKET OVERVIEW pattern wasn't found as expected.");
   }
 }
 
