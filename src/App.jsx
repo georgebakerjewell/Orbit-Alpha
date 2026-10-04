@@ -466,7 +466,9 @@ const GlobalStyles = () => (
     .oa-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
     a.oa-link:hover{text-decoration:underline}
     .oa-price{text-align:right}
-    @media(max-width:600px){.oa-price{text-align:left}.desk-only{display:none!important}.mob-only{display:block!important}}
+    .oa-tab:hover{border-color:rgba(0,255,136,0.35)!important;background:rgba(0,255,136,0.05)!important}
+    .oa-tabs::-webkit-scrollbar{height:0}
+    @media(max-width:600px){.oa-tabs{flex-wrap:wrap;overflow-x:visible!important}.oa-tab{flex:1 1 calc(50% - 4px)!important;min-width:0!important;padding:8px 12px!important}.oa-price{text-align:left}.desk-only{display:none!important}.mob-only{display:block!important}}
   `}</style>
 );
 
@@ -865,7 +867,14 @@ function Home({ news, prices, launches }) {
 /* ════════════════════════════════════════════════════════════════════════════
    MARKETS PAGE
    ════════════════════════════════════════════════════════════════════════════ */
-const TABS = [["stocks", "Stocks"], ["performance", "Performance"], ["launches", "Launches"], ["earnings", "Earnings"], ["contracts", "Contracts"], ["filings", "Filings"]];
+const TABS = [
+  ["stocks", "Stocks", "📈", "Live prices"],
+  ["performance", "Performance", "📊", "vs the S&P 500"],
+  ["launches", "Launches", "🚀", "What's flying next"],
+  ["earnings", "Earnings", "📅", "Upcoming dates"],
+  ["contracts", "Contracts", "🏛️", "Government wins"],
+  ["filings", "Filings", "🧾", "Insider buys and sells"],
+];
 const ROW_GRID = "68px 1fr 82px 72px 72px 80px";
 const sectionLabel = { fontSize: 9, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 };
 const border = "1px solid rgba(255,255,255,0.06)";
@@ -889,13 +898,22 @@ function Markets({ prices, launches, tab, setTab, goSubscribe }) {
         </span>
       </div>
 
-      <div style={{ display: "flex", padding: "10px 20px 0", borderBottom: border, overflowX: "auto" }}>
-        {TABS.map(([id, label]) => (
-          <button key={id} className="dt" onClick={() => setTab(id)} style={{ color: active === id ? C.green : C.muted, borderBottom: `1px solid ${active === id ? C.green : "transparent"}`, marginBottom: -1, flexShrink: 0 }}>
-            {label}
-          </button>
-        ))}
-      </div>
+      <nav aria-label="Markets sections" className="oa-tabs" style={{ display: "flex", gap: 8, padding: "14px 20px", borderBottom: border, overflowX: "auto" }}>
+        {TABS.map(([id, label, icon, hint]) => {
+          const on = active === id;
+          return (
+            <button key={id} onClick={() => setTab(id)} aria-current={on ? "page" : undefined} className="oa-tab"
+              style={{ flex: "1 0 auto", minWidth: 130, textAlign: "left", cursor: "pointer", fontFamily: MONO, borderRadius: 8, padding: "10px 14px",
+                background: on ? "rgba(0,255,136,0.1)" : "rgba(255,255,255,0.03)", border: `1px solid ${on ? "rgba(0,255,136,0.55)" : "rgba(255,255,255,0.1)"}`,
+                boxShadow: on ? "0 0 18px rgba(0,255,136,0.12)" : "none", transition: "all 0.15s" }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: on ? C.green : "#fff", letterSpacing: "0.04em", whiteSpace: "nowrap" }}>
+                <span style={{ marginRight: 7 }}>{icon}</span>{label}
+              </div>
+              <div style={{ fontSize: 10, color: on ? C.light : C.muted, marginTop: 3, whiteSpace: "nowrap" }}>{hint}</div>
+            </button>
+          );
+        })}
+      </nav>
 
       <div style={{ padding: "16px 20px 40px" }}>
         {active === "stocks" && <StocksTab prices={prices} goSubscribe={goSubscribe} />}
