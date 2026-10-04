@@ -17,7 +17,7 @@ async function check(name, path, validate, { critical = true, timeoutMs = 60000 
     try { json = JSON.parse(text); } catch { throw new Error(`HTTP ${res.status}, not JSON: ${text.slice(0, 120)}`); }
     const { ok, summary, detail = [] } = validate(json, res.status);
     log(`${ok ? "PASS" : critical ? "FAIL" : "WARN"}  ${name}  (${ms} ms, HTTP ${res.status})  ${summary}`);
-    detail.slice(0, 6).forEach((d) => log(`        ${d}`));
+    detail.slice(0, 10).forEach((d) => log(`        ${d}`));
     if (!ok && critical) failures++;
   } catch (e) {
     log(`${critical ? "FAIL" : "WARN"}  ${name}  ${e.message}`);
