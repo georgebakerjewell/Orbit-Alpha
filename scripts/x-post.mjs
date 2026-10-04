@@ -34,15 +34,17 @@ const covered = Object.keys(COVERED).filter((t) => typeof quotes[t]?.changePct =
 const up = covered.filter((t) => quotes[t].changePct > 0).length;
 const sorted = covered.map((t) => ({ t, v: quotes[t].changePct })).sort((a, b) => b.v - a.v);
 const pct = (v) => `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`;
-const isFriday = new Date(`${today}T12:00:00Z`).getUTCDay() === 5 || env.FRIDAY === "1";
+const isFriday = new Date(`${lastSession}T12:00:00Z`).getUTCDay() === 5 || env.FRIDAY === "1";
+// "today" on a normal run; the weekday name if run later (e.g. a manual run at the weekend)
+const when = lastSession === today ? "today" : `on ${new Date(`${lastSession}T12:00:00Z`).toLocaleDateString("en-GB", { weekday: "long", timeZone: "UTC" })}`;
 
 // ── 3. Caption (no links in the main post: X shows link posts to fewer people) ────
 const n = covered.length;
 const headline =
-  up === n ? `All ${n} space stocks we track closed green today.`
-  : up >= n * 0.8 ? `${up} of ${n} space stocks closed green today.`
-  : up <= n * 0.2 ? `A red day for space stocks: only ${up} of ${n} closed higher.`
-  : `A mixed day for space stocks: ${up} up, ${n - up} down.`;
+  up === n ? `All ${n} space stocks we track closed green ${when}.`
+  : up >= n * 0.8 ? `${up} of ${n} space stocks closed green ${when}.`
+  : up <= n * 0.2 ? `A red day for space stocks: only ${up} of ${n} closed higher ${when}.`
+  : `A mixed day for space stocks ${when}: ${up} up, ${n - up} down.`;
 const gainers = sorted.filter((x) => x.v > 0).slice(0, 3);
 const losers = sorted.filter((x) => x.v < 0).slice(-2).reverse();
 const lines = [
@@ -71,9 +73,13 @@ h1{font-size:44px;font-weight:800;letter-spacing:-0.02em;line-height:1.1}.g{colo
 const card = (h, sub, body) => `<!doctype html><html><head><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"><style>${css}</style></head>
 <body><h1>${h}</h1><p>${sub}</p>${body}<div class="f"><span class="logo">ORBIT<b>ALPHA.</b></span><span>Free live data · orbitalpha.cloud</span></div></body></html>`;
 const b64 = (f) => `data:image/png;base64,${readFileSync(f).toString("base64")}`;
-const dateLabel = new Date(`${today}T12:00:00Z`).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short", timeZone: "UTC" });
+const dateLabel = new Date(`${lastSession}T12:00:00Z`).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short", timeZone: "UTC" });
 const cardHead = up >= n / 2 ? `<span class="g">${up} of ${n}</span> space stocks closed green` : `<span class="r">${n - up} of ${n}</span> space stocks closed red`;
-const movers = [...sorted.slice(0, 3), ...sorted.slice(-2)];
+// Five boxes: biggest moves in the day's direction, plus up to two the other way.
+const ups = sorted.filter((x) => x.v > 0), downs = sorted.filter((x) => x.v < 0).reverse();
+const [major, minor] = up >= n / 2 ? [ups, downs] : [downs, ups];
+const minorPick = minor.slice(0, Math.min(2, minor.length));
+const movers = [...major.slice(0, 5 - minorPick.length), ...minorPick].sort((a, b) => b.v - a.v);
 const moverBox = (m) => `<div style="background:${m.v >= 0 ? "rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2)" : "rgba(255,68,102,0.06);border:1px solid rgba(255,68,102,0.25)"}"><b>$${m.t}</b><span class="${m.v >= 0 ? "g" : "r"}">${pct(m.v)}</span></div>`;
 
 const cards = [["x1_heatmap", card(cardHead, `${dateLabel} close · tile size = size of the move`, `<div class="img"><img src="${b64(`${OUT}/el_heatmap.png`)}"></div><div class="mv">${movers.map(moverBox).join("")}</div>`)]];
