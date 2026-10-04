@@ -34,7 +34,7 @@ const covered = Object.keys(COVERED).filter((t) => typeof quotes[t]?.changePct =
 const up = covered.filter((t) => quotes[t].changePct > 0).length;
 const sorted = covered.map((t) => ({ t, v: quotes[t].changePct })).sort((a, b) => b.v - a.v);
 const pct = (v) => `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`;
-const isFriday = new Date(`${today}T12:00:00Z`).getUTCDay() === 5;
+const isFriday = new Date(`${today}T12:00:00Z`).getUTCDay() === 5 || env.FRIDAY === "1";
 
 // ── 3. Caption (no links in the main post: X shows link posts to fewer people) ────
 const n = covered.length;

@@ -16,6 +16,10 @@ on:
         description: "Run even if the US market was closed today"
         type: boolean
         default: false
+      friday:
+        description: "Include the Friday 3-month sector card"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -32,6 +36,7 @@ jobs:
         env:
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '0' }}
           FORCE: ${{ inputs.force && '1' || '0' }}
+          FRIDAY: ${{ inputs.friday && '1' || '0' }}
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
           X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
