@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, createContext, useContext } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, createContext, useContext } from "react";
 import issues from "./issues.json";
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
 
@@ -70,10 +70,20 @@ function useRouter() {
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
+  // Every in-app click lands at the top of the new page. The jump happens after the new page has
+  // rendered (and again on the next frame, once data-driven content settles) so it can't stop partway.
+  // Back/forward keep the browser's own scroll restoration.
+  const [navCount, setNavCount] = useState(0);
+  useLayoutEffect(() => {
+    if (!navCount) return;
+    window.scrollTo(0, 0);
+    const id = requestAnimationFrame(() => window.scrollTo(0, 0));
+    return () => cancelAnimationFrame(id);
+  }, [navCount]);
   const navigate = (to) => {
     if (to !== window.location.pathname) window.history.pushState(null, "", to);
     setPath(to);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setNavCount((n) => n + 1);
   };
   return [parsePath(path), navigate];
 }
