@@ -952,7 +952,12 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
   const sortVal = (s) => (sort.col === "mktCap" ? capValue(s.mktCap) : s[sort.col]);
   const filtered = stocks
     .filter((s) => (sector === "All" || s.sector === sector) && (s.ticker.toLowerCase().includes(q) || s.name.toLowerCase().includes(q)) && (!watchOnly || watchlist.includes(s.ticker)))
-    .sort((a, b) => (sort.col ? (sort.dir === "desc" ? 1 : -1) * (sortVal(b) - sortVal(a)) : 0));
+    .sort((a, b) => {
+      if (sort.col) return (sort.dir === "desc" ? 1 : -1) * (sortVal(b) - sortVal(a));
+      // Default order: ETFs first, then stocks, each by size (market cap / fund assets), largest first.
+      const etf = (x) => (x.type === "etf" ? 0 : 1);
+      return etf(a) - etf(b) || capValue(b.mktCap) - capValue(a.mktCap);
+    });
 
   return (
     <div>
