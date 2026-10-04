@@ -6,7 +6,7 @@ import issues from "./issues.json";
    ════════════════════════════════════════════════════════════════════════════ */
 // Static config and fallback data. Live quotes from /api/quote replace STOCKS values once loaded.
 
-const SUBSCRIBER_COUNT = 300;
+const SUBSCRIBER_COUNT = 400;
 const SUBSCRIBE_API = "https://www.orbitalpha.cloud/api/subscribe";
 
 const s = (ticker, name, price, changePct, mktCap, sector, type = "stock") =>
