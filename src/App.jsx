@@ -876,7 +876,10 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
   const loading = !isLive && !timedOut;
 
   const toggleWatch = (t) => setWatchlist((w) => (w.includes(t) ? w.filter((x) => x !== t) : [...w, t]));
+  const navigate = useContext(NavContext);
   const toggleExpand = (t) => setExpanded((e) => (e === t ? null : t));
+  // Covered stocks open their full page; others (ETFs, non-roster names) expand inline.
+  const open = (t) => (PROFILES[t] ? navigate(`/stocks/${t.toLowerCase()}`) : toggleExpand(t));
   const handleSort = (col) => setSort((s) => ({ col, dir: s.col === col && s.dir === "desc" ? "asc" : "desc" }));
   const flashClass = (t) => (flash[t] ? `flash-${flash[t]}` : "");
 
@@ -888,8 +891,8 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
 
   return (
     <div>
-      <TopGainers stocks={stocks} isLive={isLive} onPick={toggleExpand} />
-      {isLive && <TodaySummary stocks={stocks} onPick={toggleExpand} />}
+      <TopGainers stocks={stocks} isLive={isLive} onPick={open} />
+      {isLive && <TodaySummary stocks={stocks} onPick={open} />}
 
       {/* Filters */}
       <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap", alignItems: "center" }}>
@@ -925,7 +928,7 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
 
         {!loading && filtered.map((s) => (
           <div key={s.ticker}>
-            <div className={`hov ${flashClass(s.ticker)}`} onClick={() => toggleExpand(s.ticker)} style={{ display: "grid", gridTemplateColumns: ROW_GRID, gap: 6, padding: "10px 8px", borderBottom: "1px solid rgba(255,255,255,0.04)", alignItems: "center" }}>
+            <div className={`hov ${flashClass(s.ticker)}`} onClick={() => open(s.ticker)} style={{ display: "grid", gridTemplateColumns: ROW_GRID, gap: 6, padding: "10px 8px", borderBottom: "1px solid rgba(255,255,255,0.04)", alignItems: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                 <Star on={watchlist.includes(s.ticker)} onClick={() => toggleWatch(s.ticker)} />
                 <span style={{ fontWeight: 700, color: C.green, fontSize: 12 }}>{s.ticker}</span>
@@ -946,7 +949,7 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
       <div className="mob-only">
         {filtered.map((s) => (
           <div key={s.ticker} style={{ border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, marginBottom: 8, background: "rgba(255,255,255,0.01)", overflow: "hidden" }}>
-            <div className={flashClass(s.ticker)} onClick={() => toggleExpand(s.ticker)} style={{ padding: "12px 14px", cursor: "pointer" }}>
+            <div className={flashClass(s.ticker)} onClick={() => open(s.ticker)} style={{ padding: "12px 14px", cursor: "pointer" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   <Star size={16} on={watchlist.includes(s.ticker)} onClick={() => toggleWatch(s.ticker)} />
@@ -962,7 +965,7 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
               </div>
               <div style={{ fontSize: 8, color: C.muted, marginBottom: 3, letterSpacing: "0.08em" }}>7D</div>
               <Sparkline data={s.spark} positive={s.changePct >= 0} />
-              <div style={{ textAlign: "center", marginTop: 6, fontSize: 9, color: C.light }}>{expanded === s.ticker ? "▲ tap to close" : "▼ tap for more"}</div>
+              <div style={{ textAlign: "center", marginTop: 6, fontSize: 9, color: C.light }}>{PROFILES[s.ticker] ? "Tap for full page →" : expanded === s.ticker ? "▲ tap to close" : "▼ tap for more"}</div>
             </div>
             {expanded === s.ticker && <StockDetail s={s} goSubscribe={goSubscribe} />}
           </div>
@@ -1041,11 +1044,6 @@ function StockDetail({ s, goSubscribe }) {
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
         <span style={{ fontSize: 10, color: C.light, background: "rgba(255,255,255,0.04)", padding: "5px 10px", borderRadius: 3 }}>{s.sector}</span>
         {link("View on Yahoo Finance →", C.blue, () => window.open(`https://finance.yahoo.com/quote/${s.ticker}`, "_blank"))}
-        {PROFILES[s.ticker] && (
-          <Link to={`/stocks/${s.ticker.toLowerCase()}`} style={{ border: "1px solid rgba(0,255,136,0.4)", background: "rgba(0,255,136,0.08)", color: C.green, fontSize: 10, padding: "5px 10px", borderRadius: 3, fontWeight: 700 }}>
-            Full {s.ticker} page: filings, contracts, earnings →
-          </Link>
-        )}
         {link(`${s.ticker} in this week's issue →`, C.green, goSubscribe)}
       </div>
     </div>
