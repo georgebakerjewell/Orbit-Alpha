@@ -43,6 +43,11 @@ await check("Quotes (all, one request)", "/api/quotes", (j) => {
 
 await check("Subscriber count", "/api/stats", (j) => ({ ok: typeof j.subscribers === "number", summary: `${j.subscribers ?? j.error}` }), { critical: false });
 
+await check("Quote RKLB 1D intraday", "/api/quote?ticker=RKLB&range=1d", (j) => {
+  const n = j?.chart?.result?.[0]?.timestamp?.length || 0;
+  return { ok: n > 10, summary: `${n} intraday points` };
+});
+
 await check("Quote RKLB 6mo", "/api/quote?ticker=RKLB&range=6mo", (j) => {
   const r = j?.chart?.result?.[0];
   const n = r?.timestamp?.length || 0;

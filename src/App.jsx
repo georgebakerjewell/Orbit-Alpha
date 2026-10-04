@@ -5,7 +5,7 @@ import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // t
 /* ════════════════════════════════════════════════════════════════════════════
    DATA  (stocks, ETFs and keywords all come from lib/roster.js)
    ════════════════════════════════════════════════════════════════════════════ */
-const SUBSCRIBER_COUNT = 400; // shown only if the live count from Beehiiv is unavailable
+const SUBSCRIBER_COUNT = 400; // shown as "400+" across the site
 const SITE_URL = "https://www.orbitalpha.cloud";
 const SUBSCRIBE_API = "https://www.orbitalpha.cloud/api/subscribe";
 
@@ -349,7 +349,12 @@ const GlobalStyles = () => (
     .mob-only{display:none}
     .oa-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
     a.oa-link:hover{text-decoration:underline}
+    :root{color-scheme:dark}
+    select{background-color:#0d1220!important;color:#e8ecf4!important;border-color:rgba(255,255,255,0.18)!important}
+    select option{background-color:#0d1220;color:#e8ecf4}
     .oa-price{text-align:right}
+    .oa-news-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:28px;align-items:start}
+    @media(max-width:860px){.oa-news-grid{grid-template-columns:1fr}}
     .oa-tile{transition:filter 0.15s}.oa-tile:hover{filter:brightness(1.25);z-index:1}
     .oa-tab:hover{border-color:rgba(0,255,136,0.35)!important;background:rgba(0,255,136,0.05)!important}
     .oa-tabs::-webkit-scrollbar{height:0}
@@ -451,11 +456,9 @@ async function subscribe(email, { source = "website", follow } = {}) {
   return false;
 }
 
-// Live subscriber count from Beehiiv, rounded down (e.g. 437 -> "430+").
+// Subscriber figure shown on the site (set by hand).
 function useSubscriberLabel() {
-  const { data } = useApi("/api/stats");
-  const n = data?.subscribers;
-  return `${n >= 10 ? Math.floor(n / 10) * 10 : SUBSCRIBER_COUNT}+`;
+  return `${SUBSCRIBER_COUNT}+`;
 }
 
 function SubscribeForm({ color = C.green, label = "Join Free →", onDone, style, source, follow }) {
@@ -626,7 +629,11 @@ function Home({ news, prices, launches }) {
   const covered = prices.stocks.filter((s) => PROFILES[s.ticker]);
   const signals = buildFeed([], filings.data?.filings || [], contracts.data?.awards || []).filter((i) => i.key_story).slice(0, 6);
   const signalsLoading = !filings.data && !filings.error && !contracts.data && !contracts.error;
-  const headlines = news.items.slice(0, 5);
+  const moveOf = (t) => prices.stocks.find((s) => s.ticker === t)?.changePct;
+  const headlines = newsClusters(news.items, Date.now() - 3 * 86_400_000)
+    .map((c) => ({ ...c, score: storyScore(c, moveOf) }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
   const nextLaunches = (launches || []).filter((l) => l.tickers.length).slice(0, 3);
   const nextEarnings = Array.isArray(earnings.data) ? earnings.data.slice(0, 4) : [];
 
@@ -703,17 +710,10 @@ function Home({ news, prices, launches }) {
           <MoreLink to="/markets/earnings">Earnings and launch calendars</MoreLink>
         </Card>
 
-        <Card title="Latest headlines">
+        <Card title="Top stories" note="Last 3 days">
           {news.loading && <ListSkeleton rows={4} />}
-          {headlines.map((item, i) => (
-            <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" className="hov" style={{ display: "block", padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none" }}>
-              <div style={{ fontSize: 12, color: C.text, lineHeight: 1.45, marginBottom: 4 }}>{item.title}</div>
-              <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
-                {tagTickers(item).slice(0, 3).map((t) => <TickerChip key={t} ticker={t} />)}
-                <span style={{ fontSize: 9, color: C.muted }}>{item.source} · {fmtDate(item.pubDate)}</span>
-              </div>
-            </a>
-          ))}
+          {!news.loading && headlines.length === 0 && <Empty>No major stories in the last few days.</Empty>}
+          {headlines.map((c) => <StoryCard key={c.lead.link} c={c} moveOf={moveOf} compact />)}
           <MoreLink to="/news">All news</MoreLink>
         </Card>
       </div>
@@ -1377,9 +1377,9 @@ function PerformanceChart({ full = false, prices }) {
 /* ════════════════════════════════════════════════════════════════════════════
    STOCK PAGE  (/stocks/rklb)
    ════════════════════════════════════════════════════════════════════════════ */
-const CHART_RANGES = [["1mo", "1M"], ["3mo", "3M"], ["6mo", "6M"], ["1y", "1Y"]];
+const CHART_RANGES = [["1d", "1D"], ["5d", "5D"], ["1mo", "1M"], ["3mo", "3M"], ["6mo", "6M"], ["1y", "1Y"]];
 
-function PriceChart({ points }) {
+function PriceChart({ points, intraday = false }) {
   const [hover, setHover] = useState(null);
   const W = 600, H = 190;
   if (points.length < 2) return <Empty>Chart unavailable right now.</Empty>;
@@ -1410,7 +1410,9 @@ function PriceChart({ points }) {
       </svg>
       {hp && (
         <div style={{ position: "absolute", top: 4, left: `${(hover / (points.length - 1)) * 100}%`, transform: `translateX(${hover > points.length / 2 ? "-105%" : "5%"})`, background: "#0a0f1e", border: `1px solid ${color}`, borderRadius: 4, padding: "4px 8px", fontSize: 11, color: "#fff", whiteSpace: "nowrap", pointerEvents: "none" }}>
-          ${hp.c.toFixed(2)} <span style={{ color: C.muted, marginLeft: 4 }}>{new Date(hp.t * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}</span>
+          ${hp.c.toFixed(2)} <span style={{ color: C.muted, marginLeft: 4 }}>{intraday
+            ? new Date(hp.t * 1000).toLocaleString("en-GB", { weekday: "short", hour: "2-digit", minute: "2-digit", timeZone: "America/New_York" }) + " ET"
+            : new Date(hp.t * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}</span>
         </div>
       )}
       <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, color: "#667", marginTop: 4 }}>
@@ -1433,7 +1435,9 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
   const result = chart.data?.chart?.result?.[0];
   const closes = result?.indicators?.quote?.[0]?.close || [];
   const points = (result?.timestamp || []).map((t, i) => ({ t, c: closes[i] })).filter((p) => p.c != null);
-  const rangeChange = points.length > 1 ? (points[points.length - 1].c / points[0].c - 1) * 100 : null;
+  // 1D change is measured from the previous close; longer ranges from the first point.
+  const base = range === "1d" ? result?.meta?.chartPreviousClose || points[0]?.c : points[0]?.c;
+  const rangeChange = points.length > 1 && base ? (points[points.length - 1].c / base - 1) * 100 : null;
   const nextEarnings = earnings.data?.find?.((e) => e.ticker === ticker);
   const upcoming = launches?.filter((l) => l.tickers.includes(ticker)).slice(0, 4);
   const stories = news.items.filter((item) => matches(item, ticker)).slice(0, 6);
@@ -1485,7 +1489,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
           </div>
           {rangeChange !== null && <span style={{ fontSize: 12, color: signColor(rangeChange), fontWeight: 600 }}>{pct(rangeChange)} over {CHART_RANGES.find(([id]) => id === range)[1]}</span>}
         </div>
-        {!chart.data && !chart.error ? <Skeleton w="100%" h={190} /> : <PriceChart points={points} />}
+        {!chart.data && !chart.error ? <Skeleton w="100%" h={190} /> : <PriceChart points={points} intraday={range === "1d" || range === "5d"} />}
       </Card>
 
       {/* Key dates */}
@@ -1574,7 +1578,11 @@ const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const KEYWORD_RE = Object.fromEntries(
   Object.entries(COMPANY_KEYWORDS).map(([co, kws]) => [co, new RegExp(`\\b(${kws.map(escape).join("|")})\\b`, "i")])
 );
-const matches = (item, co) => item.ticker === co || !!KEYWORD_RE[co]?.test(`${item.title} ${item.description || ""}`);
+// Yahoo returns news per ticker search; for short or common-word tickers that search is unreliable,
+// so those stories are only tagged when the text actually names the company.
+const AMBIGUOUS_TICKERS = new Set(["PL", "FLY", "MDA", "ECHO", "YSS"]);
+const matches = (item, co) =>
+  (item.ticker === co && !AMBIGUOUS_TICKERS.has(co)) || !!KEYWORD_RE[co]?.test(`${item.title} ${item.description || ""}`);
 
 // Covered tickers mentioned in a news item (shown as tags linking to stock pages).
 const tagTickers = (item) => Object.keys(PROFILES).filter((t) => matches(item, t));
@@ -1603,103 +1611,211 @@ function buildFeed(newsItems, filings, awards) {
   return out.sort((a, b) => b.day.localeCompare(a.day) || b.time - a.time);
 }
 
-const TYPE_META = {
-  news: { label: "Headline", color: C.muted },
-  filing: { label: "SEC filing", color: C.blue },
-  contract: { label: "Contract win", color: C.green },
-};
-const NEWS_TYPES = [["all", "Everything"], ["news", "Headlines"], ["filing", "SEC filings"], ["contract", "Contract wins"]];
+/* ── News quality, de-duplication and ranking ──────────────────────────────── */
+// Sources and headline patterns that are almost always promotional or low-information.
+const LOW_QUALITY_SOURCES = /motley fool|fool\.com|investorplace|marketbeat|simply wall st|insider monkey|24\/7 wall st|ainvest|zacks|gurufocus|seeking alpha|stocktwits|the street pro/i;
+const CLICKBAIT = /(stocks? to (buy|watch|own|hold)|should you buy|better (space )?stock|buy (now|right now|and hold)|is it (too late|time) to|millionaire|prediction:|could (soar|skyrocket|double|triple|make you)|no-brainer|forever|warren buffett|moonshot|\b\d+ (space )?stocks? (to|that|for)\b|top \d+ |which is the better)/i;
+// Headlines describing a concrete event (as opposed to commentary).
+const EVENT_WORDS = /contract|award|earnings|revenue|guidance|results|quarter|launch|acquir|merger|offering|raises|priced|price target|upgrade|downgrade|initiat|FCC|approv|partnership|agreement|deal|order|backlog|IPO|lawsuit|investigation|delay|scrub|anomaly|failure|selects|wins|signs|files/i;
+const TOP_SOURCES = /reuters|bloomberg|wall street journal|wsj|financial times|cnbc|barron|spacenews|payload|via satellite|breaking defense|defense news|space\.com|ars technica|techcrunch|associated press|marketwatch|investing\.com|yahoo finance|fierce|the information|axios/i;
+const STOP_WORDS = new Set("the a an and or of to in on for with at by from as is are was were be its it this that after over into amid new says said stock stocks shares space company inc corp ltd co nasdaq nyse why how what will could may up down today week".split(" "));
 
-function FeedItem({ item }) {
-  const meta = TYPE_META[item.type];
+const isQuality = (i) => !LOW_QUALITY_SOURCES.test(i.source || "") && !CLICKBAIT.test(i.title || "");
+const titleWords = (t) => new Set((t || "").toLowerCase().replace(/[^a-z0-9$%. ]/g, " ").split(/\s+/).filter((w) => w.length > 2 && !STOP_WORDS.has(w)));
+const overlap = (a, b) => { let n = 0; a.forEach((w) => b.has(w) && n++); return n / Math.max(1, Math.min(a.size, b.size)); };
+
+// Groups different outlets' coverage of the same story into one cluster.
+function clusterNews(items) {
+  const clusters = [];
+  [...items].sort((a, b) => b.time - a.time).forEach((it) => {
+    const w = titleWords(it.title);
+    const c = clusters.find((c) =>
+      Math.abs(c.time - it.time) < 48 * 3600e3 &&
+      (c.tickers.some((t) => it.tickers.includes(t)) || (!c.tickers.length && !it.tickers.length)) &&
+      overlap(w, c.words) >= 0.5 && Math.min(w.size, c.words.size) >= 3);
+    if (c) { c.items.push(it); it.tickers.forEach((t) => !c.tickers.includes(t) && c.tickers.push(t)); }
+    else clusters.push({ items: [it], words: w, tickers: [...it.tickers], time: it.time });
+  });
+  return clusters.map((c) => {
+    const lead = [...c.items].sort((a, b) => (TOP_SOURCES.test(b.source) ? 1 : 0) - (TOP_SOURCES.test(a.source) ? 1 : 0) || b.time - a.time)[0];
+    const sources = [...new Map(c.items.map((i) => [i.source, i])).values()];
+    return { ...c, lead, sources, event: c.items.some((i) => EVENT_WORDS.test(i.title)), latest: Math.max(...c.items.map((i) => i.time)) };
+  });
+}
+
+// Higher = more worth reading: wider coverage, a concrete event, a bigger stock move, more recent.
+function storyScore(c, moveOf) {
+  const move = Math.max(0, ...c.tickers.map((t) => Math.abs(moveOf(t) || 0)));
+  const hours = (Date.now() - c.latest) / 3600e3;
+  return c.sources.length * 2 + (c.event ? 3 : 0) + (TOP_SOURCES.test(c.lead.source) ? 1.5 : 0) + Math.min(move, 12) * 0.35 - hours / 18;
+}
+
+function newsClusters(newsItems, sinceMs, company) {
+  const items = newsItems
+    .map((n) => ({ title: n.title, link: n.link, source: n.source || "", time: +new Date(n.pubDate) || 0, tickers: tagTickers(n) }))
+    // Yahoo results come from per-ticker searches, so ones not naming a covered company are noise.
+    .filter((i, k) => !(newsItems[k].ticker && !i.tickers.length))
+    .filter((i) => i.time >= sinceMs && isQuality(i) && (!company || i.tickers.includes(company)));
+  return clusterNews(items);
+}
+
+function timeAgo(ms) {
+  const h = (Date.now() - ms) / 3600e3;
+  if (h < 1) return `${Math.max(1, Math.round(h * 60))}m ago`;
+  if (h < 24) return `${Math.round(h)}h ago`;
+  const d = Math.round(h / 24);
+  return d === 1 ? "yesterday" : `${d}d ago`;
+}
+
+const Move = ({ v }) => (typeof v === "number" ? <span style={{ fontSize: 11, fontWeight: 700, color: signColor(v) }}>{pct(v)}</span> : null);
+
+function StoryCard({ c, moveOf, compact }) {
   return (
-    <div style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.05)", display: "flex", gap: 14 }}>
-      <div style={{ width: 54, flexShrink: 0, fontSize: 10, color: "#667", paddingTop: 2 }}>
-        {item.time ? new Date(item.time).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : ""}
+    <div style={{ padding: compact ? "10px 0" : "14px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", marginBottom: 5 }}>
+        {c.tickers.slice(0, 3).map((t) => (
+          <span key={t} style={{ display: "inline-flex", gap: 5, alignItems: "center" }}><TickerChip ticker={t} /><Move v={moveOf(t)} /></span>
+        ))}
+        {c.event && <span style={{ fontSize: 9, color: C.yellow, letterSpacing: "0.06em" }}>● EVENT</span>}
       </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", marginBottom: 5 }}>
-          <span style={{ fontSize: 9, color: meta.color, letterSpacing: "0.08em", textTransform: "uppercase" }}>{meta.label}</span>
-          {item.key_story && item.type === "news" && <span style={{ fontSize: 9, color: C.yellow }}>⚡ Key story</span>}
-          {item.tickers.slice(0, 4).map((t) => <TickerChip key={t} ticker={t} />)}
-        </div>
-        <a href={item.link || undefined} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: 13, color: item.color || "#fff", lineHeight: 1.55, textDecoration: "none", fontWeight: item.type === "news" ? 400 : 600 }}>
-          {item.title}
-        </a>
-        {item.sub && <div style={{ fontSize: 11, color: C.muted, marginTop: 3, lineHeight: 1.5 }}>{item.sub}</div>}
-        <div style={{ fontSize: 9, color: "#667", marginTop: 4 }}>{item.source}</div>
+      <a href={c.lead.link} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: compact ? 13 : 15, color: "#fff", lineHeight: 1.45, textDecoration: "none", fontWeight: 600 }}>{c.lead.title}</a>
+      <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>
+        {c.lead.source} · {timeAgo(c.latest)}
+        {c.sources.length > 1 && (
+          <details style={{ display: "inline" }}>
+            <summary style={{ display: "inline", cursor: "pointer", color: C.blue, marginLeft: 6 }}>+{c.sources.length - 1} more {c.sources.length - 1 === 1 ? "source" : "sources"}</summary>
+            <div style={{ marginTop: 6, display: "grid", gap: 4 }}>
+              {c.sources.filter((i) => i !== c.lead).map((i) => (
+                <a key={i.link} href={i.link} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ color: C.light, textDecoration: "none" }}>{i.source}: {i.title}</a>
+              ))}
+            </div>
+          </details>
+        )}
       </div>
     </div>
   );
 }
 
-function News({ news }) {
+const PERIODS = [[1, "24 hours"], [3, "3 days"], [7, "7 days"]];
+
+function News({ news, prices }) {
   const filings = useApi("/api/filings");
   const contracts = useApi("/api/contracts");
-  const [type, setType] = useState("all");
+  const [days, setDays] = useState(3);
   const [company, setCompany] = useState(() => {
     const t = new URLSearchParams(window.location.search).get("ticker")?.toUpperCase();
     return PROFILES[t] ? t : "";
   });
-  const [query, setQuery] = useState("");
-  const [keyOnly, setKeyOnly] = useState(false);
-  const [limit, setLimit] = useState(60);
 
-  const feed = buildFeed(news.items, filings.data?.filings || [], contracts.data?.awards || []);
-  const q = query.trim().toLowerCase();
-  const shown = feed.filter((i) =>
-    (type === "all" || i.type === type) &&
-    (!company || i.tickers.includes(company)) &&
-    (!keyOnly || i.key_story) &&
-    (!q || `${i.title} ${i.sub || ""} ${i.source}`.toLowerCase().includes(q))
-  );
-  const days = [];
-  shown.slice(0, limit).forEach((i) => {
-    const last = days[days.length - 1];
-    if (last && last.day === i.day) last.items.push(i); else days.push({ day: i.day, items: [i] });
-  });
-  const loading = news.loading && !filings.data && !contracts.data;
-  const control = { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", color: "#ddd", padding: "8px 12px", borderRadius: 4, fontSize: 12, fontFamily: MONO };
+  const since = Date.now() - days * 86_400_000;
+  const sinceDay = isoDay(new Date(since));
+  const moveOf = (t) => prices?.stocks.find((s) => s.ticker === t)?.changePct;
+  const clusters = newsClusters(news.items, since, company)
+    .map((c) => ({ ...c, score: storyScore(c, moveOf) }))
+    .sort((a, b) => b.score - a.score);
+  const companyStories = clusters.filter((c) => c.tickers.length);
+  const top = companyStories.slice(0, 6);
+  const industry = clusters.filter((c) => !c.tickers.length).slice(0, 5);
+  const byCompany = Object.keys(PROFILES)
+    .map((t) => ({ t, move: moveOf(t), stories: companyStories.filter((c) => c.tickers.includes(t)) }))
+    .filter((r) => r.stories.length)
+    .sort((a, b) => Math.abs(b.move || 0) - Math.abs(a.move || 0));
+  const signals = buildFeed([], filings.data?.filings || [], contracts.data?.awards || [])
+    .filter((i) => i.key_story && i.day >= sinceDay && (!company || i.tickers.includes(company)));
+  const signalsLoading = !filings.data && !filings.error && !contracts.data && !contracts.error;
+  const control = { background: "#0d1220", border: "1px solid rgba(255,255,255,0.18)", color: "#e8ecf4", padding: "8px 12px", borderRadius: 6, fontSize: 12, fontFamily: MONO, cursor: "pointer" };
+  const h2 = { fontSize: 10, color: C.orange, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 600, marginBottom: 4 };
 
   return (
-    <div style={{ animation: "fu 0.3s ease", maxWidth: 820, margin: "0 auto", padding: "32px 20px 60px" }}>
-      <h1 style={{ fontFamily: SYNE, fontSize: 28, fontWeight: 800, color: "#fff", marginBottom: 6 }}>SPACE STOCK <span style={{ color: C.orange }}>NEWS</span></h1>
-      <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 18 }}>Headlines, SEC filings and government contract wins for every stock we cover, in one feed. Updated through the day.</p>
-
-      <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 10 }}>
-        {NEWS_TYPES.map(([id, label]) => (
-          <span key={id} className="stg" onClick={() => setType(id)} style={{ fontSize: 11, color: type === id ? C.orange : C.light, borderColor: type === id ? "rgba(255,150,50,0.35)" : "rgba(255,255,255,0.15)", background: type === id ? "rgba(255,150,50,0.06)" : "transparent" }}>{label}</span>
-        ))}
-      </div>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginBottom: 18 }}>
-        <select value={company} onChange={(e) => setCompany(e.target.value)} style={{ ...control, cursor: "pointer" }}>
-          <option value="">All companies</option>
-          {Object.entries(PROFILES).map(([t, p]) => <option key={t} value={t}>{t} · {p.name}</option>)}
-        </select>
-        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search..." style={{ ...control, flex: 1, minWidth: 140 }} />
-        <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: keyOnly ? C.yellow : C.muted, cursor: "pointer", userSelect: "none" }}>
-          <input type="checkbox" checked={keyOnly} onChange={(e) => setKeyOnly(e.target.checked)} style={{ accentColor: C.yellow }} />
-          Key stories only
-        </label>
+    <div style={{ animation: "fu 0.3s ease", maxWidth: 1100, margin: "0 auto", padding: "32px 20px 60px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 14, marginBottom: 22 }}>
+        <div>
+          <h1 style={{ fontFamily: SYNE, fontSize: 28, fontWeight: 800, color: "#fff", marginBottom: 6 }}>SPACE STOCK <span style={{ color: C.orange }}>NEWS</span></h1>
+          <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, maxWidth: 560 }}>What actually happened to the stocks we cover. Duplicate coverage is merged into one story and clickbait is filtered out.</p>
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <select value={company} onChange={(e) => setCompany(e.target.value)} style={control}>
+            <option value="">All companies</option>
+            {Object.entries(PROFILES).map(([t, p]) => <option key={t} value={t}>{t} · {p.name}</option>)}
+          </select>
+          <select value={days} onChange={(e) => setDays(+e.target.value)} style={control}>
+            {PERIODS.map(([d, l]) => <option key={d} value={d}>Last {l}</option>)}
+          </select>
+        </div>
       </div>
 
-      {loading && <ListSkeleton rows={8} />}
-      {!loading && shown.length === 0 && <Empty>Nothing matches these filters right now.</Empty>}
-      {days.map((d) => (
-        <section key={d.day} style={{ marginBottom: 8 }}>
-          <h2 style={{ position: "sticky", top: 0, background: C.bg, zIndex: 1, fontSize: 10, color: C.orange, letterSpacing: "0.14em", textTransform: "uppercase", padding: "12px 0 6px", borderBottom: "1px solid rgba(255,150,50,0.15)", fontWeight: 500 }}>{dayLabel(d.day)}</h2>
-          {d.items.map((i) => <FeedItem key={i.type + i.key} item={i} />)}
-        </section>
-      ))}
-      {shown.length > limit && (
-        <button onClick={() => setLimit((l) => l + 60)} style={{ ...control, width: "100%", marginTop: 12, cursor: "pointer", color: C.orange }}>Show more</button>
-      )}
+      <div className="oa-news-grid">
+        <main>
+          {news.loading && <ListSkeleton rows={6} />}
 
-      <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginTop: 28 }}>
-        <div style={{ fontFamily: SYNE, fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Too much to keep up with?</div>
-        <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>The week's space stock news that actually mattered, in one free email every Sunday.</p>
-        <SubscribeForm source="news-page" />
-      </section>
+          {!news.loading && !company && (
+            <>
+              <h2 style={h2}>Top stories</h2>
+              <div style={{ fontSize: 10, color: "#667", marginBottom: 6 }}>Ranked by how widely each story was covered, whether it's a concrete event, and how much the stock moved.</div>
+              {top.length === 0 && <Empty>No company news in this period.</Empty>}
+              {top.map((c) => <StoryCard key={c.lead.link} c={c} moveOf={moveOf} />)}
+
+              <h2 style={{ ...h2, marginTop: 30 }}>By company</h2>
+              <div style={{ fontSize: 10, color: "#667", marginBottom: 6 }}>Biggest movers first. Tap a company for all its stories.</div>
+              {byCompany.map(({ t, move, stories }) => (
+                <div key={t} style={{ display: "grid", gridTemplateColumns: "64px 64px 1fr", gap: 10, alignItems: "baseline", padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                  <span onClick={() => setCompany(t)} style={{ cursor: "pointer" }}><TickerChip ticker={t} /></span>
+                  <Move v={move} />
+                  <div style={{ minWidth: 0 }}>
+                    <a href={stories[0].lead.link} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: 13, color: C.text, textDecoration: "none", lineHeight: 1.45 }}>{stories[0].lead.title}</a>
+                    <div style={{ fontSize: 10, color: C.muted, marginTop: 2 }}>
+                      {stories[0].lead.source} · {timeAgo(stories[0].latest)}
+                      {stories.length > 1 && <span onClick={() => setCompany(t)} style={{ color: C.blue, cursor: "pointer", marginLeft: 6 }}>+{stories.length - 1} more {stories.length - 1 === 1 ? "story" : "stories"}</span>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+
+          {!news.loading && company && (
+            <>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                <h2 style={{ ...h2, marginBottom: 0 }}>{PROFILES[company].name}</h2>
+                <Move v={moveOf(company)} />
+                <Link to={`/stocks/${company.toLowerCase()}`} className="oa-link" style={{ fontSize: 10, color: C.green, marginLeft: "auto" }}>Full {company} page →</Link>
+                <span onClick={() => setCompany("")} style={{ fontSize: 10, color: C.muted, cursor: "pointer" }}>✕ All companies</span>
+              </div>
+              {companyStories.length === 0 && <Empty>No {company} stories in this period. Try a longer period.</Empty>}
+              {companyStories.map((c) => <StoryCard key={c.lead.link} c={c} moveOf={moveOf} />)}
+            </>
+          )}
+        </main>
+
+        <aside>
+          <Card title="Filings and contracts" note={`Last ${PERIODS.find(([d]) => d === days)[1]}`} style={{ marginBottom: 14 }}>
+            {signalsLoading && <ListSkeleton rows={4} />}
+            {!signalsLoading && signals.length === 0 && <Empty>No insider trades, offerings or contract wins in this period.</Empty>}
+            {signals.slice(0, 12).map((i) => (
+              <a key={i.type + i.key} href={i.link || undefined} target="_blank" rel="noopener noreferrer" className="hov" style={{ display: "flex", gap: 8, padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none", alignItems: "flex-start" }}>
+                <span style={{ flexShrink: 0 }}><TickerChip ticker={i.tickers[0]} /></span>
+                <span style={{ fontSize: 11, color: i.color || "#fff", lineHeight: 1.45, flex: 1 }}>{i.title}</span>
+                <span style={{ fontSize: 9, color: "#667", flexShrink: 0 }}>{fmtDay(i.day, { day: "numeric", month: "short" })}</span>
+              </a>
+            ))}
+            <MoreLink to="/markets/filings">All filings</MoreLink>
+          </Card>
+
+          {!company && (
+            <Card title="Industry" note="NASA, Space Force and private space">
+              {news.loading && <ListSkeleton rows={3} />}
+              {!news.loading && industry.length === 0 && <Empty>No industry stories in this period.</Empty>}
+              {industry.map((c) => <StoryCard key={c.lead.link} c={c} moveOf={moveOf} compact />)}
+            </Card>
+          )}
+
+          <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginTop: 14 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 6 }}>The week's news, summarised</div>
+            <p style={{ fontSize: 11, color: C.muted, lineHeight: 1.6, marginBottom: 12 }}>The stories that mattered, in one free email every Sunday. No paywall.</p>
+            <SubscribeForm source="news-page" style={{ flexWrap: "wrap" }} />
+          </section>
+        </aside>
+      </div>
       <SourceNote>Sources: Google News, Yahoo Finance, SEC EDGAR, USAspending.gov. Headlines link to the original publisher. Not financial advice.</SourceNote>
     </div>
   );
@@ -1847,7 +1963,7 @@ export default function App() {
         {page === "home" && <Home news={news} prices={prices} launches={launches} />}
         {page === "markets" && <Markets prices={prices} launches={launches} tab={route.tab} setTab={(t) => go(t === "stocks" ? "/markets" : `/markets/${t}`)} goSubscribe={goSubscribe} />}
         {page === "stock" && <StockPage key={route.ticker} ticker={route.ticker} prices={prices} launches={launches} news={news} goSubscribe={goSubscribe} />}
-        {page === "news" && <News news={news} />}
+        {page === "news" && <News news={news} prices={prices} />}
         {page === "newsletter" && <Newsletter />}
         {page === "about" && <About />}
         {page === "notfound" && <NotFound />}
