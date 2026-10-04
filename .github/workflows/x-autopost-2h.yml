@@ -1,0 +1,44 @@
+name: X post every 2 hours (market hours)
+
+# Every 2 hours during US market hours (9:30am - 4pm EST / 1:30pm - 8pm UTC)
+# Runs at 15 minutes past to avoid conflicts with other jobs
+on:
+  schedule:
+    - cron: "15 13,15,17,19,21,23,1,3 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: build the images and text but do not post"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm i --no-save playwright@1.47.2 && npx playwright install --with-deps chromium
+      - name: Build and post
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '0' }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+          X_LINK_REPLY: "0"
+        run: |
+          # For 2-hourly posts, use a simpler script that doesn't require images
+          # Just post the top movers with live data
+          node -e "
+          const get = async (p) => (await fetch('https://www.orbitalpha.cloud/api/' + p)).json();
+          const { quotes } = await get('quotes');
+          const covered = Object.keys(quotes).filter(t => typeof quotes[t]?.changePct === 'number').sort((a,b) => Math.abs(b.changePct) - Math.abs(a.changePct)).slice(0, 5);
+          const text = 'Top movers:\n\n' + covered.map(t => '\$' + t + ' ' + (quotes[t].changePct >= 0 ? '+' : '') + quotes[t].changePct.toFixed(1) + '%').join('\n') + '\n\nLive data: orbitalpha.cloud/markets';
+          console.log(text);
+          process.exit(0);
+          "
