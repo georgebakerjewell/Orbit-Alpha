@@ -1,13 +1,13 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
-  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=1800');
 
+  // Covered stocks (keep in step with src/stocks.json). Excluded: LMT, BA, NOC, OKLO, GILT, DXYZ.
   const SPACE_TICKERS = [
-  'SPCX', 'RKLB', 'ASTS', 'HAWK', 'LUNR', 'PL', 'BKSY', 'RDW', 'MNTS',
-  'SPCE', 'KRMN', 'SATL', 'KULR', 'GSAT', 'VSAT', 'MDA', 'SPIR',
-  'DXYZ', 'LMT', 'FLY', 'OKLO', 'BA', 'NOC', 'RTX', 'UFO',
-  'ARKX', 'TSAT', 'GILT', 'SATS', 'VOYG', 'YSS',
+    'SPCX', 'RKLB', 'ASTS', 'HAWK', 'LUNR', 'PL', 'BKSY', 'RDW', 'MNTS',
+    'SPCE', 'KRMN', 'SATL', 'KULR', 'GSAT', 'VSAT', 'MDA', 'SPIR',
+    'FLY', 'TSAT', 'ECHO', 'VOYG', 'YSS', 'SIDU', 'UFO', 'ARKX',
   ];
 
   const HIGH_SIGNAL_KEYWORDS = [

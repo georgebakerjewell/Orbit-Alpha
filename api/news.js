@@ -1,10 +1,12 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
-  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=1800');
 
   const { ticker, limit = 50 } = req.query;
 
+  // Covered stocks (keep in step with src/stocks.json) plus industry context.
+  // Excluded from Orbit Alpha coverage, so not queried: LMT, BA, NOC, OKLO, GILT, DXYZ.
   const GOOGLE_QUERIES = ticker ? [
     { q: `${ticker} stock` },
   ] : [
@@ -24,27 +26,17 @@ export default async function handler(req, res) {
     { q: 'Viasat VSAT stock' },
     { q: 'MDA Space stock' },
     { q: 'Spire Global SPIR stock' },
-    { q: 'Destiny Tech DXYZ stock' },
-    { q: 'Lockheed Martin LMT space' },
     { q: 'Firefly Aerospace FLY stock' },
-    { q: 'Oklo OKLO stock' },
-    { q: 'Boeing BA space' },
-    { q: 'Northrop Grumman NOC space' },
-    { q: 'RTX Raytheon space' },
+    { q: 'SpaceX SPCX stock' },
     { q: 'HawkEye 360 HAWK stock' },
-    { q: 'EchoStar SATS stock' },
+    { q: 'EchoStar ECHO stock' },
     { q: 'Voyager Technologies VOYG stock' },
-    { q: 'York Space YSS stock' },
-    { q: 'Gilat Satellite GILT stock' },
-    { q: 'SpaceX IPO 2026' },
-    { q: 'Blue Origin New Glenn' },
-    { q: 'Relativity Space Terran' },
-    { q: 'Vast Space Haven' },
-    { q: 'ispace HAKUTO lunar' },
+    { q: 'York Space Systems YSS stock' },
+    { q: 'Sidus Space SIDU stock' },
+    { q: 'space stocks' },
     { q: 'NASA commercial space contract' },
-    { q: 'ESA European Space Agency' },
-    { q: 'ISRO India space' },
-    { q: 'US Space Force USSF' },
+    { q: 'US Space Force contract award' },
+    { q: 'Blue Origin New Glenn' },
   ];
 
   const HIGH_SIGNAL_KEYWORDS = [
@@ -60,6 +52,12 @@ export default async function handler(req, res) {
     'astrophotography', 'horoscope', 'zodiac', 'astrology', 'thriller',
     'best photos', 'flower moon', 'stormtroopers',
   ];
+
+  const MAX_AGE = 14 * 86_400_000; // Google News search returns some old articles; skip them
+  const escapeRe = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const decode = (str) => str
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&#39;|&#x27;|&apos;/g, "'").replace(/&nbsp;/g, ' ');
 
   const isHighSignal = (text) =>
     HIGH_SIGNAL_KEYWORDS.some(k => text.toLowerCase().includes(k.toLowerCase()));
@@ -82,14 +80,16 @@ export default async function handler(req, res) {
                      item.match(/<guid>(.*?)<\/guid>/)?.[1] || '';
         const pubDate = item.match(/<pubDate>(.*?)<\/pubDate>/)?.[1] || '';
         const source = item.match(/<source[^>]*>(.*?)<\/source>/)?.[1] || 'Google News';
-        if (title && link && !isExcluded(title)) {
+        const clean = decode(title).replace(new RegExp(`\\s+-\\s+${escapeRe(decode(source).trim())}$`), '').trim();
+        const age = Date.now() - new Date(pubDate).getTime();
+        if (clean && link && !isExcluded(clean) && !(age > MAX_AGE)) {
           items.push({
-            title: title.trim(),
+            title: clean,
             link: link.trim(),
             pubDate,
             description: '',
-            source: source.trim(),
-            highlight: isHighSignal(title),
+            source: decode(source).trim(),
+            highlight: isHighSignal(clean),
           });
         }
       }

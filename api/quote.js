@@ -12,7 +12,7 @@ const SHARES = {
   HAWK: 119000000, SIDU: 101230000,
 };
 // Chart ranges the site may request (anything else falls back to 7d).
-const RANGES = new Set(['5d', '7d', '1mo', '3mo', '6mo', '1y']);
+const RANGES = new Set(['5d', '7d', '1mo', '3mo', '6mo', 'ytd', '1y']);
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');

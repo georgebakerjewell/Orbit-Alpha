@@ -24,13 +24,19 @@ const routes = [
     description: "Free weekly newsletter and live dashboard covering every space stock: prices, launches, earnings, SEC filings and government contracts.",
     body: "<h1>Orbit Alpha: the space stocks newsletter and dashboard</h1><p>Live prices, launches, earnings dates, SEC filings and government contracts for publicly traded space companies, plus a free weekly newsletter every Sunday.</p>",
   },
+  {
+    path: "/markets/performance",
+    title: "Space Stocks vs the S&P 500: ETF and Stock Performance | Orbit Alpha",
+    description: "Compare space ETFs (UFO, ARKX, ROKT, MARS, NASA), every space stock we cover and an equal-weight space index against the S&P 500 and Nasdaq 100.",
+    body: "<h1>Space stocks vs the S&amp;P 500</h1><p>Compare space ETFs, individual space stocks and the equal-weight Orbit Alpha Space Index against the S&amp;P 500 and Nasdaq 100.</p>",
+  },
   ...[["", "Dashboard"], ["launches", "Launches"], ["earnings", "Earnings"], ["contracts", "Contracts"], ["filings", "Filings"]].map(([tab, label]) => ({
     path: tab ? `/markets/${tab}` : "/markets",
     title: `Space Stocks ${label} | Orbit Alpha`,
     description: "Live prices, launches, earnings dates, SEC filings and government contract awards for publicly traded space companies.",
     body: `<h1>Space stocks ${label.toLowerCase()}</h1><p>Live data for the space stocks Orbit Alpha covers.</p>`,
   })),
-  { path: "/feed", title: "Space Stock News | Orbit Alpha", description: "Live news for space stocks from 30+ sources, filterable by company.", body: "<h1>Space stock news</h1><p>Live news from 30+ sources, filterable by company.</p>" },
+  { path: "/news", title: "Space Stock News, Filings and Contract Wins | Orbit Alpha", description: "Live space stock news, SEC filings, insider trades and government contract wins in one feed, filterable by company.", body: "<h1>Space stock news</h1><p>Headlines, SEC filings and government contract wins for every space stock we cover, in one feed.</p>" },
   { path: "/newsletter", title: "The Orbit Alpha Newsletter | Free Weekly Space Stocks Briefing", description: "Every Sunday: the week in space stocks, analyst target changes and one stock deep dive. Free.", body: "<h1>The Orbit Alpha newsletter</h1><p>Every Sunday: the week in space stocks, analyst target changes and one stock deep dive. Free.</p>" },
   { path: "/about", title: "About | Orbit Alpha", description: "What Orbit Alpha is and how it is made.", body: "<h1>About Orbit Alpha</h1>" },
   ...Object.entries(profiles).map(([t, p]) => ({

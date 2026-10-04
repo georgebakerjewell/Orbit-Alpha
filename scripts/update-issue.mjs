@@ -31,16 +31,23 @@ function decodeEntities(str) {
     .trim();
 }
 
-// Beehiiv puts the hook line as plain text right after "MARKET OVERVIEW</span><br>",
-// inside the same <h3> tag, up to the closing </h3>.
+// Headline = the hook line under the MARKET OVERVIEW heading (e.g. "A Sector Rally Meets a Wall
+// of Unlocking Shares"). Beehiiv's markup around it has changed over time, so rather than match
+// one exact pattern, take the first block of text after the heading. If that block is a long
+// paragraph (no separate hook line), use its first sentence instead.
 function extractHeadline(html) {
   if (!html) return null;
-  const match = html.match(/MARKET\s+OVERVIEW<\/span><br\s*\/?>([\s\S]*?)<\/h3>/i);
-  if (!match) return null;
-  let text = decodeEntities(match[1].replace(/<[^>]+>/g, ""));
-  // Strip a leading emoji (e.g. 🌎) and the space after it, if present.
-  text = text.replace(/^[\p{Extended_Pictographic}\u200d\uFE0F\s]+/u, "").trim();
-  if (!text || text.length < 8 || text.length > 400) return null;
+  const at = html.search(/MARKET\s+OVERVIEW/i);
+  if (at === -1) return null;
+  const after = html.slice(at).replace(/^MARKET\s+OVERVIEW/i, "").slice(0, 4000);
+  const blocks = after
+    .split(/<\/(?:h[1-6]|p|div|li)>|<br\s*\/?>/i)
+    .map((b) => decodeEntities(b.replace(/<[^>]+>/g, " ")))
+    .map((b) => b.replace(/^[\p{Extended_Pictographic}\u200d\uFE0F\s]+/u, "").trim())
+    .filter((b) => b.length >= 8);
+  if (!blocks.length) return null;
+  let text = blocks[0];
+  if (text.length > 160) text = (text.match(/^.{20,200}?[.!?](?=\s|$)/) || [text.slice(0, 157) + "..."])[0];
   return text;
 }
 
@@ -80,7 +87,7 @@ async function main() {
     : "";
 
   const extractedHeadline = extractHeadline(bodyHtml);
-  const fallback = `Issue #${issueNum} is live — read the full breakdown.`;
+  const fallback = `Issue #${issueNum}: the week in space stocks`;
   const headline = extractedHeadline || fallback;
 
   const newEntry = {
@@ -96,7 +103,7 @@ async function main() {
   writeFileSync(ISSUES_PATH, JSON.stringify(issues, null, 2) + "\n");
   console.log(`Added Issue #${issueNum}: "${headline}"`);
   if (!extractedHeadline) {
-    console.log("Note: fell back to generic headline — the MARKET OVERVIEW pattern wasn't found as expected.");
+    console.log("Note: fell back to a generic headline because no MARKET OVERVIEW text was found.");
   }
 }
 
