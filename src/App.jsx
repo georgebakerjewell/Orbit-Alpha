@@ -334,7 +334,8 @@ const GlobalStyles = () => (
     @keyframes flashUp{0%{background:rgba(0,255,136,0.3)}100%{background:transparent}}
     @keyframes flashDown{0%{background:rgba(255,68,102,0.3)}100%{background:transparent}}
     @keyframes shimmer{0%{opacity:0.4}50%{opacity:0.8}100%{opacity:0.4}}
-    @keyframes ts{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    @keyframes ts{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
+    @-webkit-keyframes ts{0%{-webkit-transform:translate3d(0,0,0)}100%{-webkit-transform:translate3d(-50%,0,0)}}
     @keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
     @keyframes bk{0%,100%{opacity:1}50%{opacity:0.1}}
     @keyframes sc{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
@@ -423,16 +424,28 @@ const Stars = () => (
 
 function TickerStrip({ stocks }) {
   const items = stocks.filter((s) => s.price != null);
+  // Safari works out the scroll distance when the animation starts and never updates it. If it starts
+  // before prices load (zero width) or after the tab was in the background, the strip sits still.
+  // So the animation only starts once prices are in, and restarts when the page becomes visible again.
+  const [run, setRun] = useState(0);
+  useEffect(() => {
+    const restart = () => document.visibilityState === "visible" && setRun((n) => n + 1);
+    document.addEventListener("visibilitychange", restart);
+    window.addEventListener("pageshow", restart);
+    return () => { document.removeEventListener("visibilitychange", restart); window.removeEventListener("pageshow", restart); };
+  }, []);
   return (
-    <div style={{ overflow: "hidden", background: "rgba(0,0,0,0.5)", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "6px 0" }}>
-      <div style={{ display: "flex", gap: 32, animation: "ts 50s linear infinite", width: "max-content" }}>
-        {[...items, ...items].map((s, i) => (
-          <span key={i} style={{ fontSize: 11, whiteSpace: "nowrap", color: signColor(s.changePct) }}>
-            <span style={{ color: C.muted, marginRight: 4 }}>{s.ticker}</span>${s.price.toFixed(2)}
-            <span style={{ marginLeft: 3 }}>{s.changePct >= 0 ? "▲" : "▼"}{Math.abs(s.changePct).toFixed(1)}%</span>
-          </span>
-        ))}
-      </div>
+    <div style={{ overflow: "hidden", background: "rgba(0,0,0,0.5)", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "6px 0", minHeight: 29 }}>
+      {items.length > 0 && (
+        <div key={`${run}-${items.length}`} style={{ display: "flex", animation: "ts 50s linear infinite", WebkitAnimation: "ts 50s linear infinite", width: "max-content", willChange: "transform" }}>
+          {[...items, ...items].map((s, i) => (
+            <span key={i} style={{ fontSize: 11, whiteSpace: "nowrap", color: signColor(s.changePct), paddingRight: 32 }}>
+              <span style={{ color: C.muted, marginRight: 4 }}>{s.ticker}</span>${s.price.toFixed(2)}
+              <span style={{ marginLeft: 3 }}>{s.changePct >= 0 ? "▲" : "▼"}{Math.abs(s.changePct).toFixed(1)}%</span>
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
