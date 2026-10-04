@@ -1,187 +1,435 @@
 import { useState, useEffect, useRef } from "react";
-import issuesData from "./issues.json";
+import issues from "./issues.json";
 
-const BEEHIIV_URL = "https://orbit-alpha.beehiiv.com/subscribe";
+/* ════════════════════════════════════════════════════════════════════════════
+   DATA (edit tickers, earnings, news keywords here)
+   ════════════════════════════════════════════════════════════════════════════ */
+// Static config and fallback data. Live quotes from /api/quote replace STOCKS values once loaded.
 
-const EARNINGS = [
-  {ticker:"RKLB",name:"Rocket Lab",date:"May 8, 2026",time:"After Market Close",watch:"Neutron development · Electron launch cadence · Space Systems revenue"},
-  {ticker:"ASTS",name:"AST SpaceMobile",date:"May 11, 2026",time:"Before Market Open",watch:"BlueBird 7 impact on guidance · Block 2 launch timeline · Cash runway"},
-  {ticker:"OKLO",name:"Oklo",date:"May 13, 2026",time:"After Market Close",watch:"NRC licensing progress · Power purchase agreement pipeline"},
-  {ticker:"BKSY",name:"BlackSky Technology",date:"May 14, 2026",time:"Before Market Open",watch:"Defence contract pipeline · Imagery analytics revenue"},
-  {ticker:"SPIR",name:"Spire Global",date:"May 15, 2026",time:"After Market Close",watch:"Government data contract wins · GNSS-R revenue"},
-  {ticker:"LUNR",name:"Intuitive Machines",date:"May 19, 2026",time:"After Market Close",watch:"$900M–$1B 2026 guidance confirmation · IM-3 mission update"},
-  {ticker:"SPCE",name:"Virgin Galactic",date:"May 20, 2026",time:"After Market Close",watch:"Commercial service launch date · Cash burn rate"},
-  {ticker:"RDW",name:"Redwire",date:"May 22, 2026",time:"Before Market Open",watch:"ISS contract extensions · UK expansion progress"},
-  {ticker:"PL",name:"Planet Labs",date:"Jun 26, 2026",time:"After Market Close",watch:"Free cash flow guidance · Government contract renewals · Pelican progress"},
-];
+const SUBSCRIBER_COUNT = 300;
+const SUBSCRIBE_API = "https://www.orbitalpha.cloud/api/subscribe";
+
+const s = (ticker, name, price, changePct, mktCap, sector, type = "stock") =>
+  ({ ticker, name, price, changePct, mktCap, sector, type });
 
 const STOCKS = [
-  { ticker:"SPCX", name:"SpaceX", price:153.23, changePct:-1.5, mktCap:"272B", short:"4.1%", sentiment:74, mentions:5200, sector:"Launch", type:"large" },
-  { ticker:"RKLB", name:"Rocket Lab", price:24.82, changePct:15.9, mktCap:"11.2B", short:"12.4%", sentiment:78, mentions:1842, sector:"Launch", type:"stock" },
-  { ticker:"ASTS", name:"AST SpaceMobile", price:31.17, changePct:4.1, mktCap:"6.8B", short:"18.2%", sentiment:65, mentions:2103, sector:"Comms", type:"stock" },
-  { ticker:"LUNR", name:"Intuitive Machines", price:8.44, changePct:-6.8, mktCap:"0.9B", short:"22.1%", sentiment:44, mentions:731, sector:"Lunar", type:"stock" },
-  { ticker:"PL", name:"Planet Labs", price:3.91, changePct:2.1, mktCap:"0.7B", short:"9.8%", sentiment:55, mentions:412, sector:"Earth Obs", type:"stock" },
-  { ticker:"BKSY", name:"BlackSky Technology", price:6.14, changePct:3.2, mktCap:"0.4B", short:"8.1%", sentiment:58, mentions:287, sector:"Earth Obs", type:"stock" },
-  { ticker:"RDW", name:"Redwire", price:11.23, changePct:4.1, mktCap:"0.8B", short:"7.3%", sentiment:61, mentions:289, sector:"Hardware", type:"stock" },
-  { ticker:"MNTS", name:"Momentus", price:1.82, changePct:-5.7, mktCap:"0.1B", short:"31.4%", sentiment:31, mentions:156, sector:"Transport", type:"stock" },
-  { ticker:"SPCE", name:"Virgin Galactic", price:2.14, changePct:-3.2, mktCap:"0.5B", short:"28.9%", sentiment:29, mentions:943, sector:"Tourism", type:"stock" },
-  { ticker:"KRMN", name:"Karman Space", price:18.40, changePct:1.8, mktCap:"1.2B", short:"6.2%", sentiment:62, mentions:341, sector:"Hardware", type:"stock" },
-  { ticker:"SATL", name:"Satellogic", price:1.23, changePct:-2.4, mktCap:"0.2B", short:"11.2%", sentiment:38, mentions:142, sector:"Earth Obs", type:"stock" },
-  { ticker:"KULR", name:"KULR Technology", price:1.94, changePct:3.3, mktCap:"0.3B", short:"12.7%", sentiment:57, mentions:221, sector:"Hardware", type:"stock" },
-  { ticker:"TSAT", name:"Telesat", price:9.81, changePct:-0.8, mktCap:"0.5B", short:"7.6%", sentiment:48, mentions:134, sector:"Comms", type:"stock" },
-  { ticker:"GSAT", name:"Globalstar", price:1.67, changePct:1.4, mktCap:"3.1B", short:"5.2%", sentiment:52, mentions:445, sector:"Comms", type:"stock" },
-  { ticker:"VSAT", name:"Viasat", price:14.32, changePct:-1.1, mktCap:"1.8B", short:"9.3%", sentiment:46, mentions:312, sector:"Comms", type:"stock" },
-  { ticker:"MDA", name:"MDA Space", price:19.44, changePct:0.6, mktCap:"2.1B", short:"4.8%", sentiment:60, mentions:198, sector:"Hardware", type:"stock" },
-  { ticker:"SPIR", name:"Spire Global", price:4.22, changePct:2.9, mktCap:"0.4B", short:"13.1%", sentiment:56, mentions:267, sector:"Earth Obs", type:"stock" },
-  { ticker:"GILT", name:"Gilat Satellite", price:7.88, changePct:0.3, mktCap:"0.3B", short:"3.2%", sentiment:49, mentions:87, sector:"Comms", type:"stock" },
-  { ticker:"DXYZ", name:"Destiny Tech100", price:38.44, changePct:4.2, mktCap:"1.1B", short:"22.3%", sentiment:67, mentions:612, sector:"Private Access", type:"stock" },
-  { ticker:"LMT", name:"Lockheed Martin", price:441.20, changePct:0.4, mktCap:"105B", short:"1.2%", sentiment:55, mentions:892, sector:"Defence", type:"large" },
-  { ticker:"FLY", name:"Firefly Aerospace", price:14.82, changePct:2.1, mktCap:"1.8B", short:"8.4%", sentiment:63, mentions:521, sector:"Launch", type:"stock" },
-  { ticker:"OKLO", name:"Oklo", price:22.14, changePct:1.8, mktCap:"2.4B", short:"11.2%", sentiment:58, mentions:334, sector:"Energy", type:"stock" },
-  { ticker:"BA", name:"Boeing", price:172.40, changePct:-0.6, mktCap:"120B", short:"2.1%", sentiment:42, mentions:1203, sector:"Defence", type:"large" },
-  { ticker:"NOC", name:"Northrop Grumman", price:489.20, changePct:0.3, mktCap:"72B", short:"1.4%", sentiment:51, mentions:445, sector:"Defence", type:"large" },
-  { ticker:"RTX", name:"RTX Corp", price:138.60, changePct:0.8, mktCap:"181B", short:"0.9%", sentiment:53, mentions:623, sector:"Defence", type:"large" },
-  { ticker:"UFO", name:"Procure Space ETF", price:18.92, changePct:1.8, mktCap:"ETF", short:"—", sentiment:61, mentions:334, sector:"ETF", type:"etf" },
-  { ticker:"ARKX", name:"ARK Space ETF", price:22.14, changePct:2.3, mktCap:"ETF", short:"—", sentiment:64, mentions:521, sector:"ETF", type:"etf" },
-  { ticker:"NASA", name:"Tema Space Innovators ETF", price:24.18, changePct:3.1, mktCap:"ETF", short:"—", sentiment:71, mentions:389, sector:"ETF", type:"etf" },
-  { ticker:"MARS", name:"Roundhill Space & Tech ETF", price:30.52, changePct:0.0, mktCap:"ETF", short:"—", sentiment:70, mentions:180, sector:"ETF", type:"etf" },
-  { ticker:"ROKT", name:"SPDR Kensho Final Frontiers ETF", price:42.18, changePct:0.0, mktCap:"ETF", short:"—", sentiment:66, mentions:210, sector:"ETF", type:"etf" },
-  { ticker:"SATS", name:"EchoStar Corporation", price:28.44, changePct:0.0, mktCap:"2.4B", short:"8.2%", sentiment:58, mentions:290, sector:"Comms", type:"stock" },
-  { ticker:"VOYG", name:"Voyager Technologies", price:31.49, changePct:0.0, mktCap:"1.9B", short:"8.4%", sentiment:62, mentions:310, sector:"Defence", type:"stock" },
-  { ticker:"YSS", name:"York Space Systems", price:33.61, changePct:0.0, mktCap:"4.3B", short:"6.2%", sentiment:65, mentions:280, sector:"Defence", type:"stock" },
-  { ticker:"HAWK", name:"HawkEye 360", price:34.00, changePct:30.0, mktCap:"3.1B", short:"—", sentiment:72, mentions:412, sector:"Earth Obs", type:"stock" },
+  s("SPCX", "SpaceX", 153.23, -1.5, "272B", "Launch", "large"),
+  s("RKLB", "Rocket Lab", 24.82, 15.9, "11.2B", "Launch"),
+  s("ASTS", "AST SpaceMobile", 31.17, 4.1, "6.8B", "Comms"),
+  s("LUNR", "Intuitive Machines", 8.44, -6.8, "0.9B", "Lunar"),
+  s("PL", "Planet Labs", 3.91, 2.1, "0.7B", "Earth Obs"),
+  s("BKSY", "BlackSky Technology", 6.14, 3.2, "0.4B", "Earth Obs"),
+  s("RDW", "Redwire", 11.23, 4.1, "0.8B", "Hardware"),
+  s("MNTS", "Momentus", 1.82, -5.7, "0.1B", "Transport"),
+  s("SPCE", "Virgin Galactic", 2.14, -3.2, "0.5B", "Tourism"),
+  s("KRMN", "Karman Space", 18.4, 1.8, "1.2B", "Hardware"),
+  s("SATL", "Satellogic", 1.23, -2.4, "0.2B", "Earth Obs"),
+  s("KULR", "KULR Technology", 1.94, 3.3, "0.3B", "Hardware"),
+  s("TSAT", "Telesat", 9.81, -0.8, "0.5B", "Comms"),
+  s("GSAT", "Globalstar", 1.67, 1.4, "3.1B", "Comms"),
+  s("VSAT", "Viasat", 14.32, -1.1, "1.8B", "Comms"),
+  s("MDA", "MDA Space", 19.44, 0.6, "2.1B", "Hardware"),
+  s("SPIR", "Spire Global", 4.22, 2.9, "0.4B", "Earth Obs"),
+  s("GILT", "Gilat Satellite", 7.88, 0.3, "0.3B", "Comms"),
+  s("DXYZ", "Destiny Tech100", 38.44, 4.2, "1.1B", "Private Access"),
+  s("LMT", "Lockheed Martin", 441.2, 0.4, "105B", "Defence", "large"),
+  s("FLY", "Firefly Aerospace", 14.82, 2.1, "1.8B", "Launch"),
+  s("OKLO", "Oklo", 22.14, 1.8, "2.4B", "Energy"),
+  s("BA", "Boeing", 172.4, -0.6, "120B", "Defence", "large"),
+  s("NOC", "Northrop Grumman", 489.2, 0.3, "72B", "Defence", "large"),
+  s("RTX", "RTX Corp", 138.6, 0.8, "181B", "Defence", "large"),
+  s("UFO", "Procure Space ETF", 18.92, 1.8, "ETF", "ETF", "etf"),
+  s("ARKX", "ARK Space ETF", 22.14, 2.3, "ETF", "ETF", "etf"),
+  s("NASA", "Tema Space Innovators ETF", 24.18, 3.1, "ETF", "ETF", "etf"),
+  s("MARS", "Roundhill Space & Tech ETF", 30.52, 0, "ETF", "ETF", "etf"),
+  s("ROKT", "SPDR Kensho Final Frontiers ETF", 42.18, 0, "ETF", "ETF", "etf"),
+  s("SATS", "EchoStar Corporation", 28.44, 0, "2.4B", "Comms"),
+  s("VOYG", "Voyager Technologies", 31.49, 0, "1.9B", "Defence"),
+  s("YSS", "York Space Systems", 33.61, 0, "4.3B", "Defence"),
+  s("HAWK", "HawkEye 360", 34.0, 30.0, "3.1B", "Earth Obs"),
 ];
 
-const PRIVATE = [
-  { name:"Blue Origin", desc:"New Glenn orbital rocket, New Shepard tourism. Jeff Bezos backed.", valuation:"~$12B", sentiment:52, news:"New Glenn manifesting commercial payloads for H2 2026." },
-  { name:"Relativity Space", desc:"3D-printed rockets. Terran R in development targeting orbital 2026.", valuation:"~$4.2B", sentiment:58, news:"Terran R propulsion test milestone confirmed Q1 2026." },
-  { name:"Vast Space", desc:"Commercial space stations. Haven-1 targeting 2026 launch via SpaceX.", valuation:"~$3.5B", sentiment:63, news:"Haven-1 launch window confirmed late 2026, crew selection underway." },
+// Fetched first so the page goes live quickly.
+const PRIORITY_TICKERS = ["SPCX", "RKLB", "ASTS", "LUNR", "PL", "HAWK", "BKSY", "RDW", "SPCE", "OKLO", "LMT"];
+
+const SECTORS = ["All", "Launch", "Comms", "Earth Obs", "Hardware", "Lunar", "Tourism", "Transport", "Defence", "Energy", "ETF", "Private Access"];
+
+const EARNINGS = [
+  { ticker: "RKLB", name: "Rocket Lab", date: "May 8, 2026", time: "After Market Close", watch: "Neutron development · Electron launch cadence · Space Systems revenue" },
+  { ticker: "ASTS", name: "AST SpaceMobile", date: "May 11, 2026", time: "Before Market Open", watch: "BlueBird 7 impact on guidance · Block 2 launch timeline · Cash runway" },
+  { ticker: "OKLO", name: "Oklo", date: "May 13, 2026", time: "After Market Close", watch: "NRC licensing progress · Power purchase agreement pipeline" },
+  { ticker: "BKSY", name: "BlackSky Technology", date: "May 14, 2026", time: "Before Market Open", watch: "Defence contract pipeline · Imagery analytics revenue" },
+  { ticker: "SPIR", name: "Spire Global", date: "May 15, 2026", time: "After Market Close", watch: "Government data contract wins · GNSS-R revenue" },
+  { ticker: "LUNR", name: "Intuitive Machines", date: "May 19, 2026", time: "After Market Close", watch: "$900M to $1B 2026 guidance confirmation · IM-3 mission update" },
+  { ticker: "SPCE", name: "Virgin Galactic", date: "May 20, 2026", time: "After Market Close", watch: "Commercial service launch date · Cash burn rate" },
+  { ticker: "RDW", name: "Redwire", date: "May 22, 2026", time: "Before Market Open", watch: "ISS contract extensions · UK expansion progress" },
+  { ticker: "PL", name: "Planet Labs", date: "Jun 26, 2026", time: "After Market Close", watch: "Free cash flow guidance · Government contract renewals · Pelican progress" },
 ];
 
-const AGENCIES = [
-  { name:"NASA", country:"🇺🇸", type:"Civil Agency", focus:"Artemis lunar programme, ISS, commercial cargo contracts", sentiment:71, news:"Artemis III crew announcement expected Q3 2026. $2.4B in new commercial awards." },
-  { name:"Space Force", country:"🇺🇸", type:"Military", focus:"National security launch, GPS, satellite comms, NSSL contracts", sentiment:64, news:"NSSL Phase 3 Lane 2 awards — RKLB and SpaceX named as winners." },
-  { name:"ESA", country:"🇪🇺", type:"Civil Agency", focus:"Ariane 6, Earth observation, science missions, Copernicus", sentiment:58, news:"Ariane 6 commercial cadence increasing through 2026. Funding review ongoing." },
-  { name:"ISRO", country:"🇮🇳", type:"Civil Agency", focus:"PSLV, GSLV, Chandrayaan lunar, Gaganyaan crewed programme", sentiment:66, news:"Gaganyaan crewed mission targeting late 2026. Commercial launch services expanding." },
-];
+const LAUNCH_IMPACT = { RKLB: "+4.2% avg", ASTS: "+12.4% avg", LUNR: "+8.1% avg" };
 
-const LAUNCHES = [
-  { date:"Est. May 2026", mission:"RKLB – Electron / LOXSAT-1 (NASA Tipping Point)", status:"GO", impact:"+4.2% avg", ticker:"RKLB" },
-  { date:"Est. May 2026", mission:"RKLB – Electron / Synspective SAR Satellite", status:"GO", impact:"+3.8% avg", ticker:"RKLB" },
-  { date:"Mid-Jun 2026", mission:"SpaceX – Falcon 9 / ASTS BlueBird 8-9-10 (Block 2)", status:"GO", impact:"+12.4% avg", ticker:"ASTS" },
-  { date:"Est. Jun 2026", mission:"RKLB – Electron / VICTUS HAZE (US Space Force)", status:"GO", impact:"+4.5% avg", ticker:"RKLB" },
-  { date:"Est. Jun 10", mission:"JAXA – H3-30 / VEP-5 + smallsats", status:"GO", impact:"Sector +0.5%", ticker:null },
-  { date:"Est. Aug 2026", mission:"SpaceX – Dragon / CRS-35 (ISS resupply)", status:"GO", impact:"Sector +0.8%", ticker:null },
-  { date:"Est. Aug 15", mission:"RKLB – Electron / NASA Aspera (UV telescope)", status:"GO", impact:"+3.5% avg", ticker:"RKLB" },
-  { date:"SUMMER 2026", mission:"SpaceX – IPO Roadshow", status:"CONFIRMED", impact:"Sector re-rating", ticker:null },
-];
-
-const SPARKDATA = {
-  SPCX:[160,158,154,152,148,150,153,151,152,153.23], RKLB:[18,19,17,20,21,19,22,24,23,24.82], ASTS:[28,27,29,30,29,28,30,31,30,31.17],
-  LUNR:[10,9.5,9,8.8,9.2,9,8.5,8.6,8.5,8.44], PL:[3.5,3.6,3.7,3.6,3.8,3.9,3.8,3.9,3.9,3.91],
-  RDW:[10,10.2,10.5,10.8,11,10.7,11,11.1,11.2,11.23], MNTS:[2.2,2.1,2,1.95,1.9,1.88,1.85,1.82,1.83,1.82],
-  SPCE:[2.5,2.4,2.3,2.25,2.2,2.2,2.15,2.1,2.12,2.14], BKSY:[5.2,5.5,5.8,5.9,6.1,5.9,6.0,6.1,6.0,6.14],
-  KRMN:[16,17,17.5,18,17.8,18.2,18.5,18.3,18.4,18.40], GSAT:[1.5,1.55,1.6,1.62,1.65,1.64,1.66,1.67,1.66,1.67],
-  LMT:[438,440,439,441,440,442,441,440,441,441.20], DXYZ:[34,35,36,37,36,37,38,38,38,38.44],
-  UFO:[17.5,18,18.2,18.5,18.3,18.6,18.8,18.9,19,18.92], ARKX:[20,21,21.5,22,21.8,22,22.1,22.2,22,22.14],
-  MARS:[27,28,29,30,29.5,30.2,30.5,30.8,30.6,30.52],
-  ROKT:[38,39,40,41,40.5,41.2,41.8,42.1,41.9,42.18],
-  SATS:[24,25,26,27,26.5,27.2,27.8,28.1,28.3,28.44],
-  IRDM:[28,29,30,31,30.5,31.0,31.2,31.4,31.1,31.22],
-  VOYG:[28,30,32,35,33,31,32,31.5,31.8,31.49],
-  YSS:[38,36,34,33,35,34,33.5,34,33.8,33.61],
-  NASA:[20,21,22,22.5,23,23.2,23.8,24,24.1,24.18],
-  FLY:[12,13,13.5,14,13.8,14.2,14.5,14.6,14.7,14.82], OKLO:[18,19,20,21,20.5,21,21.5,22,22,22.14],
-  BA:[175,174,173,172,171,172,173,172,172,172.40], NOC:[485,487,488,490,489,490,489,489,489,489.20],
-  RTX:[135,136,137,138,137,138,138,139,138,138.60],
-  SPIR:[3.8,3.9,4.0,4.1,4.0,4.1,4.2,4.1,4.2,4.22], VSAT:[15,14.8,14.5,14.3,14.4,14.2,14.3,14.4,14.3,14.32],
-  MDA:[18,18.5,19,19.2,19.1,19.3,19.4,19.5,19.4,19.44], KULR:[1.7,1.75,1.8,1.82,1.85,1.88,1.9,1.92,1.93,1.94],
-  TSAT:[10.2,10,9.8,9.9,9.8,9.7,9.8,9.9,9.8,9.81],
-  HAWK:[26,27,28,29,30,31,32,33,34,34.00],
+// News filter chips (in display order). Matched as whole words against title + description.
+const COMPANY_KEYWORDS = {
+  SPCX: ["SPCX", "SpaceX", "Starship", "Falcon", "Starlink"],
+  RKLB: ["Rocket Lab", "RKLB", "Electron", "Neutron", "Peter Beck"],
+  ASTS: ["AST SpaceMobile", "ASTS", "BlueBird", "Abel Avellan"],
+  LUNR: ["Intuitive Machines", "LUNR", "IM-3", "IM-4", "lunar lander"],
+  PL: ["Planet Labs", "Pelican"],
+  BKSY: ["BlackSky", "BKSY"],
+  RDW: ["Redwire", "RDW"],
+  MNTS: ["Momentus", "MNTS"],
+  SPCE: ["Virgin Galactic", "SPCE", "VSS"],
+  KRMN: ["Karman", "KRMN"],
+  SATL: ["Satellogic", "SATL"],
+  KULR: ["KULR Technology", "KULR"],
+  TSAT: ["Telesat", "TSAT", "Lightspeed"],
+  GSAT: ["Globalstar", "GSAT"],
+  VSAT: ["Viasat", "VSAT"],
+  MDA: ["MDA Space", "MDA Ltd"],
+  SPIR: ["Spire Global", "SPIR"],
+  DXYZ: ["Destiny Tech", "DXYZ"],
+  LMT: ["Lockheed Martin", "LMT"],
+  FLY: ["Firefly Aerospace", "Alpha rocket"],
+  OKLO: ["Oklo", "nuclear microreactor"],
+  BA: ["Boeing"],
+  NOC: ["Northrop Grumman", "NOC"],
+  RTX: ["RTX", "Raytheon"],
+  HAWK: ["HawkEye 360", "SIGINT", "RF intelligence"],
+  "Blue Origin": ["Blue Origin", "New Glenn", "BE-4"],
+  Relativity: ["Relativity Space", "Terran"],
+  Vast: ["Vast Space", "Haven-1"],
+  ispace: ["ispace", "HAKUTO"],
+  NASA: ["NASA", "Artemis", "ISS"],
+  ESA: ["ESA", "European Space Agency", "Ariane"],
+  ISRO: ["ISRO", "Gaganyaan", "Chandrayaan"],
+  "Space Force": ["Space Force", "USSF", "NSSL", "Golden Dome"],
 };
 
-const SECTORS = ["All","Launch","Comms","Earth Obs","Hardware","Lunar","Tourism","Transport","Defence","Energy","ETF","Private Access"];
-
-// ── URL hash helpers ──────────────────────────────────────────────────────────
+/* ════════════════════════════════════════════════════════════════════════════
+   HOOKS (data fetching, routing, storage)
+   ════════════════════════════════════════════════════════════════════════════ */
+/* ── Routing: #page/tab/feedMode ──────────────────────────────────────────────
+   Keep this format: newsletter links point at #feed/news/newsletter. */
 function readHash() {
-  const hash = window.location.hash.replace("#", "");
-  const [page, tab, feedMode] = hash.split("/");
-  return {
-    page: page || "home",
-    tab: tab || "stocks",
-    feedMode: feedMode || "news",
-  };
+  const [page, tab, feedMode] = window.location.hash.replace("#", "").split("/");
+  return { page: page || "home", tab: tab || "stocks", feedMode: feedMode || "news" };
 }
 
-function writeHash(page, tab, feedMode) {
+function writeHash({ page, tab, feedMode }) {
   const parts = [page];
-  if (page === "markets") parts.push(tab || "stocks");
-  if (page === "feed") parts.push(tab || "stocks", feedMode || "news");
+  if (page === "markets") parts.push(tab);
+  if (page === "feed") parts.push(tab, feedMode);
   window.location.hash = parts.join("/");
 }
 
+function useHashRoute() {
+  const [route, setRoute] = useState(readHash);
+  useEffect(() => { writeHash(route); }, [route]);
+  useEffect(() => {
+    const onChange = () => setRoute(readHash());
+    window.addEventListener("hashchange", onChange);
+    return () => window.removeEventListener("hashchange", onChange);
+  }, []);
+  return [route, (patch) => setRoute((r) => ({ ...r, ...patch }))];
+}
+
+/* ── Prices ─────────────────────────────────────────────────────────────────── */
+const formatMktCap = (v) =>
+  !v ? "-"
+  : v >= 1e12 ? `$${(v / 1e12).toFixed(2)}T`
+  : v >= 1e9 ? `$${(v / 1e9).toFixed(2)}B`
+  : v >= 1e6 ? `$${(v / 1e6).toFixed(0)}M`
+  : `$${v}`;
+
+// "11.2B", "$2.00T", "450M" -> number (for sorting)
+function capValue(str) {
+  const m = String(str || "").match(/([\d.]+)\s*([TBM])?/i);
+  if (!m) return 0;
+  return parseFloat(m[1]) * ({ T: 1e12, B: 1e9, M: 1e6 }[(m[2] || "").toUpperCase()] || 1);
+}
+
+async function fetchQuote(ticker, range) {
+  try {
+    const json = await (await fetch(`/api/quote?ticker=${ticker}&range=${range}`)).json();
+    const result = json?.chart?.result?.[0];
+    const meta = result?.meta;
+    if (!meta) return null;
+    const closes = result.indicators?.quote?.[0]?.close?.filter(Boolean) || [];
+    const price = meta.regularMarketPrice || meta.previousClose;
+    const prevClose = closes.length >= 2 ? closes[closes.length - 2] : meta.chartPreviousClose || meta.previousClose;
+    const changePct = meta.regularMarketChangePercent ?? (prevClose ? ((price - prevClose) / prevClose) * 100 : 0);
+    const cap = meta.marketCap || meta.netAssets;
+    return { ticker, price, changePct, volume: meta.regularMarketVolume || 0, spark: closes, ...(cap && { mktCap: formatMktCap(cap) }) };
+  } catch {
+    return null;
+  }
+}
+
+const fetchTicker = async (t) => (await fetchQuote(t, "7d")) || (await fetchQuote(t, "1d"));
+
+function useLivePrices() {
+  const [stocks, setStocks] = useState(STOCKS);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  useEffect(() => {
+    const apply = (results) => {
+      const updates = Object.fromEntries(results.filter(Boolean).map((r) => [r.ticker, r]));
+      if (!Object.keys(updates).length) return;
+      setStocks((prev) => prev.map((s) => (updates[s.ticker] ? { ...s, ...updates[s.ticker] } : s)));
+      setLastUpdated(new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }));
+    };
+    const rest = STOCKS.map((s) => s.ticker).filter((t) => !PRIORITY_TICKERS.includes(t));
+    const load = async () => {
+      apply(await Promise.all(PRIORITY_TICKERS.map(fetchTicker)));
+      apply(await Promise.all(rest.map(fetchTicker)));
+    };
+    load();
+    const id = setInterval(load, 5 * 60 * 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return { stocks, lastUpdated, isLive: lastUpdated !== null };
+}
+
+// Returns { TICKER: "up" | "down" } for 600ms after a price changes.
+function usePriceFlash(stocks) {
+  const [flash, setFlash] = useState({});
+  const prev = useRef({});
+  useEffect(() => {
+    const next = {};
+    stocks.forEach((s) => {
+      const p = prev.current[s.ticker];
+      if (p !== undefined && p !== s.price) next[s.ticker] = s.price > p ? "up" : "down";
+      prev.current[s.ticker] = s.price;
+    });
+    if (!Object.keys(next).length) return;
+    setFlash(next);
+    const t = setTimeout(() => setFlash({}), 600);
+    return () => clearTimeout(t);
+  }, [stocks]);
+  return flash;
+}
+
+/* ── Launches: null = loading, [] = none/unavailable ───────────────────────── */
+function toLaunch(l) {
+  const mission = l.missions?.[0]?.name || l.name || "";
+  const text = `${l.name || ""} ${mission}`;
+  const ticker = l.provider?.slug?.includes("rocket-lab") ? "RKLB"
+    : /BlueBird/.test(text) ? "ASTS"
+    : /Intuitive|IM-/.test(text) ? "LUNR"
+    : null;
+  return {
+    date: l.date_str || "TBD",
+    mission: [l.provider?.name, l.vehicle?.name, mission].filter(Boolean).join(" · "),
+    status: l.result === 1 ? "SUCCESS" : l.win_open ? "GO" : "TBD",
+    impact: LAUNCH_IMPACT[ticker] || "Sector avg",
+    ticker,
+  };
+}
+
+function useLaunches() {
+  const [launches, setLaunches] = useState(null);
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const { result } = await (await fetch("/api/launches")).json();
+        const now = Date.now() / 1000;
+        setLaunches((result || []).filter((l) => !l.sort_date || l.sort_date > now).map(toLaunch));
+      } catch (e) {
+        console.log("Launch fetch error:", e);
+        setLaunches((prev) => prev || []);
+      }
+    };
+    load();
+    const id = setInterval(load, 60 * 60 * 1000);
+    return () => clearInterval(id);
+  }, []);
+  return launches;
+}
+
+/* ── News ───────────────────────────────────────────────────────────────────── */
+function useNews() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const load = async () => {
+      const [rss, yahoo] = await Promise.allSettled([
+        fetch("/api/news?limit=50").then((r) => r.json()),
+        fetch(`/api/yahoonews?t=${Date.now()}`).then((r) => r.json()),
+      ]);
+      const list = (r) => (r.status === "fulfilled" && Array.isArray(r.value) ? r.value : []);
+      const seen = new Set();
+      setItems(
+        [...list(yahoo), ...list(rss)]
+          .filter((item) => {
+            const key = item.title?.toLowerCase().slice(0, 40);
+            if (!key || seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          })
+          .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
+      );
+      setLoading(false);
+    };
+    load();
+    const id = setInterval(load, 5 * 60 * 1000);
+    return () => clearInterval(id);
+  }, []);
+  return { items, loading };
+}
+
+/* ── Misc ───────────────────────────────────────────────────────────────────── */
+function useClock() {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return now;
+}
+
+function useLocalStorage(key, initial) {
+  const [value, setValue] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(key)) ?? initial; } catch { return initial; }
+  });
+  const set = (v) =>
+    setValue((prev) => {
+      const next = typeof v === "function" ? v(prev) : v;
+      try { localStorage.setItem(key, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  return [value, set];
+}
+
+function isMarketOpen() {
+  const est = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const mins = est.getHours() * 60 + est.getMinutes();
+  const day = est.getDay();
+  return day >= 1 && day <= 5 && mins >= 570 && mins < 960;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   THEME + SHARED UI
+   ════════════════════════════════════════════════════════════════════════════ */
+/* ── Theme ──────────────────────────────────────────────────────────────────── */
+const C = {
+  green: "#00ff88", red: "#ff4466", muted: "#aab8c2", blue: "#7eb8ff",
+  orange: "#ff9632", yellow: "#ffcc00", bg: "#04060e", text: "#dde1ec", light: "#ccd0d8",
+};
+const MONO = "'DM Mono',monospace";
+const SYNE = "'Syne',sans-serif";
+
+const pct = (v, d = 1) => `${v >= 0 ? "+" : ""}${v.toFixed(d)}%`;
+const signColor = (v) => (v >= 0 ? C.green : C.red);
+
+const sourceStyle = (src) => {
+  const map = {
+    SpaceNews: ["rgba(0,255,136,0.08)", C.green],
+    NASA: ["rgba(126,184,255,0.08)", C.blue],
+    "Space.com": ["rgba(255,255,255,0.04)", "#888"],
+  };
+  const [background, color] = map[src] || ["rgba(255,204,0,0.08)", C.yellow];
+  return { fontSize: 9, padding: "2px 8px", borderRadius: 3, flexShrink: 0, background, color };
+};
+
+const fmtDate = (d, withTime) =>
+  d ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", ...(withTime && { hour: "2-digit", minute: "2-digit" }) }) : "";
+
+const inputStyle = {
+  flex: 1, minWidth: 0, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)",
+  color: "#fff", padding: "10px 14px", borderRadius: 4, fontSize: 12, fontFamily: MONO,
+};
+
+const GlobalStyles = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@600;700;800&display=swap');
+    @keyframes flashUp{0%{background:rgba(0,255,136,0.3)}100%{background:transparent}}
+    @keyframes flashDown{0%{background:rgba(255,68,102,0.3)}100%{background:transparent}}
+    @keyframes shimmer{0%{opacity:0.4}50%{opacity:0.8}100%{opacity:0.4}}
+    @keyframes ts{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    @keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes bk{0%,100%{opacity:1}50%{opacity:0.1}}
+    @keyframes sc{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
+    *{box-sizing:border-box;margin:0;padding:0}
+    input,button,textarea{outline:none}
+    ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08)}
+    .flash-up{animation:flashUp 0.6s ease}.flash-down{animation:flashDown 0.6s ease}
+    .skeleton{background:rgba(255,255,255,0.06);border-radius:3px;animation:shimmer 1.5s infinite}
+    .hov:hover{background:rgba(255,255,255,0.03)!important;cursor:pointer}
+    .dt{background:none;border:none;cursor:pointer;padding:8px 12px;font-family:${MONO};font-size:11px;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s;white-space:nowrap}
+    .stg{cursor:pointer;font-size:10px;padding:4px 10px;border-radius:3px;border:1px solid rgba(255,255,255,0.08);transition:all 0.15s;white-space:nowrap}
+    .stg:hover{border-color:rgba(0,255,136,0.3);color:#00ff88}
+    .mob-only{display:none}
+    @media(max-width:600px){.desk-only{display:none!important}.mob-only{display:block!important}}
+  `}</style>
+);
+
+/* ── Small components ───────────────────────────────────────────────────────── */
+const Skeleton = ({ w, h, style }) => <div className="skeleton" style={{ width: w, height: h, ...style }} />;
+
 function Sparkline({ data, positive }) {
-  const [hoverIdx, setHoverIdx] = useState(null);
-  if (!data || data.length===0) return <div style={{width:"100%",height:28}}/>;
-  const min=Math.min(...data),max=Math.max(...data),range=max-min||1;
-  const w=72,h=28;
-  const pts=data.map((v,i)=>`${(i/(data.length-1))*w},${h-((v-min)/range)*h}`).join(" ");
-  const color=positive?"#00ff88":"#ff4466";
-  const hoverX=hoverIdx!==null?(hoverIdx/(data.length-1))*w:null;
-  const hoverY=hoverIdx!==null?h-((data[hoverIdx]-min)/range)*h:null;
+  const [hover, setHover] = useState(null);
+  if (!data?.length) return <div style={{ width: 72, height: 28 }} />;
+  const w = 72, h = 28;
+  const min = Math.min(...data), range = Math.max(...data) - min || 1;
+  const x = (i) => (i / (data.length - 1)) * w;
+  const y = (v) => h - ((v - min) / range) * h;
+  const pts = data.map((v, i) => `${x(i)},${y(v)}`).join(" ");
+  const color = positive ? C.green : C.red;
+  const gid = `g${positive ? 1 : 0}`;
   return (
-    <div style={{position:"relative",display:"inline-block"}}>
-      <svg width={w} height={h} style={{overflow:"visible",cursor:"crosshair"}}
-        onMouseLeave={()=>setHoverIdx(null)}
-        onMouseMove={e=>{
-          const rect=e.currentTarget.getBoundingClientRect();
-          const x=e.clientX-rect.left;
-          const idx=Math.round((x/w)*(data.length-1));
-          setHoverIdx(Math.max(0,Math.min(data.length-1,idx)));
+    <div style={{ position: "relative", display: "inline-block" }}>
+      <svg width={w} height={h} style={{ overflow: "visible", cursor: "crosshair" }}
+        onMouseLeave={() => setHover(null)}
+        onMouseMove={(e) => {
+          const i = Math.round(((e.clientX - e.currentTarget.getBoundingClientRect().left) / w) * (data.length - 1));
+          setHover(Math.max(0, Math.min(data.length - 1, i)));
         }}>
-        <defs><linearGradient id={`g${positive?1:0}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={color} stopOpacity="0.2"/><stop offset="100%" stopColor={color} stopOpacity="0"/></linearGradient></defs>
-        <polygon points={`0,${h} ${pts} ${w},${h}`} fill={`url(#g${positive?1:0})`}/>
-        <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round"/>
-        {hoverIdx!==null&&<>
-          <line x1={hoverX} y1={0} x2={hoverX} y2={h} stroke={color} strokeWidth="0.5" strokeDasharray="2,2" opacity="0.6"/>
-          <circle cx={hoverX} cy={hoverY} r="2.5" fill={color}/>
-        </>}
+        <defs>
+          <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.2" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <polygon points={`0,${h} ${pts} ${w},${h}`} fill={`url(#${gid})`} />
+        <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" />
+        {hover !== null && (
+          <>
+            <line x1={x(hover)} y1={0} x2={x(hover)} y2={h} stroke={color} strokeWidth="0.5" strokeDasharray="2,2" opacity="0.6" />
+            <circle cx={x(hover)} cy={y(data[hover])} r="2.5" fill={color} />
+          </>
+        )}
       </svg>
-      {hoverIdx!==null&&(
-        <div style={{position:"absolute",bottom:"110%",left:"50%",transform:"translateX(-50%)",background:"#0a0f1e",border:`1px solid ${color}`,borderRadius:4,padding:"3px 8px",fontSize:10,color:"#fff",whiteSpace:"nowrap",pointerEvents:"none",zIndex:99}}>
-          ${data[hoverIdx].toFixed(2)}
-          <span style={{color:"#aab8c2",marginLeft:4}}>D{hoverIdx+1}</span>
+      {hover !== null && (
+        <div style={{ position: "absolute", bottom: "110%", left: "50%", transform: "translateX(-50%)", background: "#0a0f1e", border: `1px solid ${color}`, borderRadius: 4, padding: "3px 8px", fontSize: 10, color: "#fff", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 99 }}>
+          ${data[hover].toFixed(2)}<span style={{ color: C.muted, marginLeft: 4 }}>D{hover + 1}</span>
         </div>
       )}
     </div>
   );
 }
 
-function Stars() {
-  const stars = [
-    {x:5,y:8},{x:12,y:22},{x:18,y:5},{x:25,y:35},{x:31,y:14},{x:38,y:48},{x:44,y:7},{x:51,y:28},{x:57,y:62},{x:63,y:18},
-    {x:69,y:41},{x:75,y:9},{x:81,y:55},{x:87,y:25},{x:93,y:72},{x:8,y:45},{x:15,y:68},{x:22,y:82},{x:29,y:55},{x:36,y:75},
-    {x:43,y:88},{x:50,y:72},{x:58,y:91},{x:65,y:78},{x:72,y:65},{x:79,y:85},{x:86,y:42},{x:92,y:58},{x:3,y:92},{x:97,y:15},
-    {x:10,y:38},{x:20,y:12},{x:33,y:95},{x:47,y:52},{x:54,y:38},{x:61,y:85},{x:68,y:30},{x:76,y:72},{x:83,y:18},{x:90,y:88},
-    {x:7,y:75},{x:16,y:55},{x:24,y:42},{x:41,y:22},{x:48,y:68},{x:55,y:15},{x:66,y:48},{x:73,y:8},{x:88,y:35},{x:95,y:62},
-  ];
-  return (
-    <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:0}}>
-      {stars.map((st,i)=>(
-        <div key={i} style={{position:"absolute",left:`${st.x}%`,top:`${st.y}%`,width:i%3===0?1.8:i%3===1?1.2:1,height:i%3===0?1.8:i%3===1?1.2:1,borderRadius:"50%",background:"#fff",opacity:i%3===0?0.18:i%3===1?0.14:0.10}}/>
-      ))}
-    </div>
-  );
-}
+const STARS = Array.from({ length: 50 }, (_, i) => ({
+  x: (i * 37 + 5) % 100, y: (i * 53 + 8) % 100, size: [1.8, 1.2, 1][i % 3], opacity: [0.18, 0.14, 0.1][i % 3],
+}));
+
+const Stars = () => (
+  <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}>
+    {STARS.map((st, i) => (
+      <div key={i} style={{ position: "absolute", left: `${st.x}%`, top: `${st.y}%`, width: st.size, height: st.size, borderRadius: "50%", background: "#fff", opacity: st.opacity }} />
+    ))}
+  </div>
+);
 
 function TickerStrip({ stocks }) {
-  const items=stocks.filter(s=>s.type==="stock"||s.type==="etf");
+  const items = stocks.filter((s) => s.type === "stock" || s.type === "etf");
   return (
-    <div style={{overflow:"hidden",background:"rgba(0,0,0,0.5)",borderBottom:"1px solid rgba(255,255,255,0.06)",padding:"6px 0"}}>
-      <div style={{display:"flex",gap:32,animation:"ts 50s linear infinite",width:"max-content"}}>
-        {[...items,...items].map((s,i)=>(
-          <span key={i} style={{fontSize:11,fontFamily:"monospace",whiteSpace:"nowrap",color:s.changePct>=0?"#00ff88":"#ff4466"}}>
-            <span style={{color:"#aab8c2",marginRight:4}}>{s.ticker}</span>${s.price.toFixed(2)}<span style={{marginLeft:3}}>{s.changePct>=0?"▲":"▼"}{Math.abs(s.changePct).toFixed(1)}%</span>
+    <div style={{ overflow: "hidden", background: "rgba(0,0,0,0.5)", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "6px 0" }}>
+      <div style={{ display: "flex", gap: 32, animation: "ts 50s linear infinite", width: "max-content" }}>
+        {[...items, ...items].map((s, i) => (
+          <span key={i} style={{ fontSize: 11, fontFamily: "monospace", whiteSpace: "nowrap", color: signColor(s.changePct) }}>
+            <span style={{ color: C.muted, marginRight: 4 }}>{s.ticker}</span>${s.price.toFixed(2)}
+            <span style={{ marginLeft: 3 }}>{s.changePct >= 0 ? "▲" : "▼"}{Math.abs(s.changePct).toFixed(1)}%</span>
           </span>
         ))}
       </div>
@@ -189,1285 +437,668 @@ function TickerStrip({ stocks }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// THREADS PAGE
-// ─────────────────────────────────────────────────────────────────────────────
-
-const TICKER_LIST = ["SPCX","RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","UFO","ARKX","HAWK","VOYG","YSS","SATS"];
-
-const SORT_OPTIONS = [
-  { id: "hot",      label: "🔥 Hot" },
-  { id: "new",      label: "🕐 New" },
-  { id: "top",      label: "⬆ Top" },
-  { id: "comments", label: "💬 Most discussed" },
-];
-
-function hotScore(thread) {
-  const score = (thread.upvotes || 0) - (thread.downvotes || 0);
-  const ageHours = (Date.now() - new Date(thread.time).getTime()) / 3_600_000;
-  return score / Math.pow(ageHours + 2, 1.5);
+/* ── Subscribe ──────────────────────────────────────────────────────────────── */
+async function subscribe(email) {
+  if (!email?.includes("@")) { alert("Please enter a valid email address."); return false; }
+  try {
+    const res = await fetch(SUBSCRIBE_API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
+    if ((await res.json()).success) { window.rdt?.("track", "SignUp"); return true; }
+  } catch {}
+  alert("Something went wrong. Please try again.");
+  return false;
 }
 
-function ThreadsPage({ go }) {
-  const [allThreads, setAllThreads]       = useState({});
-  const [loading, setLoading]             = useState(false);
-  const [activeTicker, setActiveTicker]   = useState("ALL");
-  const [openThread, setOpenThread]       = useState(null);
-  const [showCompose, setShowCompose]     = useState(false);
-  const [newTitle, setNewTitle]           = useState("");
-  const [newBody, setNewBody]             = useState("");
-  const [newComment, setNewComment]       = useState({});
-  const [votes, setVotes]                 = useState({});
-  const [posting, setPosting]             = useState(false);
-  const [sortBy, setSortBy]               = useState("hot");
-  const [timeFilter, setTimeFilter]       = useState("all");
+function SubscribeForm({ color = C.green, label = "Join Free →", onDone, style }) {
+  const [email, setEmail] = useState("");
+  const [done, setDone] = useState(false);
+  const submit = async () => { if (await subscribe(email)) { setDone(true); onDone?.(); } };
+  if (done) return <div style={{ fontSize: 13, color: C.green, padding: "10px 0" }}>✓ You're subscribed. Welcome to Orbit Alpha.</div>;
+  return (
+    <div style={{ display: "flex", gap: 8, maxWidth: 400, ...style }}>
+      <input value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} placeholder="your@email.com" style={inputStyle} />
+      <button onClick={submit} style={{ background: color, color: C.bg, border: "none", padding: "10px 20px", borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: MONO, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>
+        {label}
+      </button>
+    </div>
+  );
+}
 
-  const [username, setUsername]           = useState(() => localStorage.getItem("oa_username") || "");
-  const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
-  const [usernameInput, setUsernameInput] = useState("");
-  const [pendingAction, setPendingAction] = useState(null);
+const POPUP_KEY = "oa_popup_dismissed";
+function popupSuppressed() {
+  try {
+    const v = localStorage.getItem(POPUP_KEY);
+    return v === "subscribed" || (!!v && Date.now() - parseInt(v) < 30 * 86_400_000);
+  } catch { return false; }
+}
 
-  const API = "/api/threads";
+function SubscribePopup() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    if (popupSuppressed()) return;
+    const t = setTimeout(() => setShow(true), 45000);
+    return () => clearTimeout(t);
+  }, []);
+  const close = (value) => { setShow(false); try { localStorage.setItem(POPUP_KEY, value); } catch {} };
+  if (!show) return null;
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>
+      <div style={{ background: "#0d1220", border: "1px solid rgba(0,255,136,0.25)", borderRadius: 12, padding: 32, maxWidth: 420, width: "100%", position: "relative", animation: "fu 0.3s ease", boxShadow: "0 20px 60px rgba(0,0,0,0.8)" }}>
+        <button onClick={() => close(Date.now().toString())} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", color: C.muted, fontSize: 20, cursor: "pointer", lineHeight: 1 }}>×</button>
+        <div style={{ fontSize: 9, color: C.green, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 10 }}>Free Weekly Newsletter</div>
+        <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>The only weekly covering every space stock.</div>
+        <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>Macro overview · Broker target changes · One stock deep dive. Every Sunday morning. Free.</div>
+        <SubscribeForm onDone={() => close("subscribed")} style={{ maxWidth: "none", marginBottom: 14 }} />
+        <div style={{ fontSize: 10, color: C.muted }}><span style={{ color: C.green }}>✓</span> {SUBSCRIBER_COUNT}+ subscribers · Unsubscribe anytime</div>
+      </div>
+    </div>
+  );
+}
 
-  const saveUsername = () => {
-    const u = usernameInput.trim().replace(/\s+/g, "_").slice(0, 20);
-    if (!u) return;
-    localStorage.setItem("oa_username", u);
-    setUsername(u);
-    setShowUsernamePrompt(false);
-    setUsernameInput("");
-    if (pendingAction) { pendingAction(); setPendingAction(null); }
-  };
+/* ════════════════════════════════════════════════════════════════════════════
+   HOME PAGE
+   ════════════════════════════════════════════════════════════════════════════ */
+const FEATURES = [
+  { e: "📈", t: "Live Prices", d: "Real-time quotes, 7D charts and market cap. Updated every 5 minutes." },
+  { e: "🚀", t: "Launch Calendar", d: "Upcoming launches with historical price impact per mission." },
+  { e: "📅", t: "Earnings Calendar", d: "Upcoming earnings dates with key metrics to watch." },
+];
 
-  const requireUsername = (action) => {
-    if (username) { action(); return; }
-    setPendingAction(() => action);
-    setShowUsernamePrompt(true);
-  };
+const btn = (primary) => ({
+  background: primary ? C.green : "none", color: primary ? C.bg : C.muted,
+  border: primary ? "none" : "1px solid rgba(255,255,255,0.15)", padding: "11px 24px", borderRadius: 4,
+  fontSize: 11, fontWeight: primary ? 700 : 400, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: MONO, cursor: "pointer",
+});
 
-  const fetchTicker = async (ticker) => {
-    try {
-      const res  = await fetch(`${API}?ticker=${ticker}`);
-      const data = await res.json();
-      return Array.isArray(data) ? data.map(t => ({ ...t, _ticker: ticker })) : [];
-    } catch { return []; }
-  };
+function Panel({ color, rgb, title, accent, blurb, cta, onCta, children }) {
+  return (
+    <section style={{ margin: "0 auto 16px", maxWidth: 920, borderRadius: 10, border: `1px solid rgba(${rgb},0.2)`, background: `rgba(${rgb},0.02)`, padding: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+        <div>
+          <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 4 }}>{title} <span style={{ color }}>{accent}</span></div>
+          <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6 }}>{blurb}</p>
+        </div>
+        <button onClick={onCta} style={{ background: "none", border: `1px solid rgba(${rgb},0.3)`, color, padding: "8px 16px", borderRadius: 4, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: MONO, cursor: "pointer", whiteSpace: "nowrap" }}>{cta}</button>
+      </div>
+      {children}
+    </section>
+  );
+}
 
-  const fetchAll = async () => {
-    setLoading(true);
-    if (activeTicker === "ALL") {
-      const batches = [];
-      for (let i = 0; i < TICKER_LIST.length; i += 6) batches.push(TICKER_LIST.slice(i, i + 6));
-      const results = {};
-      for (const batch of batches) {
-        const settled = await Promise.allSettled(batch.map(t => fetchTicker(t)));
-        settled.forEach((r, i) => { results[batch[i]] = r.status === "fulfilled" ? r.value : []; });
-        await new Promise(r => setTimeout(r, 200));
-      }
-      setAllThreads(results);
-    } else {
-      const threads = await fetchTicker(activeTicker);
-      setAllThreads(prev => ({ ...prev, [activeTicker]: threads }));
-    }
-    setLoading(false);
-  };
+function Home({ go, goSubscribe, news }) {
+  return (
+    <div style={{ animation: "fu 0.5s ease", padding: "0 20px" }}>
+      <section style={{ padding: "40px 0 28px", textAlign: "center", maxWidth: 680, margin: "0 auto" }}>
+        <h1 style={{ fontFamily: SYNE, fontSize: "clamp(26px,6vw,48px)", fontWeight: 700, lineHeight: 1.1, letterSpacing: "-0.015em", color: "#fff", marginBottom: 10 }}>
+          The data layer for<br /><span style={{ color: C.green }}>space equity</span> investors.
+        </h1>
+        <p style={{ fontSize: 13, color: C.muted, maxWidth: 380, margin: "0 auto 20px", lineHeight: 1.6 }}>Live prices, launches, earnings and news. Weekly newsletter every Sunday.</p>
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+          <button onClick={() => go("markets", "stocks")} style={btn(true)}>View Markets →</button>
+          <button onClick={goSubscribe} style={btn(false)}>Subscribe Free →</button>
+        </div>
+      </section>
 
-  useEffect(() => { fetchAll(); }, [activeTicker]);
+      <Panel color={C.green} rgb="0,255,136" title="ORBIT" accent="MARKETS" blurb="Live prices, launches, earnings and news, updated automatically." cta="View Markets →" onCta={() => go("markets", "stocks")}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8 }}>
+          {FEATURES.map((f) => (
+            <div key={f.t} style={{ borderRadius: 6, padding: 12, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+              <div style={{ fontSize: 16, marginBottom: 4 }}>{f.e}</div>
+              <div style={{ fontSize: 11, color: "#fff", marginBottom: 3, fontWeight: 500 }}>{f.t}</div>
+              <div style={{ fontSize: 10, color: C.muted, lineHeight: 1.5 }}>{f.d}</div>
+            </div>
+          ))}
+        </div>
+      </Panel>
 
-  const rawThreads = activeTicker === "ALL"
-    ? Object.values(allThreads).flat()
-    : (allThreads[activeTicker] || []);
+      <Panel color={C.orange} rgb="255,150,50" title="ORBIT" accent="FEED" blurb="Live news from 30+ sources · Weekly newsletter every Sunday, all in one place." cta="View Feed →" onCta={() => go("feed")}>
+        {news.loading && Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+            <Skeleton w="70%" h={11} style={{ marginBottom: 6 }} /><Skeleton w="25%" h={9} />
+          </div>
+        ))}
+        {!news.loading && news.items.slice(0, 4).map((item, i) => (
+          <div key={i} onClick={() => window.open(item.link, "_blank")} className="hov" style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 12, color: C.text, lineHeight: 1.4, marginBottom: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.title}</div>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <span style={sourceStyle(item.source)}>{item.source}</span>
+                <span style={{ fontSize: 9, color: C.muted }}>{fmtDate(item.pubDate)}</span>
+              </div>
+            </div>
+            <span style={{ fontSize: 11, color: C.orange }}>→</span>
+          </div>
+        ))}
+      </Panel>
 
-  const timeFiltered = rawThreads.filter(t => {
-    if (timeFilter === "all") return true;
-    const age = Date.now() - new Date(t.time).getTime();
-    if (timeFilter === "today") return age < 86_400_000;
-    if (timeFilter === "week")  return age < 7 * 86_400_000;
-    if (timeFilter === "month") return age < 30 * 86_400_000;
-    return true;
-  });
+      <footer style={{ padding: "24px 0", borderTop: "1px solid rgba(255,255,255,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+        <span style={{ fontFamily: SYNE, fontSize: 13, fontWeight: 800, color: "#222" }}>ORBIT<span style={{ color: C.green }}>ALPHA</span>.</span>
+        <span style={{ fontSize: 10, color: C.muted }}>Not financial advice · Data via Yahoo Finance & rocketlaunch.live</span>
+        <div style={{ display: "flex", gap: 16, fontSize: 10, color: C.muted }}>
+          <span onClick={() => go("feed")} className="hov">Feed</span>
+          <span onClick={() => go("about")} className="hov">About</span>
+          <a href="mailto:OrbitAlphaApp@proton.me" style={{ color: C.muted, textDecoration: "none" }} className="hov">Contact</a>
+        </div>
+      </footer>
+    </div>
+  );
+}
 
-  const sorted = [...timeFiltered].sort((a, b) => {
-    if (sortBy === "new")      return new Date(b.time) - new Date(a.time);
-    if (sortBy === "top")      return ((b.upvotes||0)-(b.downvotes||0)) - ((a.upvotes||0)-(a.downvotes||0));
-    if (sortBy === "comments") return (b.comments?.length||0) - (a.comments?.length||0);
-    return hotScore(b) - hotScore(a);
-  });
+/* ════════════════════════════════════════════════════════════════════════════
+   MARKETS PAGE
+   ════════════════════════════════════════════════════════════════════════════ */
+const TABS = [["stocks", "Stocks"], ["launches", "Launches"], ["earnings", "Earnings"]];
+const ROW_GRID = "68px 1fr 82px 72px 72px 80px";
+const sectionLabel = { fontSize: 9, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 };
+const border = "1px solid rgba(255,255,255,0.06)";
 
-  const postThread = async () => {
-    if (!newTitle.trim() || posting) return;
-    const ticker = activeTicker === "ALL" ? "RKLB" : activeTicker;
-    setPosting(true);
-    try {
-      const res  = await fetch(`${API}?ticker=${ticker}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "thread", author: username, thread: { title: newTitle.trim(), body: newBody.trim() } }),
-      });
-      const data = await res.json();
-      setAllThreads(prev => ({ ...prev, [ticker]: Array.isArray(data) ? data.map(t => ({ ...t, _ticker: ticker })) : [] }));
-      setNewTitle(""); setNewBody(""); setShowCompose(false);
-    } catch {}
-    setPosting(false);
-  };
-
-  const postComment = async (ticker, threadId) => {
-    const text = newComment[threadId]?.trim();
-    if (!text || posting) return;
-    setPosting(true);
-    try {
-      const res  = await fetch(`${API}?ticker=${ticker}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "comment", author: username, threadId, comment: text }),
-      });
-      const data = await res.json();
-      setAllThreads(prev => ({ ...prev, [ticker]: Array.isArray(data) ? data.map(t => ({ ...t, _ticker: ticker })) : [] }));
-      setNewComment(prev => ({ ...prev, [threadId]: "" }));
-    } catch {}
-    setPosting(false);
-  };
-
-  const handleVote = async (ticker, targetId, dir) => {
-    if (votes[targetId] === dir) return;
-    setVotes(prev => ({ ...prev, [targetId]: dir }));
-    try {
-      const res  = await fetch(`${API}?ticker=${ticker}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "vote", targetId, dir }),
-      });
-      const data = await res.json();
-      setAllThreads(prev => ({ ...prev, [ticker]: Array.isArray(data) ? data.map(t => ({ ...t, _ticker: ticker })) : [] }));
-    } catch {}
-  };
-
-  const getScore = (item, id) => {
-    const vote  = votes[id];
-    let score   = (item.upvotes || 0) - (item.downvotes || 0);
-    if (vote === "up")   score += 1;
-    if (vote === "down") score -= 1;
-    return score;
-  };
-
-  const formatTime = (iso) => {
-    try {
-      const diff = (Date.now() - new Date(iso).getTime()) / 1000;
-      if (diff < 60)    return "just now";
-      if (diff < 3600)  return `${Math.floor(diff / 60)}m ago`;
-      if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-      if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
-      return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
-    } catch { return ""; }
-  };
-
-  const openThreadData = openThread
-    ? (allThreads[openThread.ticker] || []).find(t => t.id === openThread.id)
-    : null;
-
-  const purple = "#a78bfa";
-  const purpleFaint = "rgba(167,139,250,0.15)";
+function Markets({ prices, launches, tab, setTab, goSubscribe }) {
+  const clock = useClock();
+  const open = isMarketOpen();
+  const oc = open ? C.green : C.red;
+  const active = TABS.some(([id]) => id === tab) ? tab : "stocks";
 
   return (
-    <div style={{ animation: "fu 0.3s ease", maxWidth: 820, margin: "0 auto", padding: "32px 20px 80px" }}>
-
-      {showUsernamePrompt && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-          <div style={{ background: "#0d1220", border: `1px solid ${purpleFaint}`, borderRadius: 12, padding: 28, maxWidth: 360, width: "100%", animation: "fu 0.2s ease" }}>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 20, fontWeight: 800, color: "#fff", marginBottom: 6 }}>Pick a username</div>
-            <p style={{ fontSize: 12, color: "#aab8c2", lineHeight: 1.6, marginBottom: 16 }}>Shows on all your posts. Stored locally — no signup needed.</p>
-            <input
-              autoFocus value={usernameInput}
-              onChange={e => setUsernameInput(e.target.value.replace(/\s+/g, "_").slice(0, 20))}
-              onKeyDown={e => e.key === "Enter" && saveUsername()}
-              placeholder="e.g. launchpad_77"
-              style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: `1px solid ${purpleFaint}`, color: "#fff", padding: "10px 14px", borderRadius: 6, fontSize: 13, fontFamily: "'DM Mono',monospace", outline: "none", marginBottom: 8 }}
-            />
-            <div style={{ fontSize: 10, color: "#aab8c2", marginBottom: 16 }}>Max 20 chars · spaces → underscores</div>
-            <div style={{ display: "flex", gap: 8 }}>
-              <button onClick={() => { setShowUsernamePrompt(false); setPendingAction(null); setUsernameInput(""); }}
-                style={{ flex: 1, background: "none", border: "1px solid rgba(255,255,255,0.1)", color: "#aab8c2", padding: 10, borderRadius: 6, fontSize: 11, fontFamily: "'DM Mono',monospace", cursor: "pointer" }}>
-                Cancel
-              </button>
-              <button onClick={saveUsername} disabled={!usernameInput.trim()}
-                style={{ flex: 2, background: purple, color: "#04060e", border: "none", padding: 10, borderRadius: 6, fontSize: 12, fontWeight: 700, fontFamily: "'DM Mono',monospace", cursor: "pointer", opacity: usernameInput.trim() ? 1 : 0.4 }}>
-                Set Username →
-              </button>
-            </div>
-          </div>
+    <div style={{ animation: "fu 0.3s ease" }}>
+      <div style={{ padding: "12px 20px 0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 5, background: `${oc}14`, border: `1px solid ${oc}33`, borderRadius: 4, padding: "3px 10px" }}>
+          <div style={{ width: 5, height: 5, borderRadius: "50%", background: oc, animation: "bk 1.5s infinite" }} />
+          <span style={{ fontSize: 10, color: oc, letterSpacing: "0.08em" }}>{open ? "MARKET OPEN" : "MARKET CLOSED"}</span>
         </div>
-      )}
+        <span style={{ fontSize: 10, color: C.muted }}>
+          {clock.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase()} ·{" "}
+          {clock.toLocaleTimeString("en-US", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", second: "2-digit" })} EST
+        </span>
+      </div>
 
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 10 }}>
-          <div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 28, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>
-              ORBIT <span style={{ color: purple }}>THREADS</span>
-            </div>
-            <div style={{ fontSize: 11, color: "#aab8c2", marginTop: 4 }}>
-              Discuss any space stock.{" "}
-              {username
-                ? <span>Posting as <span style={{ color: purple }}>{username}</span> · <span onClick={() => { setUsernameInput(username); setShowUsernamePrompt(true); }} style={{ color: purple, cursor: "pointer", textDecoration: "underline" }}>change</span></span>
-                : <span onClick={() => setShowUsernamePrompt(true)} style={{ color: purple, cursor: "pointer", textDecoration: "underline" }}>Set a username to post</span>
-              }
-            </div>
-          </div>
-          {!openThread && (
-            <button onClick={() => requireUsername(() => setShowCompose(c => !c))}
-              style={{ background: showCompose ? "rgba(167,139,250,0.08)" : "rgba(167,139,250,0.12)", border: `1px solid ${purpleFaint}`, color: purple, padding: "9px 18px", borderRadius: 6, fontSize: 11, fontFamily: "'DM Mono',monospace", cursor: "pointer", letterSpacing: "0.06em", flexShrink: 0 }}>
-              {showCompose ? "✕ Cancel" : "+ New Thread"}
-            </button>
-          )}
+      <div style={{ display: "flex", padding: "10px 20px 0", borderBottom: border, overflowX: "auto" }}>
+        {TABS.map(([id, label]) => (
+          <button key={id} className="dt" onClick={() => setTab(id)} style={{ color: active === id ? C.green : C.muted, borderBottom: `1px solid ${active === id ? C.green : "transparent"}`, marginBottom: -1, flexShrink: 0 }}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ padding: "16px 20px 40px" }}>
+        {active === "stocks" && <StocksTab prices={prices} goSubscribe={goSubscribe} />}
+        {active === "launches" && <LaunchesTab launches={launches} />}
+        {active === "earnings" && <EarningsTab />}
+      </div>
+    </div>
+  );
+}
+
+/* ── Stocks ─────────────────────────────────────────────────────────────────── */
+const Star = ({ on, onClick, size = 12 }) => (
+  <span onClick={(e) => { e.stopPropagation(); onClick(); }} style={{ fontSize: size, color: on ? C.yellow : "#556", cursor: "pointer", lineHeight: 1, flexShrink: 0 }}>
+    {on ? "★" : "☆"}
+  </span>
+);
+
+const ChangeBadge = ({ v }) => (
+  <span style={{ fontSize: 11, fontWeight: 600, padding: "2px 6px", borderRadius: 4, background: v >= 0 ? "rgba(0,255,136,0.12)" : "rgba(255,68,102,0.12)", color: signColor(v), display: "inline-block", textAlign: "center" }}>
+    {pct(v)}
+  </span>
+);
+
+const EtfTag = () => <span style={{ fontSize: 8, color: C.blue, background: "rgba(126,184,255,0.1)", padding: "1px 4px", borderRadius: 2 }}>ETF</span>;
+
+function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
+  const [sector, setSector] = useState("All");
+  const [search, setSearch] = useState("");
+  const [watchlist, setWatchlist] = useLocalStorage("oa_watchlist", []);
+  const [watchOnly, setWatchOnly] = useState(false);
+  const [sort, setSort] = useState({ col: null, dir: "desc" });
+  const [expanded, setExpanded] = useState(null);
+  const [timedOut, setTimedOut] = useState(false);
+  const flash = usePriceFlash(stocks);
+
+  useEffect(() => { const t = setTimeout(() => setTimedOut(true), 3000); return () => clearTimeout(t); }, []);
+  const loading = !isLive && !timedOut;
+
+  const toggleWatch = (t) => setWatchlist((w) => (w.includes(t) ? w.filter((x) => x !== t) : [...w, t]));
+  const toggleExpand = (t) => setExpanded((e) => (e === t ? null : t));
+  const handleSort = (col) => setSort((s) => ({ col, dir: s.col === col && s.dir === "desc" ? "asc" : "desc" }));
+  const flashClass = (t) => (flash[t] ? `flash-${flash[t]}` : "");
+
+  const q = search.toLowerCase();
+  const sortVal = (s) => (sort.col === "mktCap" ? capValue(s.mktCap) : s[sort.col]);
+  const filtered = stocks
+    .filter((s) => (sector === "All" || s.sector === sector) && (s.ticker.toLowerCase().includes(q) || s.name.toLowerCase().includes(q)) && (!watchOnly || watchlist.includes(s.ticker)))
+    .sort((a, b) => (sort.col ? (sort.dir === "desc" ? 1 : -1) * (sortVal(b) - sortVal(a)) : 0));
+
+  return (
+    <div>
+      <TopGainers stocks={stocks} isLive={isLive} onPick={toggleExpand} />
+      {isLive && <TodaySummary stocks={stocks} onPick={toggleExpand} />}
+
+      {/* Filters */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap", alignItems: "center" }}>
+        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search ticker or name..." style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "#ddd", padding: "8px 12px", borderRadius: 4, fontSize: 12, fontFamily: MONO, width: 200 }} />
+        <button onClick={() => setWatchOnly((w) => !w)} style={{ background: watchOnly ? "rgba(255,204,0,0.1)" : "transparent", border: `1px solid ${watchOnly ? "rgba(255,204,0,0.4)" : "rgba(255,255,255,0.08)"}`, color: watchOnly ? C.yellow : C.muted, padding: "7px 12px", borderRadius: 4, fontSize: 10, fontFamily: MONO, cursor: "pointer", letterSpacing: "0.08em" }}>
+          ★ Watchlist
+        </button>
+        <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+          {SECTORS.map((s) => (
+            <span key={s} className="stg" onClick={() => setSector(s)} style={{ color: sector === s ? C.green : C.muted, borderColor: sector === s ? "rgba(0,255,136,0.3)" : "rgba(255,255,255,0.2)", background: sector === s ? "rgba(0,255,136,0.05)" : "transparent" }}>{s}</span>
+          ))}
         </div>
       </div>
 
-      {!openThread && (
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ display: "flex", gap: 4, flexWrap: "wrap", paddingBottom: 12, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-            <button onClick={() => { setActiveTicker("ALL"); setShowCompose(false); }}
-              style={{
-                background: activeTicker === "ALL" ? "rgba(167,139,250,0.15)" : "transparent",
-                border: `1px solid ${activeTicker === "ALL" ? "rgba(167,139,250,0.5)" : "rgba(255,255,255,0.08)"}`,
-                color: activeTicker === "ALL" ? purple : "#aab8c2",
-                padding: "5px 12px", borderRadius: 20, fontSize: 11, fontFamily: "'DM Mono',monospace",
-                cursor: "pointer", transition: "all 0.15s", fontWeight: activeTicker === "ALL" ? 700 : 400,
-              }}>
-              ALL
-            </button>
-            <span style={{ color: "#334", fontSize: 11, alignSelf: "center", margin: "0 2px" }}>·</span>
-            {TICKER_LIST.map(t => {
-              const isActive = activeTicker === t;
-              const count = (allThreads[t] || []).length;
-              return (
-                <button key={t} onClick={() => { setActiveTicker(t); setShowCompose(false); setOpenThread(null); }}
-                  style={{
-                    position: "relative", background: isActive ? "rgba(167,139,250,0.12)" : "transparent",
-                    border: `1px solid ${isActive ? "rgba(167,139,250,0.4)" : "rgba(255,255,255,0.07)"}`,
-                    color: isActive ? purple : "#aab8c2", padding: "5px 10px", borderRadius: 20,
-                    fontSize: 11, fontFamily: "'DM Mono',monospace", cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap",
-                  }}>
-                  {t}
-                  {count > 0 && (
-                    <span style={{ marginLeft: 5, fontSize: 9, color: isActive ? purple : "#556", background: isActive ? "rgba(167,139,250,0.15)" : "rgba(255,255,255,0.06)", padding: "0px 4px", borderRadius: 8 }}>
-                      {count}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+      {/* Desktop table */}
+      <div className="desk-only" style={{ overflowX: "auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: ROW_GRID, gap: 6, padding: "7px 8px", fontSize: 9, color: C.text, letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <span>Ticker</span><span>Name</span>
+          {[["price", "Price"], ["changePct", "1D Chg%"], ["mktCap", "Mkt Cap"]].map(([col, label]) => (
+            <span key={col} onClick={() => handleSort(col)} style={{ cursor: "pointer", color: sort.col === col ? C.green : "#fff", userSelect: "none" }}>
+              {label}{sort.col === col ? (sort.dir === "desc" ? " ↓" : " ↑") : ""}
+            </span>
+          ))}
+          <span style={{ textAlign: "center", color: C.muted }}>7D</span>
         </div>
-      )}
 
-      {openThread && openThreadData && (() => {
-        const thread = openThreadData;
-        const ticker = openThread.ticker;
-        const score  = getScore(thread, thread.id);
-        const vote   = votes[thread.id];
+        {loading && Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} style={{ display: "grid", gridTemplateColumns: ROW_GRID, gap: 6, padding: "12px 8px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+            {[40, 120, 60, 50, 55].map((w, j) => <Skeleton key={j} w={w} h={12} />)}
+            <Skeleton w={72} h={24} />
+          </div>
+        ))}
+
+        {!loading && filtered.map((s) => (
+          <div key={s.ticker}>
+            <div className={`hov ${flashClass(s.ticker)}`} onClick={() => toggleExpand(s.ticker)} style={{ display: "grid", gridTemplateColumns: ROW_GRID, gap: 6, padding: "10px 8px", borderBottom: "1px solid rgba(255,255,255,0.04)", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <Star on={watchlist.includes(s.ticker)} onClick={() => toggleWatch(s.ticker)} />
+                <span style={{ fontWeight: 700, color: C.green, fontSize: 12 }}>{s.ticker}</span>
+                {s.type === "etf" && <EtfTag />}
+              </div>
+              <div><div style={{ fontSize: 12, color: "#fff" }}>{s.name}</div><div style={{ fontSize: 9, color: C.muted, marginTop: 1 }}>{s.sector}</div></div>
+              <span style={{ fontSize: 14, color: "#fff", fontWeight: 500 }}>${s.price.toFixed(2)}</span>
+              <ChangeBadge v={s.changePct} />
+              <span style={{ color: C.text, fontSize: 10 }}>{s.mktCap}</span>
+              <Sparkline data={s.spark} positive={s.changePct >= 0} />
+            </div>
+            {expanded === s.ticker && <StockDetail s={s} goSubscribe={goSubscribe} />}
+          </div>
+        ))}
+      </div>
+
+      {/* Mobile cards */}
+      <div className="mob-only">
+        {filtered.map((s) => (
+          <div key={s.ticker} style={{ border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, marginBottom: 8, background: "rgba(255,255,255,0.01)", overflow: "hidden" }}>
+            <div className={flashClass(s.ticker)} onClick={() => toggleExpand(s.ticker)} style={{ padding: "12px 14px", cursor: "pointer" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <Star size={16} on={watchlist.includes(s.ticker)} onClick={() => toggleWatch(s.ticker)} />
+                  <span style={{ fontSize: 14, fontWeight: 700, color: C.green }}>{s.ticker}</span>
+                  {s.type === "etf" && <EtfTag />}
+                  <span style={{ fontSize: 11, color: C.muted }}>{s.name}</span>
+                </div>
+                <ChangeBadge v={s.changePct} />
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <span style={{ fontSize: 20, color: "#fff", fontWeight: 500 }}>${s.price.toFixed(2)}</span>
+                <span style={{ fontSize: 10, color: C.muted }}>{s.mktCap}</span>
+              </div>
+              <div style={{ fontSize: 8, color: C.muted, marginBottom: 3, letterSpacing: "0.08em" }}>7D</div>
+              <Sparkline data={s.spark} positive={s.changePct >= 0} />
+              <div style={{ textAlign: "center", marginTop: 6, fontSize: 9, color: C.light }}>{expanded === s.ticker ? "▲ tap to close" : "▼ tap for more"}</div>
+            </div>
+            {expanded === s.ticker && <StockDetail s={s} goSubscribe={goSubscribe} />}
+          </div>
+        ))}
+      </div>
+
+      {filtered.length === 0 && <div style={{ padding: 28, textAlign: "center", color: C.muted, fontSize: 12 }}>No results.</div>}
+    </div>
+  );
+}
+
+function TopGainers({ stocks, isLive, onPick }) {
+  const gainers = [...stocks].sort((a, b) => b.changePct - a.changePct).slice(0, 5);
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={sectionLabel}>Top Gainers Today · {isLive ? "Live" : "Demo"}</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 5 }}>
+        {gainers.map((s, i) => (
+          <div key={s.ticker} onClick={() => onPick(s.ticker)} className="hov" style={{ background: `rgba(0,255,136,${0.04 + ((5 - i) / 5) * 0.12})`, border: "1px solid rgba(0,255,136,0.12)", borderRadius: 5, padding: "10px 8px", textAlign: "center" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: C.green, marginBottom: 3 }}>{s.ticker}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.green }}>{pct(s.changePct)}</div>
+            <div style={{ fontSize: 10, color: C.muted, marginTop: 2 }}>${s.price.toFixed(2)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TodaySummary({ stocks, onPick }) {
+  const eq = stocks.filter((s) => s.type === "stock");
+  const byChange = [...eq].sort((a, b) => b.changePct - a.changePct);
+  const byVolume = eq.filter((s) => s.volume > 0).sort((a, b) => b.volume - a.volume);
+  const vol = (v) => (v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${(v / 1e3).toFixed(0)}K` : `${v}`);
+  const cards = [
+    { label: "Top Gainer", s: byChange[0], c: C.green, val: (s) => pct(s.changePct) },
+    { label: "Top Loser", s: byChange[byChange.length - 1], c: C.red, val: (s) => pct(s.changePct) },
+    { label: "Highest Volume", s: byVolume[0], c: C.blue, val: (s) => vol(s.volume) },
+  ];
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <div style={sectionLabel}>Today · 1D</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8 }}>
+        {cards.map(({ label, s, c, val }) => s && (
+          <div key={label} onClick={() => onPick(s.ticker)} className="hov" style={{ border: `1px solid ${c}22`, borderRadius: 6, padding: "10px 14px", background: `${c}08` }}>
+            <div style={{ ...sectionLabel, letterSpacing: "0.1em", marginBottom: 4 }}>{label}</div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: c }}>{s.ticker}</span>
+              <span style={{ fontSize: 11, fontWeight: 600, color: c }}>{val(s)}</span>
+            </div>
+            <div style={{ fontSize: 10, color: C.muted, marginTop: 2 }}>${s.price.toFixed(2)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StockDetail({ s, goSubscribe }) {
+  const stat = (label, value, color = "#fff") => (
+    <div>
+      <div style={{ ...sectionLabel, letterSpacing: "0.1em", marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 16, color, fontWeight: 500 }}>{value}</div>
+    </div>
+  );
+  const link = (text, color, onClick) => (
+    <button onClick={onClick} style={{ background: "none", border: `1px solid ${color}33`, color, fontSize: 10, padding: "5px 10px", borderRadius: 3, fontFamily: MONO, cursor: "pointer" }}>{text}</button>
+  );
+  return (
+    <div style={{ background: "rgba(0,255,136,0.02)", border: "1px solid rgba(0,255,136,0.1)", borderRadius: 6, margin: "0 0 4px", padding: "14px 16px", animation: "fu 0.2s ease" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 12, marginBottom: 12 }}>
+        {stat("Current Price", `$${s.price.toFixed(2)}`)}
+        {stat("1D Change", pct(s.changePct, 2), signColor(s.changePct))}
+        {stat("Mkt Cap", s.mktCap || "-")}
+      </div>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+        <span style={{ fontSize: 10, color: C.light, background: "rgba(255,255,255,0.04)", padding: "5px 10px", borderRadius: 3 }}>{s.sector}</span>
+        {link("View on Yahoo Finance →", C.blue, () => window.open(`https://finance.yahoo.com/quote/${s.ticker}`, "_blank"))}
+        {link(`${s.ticker} in this week's issue →`, C.green, goSubscribe)}
+      </div>
+    </div>
+  );
+}
+
+/* ── Launches ───────────────────────────────────────────────────────────────── */
+const STATUS_STYLE = {
+  GO: ["rgba(0,255,136,0.08)", C.green],
+  HOLD: ["rgba(255,100,0,0.08)", "#ff8844"],
+};
+
+function LaunchesTab({ launches }) {
+  const card = { border, borderRadius: 8, padding: 14, marginBottom: 8, background: "rgba(255,255,255,0.01)" };
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
+        <div style={{ ...sectionLabel, marginBottom: 0 }}>Upcoming Launches · Historical Price Impact</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, color: C.green }}>
+          <div style={{ width: 5, height: 5, borderRadius: "50%", background: C.green, animation: "bk 1.5s infinite" }} />LIVE · rocketlaunch.live
+        </div>
+      </div>
+      {launches === null && Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} style={card}><Skeleton w="30%" h={11} style={{ marginBottom: 8 }} /><Skeleton w="70%" h={12} /></div>
+      ))}
+      {launches?.length === 0 && <div style={{ padding: 28, textAlign: "center", color: C.muted, fontSize: 12 }}>No launch data available right now.</div>}
+      {launches?.map((l, i) => {
+        const [bg, color] = STATUS_STYLE[l.status] || ["rgba(255,255,255,0.04)", "#888"];
         return (
-          <div style={{ animation: "fu 0.2s ease" }}>
-            <button onClick={() => setOpenThread(null)}
-              style={{ background: "none", border: "none", color: purple, fontSize: 12, fontFamily: "'DM Mono',monospace", cursor: "pointer", padding: "0 0 18px", display: "flex", alignItems: "center", gap: 6 }}>
-              ← Back to <span style={{ color: "#fff" }}>{activeTicker === "ALL" ? ticker : activeTicker}</span> threads
-            </button>
-
-            <div style={{ border: `1px solid rgba(167,139,250,0.25)`, borderRadius: 10, padding: "20px 22px", marginBottom: 20, background: "rgba(167,139,250,0.03)" }}>
-              <div style={{ display: "flex", gap: 14 }}>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, minWidth: 28, paddingTop: 2 }}>
-                  <button onClick={() => handleVote(ticker, thread.id, "up")} style={voteBtn(vote === "up", "#00ff88")}>▲</button>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: score > 0 ? "#00ff88" : score < 0 ? "#ff4466" : "#aab8c2" }}>{score}</span>
-                  <button onClick={() => handleVote(ticker, thread.id, "down")} style={voteBtn(vote === "down", "#ff4466")}>▼</button>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", marginBottom: 8 }}>
-                    <span style={{ fontSize: 9, color: purple }}>{thread.author}</span>
-                    <span style={{ fontSize: 9, color: "#334" }}>·</span>
-                    <span style={{ fontSize: 9, color: "#aab8c2" }}>{formatTime(thread.time)}</span>
-                    <span style={{ fontSize: 9, color: "#00ff88", background: "rgba(0,255,136,0.06)", padding: "1px 7px", borderRadius: 4 }}>{ticker}</span>
-                  </div>
-                  <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 19, fontWeight: 800, color: "#fff", marginBottom: 10, lineHeight: 1.3 }}>{thread.title}</div>
-                  {thread.body && <div style={{ fontSize: 13, color: "#ccd0d8", lineHeight: 1.75 }}>{thread.body}</div>}
-                </div>
+          <div key={i} style={card}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+              <span style={{ fontSize: 12, color: C.green, fontWeight: 500 }}>{l.date}</span>
+              <div style={{ display: "flex", gap: 6 }}>
+                {l.ticker && <span style={{ fontSize: 10, color: C.green, background: "rgba(0,255,136,0.06)", padding: "2px 8px", borderRadius: 3 }}>{l.ticker}</span>}
+                <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 3, background: bg, color }}>{l.status}</span>
               </div>
             </div>
-
-            <div style={{ fontSize: 9, color: "#aab8c2", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 14 }}>
-              {thread.comments?.length || 0} comment{(thread.comments?.length || 0) !== 1 ? "s" : ""}
-            </div>
-
-            {(thread.comments || []).map(comment => {
-              const cs   = getScore(comment, comment.id);
-              const cvote = votes[comment.id];
-              return (
-                <div key={comment.id} style={{ borderLeft: `2px solid rgba(167,139,250,0.15)`, paddingLeft: 16, marginBottom: 16 }}>
-                  <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, minWidth: 22, paddingTop: 2 }}>
-                      <button onClick={() => handleVote(ticker, comment.id, "up")} style={voteBtn(cvote === "up", "#00ff88", 12)}>▲</button>
-                      <span style={{ fontSize: 10, color: cs > 0 ? "#00ff88" : cs < 0 ? "#ff4466" : "#aab8c2" }}>{cs}</span>
-                      <button onClick={() => handleVote(ticker, comment.id, "down")} style={voteBtn(cvote === "down", "#ff4466", 12)}>▼</button>
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 9, color: "#aab8c2", marginBottom: 5 }}>
-                        <span style={{ color: purple }}>{comment.author}</span>
-                        <span style={{ color: "#334", margin: "0 5px" }}>·</span>
-                        {formatTime(comment.time)}
-                      </div>
-                      <div style={{ fontSize: 13, color: "#ccd0d8", lineHeight: 1.65 }}>{comment.body}</div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-
-            <div style={{ marginTop: 20, display: "flex", gap: 8 }}>
-              <input
-                value={newComment[thread.id] || ""}
-                onChange={e => setNewComment(prev => ({ ...prev, [thread.id]: e.target.value }))}
-                onKeyDown={e => e.key === "Enter" && requireUsername(() => postComment(ticker, thread.id))}
-                placeholder={username ? "Add a comment..." : "Set a username to reply..."}
-                style={{ flex: 1, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "10px 14px", borderRadius: 6, fontSize: 12, fontFamily: "'DM Mono',monospace", outline: "none" }}
-              />
-              <button onClick={() => requireUsername(() => postComment(ticker, thread.id))} disabled={posting}
-                style={{ background: purple, color: "#04060e", border: "none", padding: "10px 18px", borderRadius: 6, fontSize: 11, fontWeight: 700, fontFamily: "'DM Mono',monospace", cursor: "pointer", whiteSpace: "nowrap", opacity: posting ? 0.6 : 1 }}>
-                {posting ? "..." : "Reply →"}
-              </button>
-            </div>
+            <div style={{ fontSize: 12, color: "#bbb", marginBottom: 4 }}>{l.mission}</div>
+            <div style={{ fontSize: 10, color: C.muted }}>Historical avg: {l.impact}</div>
           </div>
         );
-      })()}
+      })}
+    </div>
+  );
+}
 
-      {!openThread && (
-        <div>
-          {showCompose && (
-            <div style={{ background: "rgba(167,139,250,0.04)", border: `1px solid rgba(167,139,250,0.2)`, borderRadius: 10, padding: "18px 20px", marginBottom: 16, animation: "fu 0.2s ease" }}>
-              <div style={{ fontSize: 9, color: purple, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>
-                New thread · {activeTicker === "ALL" ? "RKLB" : activeTicker} · posting as <span style={{ color: "#fff" }}>{username}</span>
-                {activeTicker === "ALL" && <span style={{ color: "#aab8c2", marginLeft: 6 }}>(defaults to RKLB when posting from All)</span>}
-              </div>
-              <input value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="Thread title..."
-                style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "10px 14px", borderRadius: 6, fontSize: 13, fontFamily: "'DM Mono',monospace", outline: "none", marginBottom: 8 }}
-              />
-              <textarea value={newBody} onChange={e => setNewBody(e.target.value)} placeholder="Your thoughts... (optional)" rows={3}
-                style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", padding: "10px 14px", borderRadius: 6, fontSize: 12, fontFamily: "'DM Mono',monospace", outline: "none", resize: "vertical", display: "block", marginBottom: 12 }}
-              />
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
-                <button onClick={() => { setShowCompose(false); setNewTitle(""); setNewBody(""); }}
-                  style={{ background: "none", border: "1px solid rgba(255,255,255,0.1)", color: "#aab8c2", padding: "8px 16px", borderRadius: 6, fontSize: 11, fontFamily: "'DM Mono',monospace", cursor: "pointer" }}>
-                  Cancel
-                </button>
-                <button onClick={() => requireUsername(postThread)} disabled={posting || !newTitle.trim()}
-                  style={{ background: purple, color: "#04060e", border: "none", padding: "8px 20px", borderRadius: 6, fontSize: 11, fontWeight: 700, fontFamily: "'DM Mono',monospace", cursor: "pointer", opacity: (posting || !newTitle.trim()) ? 0.5 : 1 }}>
-                  {posting ? "Posting..." : "Post Thread →"}
-                </button>
-              </div>
+/* ── Earnings ───────────────────────────────────────────────────────────────── */
+function EarningsTab() {
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
+        <div style={{ ...sectionLabel, marginBottom: 0 }}>Upcoming Earnings · Space Stocks</div>
+        <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.08em" }}>Updated weekly · EST times</div>
+      </div>
+      {EARNINGS.map((e) => (
+        <div key={e.ticker} style={{ border: "1px solid rgba(255,255,255,0.07)", borderRadius: 6, padding: "14px 16px", marginBottom: 8, background: "rgba(255,255,255,0.01)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 8, marginBottom: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontWeight: 700, color: C.green, fontSize: 13 }}>{e.ticker}</span>
+              <span style={{ fontSize: 11, color: C.muted }}>{e.name}</span>
             </div>
-          )}
-
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
-            <div style={{ display: "flex", gap: 2, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, padding: 3 }}>
-              {SORT_OPTIONS.map(opt => (
-                <button key={opt.id} onClick={() => setSortBy(opt.id)}
-                  style={{ background: sortBy === opt.id ? "rgba(167,139,250,0.15)" : "transparent", border: sortBy === opt.id ? `1px solid rgba(167,139,250,0.3)` : "1px solid transparent", color: sortBy === opt.id ? purple : "#aab8c2", padding: "6px 12px", borderRadius: 6, fontSize: 11, fontFamily: "'DM Mono',monospace", cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap" }}>
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-
-            <div style={{ display: "flex", gap: 4 }}>
-              {[["all","All time"],["today","Today"],["week","This week"],["month","This month"]].map(([val,label]) => (
-                <button key={val} onClick={() => setTimeFilter(val)}
-                  style={{ background: timeFilter === val ? "rgba(255,255,255,0.07)" : "transparent", border: `1px solid ${timeFilter === val ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.06)"}`, color: timeFilter === val ? "#fff" : "#aab8c2", padding: "6px 10px", borderRadius: 6, fontSize: 10, fontFamily: "'DM Mono',monospace", cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap" }}>
-                  {label}
-                </button>
-              ))}
+            <div style={{ textAlign: "right" }}>
+              <div style={{ fontSize: 11, color: "#fff", fontWeight: 500 }}>{e.date}</div>
+              <div style={{ fontSize: 9, color: C.muted, marginTop: 2 }}>{e.time}</div>
             </div>
           </div>
+          <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.6 }}>
+            <span style={{ marginRight: 6, letterSpacing: "0.08em", fontSize: 9, textTransform: "uppercase" }}>Watch:</span>{e.watch}
+          </div>
+        </div>
+      ))}
+      <div style={{ padding: 12, textAlign: "center", fontSize: 10, color: C.light, borderTop: "1px solid rgba(255,255,255,0.04)", marginTop: 8 }}>
+        Estimates sourced from analyst consensus · Updated weekly · Not financial advice
+      </div>
+    </div>
+  );
+}
 
-          <div style={{ fontSize: 11, color: "#aab8c2", marginBottom: 14 }}>
-            {loading
-              ? <span style={{ color: "#334" }}>Loading{activeTicker === "ALL" ? " all tickers..." : ` ${activeTicker}...`}</span>
-              : <span>{sorted.length} thread{sorted.length !== 1 ? "s" : ""}{activeTicker !== "ALL" ? <span> on <span style={{ color: purple, fontWeight: 700 }}>{activeTicker}</span></span> : <span> across <span style={{ color: purple, fontWeight: 700 }}>all tickers</span></span>}</span>
-            }
+/* ════════════════════════════════════════════════════════════════════════════
+   FEED PAGE
+   ════════════════════════════════════════════════════════════════════════════ */
+const FILTERS = ["All", ...Object.keys(COMPANY_KEYWORDS)];
+const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const KEYWORD_RE = Object.fromEntries(
+  Object.entries(COMPANY_KEYWORDS).map(([co, kws]) => [co, new RegExp(`\\b(${kws.map(escape).join("|")})\\b`, "i")])
+);
+const matches = (item, co) => item.ticker === co || KEYWORD_RE[co].test(`${item.title} ${item.description || ""}`);
+
+const pill = (on) => ({
+  background: on ? "rgba(255,150,50,0.15)" : "transparent", border: `1px solid ${on ? "rgba(255,150,50,0.3)" : "transparent"}`,
+  color: on ? C.orange : C.muted, padding: "7px 18px", borderRadius: 4, fontSize: 11, fontFamily: MONO, cursor: "pointer", letterSpacing: "0.06em", whiteSpace: "nowrap",
+});
+const badge = (color, rgb) => ({ position: "absolute", top: 12, right: 12, fontSize: 9, color, background: `rgba(${rgb},0.08)`, border: `1px solid rgba(${rgb},0.2)`, padding: "2px 8px", borderRadius: 3, letterSpacing: "0.1em" });
+
+function Feed({ news, feedMode, setFeedMode }) {
+  const [company, setCompany] = useState("All");
+  const items = company === "All" ? news.items : news.items.filter((i) => matches(i, company));
+
+  return (
+    <div style={{ animation: "fu 0.3s ease", maxWidth: 800, margin: "0 auto", padding: "32px 20px 60px" }}>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ fontFamily: SYNE, fontSize: 28, fontWeight: 800, color: "#fff", marginBottom: 6 }}>ORBIT <span style={{ color: C.orange }}>FEED</span></div>
+        <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 20 }}>News and analysis for space equity investors.</p>
+        <div style={{ display: "inline-flex", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: 3, gap: 2 }}>
+          <button onClick={() => setFeedMode("news")} style={pill(feedMode !== "newsletter")}>📰 News</button>
+          <button onClick={() => setFeedMode("newsletter")} style={pill(feedMode === "newsletter")}>✉ Newsletter</button>
+        </div>
+      </div>
+
+      {feedMode !== "newsletter" ? (
+        <div style={{ animation: "fu 0.2s ease" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
+            <p style={{ fontSize: 11, color: C.muted }}>Live space stock news from 30+ sources, updated every 5 minutes.</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, color: C.green }}>
+              <div style={{ width: 5, height: 5, borderRadius: "50%", background: C.green, animation: "bk 1.5s infinite" }} />LIVE
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 20 }}>
+            {FILTERS.map((co) => (
+              <span key={co} onClick={() => setCompany(co)} className="stg" style={{ fontSize: 9, color: company === co ? C.orange : C.light, borderColor: company === co ? "rgba(255,150,50,0.3)" : "rgba(255,255,255,0.2)", background: company === co ? "rgba(255,150,50,0.05)" : "transparent" }}>{co}</span>
+            ))}
           </div>
 
-          {loading && Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} style={{ border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "18px", marginBottom: 8, display: "flex", gap: 14 }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: 5, alignItems: "center", minWidth: 28 }}>
-                <div className="skeleton" style={{ width: 14, height: 10, borderRadius: 2 }} />
-                <div className="skeleton" style={{ width: 18, height: 14, borderRadius: 2 }} />
-                <div className="skeleton" style={{ width: 14, height: 10, borderRadius: 2 }} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <div className="skeleton" style={{ height: 11, width: "20%", marginBottom: 8 }} />
-                <div className="skeleton" style={{ height: 14, width: "65%", marginBottom: 6 }} />
-                <div className="skeleton" style={{ height: 10, width: "40%", marginBottom: 12 }} />
-                <div className="skeleton" style={{ height: 9, width: "25%" }} />
-              </div>
+          {news.loading && Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} style={{ padding: "16px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+              <Skeleton w="70%" h={13} style={{ marginBottom: 8 }} /><Skeleton w="30%" h={10} />
             </div>
           ))}
-
-          {!loading && sorted.length === 0 && (
-            <div style={{ textAlign: "center", padding: "56px 20px" }}>
-              <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.25 }}>💬</div>
-              <div style={{ fontSize: 13, color: "#aab8c2", lineHeight: 1.7 }}>
-                No threads{timeFilter !== "all" ? " in this time period" : ""} for {activeTicker === "ALL" ? "any ticker" : activeTicker}.<br />
-                <span onClick={() => requireUsername(() => setShowCompose(true))} style={{ color: purple, cursor: "pointer" }}>
-                  Start the first one →
-                </span>
-              </div>
-            </div>
-          )}
-
-          {!loading && sorted.map(thread => {
-            const ticker = thread._ticker || activeTicker;
-            const score  = getScore(thread, thread.id);
-            const vote   = votes[thread.id];
-            const commentCount = thread.comments?.length || 0;
-            return (
-              <div key={`${ticker}-${thread.id}`}
-                style={{ border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "16px 18px", marginBottom: 8, background: "rgba(255,255,255,0.01)", transition: "border-color 0.15s, background 0.15s" }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(167,139,250,0.22)"; e.currentTarget.style.background = "rgba(167,139,250,0.02)"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)"; e.currentTarget.style.background = "rgba(255,255,255,0.01)"; }}>
-                <div style={{ display: "flex", gap: 14 }}>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, minWidth: 28, paddingTop: 2, flexShrink: 0 }}>
-                    <button onClick={e => { e.stopPropagation(); handleVote(ticker, thread.id, "up"); }} style={voteBtn(vote === "up", "#00ff88", 13)}>▲</button>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: score > 0 ? "#00ff88" : score < 0 ? "#ff4466" : "#aab8c2", lineHeight: 1 }}>{score}</span>
-                    <button onClick={e => { e.stopPropagation(); handleVote(ticker, thread.id, "down"); }} style={voteBtn(vote === "down", "#ff4466", 13)}>▼</button>
-                  </div>
-
-                  <div style={{ flex: 1, minWidth: 0, cursor: "pointer" }} onClick={() => setOpenThread({ ticker, id: thread.id })}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", marginBottom: 6 }}>
-                      <span style={{ fontSize: 9, color: purple, fontWeight: 600 }}>{thread.author}</span>
-                      <span style={{ fontSize: 9, color: "#334" }}>·</span>
-                      <span style={{ fontSize: 9, color: "#aab8c2" }}>{formatTime(thread.time)}</span>
-                      {activeTicker === "ALL" && (
-                        <span style={{ fontSize: 9, color: "#00ff88", background: "rgba(0,255,136,0.07)", padding: "1px 7px", borderRadius: 4, fontWeight: 600 }}>{ticker}</span>
-                      )}
-                    </div>
-
-                    <div style={{ fontSize: 14, color: "#fff", fontWeight: 600, marginBottom: 5, lineHeight: 1.4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{thread.title}</div>
-
-                    {thread.body && (
-                      <div style={{ fontSize: 12, color: "#aab8c2", lineHeight: 1.6, marginBottom: 8, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                        {thread.body}
-                      </div>
-                    )}
-
-                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
-                      <span style={{ fontSize: 11, color: "#556" }}>
-                        💬 <span style={{ color: commentCount > 0 ? "#aab8c2" : "#334" }}>{commentCount}</span> {commentCount === 1 ? "comment" : "comments"}
-                      </span>
-                      <span style={{ fontSize: 11, color: "#334" }}>·</span>
-                      <span style={{ fontSize: 11, color: purple, opacity: 0.7 }}>view thread →</span>
-                    </div>
-                  </div>
+          {!news.loading && items.length === 0 && <div style={{ padding: 28, textAlign: "center", color: C.muted, fontSize: 12 }}>No stories for {company} right now.</div>}
+          {!news.loading && items.map((item, i) => (
+            <div key={i} onClick={() => window.open(item.link, "_blank")} className="hov"
+              style={{ padding: 16, cursor: "pointer", animation: `fu 0.3s ease ${Math.min(i, 20) * 0.02}s both`, borderRadius: item.highlight ? 6 : 0, marginBottom: item.highlight ? 8 : 0, background: item.highlight ? "rgba(255,204,0,0.03)" : "transparent", border: item.highlight ? "1px solid rgba(255,204,0,0.15)" : "none", borderBottom: item.highlight ? "1px solid rgba(255,204,0,0.15)" : "1px solid rgba(255,255,255,0.05)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 8 }}>
+                <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+                  <span style={sourceStyle(item.source)}>{item.source}</span>
+                  {item.highlight && <span style={{ fontSize: 9, padding: "2px 6px", borderRadius: 3, background: "rgba(255,204,0,0.1)", color: C.yellow, letterSpacing: "0.08em" }}>⚡ KEY STORY</span>}
                 </div>
+                <span style={{ fontSize: 10, color: C.muted, flexShrink: 0 }}>{fmtDate(item.pubDate, true)}</span>
               </div>
-            );
-          })}
+              <div style={{ fontSize: 14, color: item.highlight ? "#fff" : C.text, lineHeight: 1.65, fontWeight: item.highlight ? 500 : 400, marginBottom: 6 }}>{item.title}</div>
+              {item.description && <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.6 }}>{item.description}</div>}
+              <div style={{ fontSize: 10, color: C.orange, marginTop: 8, opacity: 0.8 }}>Read full article →</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div style={{ animation: "fu 0.2s ease" }}>
+          <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 20 }}>Every Sunday: macro overview, broker target changes and one stock deep dive. Free.</p>
+          <SubscribeForm color={C.orange} style={{ marginBottom: 28 }} />
+          <div style={{ height: 1, background: "rgba(255,255,255,0.06)", marginBottom: 24 }} />
+          <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>All Issues</div>
+          {issues.map((issue, i) => (
+            <div key={issue.issue} className="hov" onClick={() => issue.live && window.open(issue.url, "_blank")}
+              style={{ border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, padding: 20, marginBottom: 10, background: "rgba(255,255,255,0.01)", cursor: issue.live ? "pointer" : "default", opacity: issue.live ? 1 : 0.5, position: "relative" }}>
+              {!issue.live && <span style={badge(C.yellow, "255,204,0")}>COMING SUNDAY</span>}
+              {i === 0 && issue.live && <span style={badge(C.green, "0,255,136")}>LATEST</span>}
+              <div style={{ fontSize: 10, color: C.orange, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>Issue #{issue.issue} · {issue.date}</div>
+              <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6, lineHeight: 1.4 }}>{issue.headline}</div>
+              <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.6, marginBottom: issue.live ? 10 : 0 }}>{issue.summary}</div>
+              {issue.live && <div style={{ fontSize: 10, color: C.orange, opacity: 0.7 }}>Read issue →</div>}
+            </div>
+          ))}
         </div>
       )}
     </div>
   );
 }
 
-function voteBtn(active, color, size = 14) {
-  return {
-    background: "none", border: "none", cursor: "pointer",
-    fontSize: size, color: active ? color : "#445",
-    lineHeight: 1, padding: 0, transition: "color 0.1s",
-  };
+/* ════════════════════════════════════════════════════════════════════════════
+   ABOUT PAGE
+   ════════════════════════════════════════════════════════════════════════════ */
+const P = ({ children, mb = 16 }) => <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.8, marginBottom: mb }}>{children}</p>;
+const Rule = ({ mb = 24 }) => <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: `20px 0 ${mb}px` }} />;
+
+function About() {
+  return (
+    <div style={{ animation: "fu 0.3s ease", maxWidth: 640, margin: "0 auto", padding: "32px 20px 60px" }}>
+      <div style={{ fontFamily: SYNE, fontSize: 28, fontWeight: 800, color: "#fff" }}>ABOUT <span style={{ color: C.green }}>ORBIT ALPHA</span></div>
+      <Rule mb={20} />
+      <P>Orbit Alpha is a free dashboard and weekly newsletter built for retail investors who follow space equities. It covers every publicly traded space stock, ETF and private company, with live prices, launch catalysts, broker target changes and weekly deep dives.</P>
+      <P>The newsletter goes out every Sunday morning and covers three things: a macro overview of the week in space stocks, a broker pulse showing all analyst rating and price target changes, and one stock of the week (bull case, bear case, key catalysts, honest view on valuation).</P>
+      <P mb={32}>Everything is free. No paywall. No signup required to use the dashboard.</P>
+      <Rule />
+      <div style={{ fontSize: 10, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>Get in touch</div>
+      <a href="mailto:OrbitAlphaApp@proton.me" style={{ color: C.green, fontSize: 13, textDecoration: "none" }}>📬 OrbitAlphaApp@proton.me</a>
+      <SubscribeForm label="Subscribe →" style={{ marginTop: 24 }} />
+    </div>
+  );
 }
 
-const PROXY_URL = "/api/quote";
-const ALL_TICKERS = STOCKS.map(s=>s.ticker);
-
-const formatMktCap = (v) => {
-  if(!v) return "—";
-  if(v >= 1e12) return `$${(v/1e12).toFixed(2)}T`;
-  if(v >= 1e9) return `$${(v/1e9).toFixed(2)}B`;
-  if(v >= 1e6) return `$${(v/1e6).toFixed(0)}M`;
-  return `$${v}`;
-};
+/* ════════════════════════════════════════════════════════════════════════════
+   APP SHELL
+   ════════════════════════════════════════════════════════════════════════════ */
+const NAV = [["home", "Home"], ["markets", "Markets"], ["feed", "Feed"]];
+const PAGES = ["home", "markets", "feed", "about"];
 
 export default function App() {
-  // ── Initialise from URL hash ────────────────────────────────────────────────
-  const initialState = readHash();
-  const [page,setPage]=useState(initialState.page);
-  const [tab,setTab]=useState(initialState.tab);
-  const [feedMode,setFeedMode]=useState(initialState.feedMode);
+  const [route, setRoute] = useHashRoute();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const prices = useLivePrices();
+  const launches = useLaunches();
+  const news = useNews();
 
-  // Sync state → hash whenever page/tab/feedMode changes
-  useEffect(() => {
-    writeHash(page, tab, feedMode);
-  }, [page, tab, feedMode]);
+  const page = PAGES.includes(route.page) ? route.page : "home"; // old #threads links fall back to home
+  const latest = issues[0];
 
-  // Listen for browser back/forward navigation
-  useEffect(() => {
-    const onHashChange = () => {
-      const s = readHash();
-      setPage(s.page);
-      setTab(s.tab);
-      setFeedMode(s.feedMode);
-    };
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
-
-  const [sector,setSector]=useState("All");
-  const [search,setSearch]=useState("");
-  const [email,setEmail]=useState("");
-  const [submitted,setSubmitted]=useState(false);
-  const [menuOpen,setMenuOpen]=useState(false);
-  const [liveStocks,setLiveStocks]=useState(STOCKS);
-  const [showExitPopup, setShowExitPopup] = useState(false);
-  const [popupDismissed, setPopupDismissed] = useState(() => {
-  try {
-    const dismissed = localStorage.getItem('oa_popup_dismissed');
-    if (!dismissed) return false;
-    if (dismissed === 'subscribed') return true;
-    return Date.now() - parseInt(dismissed) < 30 * 86_400_000;
-  } catch { return false; }
-});
-  const [popupEmail, setPopupEmail] = useState("");
-  const [popupSubmitted, setPopupSubmitted] = useState(false);
-
-const latestIssue = issuesData[0];
-const latestIssueLive = latestIssue.live;
-const LATEST_ISSUE_URL = latestIssue.url;
-  
- useEffect(()=>{
-  if(popupDismissed || popupSubmitted) return;
-  const timer = setTimeout(()=>{ setShowExitPopup(true); }, 45000);
-  return ()=>clearTimeout(timer);
-},[popupDismissed, popupSubmitted]);
-
-  const dismissPopup = () => { setShowExitPopup(false); setPopupDismissed(true); try { localStorage.setItem('oa_popup_dismissed', Date.now().toString()); } catch {} };
-
-  const subscribe = async (emailAddress, onSuccess) => {
-    if(!emailAddress || !emailAddress.includes('@')) { alert('Please enter a valid email address.'); return; }
-    try {
-      const res = await fetch('https://www.orbitalpha.cloud/api/subscribe', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: emailAddress }),
-      });
-      const data = await res.json();
-      if(data.success) { 
-  window.rdt && window.rdt('track', 'SignUp');
-  onSuccess(); 
-} else { alert('Something went wrong. Please try again.'); }
-    } catch(e) { alert('Something went wrong. Please try again.'); }
-  };
-
-const submitPopup = () => { subscribe(popupEmail, ()=>{ setPopupSubmitted(true); setShowExitPopup(false); try { localStorage.setItem('oa_popup_dismissed', 'subscribed'); } catch {} }); };
-  const sub = () => { subscribe(email, ()=>setSubmitted(true)); };
-
-  const SUBSCRIBER_COUNT = 300;
-  const [lastUpdated,setLastUpdated]=useState(null);
-  const [isLive,setIsLive]=useState(false);
-
-  const fetchQuote = async (ticker, range="7d") => {
-    try {
-      const res = await fetch(`${PROXY_URL}?ticker=${ticker}&range=${range}`);
-      const parsed = await res.json();
-      const meta = parsed?.chart?.result?.[0]?.meta;
-      const quotes = parsed?.chart?.result?.[0]?.indicators?.quote?.[0];
-      if(!meta) return null;
-      const price = meta.regularMarketPrice || meta.previousClose;
-      const closePrices = quotes?.close?.filter(Boolean) || [];
-      const prevClose = closePrices.length >= 2 ? closePrices[closePrices.length - 2] : meta.chartPreviousClose || meta.previousClose;
-      const changePct = meta.regularMarketChangePercent !== undefined ? meta.regularMarketChangePercent : prevClose ? ((price - prevClose) / prevClose) * 100 : 0;
-      const change = meta.regularMarketChange !== undefined ? meta.regularMarketChange : price - prevClose;
-      const mktCap = meta.marketCap ? formatMktCap(meta.marketCap) : meta.netAssets ? formatMktCap(meta.netAssets) : null;
-      const volume = meta.regularMarketVolume || 0;
-      const closes = quotes?.close?.filter(Boolean) || [];
-      return { ticker, price, changePct, change, mktCap, volume, sparkline: closes };
-    } catch(e) { return null; }
-  };
-
-  const fetchOneTicker = async (t) => {
-    const [r7, r3, r1] = await Promise.allSettled([fetchQuote(t,"7d"),fetchQuote(t,"3d"),fetchQuote(t,"1d")]);
-    const base = r7.value || r3.value || r1.value;
-    if(!base) return null;
-    return { ...base, spark7d: r7.value?.sparkline||[], spark3d: r3.value?.sparkline||[], spark1d: r1.value?.sparkline||[] };
-  };
-
-  const applyUpdates = (results) => {
-    const updates = {};
-    results.forEach(r => {
-      if(r.status==="fulfilled" && r.value) {
-        const d = r.value;
-        updates[d.ticker] = { price:d.price, changePct:d.changePct, change:d.change, ...(d.mktCap&&{mktCap:d.mktCap}), ...(d.volume&&{volume:d.volume}), spark7d:d.spark7d, spark3d:d.spark3d, spark1d:d.spark1d, liveSparkline:d.spark7d };
-      }
-    });
-    if(Object.keys(updates).length > 0) {
-      setLiveStocks(prev => prev.map(s => updates[s.ticker] ? {...s,...updates[s.ticker]} : s));
-      setLastUpdated(new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}));
-      setIsLive(true);
-    }
-  };
-
-  const fetchAllPrices = async () => {
-    try {
-      const tickers = ALL_TICKERS.slice(0,35);
-      // Priority tickers: fetch all at once immediately so the page feels live within ~1-2s
-      const PRIORITY = ["SPCX","RKLB","ASTS","LUNR","PL","HAWK","BKSY","RDW","SPCE","OKLO","LMT"];
-      const rest = tickers.filter(t => !PRIORITY.includes(t));
-
-      // Round 1: all priority tickers in parallel — no delay, paint live data fast
-      const priorityResults = await Promise.allSettled(PRIORITY.map(fetchOneTicker));
-      applyUpdates(priorityResults);
-
-      // Round 2: remaining tickers in parallel — no artificial delay
-      const restResults = await Promise.allSettled(rest.map(fetchOneTicker));
-      applyUpdates(restResults);
-    } catch(e) { console.log("Fetch error:", e); }
-  };
-
-  useEffect(()=>{ fetchAllPrices(); const interval = setInterval(fetchAllPrices, 300000); return ()=>clearInterval(interval); },[]);
-
-  const [clock, setClock] = useState(new Date());
-  useEffect(()=>{ const t = setInterval(()=>setClock(new Date()), 1000); return ()=>clearInterval(t); },[]);
-
-  const [newsSource, setNewsSource] = useState("");
-  const [newsCompany, setNewsCompany] = useState("");
-
-  const [liveLaunches, setLiveLaunches] = useState(LAUNCHES);
-  useEffect(()=>{
-    const fetchLaunches = async () => {
-      try {
-        const res = await fetch('/api/launches');
-        const data = await res.json();
-        if(data.result && data.result.length > 0) {
-          const now = Date.now() / 1000;
-          const mapped = data.result
-            .filter(l => { if(!l.sort_date) return true; return l.sort_date > now; })
-            .map(l => {
-              const ticker = l.provider?.slug?.includes('rocket-lab') ? 'RKLB' : l.name?.includes('BlueBird')||l.missions?.[0]?.name?.includes('BlueBird') ? 'ASTS' : l.name?.includes('Intuitive')||l.missions?.[0]?.name?.includes('IM-') ? 'LUNR' : null;
-              const status = l.result === 1 ? 'SUCCESS' : l.win_open ? 'GO' : 'TBD';
-              return { date:l.date_str||'TBD', mission:`${l.provider?.name||''} – ${l.vehicle?.name||''} / ${l.missions?.[0]?.name||l.name||''}`, status, impact:ticker==='RKLB'?'+4.2% avg':ticker==='ASTS'?'+12.4% avg':ticker==='LUNR'?'+8.1% avg':'Sector avg', ticker };
-            });
-          setLiveLaunches(mapped);
-        }
-      } catch(e) { console.log('Launch fetch error:', e); }
-    };
-    fetchLaunches();
-    const interval = setInterval(fetchLaunches, 3600000);
-    return ()=>clearInterval(interval);
-  },[]);
-
-  const [newsItems, setNewsItems] = useState([]);
-  const [newsLoading, setNewsLoading] = useState(true);
-
-  useEffect(()=>{
-    const fetchNews = async () => {
-      try {
-        const [rssRes, yahooRes] = await Promise.allSettled([
-          fetch('/api/news?limit=50').then(r=>r.json()),
-          fetch(`/api/yahoonews?t=${Date.now()}`).then(r=>r.json()),
-        ]);
-        const rssItems = rssRes.status==='fulfilled' && Array.isArray(rssRes.value) ? rssRes.value : [];
-        const yahooItems = yahooRes.status==='fulfilled' && Array.isArray(yahooRes.value) ? yahooRes.value : [];
-        const seenTitles = new Set();
-        const combined = [...yahooItems, ...rssItems]
-          .filter(item => { const key = item.title?.toLowerCase().slice(0,40); if(!key||seenTitles.has(key)) return false; seenTitles.add(key); return true; })
-          .sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate));
-        setNewsItems(combined); setNewsLoading(false);
-      } catch(e) { console.log('News fetch error:', e); setNewsLoading(false); }
-    };
-    fetchNews();
-    const interval = setInterval(fetchNews, 300000);
-    return ()=>clearInterval(interval);
-  },[]);
-
-  const isMarketOpen = ()=>{
-    const now = new Date();
-    const est = new Date(now.toLocaleString("en-US",{timeZone:"America/New_York"}));
-    const day=est.getDay(); const h=est.getHours(); const m=est.getMinutes(); const mins=h*60+m;
-    return day>=1 && day<=5 && mins>=570 && mins<960;
-  };
-
-  const [watchlist, setWatchlist] = useState(()=>{ try { return JSON.parse(localStorage.getItem('oa_watchlist')||'[]'); } catch { return []; } });
-  const toggleWatch = (ticker) => { setWatchlist(prev => { const next = prev.includes(ticker) ? prev.filter(t=>t!==ticker) : [...prev,ticker]; localStorage.setItem('oa_watchlist',JSON.stringify(next)); return next; }); };
-  const [showWatchlistOnly, setShowWatchlistOnly] = useState(false);
-
-  const [stockNews, setStockNews] = useState({});
-  const fetchStockNews = async (ticker) => {
-    if(stockNews[ticker]) return;
-    try {
-      const res = await fetch(`/api/yahoonews?ticker=${ticker}`);
-      const data = await res.json();
-      setStockNews(prev => ({...prev,[ticker]:data.slice(0,3)}));
-    } catch(e) {}
-  };
-
-  const [sortCol, setSortCol] = useState(null);
-  const [sortDir, setSortDir] = useState("desc");
-  const handleSort = (col) => { if(sortCol===col) setSortDir(d=>d==="desc"?"asc":"desc"); else { setSortCol(col); setSortDir("desc"); } };
-
-  const [flashMap, setFlashMap] = useState({});
-  const prevPrices = useRef({});
-  useEffect(()=>{
-    const flashes = {};
-    liveStocks.forEach(s=>{ const prev=prevPrices.current[s.ticker]; if(prev!==undefined&&prev!==s.price) flashes[s.ticker]=s.price>prev?"up":"down"; prevPrices.current[s.ticker]=s.price; });
-    if(Object.keys(flashes).length>0){ setFlashMap(flashes); setTimeout(()=>setFlashMap({}),600); }
-  },[liveStocks]);
-
-  const [expandedTicker, setExpandedTicker] = useState(null);
-  const [loading, setLoading] = useState(true);
-  useEffect(()=>{ if(isLive) setLoading(false); const t=setTimeout(()=>setLoading(false),3000); return ()=>clearTimeout(t); },[isLive]);
-
-  // ── Navigation helper ───────────────────────────────────────────────────────
-  // go(page, tab, feedMode?) — also handles the special "subscribe" shortcut
-  const go=(p,t,fm)=>{
-    setPage(p);
-    if(t) setTab(t);
-    if(fm) setFeedMode(fm);
+  const go = (p, tab, feedMode) => {
+    setRoute({ page: p, ...(tab && { tab }), ...(feedMode && { feedMode }) });
     setMenuOpen(false);
-    window.scrollTo({top:0,behavior:"smooth"});
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
-  // Dedicated subscribe helper — goes to feed / newsletter tab
   const goSubscribe = () => go("feed", "news", "newsletter");
+  const share = () =>
+    navigator.share
+      ? navigator.share({ title: "Orbit Alpha", text: "Free space stocks dashboard", url: "https://orbitalpha.cloud" })
+      : navigator.clipboard.writeText("https://orbitalpha.cloud").then(() => alert("Link copied!"));
 
-  const filtered = (() => {
-    let arr = liveStocks.filter(s=>{
-      const ms=sector==="All"||s.sector===sector;
-      const mq=s.ticker.toLowerCase().includes(search.toLowerCase())||s.name.toLowerCase().includes(search.toLowerCase());
-      const mw=!showWatchlistOnly||watchlist.includes(s.ticker);
-      return ms&&mq&&mw;
-    });
-    if(sortCol) {
-      arr = [...arr].sort((a,b)=>{
-        let av=sortCol==="price"?a.price:sortCol==="changePct"?a.changePct:sortCol==="mktCap"?(parseFloat(a.mktCap?.replace(/[^0-9.]/g,""))||0):0;
-        let bv=sortCol==="price"?b.price:sortCol==="changePct"?b.changePct:sortCol==="mktCap"?(parseFloat(b.mktCap?.replace(/[^0-9.]/g,""))||0):0;
-        return sortDir==="desc"?bv-av:av-bv;
-      });
-    }
-    return arr;
-  })();
+  const marketChrome = page === "home" || page === "markets";
+  const navBtn = { background: "none", border: "1px solid rgba(255,255,255,0.1)", color: C.light, padding: "7px 12px", borderRadius: 4, fontSize: 10, letterSpacing: "0.06em", fontFamily: MONO, cursor: "pointer" };
 
-const NAV_ITEMS = [["home","Home"],["markets","Markets"],["feed","Feed"]];
-  
   return (
-    <div style={{minHeight:"100vh",background:"#04060e",color:"#dde1ec",fontFamily:"'DM Mono',monospace",fontSize:13,position:"relative",overflowX:"hidden"}}>
+    <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: MONO, fontSize: 13, position: "relative", overflowX: "hidden" }}>
+      <GlobalStyles />
+      <SubscribePopup />
+      <Stars />
+      <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 1, overflow: "hidden", opacity: 0.02 }}>
+        <div style={{ position: "absolute", width: "100%", height: 2, background: "linear-gradient(transparent,rgba(0,255,136,1),transparent)", animation: "sc 10s linear infinite" }} />
+      </div>
 
-      {showExitPopup&&(
-  <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:20,backdropFilter:"blur(4px)"}}>
-    <div style={{background:"#0d1220",border:"1px solid rgba(0,255,136,0.25)",borderRadius:12,padding:"32px",maxWidth:420,width:"100%",position:"relative",animation:"fu 0.3s ease",boxShadow:"0 20px 60px rgba(0,0,0,0.8)"}}>
-      <button onClick={dismissPopup} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"#aab8c2",fontSize:20,cursor:"pointer",lineHeight:1}}>×</button>
-      <div style={{fontSize:9,color:"#00ff88",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:10}}>Free Weekly Newsletter</div>
-      <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:"#fff",lineHeight:1.2,marginBottom:10}}>The only weekly covering every space stock.</div>
-      <div style={{fontSize:12,color:"#aab8c2",lineHeight:1.7,marginBottom:20}}>Macro overview · Broker target changes · One stock deep dive. Every Sunday morning. Free.</div>
-      {popupSubmitted ? (
-        <div style={{fontSize:13,color:"#00ff88",padding:"10px 0"}}>✓ You're subscribed. Welcome to Orbit Alpha.</div>
-      ) : (
-        <>
-          <div style={{display:"flex",gap:8,marginBottom:14}}>
-            <input value={popupEmail} onChange={e=>setPopupEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&submitPopup()} placeholder="your@email.com" style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",color:"#fff",padding:"11px 14px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none",minWidth:0}}/>
-            <button onClick={submitPopup} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px 18px",borderRadius:4,fontSize:11,fontWeight:700,fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>Join Free →</button>
+      <div style={{ position: "relative", zIndex: 2 }}>
+        {/* Nav */}
+        <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 20px", borderBottom: "1px solid rgba(255,255,255,0.05)", position: "relative" }}>
+          <div onClick={() => go("home")} style={{ cursor: "pointer", fontFamily: SYNE, fontSize: 18, fontWeight: 800 }}>
+            <span style={{ color: "#fff", fontWeight: 700 }}>ORBIT</span><span style={{ color: C.green }}>ALPHA.</span>
           </div>
-          <div style={{fontSize:10,color:"#aab8c2",display:"flex",alignItems:"center",gap:6}}>
-            <span style={{color:"#00ff88"}}>✓</span> {SUBSCRIBER_COUNT}+ subscribers · Unsubscribe anytime
-          </div>
-        </>
-      )}
-    </div>
-  </div>
-)}
-
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@600;700;800&display=swap');
-        @keyframes flashUp{0%{background:rgba(0,255,136,0.3)}100%{background:transparent}}
-        @keyframes flashDown{0%{background:rgba(255,68,102,0.3)}100%{background:transparent}}
-        @keyframes shimmer{0%{opacity:0.4}50%{opacity:0.8}100%{opacity:0.4}}
-        .flash-up{animation:flashUp 0.6s ease}.flash-down{animation:flashDown 0.6s ease}
-        .skeleton{background:rgba(255,255,255,0.06);border-radius:3px;animation:shimmer 1.5s infinite}
-        @keyframes ts{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-        @keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes bk{0%,100%{opacity:1}50%{opacity:0.1}}
-        @keyframes sc{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
-        *{box-sizing:border-box;margin:0;padding:0}
-        ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08)}
-        .hov:hover{background:rgba(255,255,255,0.03)!important;cursor:pointer}
-        .dt{background:none;border:none;cursor:pointer;padding:8px 12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s;white-space:nowrap}
-        .stg{cursor:pointer;font-size:10px;padding:4px 10px;border-radius:3px;border:1px solid rgba(255,255,255,0.08);transition:all 0.15s;white-space:nowrap}.stg:hover{border-color:rgba(0,255,136,0.3);color:#00ff88}
-        input,button,textarea{outline:none}
-        @media(max-width:600px){
-          .desk-only{display:none!important}.mob-stack{flex-direction:column!important}.mob-full{width:100%!important;max-width:100%!important}
-          .mob-pad{padding:48px 18px 40px!important}.mob-grid2{grid-template-columns:1fr 1fr!important}.mob-grid1{grid-template-columns:1fr!important}
-          .mob-text-sm{font-size:11px!important}.mob-hide{display:none!important}
-        }
-      `}</style>
-
-      <Stars/>
-      <div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:1,overflow:"hidden",opacity:0.02}}><div style={{position:"absolute",width:"100%",height:2,background:"linear-gradient(transparent,rgba(0,255,136,1),transparent)",animation:"sc 10s linear infinite"}}/></div>
-      <div style={{position:"relative",zIndex:2}}>
-
-        <nav style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.05)",position:"relative"}}>
-          <div onClick={()=>go("home")} style={{cursor:"pointer",display:"flex",alignItems:"baseline",flexShrink:0}}>
-            <span style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:"#fff",letterSpacing:"-0.01em"}}>ORBIT</span>
-            <span style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#00ff88",letterSpacing:"-0.02em"}}>ALPHA</span>
-            <span style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,color:"#00ff88"}}>.</span>
-          </div>
-          <div className="desk-only" style={{position:"absolute",left:"50%",transform:"translateX(-50%)",display:"flex",gap:28,alignItems:"center"}}>
-            {NAV_ITEMS.map(([p,l])=>(
-              <span key={p} onClick={()=>go(p)} style={{fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",cursor:"pointer",color:page===p?"#00ff88":"#aab8c2",borderBottom:page===p?"1px solid #00ff88":"1px solid transparent",paddingBottom:2,transition:"color 0.2s"}}>{l}</span>
+          <div className="desk-only" style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", display: "flex", gap: 28 }}>
+            {NAV.map(([p, l]) => (
+              <span key={p} onClick={() => go(p)} style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer", color: page === p ? C.green : C.muted, borderBottom: `1px solid ${page === p ? C.green : "transparent"}`, paddingBottom: 2 }}>{l}</span>
             ))}
           </div>
-          <div style={{display:"flex",gap:10,alignItems:"center",flexShrink:0}}>
-            {/* FIX: Subscribe button now navigates to feed/newsletter */}
-            <button className="desk-only" onClick={goSubscribe} style={{background:"rgba(0,255,136,0.07)",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"7px 15px",borderRadius:4,fontSize:10,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free</button>
-            <button className="desk-only" onClick={()=>{ if(navigator.share){navigator.share({title:"Orbit Alpha",text:"Free space stocks dashboard",url:"https://orbitalpha.cloud"});}else{navigator.clipboard.writeText("https://orbitalpha.cloud").then(()=>alert("Link copied!"));}}} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#ccd0d8",padding:"7px 12px",borderRadius:4,fontSize:10,letterSpacing:"0.06em",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Share ↗</button>
-            <button onClick={()=>setMenuOpen(!menuOpen)} style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",color:"#ccd0d8",padding:"6px 10px",borderRadius:4,cursor:"pointer",fontSize:16,display:"none"}} className="mob-menu-btn">{menuOpen?"✕":"☰"}</button>
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <button className="desk-only" onClick={goSubscribe} style={{ ...navBtn, background: "rgba(0,255,136,0.07)", border: "1px solid rgba(0,255,136,0.2)", color: C.green, letterSpacing: "0.1em", textTransform: "uppercase" }}>Subscribe Free</button>
+            <button className="desk-only" onClick={share} style={navBtn}>Share ↗</button>
+            <button className="mob-only" onClick={() => setMenuOpen(!menuOpen)} style={{ ...navBtn, padding: "6px 10px", fontSize: 16 }}>{menuOpen ? "✕" : "☰"}</button>
           </div>
         </nav>
 
-        {menuOpen&&(
-          <div style={{background:"#070a14",borderBottom:"1px solid rgba(255,255,255,0.06)",padding:"16px 20px",display:"flex",flexDirection:"column",gap:4}}>
-            {NAV_ITEMS.map(([p,l])=>(
-              <span key={p} onClick={()=>{go(p);setMenuOpen(false);}} style={{color:page===p?"#00ff88":"#ccd0d8",padding:"10px 0",fontSize:12,letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(255,255,255,0.04)",cursor:"pointer"}}>{l}</span>
+        {menuOpen && (
+          <div style={{ background: "#070a14", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
+            {NAV.map(([p, l]) => (
+              <span key={p} onClick={() => go(p)} style={{ color: page === p ? C.green : C.light, padding: "10px 0", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: "1px solid rgba(255,255,255,0.04)", cursor: "pointer" }}>{l}</span>
             ))}
-            {/* FIX: Mobile subscribe also goes to newsletter */}
-            <button onClick={()=>{goSubscribe();setMenuOpen(false);}} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",marginTop:8}}>Subscribe Free →</button>
+            <button onClick={goSubscribe} style={{ background: C.green, color: C.bg, border: "none", padding: 11, borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: MONO, cursor: "pointer", marginTop: 8 }}>Subscribe Free →</button>
           </div>
         )}
 
-        <style>{`.mob-menu-btn{display:none!important}@media(max-width:600px){.mob-menu-btn{display:block!important}}`}</style>
+        {marketChrome && <TickerStrip stocks={prices.stocks} />}
 
-        {(page==="home"||page==="markets")&&<TickerStrip stocks={liveStocks}/>}
-
-        {page==="home"&&(
-          <div onClick={()=>latestIssueLive&&window.open(LATEST_ISSUE_URL,"_blank")} style={{background:"rgba(126,184,255,0.06)",borderBottom:"1px solid rgba(126,184,255,0.12)",padding:"8px 20px",textAlign:"center",cursor:latestIssueLive?"pointer":"default",transition:"background 0.2s"}}
-            onMouseEnter={e=>{ if(latestIssueLive) e.currentTarget.style.background="rgba(126,184,255,0.1)"; }}
-            onMouseLeave={e=>e.currentTarget.style.background="rgba(126,184,255,0.06)"}>
-            <span style={{fontSize:11,color:"#7eb8ff",letterSpacing:"0.04em"}}>
-              📬 <strong>Issue #{latestIssue.issue} {latestIssueLive?"is live":"— coming Sunday"}</strong> — {latestIssue.headline}
-              {latestIssueLive&&<span style={{marginLeft:10,opacity:0.6}}>Read now →</span>}
+        {page === "home" && (
+          <div onClick={() => latest.live && window.open(latest.url, "_blank")} className={latest.live ? "hov" : ""} style={{ background: "rgba(126,184,255,0.06)", borderBottom: "1px solid rgba(126,184,255,0.12)", padding: "8px 20px", textAlign: "center" }}>
+            <span style={{ fontSize: 11, color: C.blue, letterSpacing: "0.04em" }}>
+              📬 <strong>Issue #{latest.issue} {latest.live ? "is live" : "coming Sunday"}</strong> · {latest.headline}
+              {latest.live && <span style={{ marginLeft: 10, opacity: 0.6 }}>Read now →</span>}
             </span>
           </div>
         )}
 
-        {(page==="home"||page==="markets")&&(
-          <div style={{background:isLive?"rgba(0,255,136,0.05)":"rgba(255,204,0,0.07)",borderBottom:`1px solid ${isLive?"rgba(0,255,136,0.15)":"rgba(255,204,0,0.15)"}`,padding:"8px 16px",textAlign:"center"}}>
-            <div style={{display:"inline-flex",alignItems:"center",gap:8,flexWrap:"wrap",justifyContent:"center"}}>
-              <div style={{width:6,height:6,borderRadius:"50%",background:isLive?"#00ff88":"#ffcc00",animation:"bk 1.5s infinite",flexShrink:0}}/>
-              {isLive ? <span style={{fontSize:11,color:"#00ff88",letterSpacing:"0.04em"}}>LIVE DATA · Updated {lastUpdated}</span>
-                : <span style={{fontSize:11,color:"#ffcc00",letterSpacing:"0.04em"}}>⚠ DEMO DATA ONLY — All prices and metrics are illustrative.</span>}
-            </div>
+        {marketChrome && (
+          <div style={{ background: prices.isLive ? "rgba(0,255,136,0.05)" : "rgba(255,204,0,0.07)", borderBottom: `1px solid ${prices.isLive ? "rgba(0,255,136,0.15)" : "rgba(255,204,0,0.15)"}`, padding: "8px 16px", textAlign: "center", fontSize: 11, letterSpacing: "0.04em", color: prices.isLive ? C.green : C.yellow }}>
+            <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "currentColor", animation: "bk 1.5s infinite", marginRight: 8 }} />
+            {prices.isLive ? `LIVE DATA · Updated ${prices.lastUpdated}` : "⚠ DEMO DATA ONLY. All prices and metrics are illustrative."}
           </div>
         )}
 
-        {/* ── HOME ── */}
-        {page==="home"&&(
-          <div style={{animation:"fu 0.5s ease"}}>
-            <section style={{padding:"40px 20px 28px",textAlign:"center",maxWidth:680,margin:"0 auto"}}>
-              <h1 style={{fontFamily:"'Syne',sans-serif",fontSize:"clamp(26px,6vw,48px)",fontWeight:700,lineHeight:1.1,letterSpacing:"-0.015em",color:"#fff",marginBottom:10}}>
-                The data layer for<br/><span style={{color:"#00ff88"}}>space equity</span> investors.
-              </h1>
-              <p style={{fontSize:13,color:"#aab8c2",maxWidth:380,margin:"0 auto 20px",lineHeight:1.6}}>Live prices, launches, earnings and news. Weekly newsletter every Sunday.</p>
-              <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}}>
-                <button onClick={()=>go("markets","stocks")} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"11px 24px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>View Markets →</button>
-                {/* FIX: this hero subscribe button also goes to newsletter */}
-                <button onClick={goSubscribe} style={{background:"none",border:"1px solid rgba(255,255,255,0.15)",color:"#aab8c2",padding:"11px 24px",borderRadius:4,fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Subscribe Free →</button>
-              </div>
-            </section>
-
-            <section style={{margin:"0 20px 16px",borderRadius:10,border:"1px solid rgba(0,255,136,0.2)",background:"rgba(0,255,136,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
-                <div>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:"#fff",letterSpacing:"-0.01em",marginBottom:4}}>ORBIT <span style={{color:"#00ff88"}}>MARKETS</span></div>
-                  <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Live prices, launches, earnings and news — updated automatically.</p>
-                </div>
-                <button onClick={()=>go("markets","stocks")} style={{background:"none",border:"1px solid rgba(0,255,136,0.3)",color:"#00ff88",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Markets →</button>
-              </div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
-                {[{e:"📈",t:"Live Prices",d:"Real-time quotes, 7D charts and market cap. Updated every 5 minutes."},{e:"🚀",t:"Launch Calendar",d:"Upcoming launches with historical price impact per mission."},{e:"📅",t:"Earnings Calendar",d:"Upcoming earnings dates with key metrics to watch."}].map((f,i)=>(
-                  <div key={i} style={{borderRadius:6,padding:"12px",background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)"}}>
-                    <div style={{fontSize:16,marginBottom:4}}>{f.e}</div>
-                    <div style={{fontSize:11,color:"#fff",marginBottom:3,fontWeight:500}}>{f.t}</div>
-                    <div style={{fontSize:10,color:"#aab8c2",lineHeight:1.5}}>{f.d}</div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section style={{margin:"0 20px 16px",borderRadius:10,border:"1px solid rgba(255,150,50,0.2)",background:"rgba(255,150,50,0.02)",padding:"24px",maxWidth:920,marginLeft:"auto",marginRight:"auto"}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
-                <div>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:700,color:"#fff",letterSpacing:"-0.01em",marginBottom:4}}>ORBIT <span style={{color:"#ff9632"}}>FEED</span></div>
-                  <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>Live news from 30+ sources · Weekly newsletter every Sunday — all in one place.</p>
-                </div>
-                <button onClick={()=>go("feed")} style={{background:"none",border:"1px solid rgba(255,150,50,0.3)",color:"#ff9632",padding:"8px 16px",borderRadius:4,fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>View Feed →</button>
-              </div>
-              {newsLoading&&Array.from({length:3}).map((_,i)=>(<div key={i} style={{padding:"10px 0",borderBottom:"1px solid rgba(255,255,255,0.04)"}}><div className="skeleton" style={{height:11,width:"70%",marginBottom:6}}/><div className="skeleton" style={{height:9,width:"25%"}}/></div>))}
-              {!newsLoading&&newsItems.slice(0,4).map((item,i)=>(
-                <div key={i} onClick={()=>window.open(item.link,"_blank")} className="hov" style={{padding:"10px 0",borderBottom:"1px solid rgba(255,255,255,0.04)",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:12,color:"#dde1ec",lineHeight:1.4,marginBottom:4,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{item.title}</div>
-                    <div style={{display:"flex",gap:8,alignItems:"center"}}>
-                      <span style={{fontSize:9,padding:"1px 6px",borderRadius:3,background:item.source==="SpaceNews"?"rgba(0,255,136,0.08)":item.source==="NASA"?"rgba(126,184,255,0.08)":"rgba(255,204,0,0.08)",color:item.source==="SpaceNews"?"#00ff88":item.source==="NASA"?"#7eb8ff":"#ffcc00"}}>{item.source}</span>
-                      <span style={{fontSize:9,color:"#aab8c2"}}>{item.pubDate?new Date(item.pubDate).toLocaleDateString("en-GB",{day:"numeric",month:"short"}):""}</span>
-                    </div>
-                  </div>
-                  <span style={{fontSize:11,color:"#ff9632",flexShrink:0}}>→</span>
-                </div>
-              ))}
-            </section>
-
-            <footer style={{padding:"24px 20px",borderTop:"1px solid rgba(255,255,255,0.04)",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
-              <span style={{fontFamily:"'Syne',sans-serif",fontSize:13,fontWeight:800,color:"#222"}}>ORBIT<span style={{color:"#00ff88"}}>ALPHA</span>.</span>
-              <span style={{fontSize:10,color:"#aab8c2"}}>Not financial advice · Data via Yahoo Finance & rocketlaunch.live</span>
-              <div style={{display:"flex",gap:16,fontSize:10,color:"#aab8c2",flexWrap:"wrap"}}>
-                <span onClick={()=>go("feed")} style={{cursor:"pointer"}} className="hov">Feed</span>
-                <span onClick={()=>go("about")} style={{cursor:"pointer"}} className="hov">About</span>
-                <a href="mailto:OrbitAlphaApp@proton.me" style={{color:"#aab8c2",textDecoration:"none"}} className="hov">Contact</a>
-              </div>
-            </footer>
-          </div>
-        )}
-
-        {/* ── MARKETS ── */}
-        {page==="markets"&&(
-          <div style={{animation:"fu 0.3s ease"}}>
-            <div style={{padding:"12px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8}}>
-              <div style={{display:"flex",alignItems:"center",gap:5,background:isMarketOpen()?"rgba(0,255,136,0.08)":"rgba(255,68,102,0.08)",border:`1px solid ${isMarketOpen()?"rgba(0,255,136,0.2)":"rgba(255,68,102,0.2)"}`,borderRadius:4,padding:"3px 10px"}}>
-                <div style={{width:5,height:5,borderRadius:"50%",background:isMarketOpen()?"#00ff88":"#ff4466",animation:"bk 1.5s infinite"}}/>
-                <span style={{fontSize:10,color:isMarketOpen()?"#00ff88":"#ff4466",letterSpacing:"0.08em"}}>{isMarketOpen()?"MARKET OPEN":"MARKET CLOSED"}</span>
-              </div>
-              <span style={{fontSize:10,color:"#aab8c2",fontFamily:"monospace"}}>
-                {clock.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}).toUpperCase()} · {clock.toLocaleTimeString("en-US",{timeZone:"America/New_York",hour:"2-digit",minute:"2-digit",second:"2-digit"})} EST
-              </span>
-            </div>
-
-            <div style={{display:"flex",padding:"10px 20px 0",borderBottom:"1px solid rgba(255,255,255,0.06)",gap:0,overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
-              {[{id:"stocks",l:"Stocks"},{id:"launches",l:"Launches"},{id:"earnings",l:"Earnings"}].map(t=>(
-                <button key={t.id} className="dt" onClick={()=>setTab(t.id)} style={{color:tab===t.id?"#00ff88":"#aab8c2",borderBottom:tab===t.id?"1px solid #00ff88":"1px solid transparent",marginBottom:-1,flexShrink:0}}>{t.l}</button>
-              ))}
-            </div>
-
-            <div style={{padding:"16px 20px 40px"}}>
-              {tab==="stocks"&&(
-                <div>
-                  {(()=>{
-                    const gainers=[...liveStocks].filter(s=>typeof s.changePct==="number").sort((a,b)=>b.changePct-a.changePct).slice(0,5);
-                    if(gainers.length===0) return null;
-                    return (
-                      <div style={{marginBottom:16}}>
-                        <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:8}}>Top Gainers Today {isLive?"· Live":"· Demo"}</div>
-                        <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:5}}>
-                          {gainers.map((s,i)=>(
-                            <div key={s.ticker} onClick={()=>setExpandedTicker(expandedTicker===s.ticker?null:s.ticker)} className="hov" style={{background:`rgba(0,255,136,${0.04+((5-i)/5)*0.12})`,border:"1px solid rgba(0,255,136,0.12)",borderRadius:5,padding:"10px 8px",cursor:"pointer",textAlign:"center",transition:"all 0.2s"}}>
-                              <div style={{fontSize:11,fontWeight:700,color:"#00ff88",marginBottom:3}}>{s.ticker}</div>
-                              <div style={{fontSize:13,fontWeight:700,color:"#00ff88"}}>+{s.changePct.toFixed(1)}%</div>
-                              <div style={{fontSize:10,color:"#aab8c2",marginTop:2}}>${s.price.toFixed(2)}</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })()}
-                  {isLive&&(()=>{
-                    const sorted=[...liveStocks].filter(s=>s.type==="stock"&&typeof s.changePct==="number");
-                    const gainer=sorted.sort((a,b)=>b.changePct-a.changePct)[0];
-                    const loser=sorted.sort((a,b)=>a.changePct-b.changePct)[0];
-                    const byVolume=[...liveStocks].filter(s=>s.type==="stock"&&typeof s.volume==="number"&&s.volume>0).sort((a,b)=>b.volume-a.volume)[0];
-                    return (
-                      <div style={{marginBottom:14}}>
-                        <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:8}}>Today · 1D</div>
-                        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
-                          {[{label:"Top Gainer",s:gainer,c:"#00ff88",val:s=>`+${s.changePct.toFixed(1)}%`},{label:"Top Loser",s:loser,c:"#ff4466",val:s=>`${s.changePct.toFixed(1)}%`},{label:"Highest Volume",s:byVolume,c:"#7eb8ff",val:s=>s.volume>=1e6?`${(s.volume/1e6).toFixed(1)}M`:s.volume>=1e3?`${(s.volume/1e3).toFixed(0)}K`:`${s.volume}`}].map(({label,s,c,val})=>s?(
-                            <div key={label} onClick={()=>setExpandedTicker(expandedTicker===s.ticker?null:s.ticker)} className="hov" style={{border:`1px solid ${c}22`,borderRadius:6,padding:"10px 14px",background:`${c}08`,cursor:"pointer"}}>
-                              <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>{label}</div>
-                              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                                <span style={{fontSize:13,fontWeight:700,color:c}}>{s.ticker}</span>
-                                <span style={{fontSize:11,fontWeight:600,color:c}}>{val(s)}</span>
-                              </div>
-                              <div style={{fontSize:10,color:"#aab8c2",marginTop:2}}>${s.price.toFixed(2)}</div>
-                            </div>
-                          ):null)}
-                        </div>
-                      </div>
-                    );
-                  })()}
-                  <div style={{display:"flex",gap:8,marginBottom:12,flexWrap:"wrap",alignItems:"center"}}>
-                    <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search ticker or name..." style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#ddd",padding:"8px 12px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",width:200}}/>
-                    <button onClick={()=>setShowWatchlistOnly(w=>!w)} style={{background:showWatchlistOnly?"rgba(255,204,0,0.1)":"transparent",border:`1px solid ${showWatchlistOnly?"rgba(255,204,0,0.4)":"rgba(255,255,255,0.08)"}`,color:showWatchlistOnly?"#ffcc00":"#aab8c2",padding:"7px 12px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer",letterSpacing:"0.08em"}}>★ Watchlist</button>
-                    <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-                      {SECTORS.map(s=>(<span key={s} className="stg" onClick={()=>setSector(s)} style={{color:sector===s?"#00ff88":"#aab8c2",borderColor:sector===s?"rgba(0,255,136,0.3)":"rgba(255,255,255,0.2)",background:sector===s?"rgba(0,255,136,0.05)":"transparent"}}>{s}</span>))}
-                    </div>
-                  </div>
-                  <div className="desk-only" style={{overflowX:"auto"}}>
-                    <div style={{minWidth:"auto",width:"100%"}}>
-                      <div style={{display:"grid",gridTemplateColumns:"68px 1fr 82px 72px 72px 80px",gap:6,padding:"7px 8px",fontSize:9,color:"#dde1ec",letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
-                        <span>Ticker</span><span>Name</span>
-                        {[["price","Price"],["changePct","1D Chg%"],["mktCap","Mkt Cap"]].map(([col,label])=>(
-                          <span key={col} onClick={()=>handleSort(col)} style={{cursor:"pointer",color:sortCol===col?"#00ff88":"#fff",userSelect:"none"}}>{label}{sortCol===col?(sortDir==="desc"?" ↓":" ↑"):""}</span>
-                        ))}
-                        <span style={{textAlign:"center",color:"#aab8c2"}}>7D</span>
-                      </div>
-                      {loading&&Array.from({length:8}).map((_,i)=>(
-                        <div key={i} style={{display:"grid",gridTemplateColumns:"68px 1fr 82px 72px 72px 80px",gap:6,padding:"12px 8px",borderBottom:"1px solid rgba(255,255,255,0.04)",alignItems:"center"}}>
-                          <div className="skeleton" style={{height:12,width:40}}/><div className="skeleton" style={{height:12,width:120}}/><div className="skeleton" style={{height:12,width:60}}/><div className="skeleton" style={{height:12,width:50}}/><div className="skeleton" style={{height:12,width:55}}/><div className="skeleton" style={{height:24,width:72}}/>
-                        </div>
-                      ))}
-                      {!loading&&filtered.map(s=>(
-                        <div key={s.ticker}>
-                          <div className={`hov ${flashMap[s.ticker]==="up"?"flash-up":flashMap[s.ticker]==="down"?"flash-down":""}`}
-                            onClick={()=>{ setExpandedTicker(expandedTicker===s.ticker?null:s.ticker); if(expandedTicker!==s.ticker) fetchStockNews(s.ticker); }}
-                            style={{display:"grid",gridTemplateColumns:"68px 1fr 82px 72px 72px 80px",gap:6,padding:"10px 8px",borderBottom:"1px solid rgba(255,255,255,0.04)",alignItems:"center",transition:"background 0.15s",cursor:"pointer"}}>
-                            <div style={{display:"flex",alignItems:"center",gap:4}}>
-                              <span onClick={e=>{e.stopPropagation();toggleWatch(s.ticker);}} style={{fontSize:12,color:watchlist.includes(s.ticker)?"#ffcc00":"#556",cursor:"pointer",marginRight:2,lineHeight:1}}>{watchlist.includes(s.ticker)?"★":"☆"}</span>
-                              <span style={{fontWeight:700,color:"#00ff88",fontSize:12}}>{s.ticker}</span>
-                              {s.type==="etf"&&<span style={{fontSize:8,color:"#7eb8ff",background:"rgba(126,184,255,0.1)",padding:"1px 3px",borderRadius:2}}>ETF</span>}
-                            </div>
-                            <div><div style={{fontSize:12,color:"#fff"}}>{s.name}</div><div style={{fontSize:9,color:"#aab8c2",marginTop:1}}>{s.sector}</div></div>
-                            <span style={{fontSize:14,color:"#fff",fontWeight:500}}>${s.price.toFixed(2)}</span>
-                            <span style={{fontSize:11,fontWeight:600,padding:"2px 6px",borderRadius:4,background:s.changePct>=0?"rgba(0,255,136,0.12)":"rgba(255,68,102,0.12)",color:s.changePct>=0?"#00ff88":"#ff4466",display:"inline-block",textAlign:"center"}}>{s.changePct>=0?"+":""}{s.changePct.toFixed(1)}%</span>
-                            <span style={{color:"#dde1ec",fontSize:10}}>{s.mktCap}</span>
-                            <Sparkline data={s.spark7d||s.liveSparkline||SPARKDATA[s.ticker]} positive={s.changePct>=0}/>
-                          </div>
-                          {expandedTicker===s.ticker&&(
-                            <div style={{background:"rgba(0,255,136,0.02)",border:"1px solid rgba(0,255,136,0.1)",borderRadius:6,margin:"0 0 4px",padding:"14px 16px",animation:"fu 0.2s ease"}}>
-                              <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginBottom:10}}>
-                                <div><div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>Current Price</div><div style={{fontSize:16,color:"#fff",fontWeight:500}}>${s.price.toFixed(2)}</div></div>
-                                <div><div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>1D Change</div><div style={{fontSize:16,color:s.changePct>=0?"#00ff88":"#ff4466",fontWeight:500}}>{s.changePct>=0?"+":""}{s.changePct.toFixed(2)}%</div></div>
-                                <div><div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>Mkt Cap</div><div style={{fontSize:16,color:"#fff",fontWeight:500}}>{s.mktCap||"—"}</div></div>
-                              </div>
-                              <div style={{display:"flex",gap:10,marginTop:8,flexWrap:"wrap"}}>
-                                <span style={{fontSize:10,color:"#ccd0d8",background:"rgba(255,255,255,0.04)",padding:"3px 10px",borderRadius:3}}>{s.sector}</span>
-                                <span onClick={()=>window.open(`https://finance.yahoo.com/quote/${s.ticker}`,"_blank")} style={{fontSize:10,color:"#7eb8ff",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(126,184,255,0.2)"}}>View on Yahoo Finance →</span>
-                                <span onClick={goSubscribe} style={{fontSize:10,color:"#00ff88",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(0,255,136,0.2)"}}>{s.ticker} covered in this week's issue →</span>
-                                <span onClick={()=>go("threads")} style={{fontSize:10,color:"#a78bfa",cursor:"pointer",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(167,139,250,0.2)"}}>Discuss {s.ticker} →</span>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div style={{display:"none"}} className="mob-cards">
-                    <div style={{display:"flex",gap:8,marginBottom:10,alignItems:"center"}}>
-                      <button onClick={()=>setShowWatchlistOnly(w=>!w)} style={{background:showWatchlistOnly?"rgba(255,204,0,0.1)":"transparent",border:`1px solid ${showWatchlistOnly?"rgba(255,204,0,0.4)":"rgba(255,255,255,0.08)"}`,color:showWatchlistOnly?"#ffcc00":"#aab8c2",padding:"7px 14px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer",letterSpacing:"0.08em"}}>★ {showWatchlistOnly?"Watchlist Only":"Watchlist"}</button>
-                      <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search..." style={{flex:1,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",color:"#ddd",padding:"7px 10px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace"}}/>
-                    </div>
-                    {filtered.map(s=>(
-                      <div key={s.ticker} style={{border:"1px solid rgba(255,255,255,0.07)",borderRadius:8,marginBottom:8,background:"rgba(255,255,255,0.01)",overflow:"hidden"}}>
-                        <div onClick={()=>setExpandedTicker(expandedTicker===s.ticker?null:s.ticker)} className={`${flashMap[s.ticker]==="up"?"flash-up":flashMap[s.ticker]==="down"?"flash-down":""}`} style={{padding:"12px 14px",cursor:"pointer"}}>
-                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-                            <div style={{display:"flex",alignItems:"center",gap:6}}>
-                              <span onClick={e=>{e.stopPropagation();toggleWatch(s.ticker);}} style={{fontSize:16,color:watchlist.includes(s.ticker)?"#ffcc00":"#556",cursor:"pointer",lineHeight:1,flexShrink:0}}>{watchlist.includes(s.ticker)?"★":"☆"}</span>
-                              <span style={{fontSize:14,fontWeight:700,color:"#00ff88"}}>{s.ticker}</span>
-                              {s.type==="etf"&&<span style={{fontSize:8,color:"#7eb8ff",background:"rgba(126,184,255,0.1)",padding:"1px 5px",borderRadius:2}}>ETF</span>}
-                              <span style={{fontSize:11,color:"#aab8c2"}}>{s.name}</span>
-                            </div>
-                            <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:4,background:s.changePct>=0?"rgba(0,255,136,0.12)":"rgba(255,68,102,0.12)",color:s.changePct>=0?"#00ff88":"#ff4466"}}>{s.changePct>=0?"+":""}{s.changePct.toFixed(1)}%</span>
-                          </div>
-                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-                            <span style={{fontSize:20,color:"#fff",fontWeight:500}}>${s.price.toFixed(2)}</span>
-                            <span style={{fontSize:10,color:"#aab8c2"}}>{s.mktCap}</span>
-                          </div>
-                          <div style={{marginTop:10}}>
-                            <div style={{fontSize:8,color:"#aab8c2",marginBottom:3,letterSpacing:"0.08em"}}>7D</div>
-                            <Sparkline data={s.spark7d||s.liveSparkline||SPARKDATA[s.ticker]} positive={s.changePct>=0}/>
-                          </div>
-                          <div style={{textAlign:"center",marginTop:6,fontSize:9,color:"#ccd0d8"}}>{expandedTicker===s.ticker?"▲ tap to close":"▼ tap for more"}</div>
-                        </div>
-                        {expandedTicker===s.ticker&&(
-                          <div style={{borderTop:"1px solid rgba(0,255,136,0.1)",padding:"12px 14px",background:"rgba(0,255,136,0.02)",animation:"fu 0.2s ease"}}>
-                            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
-                              <div><div style={{fontSize:9,color:"#aab8c2",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:3}}>Current Price</div><div style={{fontSize:16,color:"#fff",fontWeight:500}}>${s.price.toFixed(2)}</div></div>
-                              <div><div style={{fontSize:9,color:"#aab8c2",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:3}}>1D Change</div><div style={{fontSize:16,color:s.changePct>=0?"#00ff88":"#ff4466",fontWeight:500}}>{s.changePct>=0?"+":""}{s.changePct.toFixed(2)}%</div></div>
-                              <div><div style={{fontSize:9,color:"#aab8c2",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:3}}>Mkt Cap</div><div style={{fontSize:14,color:"#fff",fontWeight:500}}>{s.mktCap||"—"}</div></div>
-                            </div>
-                            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-                              <button onClick={()=>window.open(`https://finance.yahoo.com/quote/${s.ticker}`,"_blank")} style={{flex:1,background:"none",border:"1px solid rgba(126,184,255,0.2)",color:"#7eb8ff",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Yahoo Finance →</button>
-                              <button onClick={goSubscribe} style={{flex:1,background:"none",border:"1px solid rgba(0,255,136,0.2)",color:"#00ff88",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>{s.ticker} in newsletter →</button>
-                              <button onClick={()=>go("threads")} style={{flex:1,background:"none",border:"1px solid rgba(167,139,250,0.2)",color:"#a78bfa",padding:"8px",borderRadius:4,fontSize:10,fontFamily:"'DM Mono',monospace",cursor:"pointer"}}>Discuss {s.ticker} →</button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <style>{`@media(max-width:600px){.desk-only{display:none!important}.mob-cards{display:block!important}}`}</style>
-                  {filtered.length===0&&<div style={{padding:"28px",textAlign:"center",color:"#aab8c2",fontSize:12}}>No results.</div>}
-                </div>
-              )}
-
-              {tab==="launches"&&(
-                <div>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:8}}>
-                    <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase"}}>Upcoming Launches · Historical Price Impact</div>
-                    <div style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"#00ff88"}}><div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>LIVE · rocketlaunch.live</div>
-                  </div>
-                  {liveLaunches.map((l,i)=>(
-                    <div key={i} style={{border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:"14px",marginBottom:8,background:"rgba(255,255,255,0.01)"}}>
-                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-                        <span style={{fontSize:12,color:"#00ff88",fontWeight:500}}>{l.date}</span>
-                        <div style={{display:"flex",gap:6,alignItems:"center"}}>
-                          {l.ticker&&<span style={{fontSize:10,color:"#00ff88",background:"rgba(0,255,136,0.06)",padding:"2px 8px",borderRadius:3}}>{l.ticker}</span>}
-                          <span style={{fontSize:10,padding:"2px 8px",borderRadius:3,background:l.status==="GO"?"rgba(0,255,136,0.08)":l.status==="HOLD"?"rgba(255,100,0,0.08)":"rgba(255,255,255,0.04)",color:l.status==="GO"?"#00ff88":l.status==="HOLD"?"#ff8844":"#888"}}>{l.status}</span>
-                        </div>
-                      </div>
-                      <div style={{fontSize:12,color:"#bbb",marginBottom:4}}>{l.mission}</div>
-                      <div style={{fontSize:10,color:"#aab8c2"}}>Historical avg: {l.impact}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {tab==="earnings"&&(
-                <div>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:8}}>
-                    <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase"}}>Upcoming Earnings · Space Stocks</div>
-                    <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.08em"}}>Updated weekly · EST times</div>
-                  </div>
-                  {EARNINGS.map((e,i)=>(
-                    <div key={i} style={{border:"1px solid rgba(255,255,255,0.07)",borderRadius:6,padding:"14px 16px",marginBottom:8,background:"rgba(255,255,255,0.01)"}}>
-                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:8,marginBottom:8}}>
-                        <div style={{display:"flex",alignItems:"center",gap:8}}>
-                          <span style={{fontWeight:700,color:"#00ff88",fontSize:13}}>{e.ticker}</span>
-                          <span style={{fontSize:11,color:"#aab8c2"}}>{e.name}</span>
-                        </div>
-                        <div style={{textAlign:"right"}}>
-                          <div style={{fontSize:11,color:"#fff",fontWeight:500}}>{e.date}</div>
-                          <div style={{fontSize:9,color:"#aab8c2",marginTop:2}}>{e.time}</div>
-                        </div>
-                      </div>
-                      <div style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}><span style={{color:"#aab8c2",marginRight:6,letterSpacing:"0.08em",fontSize:9,textTransform:"uppercase"}}>Watch:</span>{e.watch}</div>
-                    </div>
-                  ))}
-                  <div style={{padding:"12px",textAlign:"center",fontSize:10,color:"#ccd0d8",borderTop:"1px solid rgba(255,255,255,0.04)",marginTop:8}}>Estimates sourced from analyst consensus · Updated weekly · Not financial advice</div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* ── FEED ── */}
-        {page==="feed"&&(
-          <div style={{animation:"fu 0.3s ease",maxWidth:800,margin:"0 auto",padding:"32px 20px 60px"}}>
-            <div style={{marginBottom:24}}>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ORBIT <span style={{color:"#ff9632"}}>FEED</span></div>
-              <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:20}}>News and analysis for space equity investors.</p>
-              <div style={{display:"inline-flex",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:6,padding:3,gap:2}}>
-                {[["news","📰 News"],["newsletter","✉ Newsletter"]].map(([mode,label])=>(
-                  <button key={mode} onClick={()=>setFeedMode(mode)}
-                    style={{background:feedMode===mode?"rgba(255,150,50,0.15)":"transparent",border:feedMode===mode?"1px solid rgba(255,150,50,0.3)":"1px solid transparent",color:feedMode===mode?"#ff9632":"#aab8c2",padding:"7px 18px",borderRadius:4,fontSize:11,fontFamily:"'DM Mono',monospace",cursor:"pointer",letterSpacing:"0.06em",transition:"all 0.15s",whiteSpace:"nowrap"}}>
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {feedMode==="news"&&(
-              <div style={{animation:"fu 0.2s ease"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:8}}>
-                  <p style={{fontSize:11,color:"#aab8c2"}}>Live space stock news from 30+ sources — updated every 5 minutes.</p>
-                  <div style={{display:"flex",alignItems:"center",gap:5,fontSize:10,color:"#00ff88",flexShrink:0}}><div style={{width:5,height:5,borderRadius:"50%",background:"#00ff88",animation:"bk 1.5s infinite"}}/>LIVE</div>
-                </div>
-                <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:20}}>
-                 {["All","SPCX","RKLB","ASTS","LUNR","PL","BKSY","RDW","MNTS","SPCE","KRMN","SATL","KULR","TSAT","GSAT","VSAT","MDA","SPIR","DXYZ","LMT","FLY","OKLO","BA","NOC","RTX","HAWK","Blue Origin","Relativity","Vast","ispace","NASA","ESA","ISRO","Space Force"].map(co=>(
-                    <span key={co} onClick={()=>setNewsCompany(co==="All"?"":co)} className="stg" style={{color:newsCompany===(co==="All"?"":co)?"#ff9632":"#ccd0d8",borderColor:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.3)":"rgba(255,255,255,0.2)",background:newsCompany===(co==="All"?"":co)?"rgba(255,150,50,0.05)":"transparent",fontSize:9}}>{co}</span>
-                  ))}
-                </div>
-                {newsLoading&&Array.from({length:8}).map((_,i)=>(<div key={i} style={{padding:"16px 0",borderBottom:"1px solid rgba(255,255,255,0.05)"}}><div className="skeleton" style={{height:13,width:"70%",marginBottom:8}}/><div className="skeleton" style={{height:10,width:"30%"}}/></div>))}
-                {!newsLoading&&(()=>{
-                  const COMPANY_KEYWORDS = {
-                    RKLB:['Rocket Lab','RKLB','Electron','Neutron','Peter Beck'],ASTS:['AST SpaceMobile','ASTS','BlueBird','Abel Avellan'],
-                    LUNR:['Intuitive Machines','LUNR','IM-3','IM-4','lunar lander'],PL:['Planet Labs','PBC','Pelican'],BKSY:['BlackSky','BKSY'],RDW:['Redwire','RDW'],
-                    MNTS:['Momentus','MNTS'],SPCE:['Virgin Galactic','SPCE','VSS'],KRMN:['Karman','KRMN'],SATL:['Satellogic','SATL'],KULR:['KULR Technology','KULR'],
-                    TSAT:['Telesat','TSAT','Lightspeed'],GSAT:['Globalstar','GSAT'],VSAT:['Viasat','VSAT'],MDA:['MDA Space','MDA Ltd'],SPIR:['Spire Global','SPIR'],
-                    GILT:['Gilat Satellite','GILT'],DXYZ:['Destiny Tech','DXYZ'],LMT:['Lockheed Martin','LMT'],FLY:['Firefly Aerospace','FLY','Alpha rocket'],
-                    OKLO:['Oklo','OKLO','nuclear microreactor'],BA:['Boeing','BA'],NOC:['Northrop Grumman','NOC'],RTX:['RTX','Raytheon'],
-                    HAWK:['HawkEye 360','HAWK','SIGINT','RF intelligence'],SATS:['EchoStar','SATS'],VOYG:['Voyager Technologies','VOYG'],YSS:['York Space','YSS'],
-                    SpaceX:['SPCX','SpaceX','Starship','Falcon','Starlink'],'Blue Origin':['Blue Origin','New Glenn','BE-4'],Relativity:['Relativity Space','Terran'],
-                    Vast:['Vast Space','Haven-1'],ispace:['ispace','HAKUTO'],NASA:['NASA','Artemis','ISS'],ESA:['ESA','European Space Agency','Ariane'],
-                    ISRO:['ISRO','Gaganyaan','Chandrayaan'],'Space Force':['Space Force','USSF','NSSL','Golden Dome'],
-                  };
-                  return newsItems
-                    .filter(item=>!newsSource||item.source===newsSource)
-                    .filter(item=>{
-                      if(!newsCompany) return true;
-                      if(item.ticker===newsCompany) return true;
-                      const keywords=COMPANY_KEYWORDS[newsCompany]||[newsCompany];
-                      const text=`${item.title} ${item.description}`.toLowerCase();
-                      return keywords.some(k=>text.includes(k.toLowerCase()));
-                    })
-                    .map((item,i)=>(
-                      <div key={i} onClick={()=>window.open(item.link,"_blank")} className="hov" style={{padding:"16px",borderBottom:"1px solid rgba(255,255,255,0.05)",cursor:"pointer",animation:`fu 0.3s ease ${i*0.02}s both`,borderRadius:item.highlight?6:0,border:item.highlight?"1px solid rgba(255,204,0,0.15)":"none",borderBottom:item.highlight?"1px solid rgba(255,204,0,0.15)":"1px solid rgba(255,255,255,0.05)",background:item.highlight?"rgba(255,204,0,0.03)":"transparent",marginBottom:item.highlight?8:0}}>
-                        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:8}}>
-                          <div style={{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
-                            <span style={{fontSize:9,padding:"2px 8px",borderRadius:3,flexShrink:0,background:item.source==="SpaceNews"?"rgba(0,255,136,0.08)":item.source==="NASA"?"rgba(126,184,255,0.08)":item.source==="Space.com"?"rgba(255,255,255,0.04)":"rgba(255,204,0,0.08)",color:item.source==="SpaceNews"?"#00ff88":item.source==="NASA"?"#7eb8ff":item.source==="Space.com"?"#888":"#ffcc00"}}>{item.source}</span>
-                            {item.highlight&&<span style={{fontSize:9,padding:"2px 6px",borderRadius:3,background:"rgba(255,204,0,0.1)",color:"#ffcc00",letterSpacing:"0.08em"}}>⚡ KEY STORY</span>}
-                          </div>
-                          <span style={{fontSize:10,color:"#aab8c2",flexShrink:0}}>{item.pubDate?new Date(item.pubDate).toLocaleDateString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):""}</span>
-                        </div>
-                        <div style={{fontSize:14,color:item.highlight?"#fff":"#dde1ec",lineHeight:1.65,fontWeight:item.highlight?500:400,fontFamily:"'DM Mono',monospace",marginBottom:6}}>{item.title}</div>
-                        {item.description&&<div style={{fontSize:12,color:"#aab8c2",lineHeight:1.6}}>{item.description}</div>}
-                        <div style={{fontSize:10,color:"#ff9632",marginTop:8,opacity:0.8}}>Read full article →</div>
-                      </div>
-                    ));
-                })()}
-              </div>
-            )}
-
-            {feedMode==="newsletter"&&(
-              <div style={{animation:"fu 0.2s ease"}}>
-                <p style={{fontSize:12,color:"#aab8c2",lineHeight:1.6,marginBottom:20}}>Every Sunday — macro overview, broker target changes and one stock deep dive. Free.</p>
-                {submitted ? (
-                  <div style={{fontSize:13,color:"#00ff88",padding:"10px 0 20px"}}>✓ You're subscribed. Welcome to Orbit Alpha.</div>
-                ) : (
-                  <div style={{display:"flex",gap:8,maxWidth:400,marginBottom:28}}>
-                    <input value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&sub()} placeholder="your@email.com" style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",color:"#fff",padding:"10px 14px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}/>
-                    <button onClick={sub} style={{background:"#ff9632",color:"#04060e",border:"none",padding:"10px 22px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap"}}>Join Free →</button>
-                  </div>
-                )}
-                <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
-                <div style={{fontSize:9,color:"#aab8c2",letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:16}}>All Issues</div>
-                 {issuesData.map((issue,i)=>(
-                  <div key={i} className="hov" onClick={()=>issue.live&&window.open(issue.url,"_blank")} style={{border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:"20px",marginBottom:10,background:"rgba(255,255,255,0.01)",cursor:issue.live?"pointer":"default",opacity:issue.live?1:0.5,position:"relative"}}>
-                    {!issue.live&&<span style={{position:"absolute",top:12,right:12,fontSize:9,color:"#ffcc00",background:"rgba(255,204,0,0.08)",border:"1px solid rgba(255,204,0,0.2)",padding:"2px 8px",borderRadius:3,letterSpacing:"0.1em"}}>COMING SUNDAY</span>}
-                    {i===0&&issue.live&&<span style={{position:"absolute",top:12,right:12,fontSize:9,color:"#00ff88",background:"rgba(0,255,136,0.08)",border:"1px solid rgba(0,255,136,0.2)",padding:"2px 8px",borderRadius:3,letterSpacing:"0.1em"}}>LATEST</span>}
-                    <div style={{fontSize:10,color:"#ff9632",letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:6}}>Issue #{issue.issue} · {issue.date}</div>
-                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:700,color:"#fff",marginBottom:6,lineHeight:1.4}}>{issue.headline}</div>
-                    <div style={{fontSize:11,color:"#aab8c2",lineHeight:1.6,marginBottom:issue.live?10:0}}>{issue.summary}</div>
-                    {issue.live&&<div style={{fontSize:10,color:"#ff9632",opacity:0.7}}>Read issue →</div>}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── THREADS ── */}
-        {page==="threads"&&<ThreadsPage go={go}/>}
-
-        {/* ── ABOUT ── */}
-        {page==="about"&&(
-          <div style={{animation:"fu 0.3s ease",maxWidth:640,margin:"0 auto",padding:"32px 20px 60px"}}>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:"#fff",marginBottom:6}}>ABOUT <span style={{color:"#00ff88"}}>ORBIT ALPHA</span></div>
-            <div style={{height:1,background:"rgba(255,255,255,0.06)",margin:"20px 0"}}/>
-            <p style={{fontSize:13,color:"#aab8c2",lineHeight:1.8,marginBottom:16}}>Orbit Alpha is a free dashboard and weekly newsletter built for retail investors who follow space equities. It covers every publicly traded space stock, ETF and private company — with live prices, launch catalysts, broker target changes and weekly deep dives.</p>
-            <p style={{fontSize:13,color:"#aab8c2",lineHeight:1.8,marginBottom:16}}>The newsletter goes out every Sunday morning and covers three things: a macro overview of the week in space stocks, a broker pulse showing all analyst rating and price target changes, and one stock of the week — bull case, bear case, key catalysts, honest view on valuation.</p>
-            <p style={{fontSize:13,color:"#aab8c2",lineHeight:1.8,marginBottom:32}}>Everything is free. No paywall. No signup required to use the dashboard.</p>
-            <div style={{height:1,background:"rgba(255,255,255,0.06)",marginBottom:24}}/>
-            <div style={{fontSize:10,color:"#aab8c2",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:12}}>Get in touch</div>
-            <a href="mailto:OrbitAlphaApp@proton.me" style={{color:"#00ff88",fontSize:13,textDecoration:"none",display:"inline-flex",alignItems:"center",gap:6}}>📬 OrbitAlphaApp@proton.me</a>
-            <div style={{marginTop:24}}>
-              {submitted ? (
-                <div style={{fontSize:13,color:"#00ff88",padding:"10px 0"}}>✓ You're subscribed. Welcome to Orbit Alpha.</div>
-              ) : (
-                <div style={{display:"flex",gap:8,maxWidth:400}}>
-                  <input value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&sub()} placeholder="your@email.com" style={{flex:1,background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",color:"#fff",padding:"10px 14px",borderRadius:4,fontSize:12,fontFamily:"'DM Mono',monospace",outline:"none"}}/>
-                  <button onClick={sub} style={{background:"#00ff88",color:"#04060e",border:"none",padding:"10px 22px",borderRadius:4,fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontFamily:"'DM Mono',monospace",cursor:"pointer",whiteSpace:"nowrap"}}>Subscribe →</button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
+        {page === "home" && <Home go={go} goSubscribe={goSubscribe} news={news} />}
+        {page === "markets" && <Markets prices={prices} launches={launches} tab={route.tab} setTab={(tab) => setRoute({ tab })} goSubscribe={goSubscribe} />}
+        {page === "feed" && <Feed news={news} feedMode={route.feedMode} setFeedMode={(feedMode) => setRoute({ feedMode })} />}
+        {page === "about" && <About />}
       </div>
     </div>
   );
