@@ -57,7 +57,7 @@ export function cleanDescription(desc = "") {
   return (lower.charAt(0).toUpperCase() + lower.slice(1)).slice(0, 220);
 }
 
-export function shapeResults(results, cutoff) {
+export function shapeResults(results, cutoff, today = new Date().toISOString().slice(0, 10)) {
   return results
     .map((r) => ({
       ticker: tickerFor(r["Recipient Name"]),
@@ -70,7 +70,8 @@ export function shapeResults(results, cutoff) {
       awardId: r["Award ID"],
       url: r.generated_internal_id ? `https://www.usaspending.gov/award/${r.generated_internal_id}` : null,
     }))
-    .filter((a) => a.ticker && a.amount > 0 && a.start >= cutoff);
+    // Work must have started (start dates can be years ahead) and skip trivial modifications.
+    .filter((a) => a.ticker && a.amount >= 10_000 && a.start >= cutoff && a.start <= today);
 }
 
 export default async function handler(req, res) {
