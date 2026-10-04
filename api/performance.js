@@ -1,5 +1,5 @@
-// Relative performance: space ETFs, benchmarks, an equal-weight index of the covered stocks,
-// and each covered stock, all rebased to % change from the start of the range.
+// Relative performance: space ETFs, benchmarks and each covered stock,
+// all rebased to % change from the start of the range.
 //   GET /api/performance?range=ytd   (1mo | 3mo | 6mo | ytd | 1y)
 
 export const config = { maxDuration: 30 };
@@ -50,21 +50,6 @@ export function rebase(dates, byDate) {
   });
 }
 
-// Equal-weight index: each day, the average daily return of the stocks that traded on both days.
-// Stocks join from their first trading day in the range (e.g. a recent IPO).
-export function equalWeightIndex(dates, stockMaps) {
-  let level = 1;
-  return dates.map((d, i) => {
-    if (i === 0) return 0;
-    const prev = dates[i - 1];
-    const rets = stockMaps
-      .filter((m) => m[d] != null && m[prev] != null)
-      .map((m) => m[d] / m[prev] - 1);
-    if (rets.length) level *= 1 + rets.reduce((a, b) => a + b, 0) / rets.length;
-    return round((level - 1) * 100);
-  });
-}
-
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   const range = RANGES.has(req.query.range) ? req.query.range : "ytd";
@@ -86,7 +71,6 @@ export default async function handler(req, res) {
   if (dates.length < 2) return res.status(502).json({ error: "No market data", dates: [], series: [] });
 
   const series = [
-    { id: "INDEX", label: "Orbit Alpha Space Index", kind: "index", values: equalWeightIndex(dates, ROSTER.map((t) => maps[t] || {})) },
     ...[...BENCHMARKS, ...ETFS].map((s) => ({ ...s, values: rebase(dates, maps[s.id] || {}) })),
     ...ROSTER.map((t) => ({ id: t, label: t, kind: "stock", values: rebase(dates, maps[t] || {}) })),
   ].filter((s) => s.values.some((v) => v != null));

@@ -27,8 +27,8 @@ const routes = [
   {
     path: "/markets/performance",
     title: "Space Stocks vs the S&P 500: ETF and Stock Performance | Orbit Alpha",
-    description: "Compare space ETFs (UFO, ARKX, ROKT, MARS, NASA), every space stock we cover and an equal-weight space index against the S&P 500 and Nasdaq 100.",
-    body: "<h1>Space stocks vs the S&amp;P 500</h1><p>Compare space ETFs, individual space stocks and the equal-weight Orbit Alpha Space Index against the S&amp;P 500 and Nasdaq 100.</p>",
+    description: "Compare space ETFs (UFO, ARKX, ROKT, MARS, NASA) and every space stock we cover against the S&P 500 and Nasdaq 100.",
+    body: "<h1>Space stocks vs the S&amp;P 500</h1><p>Compare space ETFs and individual space stocks against the S&amp;P 500 and Nasdaq 100.</p>",
   },
   ...[["", "Dashboard"], ["launches", "Launches"], ["earnings", "Earnings"], ["contracts", "Contracts"], ["filings", "Filings"]].map(([tab, label]) => ({
     path: tab ? `/markets/${tab}` : "/markets",

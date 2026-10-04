@@ -419,8 +419,9 @@ const C = {
   green: "#00ff88", red: "#ff4466", muted: "#aab8c2", blue: "#7eb8ff",
   orange: "#ff9632", yellow: "#ffcc00", bg: "#04060e", text: "#dde1ec", light: "#ccd0d8",
 };
-const MONO = "'DM Mono',monospace";
-const SYNE = "'Syne',sans-serif";
+// One clean, readable typeface everywhere (Inter). Numbers use tabular figures so prices line up.
+const MONO = "'Inter',system-ui,-apple-system,'Segoe UI',sans-serif";
+const SYNE = MONO;
 
 const pct = (v, d = 1) => `${v >= 0 ? "+" : ""}${v.toFixed(d)}%`;
 const signColor = (v) => (v >= 0 ? C.green : C.red);
@@ -445,7 +446,8 @@ const inputStyle = {
 
 const GlobalStyles = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    body{font-family:${MONO};font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
     @keyframes flashUp{0%{background:rgba(0,255,136,0.3)}100%{background:transparent}}
     @keyframes flashDown{0%{background:rgba(255,68,102,0.3)}100%{background:transparent}}
     @keyframes shimmer{0%{opacity:0.4}50%{opacity:0.8}100%{opacity:0.4}}
@@ -466,6 +468,7 @@ const GlobalStyles = () => (
     .oa-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
     a.oa-link:hover{text-decoration:underline}
     .oa-price{text-align:right}
+    .oa-tile{transition:filter 0.15s}.oa-tile:hover{filter:brightness(1.25);z-index:1}
     .oa-tab:hover{border-color:rgba(0,255,136,0.35)!important;background:rgba(0,255,136,0.05)!important}
     .oa-tabs::-webkit-scrollbar{height:0}
     @media(max-width:600px){.oa-tabs{flex-wrap:wrap;overflow-x:visible!important}.oa-tab{flex:1 1 calc(50% - 4px)!important;min-width:0!important;padding:8px 12px!important}.oa-price{text-align:left}.desk-only{display:none!important}.mob-only{display:block!important}}
@@ -535,7 +538,7 @@ function TickerStrip({ stocks }) {
     <div style={{ overflow: "hidden", background: "rgba(0,0,0,0.5)", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "6px 0" }}>
       <div style={{ display: "flex", gap: 32, animation: "ts 50s linear infinite", width: "max-content" }}>
         {[...items, ...items].map((s, i) => (
-          <span key={i} style={{ fontSize: 11, fontFamily: "monospace", whiteSpace: "nowrap", color: signColor(s.changePct) }}>
+          <span key={i} style={{ fontSize: 11, whiteSpace: "nowrap", color: signColor(s.changePct) }}>
             <span style={{ color: C.muted, marginRight: 4 }}>{s.ticker}</span>${s.price.toFixed(2)}
             <span style={{ marginLeft: 3 }}>{s.changePct >= 0 ? "▲" : "▼"}{Math.abs(s.changePct).toFixed(1)}%</span>
           </span>
@@ -971,8 +974,7 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
 
   return (
     <div>
-      <TopGainers stocks={stocks} isLive={isLive} onPick={open} />
-      {isLive && <TodaySummary stocks={stocks} onPick={open} />}
+      <Heatmap stocks={stocks} isLive={isLive} />
 
       {/* Filters */}
       <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap", alignItems: "center" }}>
@@ -1057,48 +1059,96 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
   );
 }
 
-function TopGainers({ stocks, isLive, onPick }) {
-  const gainers = [...stocks].sort((a, b) => b.changePct - a.changePct).slice(0, 5);
-  return (
-    <div style={{ marginBottom: 16 }}>
-      <div style={sectionLabel}>Top Gainers Today · {isLive ? "Live" : "Demo"}</div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 5 }}>
-        {gainers.map((s, i) => (
-          <div key={s.ticker} onClick={() => onPick(s.ticker)} className="hov" style={{ background: `rgba(0,255,136,${0.04 + ((5 - i) / 5) * 0.12})`, border: "1px solid rgba(0,255,136,0.12)", borderRadius: 5, padding: "10px 8px", textAlign: "center" }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: C.green, marginBottom: 3 }}>{s.ticker}</div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: C.green }}>{pct(s.changePct)}</div>
-            <div style={{ fontSize: 10, color: C.muted, marginTop: 2 }}>${s.price.toFixed(2)}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+/* ── Heatmap: tile size = size of the move, green up, red down ───────────────── */
+// Squarified treemap layout: returns rectangles {x, y, w, h} for items sorted by value (desc).
+function treemap(items, W, H) {
+  const total = items.reduce((a, d) => a + d.value, 0) || 1;
+  const nodes = items.map((d) => ({ ...d, area: (d.value / total) * W * H }));
+  const out = [];
+  let rect = { x: 0, y: 0, w: W, h: H };
+  let row = [];
+  const worst = (r, side) => {
+    const sum = r.reduce((a, n) => a + n.area, 0);
+    const max = Math.max(...r.map((n) => n.area)), min = Math.min(...r.map((n) => n.area));
+    return Math.max((side * side * max) / (sum * sum), (sum * sum) / (side * side * min));
+  };
+  const place = (r) => {
+    const sum = r.reduce((a, n) => a + n.area, 0);
+    if (rect.w >= rect.h) {
+      const cw = sum / rect.h; let cy = rect.y;
+      r.forEach((n) => { const nh = n.area / cw; out.push({ ...n, x: rect.x, y: cy, w: cw, h: nh }); cy += nh; });
+      rect = { x: rect.x + cw, y: rect.y, w: rect.w - cw, h: rect.h };
+    } else {
+      const rh = sum / rect.w; let cx = rect.x;
+      r.forEach((n) => { const nw = n.area / rh; out.push({ ...n, x: cx, y: rect.y, w: nw, h: rh }); cx += nw; });
+      rect = { x: rect.x, y: rect.y + rh, w: rect.w, h: rect.h - rh };
+    }
+  };
+  nodes.forEach((n) => {
+    const side = Math.min(rect.w, rect.h);
+    if (!row.length || worst([...row, n], side) <= worst(row, side)) row.push(n);
+    else { place(row); row = [n]; }
+  });
+  if (row.length) place(row);
+  return out;
 }
 
-function TodaySummary({ stocks, onPick }) {
-  const eq = stocks.filter((s) => s.type === "stock");
-  const byChange = [...eq].sort((a, b) => b.changePct - a.changePct);
-  const byVolume = eq.filter((s) => s.volume > 0).sort((a, b) => b.volume - a.volume);
-  const vol = (v) => (v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${(v / 1e3).toFixed(0)}K` : `${v}`);
-  const cards = [
-    { label: "Top Gainer", s: byChange[0], c: C.green, val: (s) => pct(s.changePct) },
-    { label: "Top Loser", s: byChange[byChange.length - 1], c: C.red, val: (s) => pct(s.changePct) },
-    { label: "Highest Volume", s: byVolume[0], c: C.blue, val: (s) => vol(s.volume) },
-  ];
+function useWidth() {
+  const ref = useRef(null);
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    if (!ref.current) return;
+    const ro = new ResizeObserver(([e]) => setWidth(e.contentRect.width));
+    ro.observe(ref.current);
+    return () => ro.disconnect();
+  }, []);
+  return [ref, width];
+}
+
+const weekChange = (s) => (s.spark?.length > 1 ? (s.spark[s.spark.length - 1] / s.spark[0] - 1) * 100 : null);
+
+function Heatmap({ stocks, isLive }) {
+  const [period, setPeriod] = useState("day");
+  const [ref, width] = useWidth();
+  const height = width < 600 ? Math.max(460, width * 1.35) : Math.max(380, width * 0.42);
+  const items = stocks
+    .filter((s) => PROFILES[s.ticker])
+    .map((s) => ({ s, chg: period === "day" ? s.changePct : weekChange(s) }))
+    .filter((d) => typeof d.chg === "number" && isFinite(d.chg))
+    .map((d) => ({ ...d, value: Math.abs(d.chg) + 0.35 })) // small floor so flat stocks still get a tile
+    .sort((a, b) => b.value - a.value);
+  const tiles = width ? treemap(items, width, height) : [];
+  const ups = items.filter((d) => d.chg > 0).length;
+
   return (
-    <div style={{ marginBottom: 14 }}>
-      <div style={sectionLabel}>Today · 1D</div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8 }}>
-        {cards.map(({ label, s, c, val }) => s && (
-          <div key={label} onClick={() => onPick(s.ticker)} className="hov" style={{ border: `1px solid ${c}22`, borderRadius: 6, padding: "10px 14px", background: `${c}08` }}>
-            <div style={{ ...sectionLabel, letterSpacing: "0.1em", marginBottom: 4 }}>{label}</div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: 13, fontWeight: 700, color: c }}>{s.ticker}</span>
-              <span style={{ fontSize: 11, fontWeight: 600, color: c }}>{val(s)}</span>
-            </div>
-            <div style={{ fontSize: 10, color: C.muted, marginTop: 2 }}>${s.price.toFixed(2)}</div>
-          </div>
-        ))}
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
+        <div>
+          <div style={{ ...sectionLabel, marginBottom: 2 }}>Space stocks heatmap {isLive ? "· Live" : ""}</div>
+          {isLive && <div style={{ fontSize: 11, color: C.muted }}>{ups} up, {items.length - ups} down. Bigger tile, bigger move. Tap a tile for the full page.</div>}
+        </div>
+        <div style={{ display: "flex", gap: 4 }}>
+          {[["day", "Today"], ["week", "5 days"]].map(([id, l]) => (
+            <button key={id} onClick={() => setPeriod(id)} className="stg" style={{ fontFamily: MONO, background: period === id ? "rgba(0,255,136,0.08)" : "transparent", color: period === id ? C.green : C.muted, borderColor: period === id ? "rgba(0,255,136,0.3)" : "rgba(255,255,255,0.12)" }}>{l}</button>
+          ))}
+        </div>
+      </div>
+      <div ref={ref} style={{ position: "relative", width: "100%", height, borderRadius: 8, overflow: "hidden", background: "rgba(255,255,255,0.02)" }}>
+        {!isLive && <Skeleton w="100%" h={height} />}
+        {isLive && tiles.map(({ s, chg, x, y, w, h }) => {
+          const t = Math.min(1, Math.abs(chg) / 8); // colour intensity peaks at an 8% move
+          const bg = chg >= 0 ? `rgba(0,${150 + Math.round(t * 70)},${90 + Math.round(t * 20)},${0.28 + t * 0.62})` : `rgba(${200 + Math.round(t * 40)},50,70,${0.28 + t * 0.62})`;
+          const big = Math.min(w, h);
+          const fs = Math.max(10, Math.min(30, big / 4));
+          return (
+            <Link key={s.ticker} to={`/stocks/${s.ticker.toLowerCase()}`} title={`${PROFILES[s.ticker].name}: ${pct(chg, 2)}`} className="oa-tile"
+              style={{ position: "absolute", left: x, top: y, width: w, height: h, background: bg, border: `1px solid ${C.bg}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", textAlign: "center", padding: 2 }}>
+              {big > 26 && <span style={{ fontSize: fs, fontWeight: 800, color: "#fff", lineHeight: 1.1 }}>{s.ticker}</span>}
+              {big > 40 && <span style={{ fontSize: Math.max(9, fs * 0.6), fontWeight: 600, color: "rgba(255,255,255,0.9)" }}>{pct(chg)}</span>}
+              {big > 110 && <span style={{ fontSize: Math.max(9, fs * 0.38), color: "rgba(255,255,255,0.7)", marginTop: 2 }}>{PROFILES[s.ticker].name}</span>}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
@@ -1231,9 +1281,9 @@ function FilingsTab() {
    PERFORMANCE CHART  (space ETFs and covered stocks vs the S&P 500)
    ════════════════════════════════════════════════════════════════════════════ */
 const PERF_RANGES = [["1mo", "1M"], ["3mo", "3M"], ["6mo", "6M"], ["ytd", "YTD"], ["1y", "1Y"]];
-const PERF_COLORS = { INDEX: C.green, SPY: "#e8ecf4", QQQ: "#8fa3c0", UFO: C.orange, ARKX: "#b18cff", ROKT: C.yellow, MARS: C.blue, NASA: "#ff7eb6" };
+const PERF_COLORS = { SPY: "#e8ecf4", QQQ: "#8fa3c0", UFO: C.orange, ARKX: "#b18cff", ROKT: C.yellow, MARS: C.blue, NASA: "#ff7eb6" };
 const STOCK_COLORS = ["#4de1ff", "#ff6b6b", "#c3f73a", "#ffa94d"];
-const PERF_GROUPS = [["index", "Orbit Alpha"], ["benchmark", "Benchmarks"], ["etf", "Space ETFs"]];
+const PERF_GROUPS = [["benchmark", "Benchmarks"], ["etf", "Space ETFs"]];
 
 function niceStep(span) {
   const raw = span / 4, mag = 10 ** Math.floor(Math.log10(raw || 1)), n = raw / mag;
@@ -1242,7 +1292,7 @@ function niceStep(span) {
 
 function PerformanceChart({ full = false }) {
   const [range, setRange] = useState("ytd");
-  const [selected, setSelected] = useState(full ? ["INDEX", "SPY", "UFO", "ARKX"] : ["INDEX", "SPY"]);
+  const [selected, setSelected] = useState(full ? ["SPY", "UFO", "ARKX", "MARS"] : ["SPY", "UFO", "ARKX"]);
   const [hover, setHover] = useState(null);
   const { data, error } = useApi(`/api/performance?range=${range}`);
 
@@ -1266,10 +1316,11 @@ function PerformanceChart({ full = false }) {
   const ticks = []; for (let v = yMin; v <= yMax + 1e-9; v += step) ticks.push(Math.round(v * 100) / 100);
   const label = (s) => (s.kind === "stock" ? `${s.id} · ${PROFILES[s.id]?.name || ""}` : s.label);
 
-  const index = byId.INDEX, spy = byId.SPY;
-  const headline = index && spy && (
+  // Headline: the oldest space ETF (UFO) against the S&P 500.
+  const ufo = byId.UFO, spy = byId.SPY;
+  const headline = ufo && spy && (
     <div style={{ display: "flex", gap: 28, flexWrap: "wrap", marginBottom: 14 }}>
-      {[[index, "Orbit Alpha Space Index"], [spy, "S&P 500"]].map(([s, name]) => (
+      {[[ufo, "Space stocks (UFO ETF)"], [spy, "S&P 500"]].map(([s, name]) => (
         <div key={s.id}>
           <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 4 }}>{name}</div>
           <div style={{ fontFamily: SYNE, fontSize: full ? 26 : 30, fontWeight: 800, color: signColor(lastValue(s)) }}>{pct(lastValue(s))}</div>
@@ -1310,7 +1361,7 @@ function PerformanceChart({ full = false }) {
             }}>
             {ticks.map((t) => <line key={t} x1="0" x2={W} y1={y(t)} y2={y(t)} stroke={t === 0 ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.06)"} strokeWidth="1" vectorEffect="non-scaling-stroke" />)}
             {active.map((s) => (
-              <path key={s.id} d={path(s.values)} fill="none" stroke={colorOf(s.id)} strokeWidth={s.id === "INDEX" ? 2.6 : 1.6} vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+              <path key={s.id} d={path(s.values)} fill="none" stroke={colorOf(s.id)} strokeWidth={s.kind === "benchmark" ? 2.2 : 1.8} vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
             ))}
             {hover !== null && <line x1={x(hover)} x2={x(hover)} y1="0" y2={H} stroke="rgba(255,255,255,0.35)" strokeDasharray="3,3" vectorEffect="non-scaling-stroke" />}
           </svg>
@@ -1335,7 +1386,7 @@ function PerformanceChart({ full = false }) {
       {/* Legend / tick boxes */}
       {data && (
         <div style={{ marginTop: 14 }}>
-          {(full ? PERF_GROUPS : [["index"], ["benchmark"], ["etf"]]).map(([kind, title]) => {
+          {(full ? PERF_GROUPS : [["benchmark"], ["etf"]]).map(([kind, title]) => {
             const items = series.filter((s) => s.kind === kind);
             if (!items.length) return null;
             return (
@@ -1374,7 +1425,7 @@ function PerformanceChart({ full = false }) {
       )}
       {full && data && (
         <SourceNote>
-          The Orbit Alpha Space Index is an equal-weighted average of the {series.filter((s) => s.kind === "stock").length} stocks we cover, rebalanced daily; recent listings join from their first trading day. It is a reference measure, not an investable product. Prices via Yahoo Finance, as of {fmtDay(data.asOf, { day: "numeric", month: "short", year: "numeric" })}. Past performance is not a guide to future returns.
+          Percentage change in price from the first trading day of the period. Stocks listed during the period start from their first trading day. Prices via Yahoo Finance, as of {fmtDay(data.asOf, { day: "numeric", month: "short", year: "numeric" })}. Past performance is not a guide to future returns.
         </SourceNote>
       )}
     </div>
