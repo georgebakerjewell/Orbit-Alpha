@@ -837,7 +837,7 @@ function Home({ news, prices, launches }) {
 
       <footer style={{ padding: "24px 0", borderTop: "1px solid rgba(255,255,255,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
         <span style={{ fontFamily: SYNE, fontSize: 13, fontWeight: 800, color: "#556" }}>ORBIT<span style={{ color: C.green }}>ALPHA</span>.</span>
-        <span style={{ fontSize: 10, color: C.muted }}>Not financial advice · Data: Yahoo Finance, SEC EDGAR, USAspending.gov, Nasdaq, rocketlaunch.live</span>
+        <span style={{ fontSize: 10, color: C.muted }}>Not financial advice · Data: Yahoo Finance, SEC EDGAR, USAspending.gov, Nasdaq, The Space Devs</span>
         <div style={{ display: "flex", gap: 16, fontSize: 10, color: C.muted }}>
           <Link to="/news" className="oa-link">News</Link>
           <Link to="/newsletter" className="oa-link">Newsletter</Link>
@@ -1199,7 +1199,7 @@ function LaunchesTab({ launches }) {
       {launches === null && <ListSkeleton />}
       {shown?.length === 0 && <Empty>No launch data available right now.</Empty>}
       {shown?.map((l, i) => <LaunchCard key={i} l={l} />)}
-      <SourceNote>Source: rocketlaunch.live. Tickers show the launch provider or payload owner where we can identify them.</SourceNote>
+      <SourceNote>Source: Launch Library 2 (The Space Devs). Tickers show the launch provider or payload owner where we can identify them. Dates marked NET are "no earlier than".</SourceNote>
     </div>
   );
 }
