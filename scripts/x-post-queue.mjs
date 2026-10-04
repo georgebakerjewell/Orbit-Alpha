@@ -1,6 +1,6 @@
 // Posts every tweet waiting in x-queue/pending/*.txt to X, then moves it to x-queue/posted/.
-// File format: the tweet text. Optionally a line "--- reply ---" followed by a reply
-// (e.g. a link), posted as a reply to the main tweet. DRY_RUN=1 prints without posting.
+// File format: the tweet text. Each line "--- reply ---" starts another tweet, posted as a
+// threaded reply to the previous one (so a file can hold a short thread). DRY_RUN=1 prints without posting.
 import { readdirSync, readFileSync, renameSync, appendFileSync } from "node:fs";
 import { createHmac, randomBytes } from "node:crypto";
 
@@ -34,18 +34,18 @@ async function tweet(body) {
 
 let failed = false;
 for (const f of files) {
-  const [text, reply] = readFileSync(`${DIR}/${f}`, "utf8").split(/^--- reply ---$/m).map((s) => s.trim());
-  if (!text) { console.log(`${f}: empty, skipped`); continue; }
-  if (text.includes("—")) { console.error(`${f}: contains an em dash, not posted`); failed = true; continue; }
-  console.log(`--- ${f} ---\n${text}${reply ? `\n[reply] ${reply}` : ""}`);
+  const parts = readFileSync(`${DIR}/${f}`, "utf8").split(/^--- reply ---$/m).map((s) => s.trim()).filter(Boolean);
+  if (!parts.length) { console.log(`${f}: empty, skipped`); continue; }
+  const bad = parts.find((p) => p.includes("\u2014") || p.length > 280);
+  if (bad) { console.error(`${f}: a tweet has an em dash or is over 280 characters, not posted`); failed = true; continue; }
+  console.log(`--- ${f} ---\n${parts.join("\n[reply]\n")}`);
   if (DRY) continue;
   try {
-    const id = await tweet({ text });
-    console.log(`Posted: https://x.com/i/status/${id}`);
-    let log = `\n\n# posted ${new Date().toISOString()} https://x.com/i/status/${id}`;
-    if (reply) {
-      const rid = await tweet({ text: reply, reply: { in_reply_to_tweet_id: id } });
-      log += `\n# reply https://x.com/i/status/${rid}`;
+    let log = `\n\n# posted ${new Date().toISOString()}`, prev;
+    for (const text of parts) {
+      prev = await tweet(prev ? { text, reply: { in_reply_to_tweet_id: prev } } : { text });
+      log += `\n# https://x.com/i/status/${prev}`;
+      console.log(`Posted: https://x.com/i/status/${prev}`);
     }
     appendFileSync(`${DIR}/${f}`, log);
     renameSync(`${DIR}/${f}`, `x-queue/posted/${f}`);
