@@ -1,7 +1,7 @@
 // Posts every tweet waiting in x-queue/pending/*.txt to X, then moves it to x-queue/posted/.
 // File format: the tweet text. Each line "--- reply ---" starts another tweet, posted as a
 // threaded reply to the previous one (so a file can hold a short thread). DRY_RUN=1 prints without posting.
-import { readdirSync, readFileSync, renameSync, appendFileSync } from "node:fs";
+import { readdirSync, readFileSync, renameSync, appendFileSync, mkdirSync } from "node:fs";
 import { createHmac, randomBytes } from "node:crypto";
 
 const env = process.env;
@@ -10,7 +10,7 @@ const DIR = "x-queue/pending";
 const files = readdirSync(DIR).filter((f) => f.endsWith(".txt")).sort();
 if (!files.length) { console.log("Queue empty."); process.exit(0); }
 if (!DRY && !(env.X_API_KEY && env.X_API_SECRET && env.X_ACCESS_TOKEN && env.X_ACCESS_SECRET)) {
-  console.error("Missing X API secrets."); process.exit(1);
+  console.log("::error::Missing X API secrets (X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN, X_ACCESS_SECRET) in repo Actions secrets."); process.exit(1);
 }
 
 const enc = (s) => encodeURIComponent(s).replace(/[!'()*]/g, (c) => "%" + c.charCodeAt(0).toString(16).toUpperCase());
@@ -37,11 +37,11 @@ for (const f of files) {
   const parts = readFileSync(`${DIR}/${f}`, "utf8").split(/^--- reply ---$/m).map((s) => s.trim()).filter(Boolean);
   if (!parts.length) { console.log(`${f}: empty, skipped`); continue; }
   const bad = parts.find((p) => p.includes("\u2014") || p.length > 280);
-  if (bad) { console.error(`${f}: a tweet has an em dash or is over 280 characters, not posted`); failed = true; continue; }
+  if (bad) { console.log(`::error::${f}: a tweet has an em dash or is over 280 characters, not posted`); failed = true; continue; }
   console.log(`--- ${f} ---\n${parts.join("\n[reply]\n")}`);
   if (DRY) continue;
   try {
-    let log = `\n\n# posted ${new Date().toISOString()}`, prev;
+    var log = `\n\n# posted ${new Date().toISOString()}`, prev = null;
     for (const text of parts) {
       prev = await tweet(prev ? { text, reply: { in_reply_to_tweet_id: prev } } : { text });
       log += `\n# https://x.com/i/status/${prev}`;
@@ -49,6 +49,10 @@ for (const f of files) {
     }
     appendFileSync(`${DIR}/${f}`, log);
     renameSync(`${DIR}/${f}`, `x-queue/posted/${f}`);
-  } catch (e) { console.error(`${f}: ${e.message}`); failed = true; }
+  } catch (e) {
+    console.log(`::error::${f}: ${e.message}`); failed = true;
+    // If part of the thread went out, park the file so it is never re-posted.
+    if (prev) { appendFileSync(`${DIR}/${f}`, `${log}\n# FAILED: ${e.message}`); mkdirSync("x-queue/failed", { recursive: true }); renameSync(`${DIR}/${f}`, `x-queue/failed/${f}`); }
+  }
 }
 if (failed) process.exit(1);
