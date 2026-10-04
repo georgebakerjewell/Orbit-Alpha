@@ -239,7 +239,7 @@ function useNews() {
   useEffect(() => {
     const load = async () => {
       const [rss, yahoo] = await Promise.allSettled([
-        fetch("/api/news?limit=50").then((r) => r.json()),
+        fetch("/api/news?limit=150").then((r) => r.json()),
         fetch(`/api/yahoonews?t=${Date.now()}`).then((r) => r.json()),
       ]);
       const list = (r) => (r.status === "fulfilled" && Array.isArray(r.value) ? r.value : []);
