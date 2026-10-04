@@ -1,12 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
 import issues from "./issues.json";
+import PROFILES from "./stocks.json"; // roster company profiles (also used by scripts/prerender.mjs)
 
 /* ════════════════════════════════════════════════════════════════════════════
    DATA (edit tickers, earnings, news keywords here)
    ════════════════════════════════════════════════════════════════════════════ */
 // Static config and fallback data. Live quotes from /api/quote replace STOCKS values once loaded.
 
-const SUBSCRIBER_COUNT = 300;
+const SUBSCRIBER_COUNT = 400;
+const SITE_URL = "https://www.orbitalpha.cloud";
 const SUBSCRIBE_API = "https://www.orbitalpha.cloud/api/subscribe";
 
 const s = (ticker, name, price, changePct, mktCap, sector, type = "stock") =>
@@ -55,19 +57,25 @@ const PRIORITY_TICKERS = ["SPCX", "RKLB", "ASTS", "LUNR", "PL", "HAWK", "BKSY", 
 
 const SECTORS = ["All", "Launch", "Comms", "Earth Obs", "Hardware", "Lunar", "Tourism", "Transport", "Defence", "Energy", "ETF", "Private Access"];
 
-const EARNINGS = [
-  { ticker: "RKLB", name: "Rocket Lab", date: "May 8, 2026", time: "After Market Close", watch: "Neutron development · Electron launch cadence · Space Systems revenue" },
-  { ticker: "ASTS", name: "AST SpaceMobile", date: "May 11, 2026", time: "Before Market Open", watch: "BlueBird 7 impact on guidance · Block 2 launch timeline · Cash runway" },
-  { ticker: "OKLO", name: "Oklo", date: "May 13, 2026", time: "After Market Close", watch: "NRC licensing progress · Power purchase agreement pipeline" },
-  { ticker: "BKSY", name: "BlackSky Technology", date: "May 14, 2026", time: "Before Market Open", watch: "Defence contract pipeline · Imagery analytics revenue" },
-  { ticker: "SPIR", name: "Spire Global", date: "May 15, 2026", time: "After Market Close", watch: "Government data contract wins · GNSS-R revenue" },
-  { ticker: "LUNR", name: "Intuitive Machines", date: "May 19, 2026", time: "After Market Close", watch: "$900M to $1B 2026 guidance confirmation · IM-3 mission update" },
-  { ticker: "SPCE", name: "Virgin Galactic", date: "May 20, 2026", time: "After Market Close", watch: "Commercial service launch date · Cash burn rate" },
-  { ticker: "RDW", name: "Redwire", date: "May 22, 2026", time: "Before Market Open", watch: "ISS contract extensions · UK expansion progress" },
-  { ticker: "PL", name: "Planet Labs", date: "Jun 26, 2026", time: "After Market Close", watch: "Free cash flow guidance · Government contract renewals · Pelican progress" },
+// Tags launches with the roster tickers involved (launch provider or payload owner).
+const LAUNCH_TAGS = [
+  [/rocket lab|electron|neutron/i, "RKLB"],
+  [/firefly|\balpha\b|blue ghost/i, "FLY"],
+  [/spacex|falcon|starship|starlink|dragon/i, "SPCX"],
+  [/intuitive machines|\bIM-\d/i, "LUNR"],
+  [/bluebird|ast spacemobile/i, "ASTS"],
+  [/blacksky|gen-3/i, "BKSY"],
+  [/planet labs|pelican|superdove|\bflock\b/i, "PL"],
+  [/spire|lemur/i, "SPIR"],
+  [/hawkeye/i, "HAWK"],
+  [/satellogic|newsat/i, "SATL"],
+  [/telesat|lightspeed/i, "TSAT"],
+  [/globalstar/i, "GSAT"],
+  [/viasat|inmarsat/i, "VSAT"],
+  [/sidus|lizziesat/i, "SIDU"],
+  [/momentus|vigoride/i, "MNTS"],
+  [/starlab/i, "VOYG"],
 ];
-
-const LAUNCH_IMPACT = { RKLB: "+4.2% avg", ASTS: "+12.4% avg", LUNR: "+8.1% avg" };
 
 // News filter chips (in display order). Matched as whole words against title + description.
 const COMPANY_KEYWORDS = {
@@ -113,29 +121,117 @@ const COMPANY_KEYWORDS = {
 /* ════════════════════════════════════════════════════════════════════════════
    HOOKS (data fetching, routing, storage)
    ════════════════════════════════════════════════════════════════════════════ */
-/* ── Routing: #page/tab/feedMode ──────────────────────────────────────────────
-   Keep this format: newsletter links point at #feed/news/newsletter. */
-function readHash() {
-  const [page, tab, feedMode] = window.location.hash.replace("#", "").split("/");
-  return { page: page || "home", tab: tab || "stocks", feedMode: feedMode || "news" };
+/* ── Routing: real URLs ───────────────────────────────────────────────────────
+   /                      home
+   /markets[/launches|earnings|contracts|filings]
+   /stocks/rklb           stock page (roster tickers in stocks.json)
+   /feed, /newsletter, /about
+   Old #hash links (e.g. #feed/news/newsletter in Reddit posts) are redirected. */
+const MARKET_TABS = ["stocks", "launches", "earnings", "contracts", "filings"];
+
+function parsePath(pathname) {
+  const [first, second] = pathname.toLowerCase().split("/").filter(Boolean);
+  if (!first) return { page: "home" };
+  if (first === "markets") return { page: "markets", tab: MARKET_TABS.includes(second) ? second : "stocks" };
+  if (first === "stocks" && second) return { page: "stock", ticker: second.toUpperCase() };
+  if (["feed", "newsletter", "about"].includes(first)) return { page: first };
+  return { page: "notfound" };
 }
 
-function writeHash({ page, tab, feedMode }) {
-  const parts = [page];
-  if (page === "markets") parts.push(tab);
-  if (page === "feed") parts.push(tab, feedMode);
-  window.location.hash = parts.join("/");
+function legacyHashPath(hash) {
+  const [page, tab, mode] = hash.replace("#", "").split("/");
+  if (page === "feed") return mode === "newsletter" ? "/newsletter" : "/feed";
+  if (page === "markets") return tab && tab !== "stocks" ? `/markets/${tab}` : "/markets";
+  if (page === "about") return "/about";
+  return "/";
 }
 
-function useHashRoute() {
-  const [route, setRoute] = useState(readHash);
-  useEffect(() => { writeHash(route); }, [route]);
+function useRouter() {
+  const [path, setPath] = useState(() => {
+    if (window.location.hash.length > 1) {
+      const to = legacyHashPath(window.location.hash);
+      window.history.replaceState(null, "", to);
+      return to;
+    }
+    return window.location.pathname;
+  });
   useEffect(() => {
-    const onChange = () => setRoute(readHash());
-    window.addEventListener("hashchange", onChange);
-    return () => window.removeEventListener("hashchange", onChange);
+    const onPop = () => setPath(window.location.pathname);
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
   }, []);
-  return [route, (patch) => setRoute((r) => ({ ...r, ...patch }))];
+  const navigate = (to) => {
+    if (to !== window.location.pathname) window.history.pushState(null, "", to);
+    setPath(to);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  return [parsePath(path), navigate];
+}
+
+const NavContext = createContext(() => {});
+
+// Real <a href> links (crawlable, open-in-new-tab works) with in-app navigation on normal clicks.
+function Link({ to, children, style, ...rest }) {
+  const navigate = useContext(NavContext);
+  const onClick = (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    e.preventDefault();
+    navigate(to);
+  };
+  return <a href={to} onClick={onClick} style={{ color: "inherit", textDecoration: "none", ...style }} {...rest}>{children}</a>;
+}
+
+// Page titles and descriptions (scripts/prerender.mjs writes the same values into static HTML for search engines).
+function routeMeta(route) {
+  const p = PROFILES[route.ticker];
+  if (route.page === "stock" && p) return {
+    title: `${route.ticker} Stock: ${p.name} News, Filings and Contracts | Orbit Alpha`,
+    description: `${p.name} (${route.ticker}) live price, SEC filings, insider trades, government contracts, earnings date and launches. ${p.about}`,
+  };
+  const tab = route.tab && route.tab !== "stocks" ? route.tab : null;
+  return {
+    home: { title: "Orbit Alpha: Space Stocks Newsletter and Live Dashboard", description: "Free weekly newsletter and live dashboard covering every space stock: prices, launches, earnings, SEC filings and government contracts." },
+    markets: { title: `Space Stocks ${tab ? tab[0].toUpperCase() + tab.slice(1) : "Dashboard"} | Orbit Alpha`, description: "Live prices, launches, earnings dates, SEC filings and government contract awards for publicly traded space companies." },
+    feed: { title: "Space Stock News | Orbit Alpha", description: "Live news for space stocks from 30+ sources, filterable by company." },
+    newsletter: { title: "The Orbit Alpha Newsletter | Free Weekly Space Stocks Briefing", description: "Every Sunday: the week in space stocks, analyst target changes and one stock deep dive. Free." },
+    about: { title: "About | Orbit Alpha", description: "What Orbit Alpha is and how it is made." },
+  }[route.page] || { title: "Page not found | Orbit Alpha", description: "" };
+}
+
+function useDocumentMeta(route, path) {
+  useEffect(() => {
+    const { title, description } = routeMeta(route);
+    document.title = title;
+    const set = (selector, attr, value) => {
+      let el = document.head.querySelector(selector);
+      if (!el) {
+        el = document.createElement(selector.startsWith("link") ? "link" : "meta");
+        if (selector.startsWith("link")) el.rel = "canonical"; else el.name = "description";
+        document.head.appendChild(el);
+      }
+      el.setAttribute(attr, value);
+    };
+    set('meta[name="description"]', "content", description);
+    set('link[rel="canonical"]', "href", SITE_URL + (path === "/" ? "/" : path));
+  }, [path]);
+}
+
+/* ── Small JSON fetch hook with an in-memory cache (shared across pages) ───── */
+const apiCache = new Map();
+function useApi(url) {
+  const [state, setState] = useState(() => (apiCache.has(url) ? { data: apiCache.get(url), error: false } : { data: null, error: false }));
+  useEffect(() => {
+    if (!url) return;
+    if (apiCache.has(url)) { setState({ data: apiCache.get(url), error: false }); return; }
+    let alive = true;
+    setState({ data: null, error: false });
+    fetch(url)
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((d) => { apiCache.set(url, d); if (alive) setState({ data: d, error: false }); })
+      .catch(() => alive && setState({ data: null, error: true }));
+    return () => { alive = false; };
+  }, [url]);
+  return state;
 }
 
 /* ── Prices ─────────────────────────────────────────────────────────────────── */
@@ -218,17 +314,14 @@ function usePriceFlash(stocks) {
 /* ── Launches: null = loading, [] = none/unavailable ───────────────────────── */
 function toLaunch(l) {
   const mission = l.missions?.[0]?.name || l.name || "";
-  const text = `${l.name || ""} ${mission}`;
-  const ticker = l.provider?.slug?.includes("rocket-lab") ? "RKLB"
-    : /BlueBird/.test(text) ? "ASTS"
-    : /Intuitive|IM-/.test(text) ? "LUNR"
-    : null;
+  const text = `${l.provider?.name || ""} ${l.vehicle?.name || ""} ${l.name || ""} ${mission}`;
   return {
     date: l.date_str || "TBD",
+    sortDate: l.sort_date || null,
     mission: [l.provider?.name, l.vehicle?.name, mission].filter(Boolean).join(" · "),
+    location: l.pad?.location?.name || "",
     status: l.result === 1 ? "SUCCESS" : l.win_open ? "GO" : "TBD",
-    impact: LAUNCH_IMPACT[ticker] || "Sector avg",
-    ticker,
+    tickers: LAUNCH_TAGS.filter(([re]) => re.test(text)).map(([, t]) => t),
   };
 }
 
@@ -365,7 +458,10 @@ const GlobalStyles = () => (
     .stg{cursor:pointer;font-size:10px;padding:4px 10px;border-radius:3px;border:1px solid rgba(255,255,255,0.08);transition:all 0.15s;white-space:nowrap}
     .stg:hover{border-color:rgba(0,255,136,0.3);color:#00ff88}
     .mob-only{display:none}
-    @media(max-width:600px){.desk-only{display:none!important}.mob-only{display:block!important}}
+    .oa-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+    a.oa-link:hover{text-decoration:underline}
+    .oa-price{text-align:right}
+    @media(max-width:600px){.oa-price{text-align:left}.desk-only{display:none!important}.mob-only{display:block!important}}
   `}</style>
 );
 
@@ -505,13 +601,111 @@ function SubscribePopup() {
   );
 }
 
+/* ── Shared data display pieces (stock pages, Contracts and Filings tabs) ──── */
+const fmtMoney = (v) =>
+  !v ? "-" : v >= 1e9 ? `$${(v / 1e9).toFixed(2)}B` : v >= 1e6 ? `$${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `$${Math.round(v / 1e3)}K` : `$${Math.round(v)}`;
+
+// "2026-11-05" -> "Thu 5 Nov 2026" (dates are calendar dates, so format in UTC to avoid off-by-one)
+const fmtDay = (iso, opts = { weekday: "short", day: "numeric", month: "short", year: "numeric" }) =>
+  iso ? new Date(`${iso.slice(0, 10)}T00:00:00Z`).toLocaleDateString("en-GB", { ...opts, timeZone: "UTC" }) : "";
+
+const cardStyle = { border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "18px 20px", background: "rgba(255,255,255,0.015)" };
+
+function Card({ title, note, children, style }) {
+  return (
+    <section style={{ ...cardStyle, ...style }}>
+      {title && (
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+          <h2 style={{ fontSize: 10, color: C.muted, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 500 }}>{title}</h2>
+          {note && <span style={{ fontSize: 9, color: "#667" }}>{note}</span>}
+        </div>
+      )}
+      {children}
+    </section>
+  );
+}
+
+const Empty = ({ children }) => <div style={{ fontSize: 12, color: C.muted, padding: "8px 0", lineHeight: 1.6 }}>{children}</div>;
+
+function ListSkeleton({ rows = 4 }) {
+  return Array.from({ length: rows }).map((_, i) => (
+    <div key={i} style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+      <Skeleton w="35%" h={10} style={{ marginBottom: 6 }} /><Skeleton w="80%" h={12} />
+    </div>
+  ));
+}
+
+function TickerChip({ ticker }) {
+  const chip = <span style={{ fontSize: 10, fontWeight: 700, color: C.green, background: "rgba(0,255,136,0.07)", padding: "2px 7px", borderRadius: 3 }}>{ticker}</span>;
+  return PROFILES[ticker] ? <Link to={`/stocks/${ticker.toLowerCase()}`}>{chip}</Link> : chip;
+}
+
+const KIND_COLOR = { earnings: C.blue, dilution: C.orange, holder: C.yellow, report: C.light, event: C.light };
+function filingColor(f) {
+  if (f.direction === "buy") return C.green;
+  if (f.direction === "sale") return C.red;
+  return KIND_COLOR[f.kind] || C.light;
+}
+
+function FilingRow({ f, showTicker }) {
+  return (
+    <div style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "flex", gap: 12, alignItems: "flex-start" }}>
+      <div style={{ fontSize: 10, color: C.muted, width: 78, flexShrink: 0, paddingTop: 2 }}>{fmtDay(f.date, { day: "numeric", month: "short", year: "2-digit" })}</div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 3 }}>
+          {showTicker && <TickerChip ticker={f.ticker} />}
+          <span style={{ fontSize: 12, fontWeight: 600, color: filingColor(f) }}>{f.label}</span>
+          <span style={{ fontSize: 9, color: "#667" }}>Form {f.form}</span>
+        </div>
+        {f.owner && (
+          <div style={{ fontSize: 11, color: C.muted }}>
+            {f.owner}{f.role ? ` (${f.role})` : ""}{f.value ? ` · ${fmtMoney(f.value)}` : ""}
+          </div>
+        )}
+      </div>
+      <a href={f.url} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: 10, color: C.blue, flexShrink: 0, textDecoration: "none", paddingTop: 2 }}>SEC →</a>
+    </div>
+  );
+}
+
+function ContractRow({ a, showTicker }) {
+  return (
+    <div style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "flex", gap: 12, alignItems: "flex-start" }}>
+      <div style={{ fontSize: 10, color: C.muted, width: 78, flexShrink: 0, paddingTop: 2 }}>{fmtDay(a.start, { day: "numeric", month: "short", year: "2-digit" })}</div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 3 }}>
+          {showTicker && <TickerChip ticker={a.ticker} />}
+          <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{fmtMoney(a.amount)}</span>
+          <span style={{ fontSize: 11, color: C.light }}>{a.subAgency || a.agency}</span>
+        </div>
+        {a.description && <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.5 }}>{a.description}</div>}
+      </div>
+      {a.url && <a href={a.url} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: 10, color: C.blue, flexShrink: 0, textDecoration: "none", paddingTop: 2 }}>Details →</a>}
+    </div>
+  );
+}
+
+function EarningsRow({ e, showTicker = true }) {
+  return (
+    <div style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+      <div style={{ fontSize: 12, color: "#fff", fontWeight: 600, width: 120 }}>{fmtDay(e.date)}</div>
+      {showTicker && <TickerChip ticker={e.ticker} />}
+      <span style={{ fontSize: 11, color: C.muted, flex: 1 }}>{PROFILES[e.ticker]?.name || e.name}</span>
+      <span style={{ fontSize: 10, color: C.light }}>{e.time}</span>
+      {e.epsEst && <span style={{ fontSize: 10, color: C.muted }}>EPS est. {e.epsEst}</span>}
+    </div>
+  );
+}
+
+const SourceNote = ({ children }) => <div style={{ fontSize: 9, color: "#667", marginTop: 10, lineHeight: 1.6 }}>{children}</div>;
+
 /* ════════════════════════════════════════════════════════════════════════════
    HOME PAGE
    ════════════════════════════════════════════════════════════════════════════ */
 const FEATURES = [
   { e: "📈", t: "Live Prices", d: "Real-time quotes, 7D charts and market cap. Updated every 5 minutes." },
-  { e: "🚀", t: "Launch Calendar", d: "Upcoming launches with historical price impact per mission." },
-  { e: "📅", t: "Earnings Calendar", d: "Upcoming earnings dates with key metrics to watch." },
+  { e: "🚀", t: "Launches and Earnings", d: "Upcoming launches tagged by the stocks involved, plus confirmed earnings dates." },
+  { e: "🧾", t: "Filings and Contracts", d: "Insider trades, share offerings and government contract wins, from official sources." },
 ];
 
 const btn = (primary) => ({
@@ -544,12 +738,12 @@ function Home({ go, goSubscribe, news }) {
         </h1>
         <p style={{ fontSize: 13, color: C.muted, maxWidth: 380, margin: "0 auto 20px", lineHeight: 1.6 }}>Live prices, launches, earnings and news. Weekly newsletter every Sunday.</p>
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-          <button onClick={() => go("markets", "stocks")} style={btn(true)}>View Markets →</button>
+          <button onClick={() => go("/markets")} style={btn(true)}>View Markets →</button>
           <button onClick={goSubscribe} style={btn(false)}>Subscribe Free →</button>
         </div>
       </section>
 
-      <Panel color={C.green} rgb="0,255,136" title="ORBIT" accent="MARKETS" blurb="Live prices, launches, earnings and news, updated automatically." cta="View Markets →" onCta={() => go("markets", "stocks")}>
+      <Panel color={C.green} rgb="0,255,136" title="ORBIT" accent="MARKETS" blurb="Live prices, launches, earnings and news, updated automatically." cta="View Markets →" onCta={() => go("/markets")}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8 }}>
           {FEATURES.map((f) => (
             <div key={f.t} style={{ borderRadius: 6, padding: 12, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
@@ -561,7 +755,19 @@ function Home({ go, goSubscribe, news }) {
         </div>
       </Panel>
 
-      <Panel color={C.orange} rgb="255,150,50" title="ORBIT" accent="FEED" blurb="Live news from 30+ sources · Weekly newsletter every Sunday, all in one place." cta="View Feed →" onCta={() => go("feed")}>
+      <section style={{ margin: "0 auto 16px", maxWidth: 920, borderRadius: 10, border: "1px solid rgba(255,255,255,0.08)", padding: 24 }}>
+        <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 4 }}>STOCKS WE <span style={{ color: C.green }}>COVER</span></div>
+        <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>Each has its own page with live price, chart, SEC filings, government contracts, earnings date and news.</p>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          {Object.entries(PROFILES).map(([t, p]) => (
+            <Link key={t} to={`/stocks/${t.toLowerCase()}`} className="hov" title={p.name} style={{ border: "1px solid rgba(0,255,136,0.18)", borderRadius: 4, padding: "6px 10px", fontSize: 11, color: C.green, fontWeight: 700 }}>
+              {t} <span style={{ color: C.muted, fontWeight: 400 }}>{p.name}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <Panel color={C.orange} rgb="255,150,50" title="ORBIT" accent="FEED" blurb="Live news from 30+ sources · Weekly newsletter every Sunday, all in one place." cta="View Feed →" onCta={() => go("/feed")}>
         {news.loading && Array.from({ length: 3 }).map((_, i) => (
           <div key={i} style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
             <Skeleton w="70%" h={11} style={{ marginBottom: 6 }} /><Skeleton w="25%" h={9} />
@@ -585,8 +791,9 @@ function Home({ go, goSubscribe, news }) {
         <span style={{ fontFamily: SYNE, fontSize: 13, fontWeight: 800, color: "#222" }}>ORBIT<span style={{ color: C.green }}>ALPHA</span>.</span>
         <span style={{ fontSize: 10, color: C.muted }}>Not financial advice · Data via Yahoo Finance & rocketlaunch.live</span>
         <div style={{ display: "flex", gap: 16, fontSize: 10, color: C.muted }}>
-          <span onClick={() => go("feed")} className="hov">Feed</span>
-          <span onClick={() => go("about")} className="hov">About</span>
+          <Link to="/feed" className="oa-link">Feed</Link>
+          <Link to="/newsletter" className="oa-link">Newsletter</Link>
+          <Link to="/about" className="oa-link">About</Link>
           <a href="mailto:OrbitAlphaApp@proton.me" style={{ color: C.muted, textDecoration: "none" }} className="hov">Contact</a>
         </div>
       </footer>
@@ -597,7 +804,7 @@ function Home({ go, goSubscribe, news }) {
 /* ════════════════════════════════════════════════════════════════════════════
    MARKETS PAGE
    ════════════════════════════════════════════════════════════════════════════ */
-const TABS = [["stocks", "Stocks"], ["launches", "Launches"], ["earnings", "Earnings"]];
+const TABS = [["stocks", "Stocks"], ["launches", "Launches"], ["earnings", "Earnings"], ["contracts", "Contracts"], ["filings", "Filings"]];
 const ROW_GRID = "68px 1fr 82px 72px 72px 80px";
 const sectionLabel = { fontSize: 9, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 };
 const border = "1px solid rgba(255,255,255,0.06)";
@@ -633,6 +840,8 @@ function Markets({ prices, launches, tab, setTab, goSubscribe }) {
         {active === "stocks" && <StocksTab prices={prices} goSubscribe={goSubscribe} />}
         {active === "launches" && <LaunchesTab launches={launches} />}
         {active === "earnings" && <EarningsTab />}
+        {active === "contracts" && <ContractsTab />}
+        {active === "filings" && <FilingsTab />}
       </div>
     </div>
   );
@@ -832,6 +1041,11 @@ function StockDetail({ s, goSubscribe }) {
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
         <span style={{ fontSize: 10, color: C.light, background: "rgba(255,255,255,0.04)", padding: "5px 10px", borderRadius: 3 }}>{s.sector}</span>
         {link("View on Yahoo Finance →", C.blue, () => window.open(`https://finance.yahoo.com/quote/${s.ticker}`, "_blank"))}
+        {PROFILES[s.ticker] && (
+          <Link to={`/stocks/${s.ticker.toLowerCase()}`} style={{ border: "1px solid rgba(0,255,136,0.4)", background: "rgba(0,255,136,0.08)", color: C.green, fontSize: 10, padding: "5px 10px", borderRadius: 3, fontWeight: 700 }}>
+            Full {s.ticker} page: filings, contracts, earnings →
+          </Link>
+        )}
         {link(`${s.ticker} in this week's issue →`, C.green, goSubscribe)}
       </div>
     </div>
@@ -844,67 +1058,276 @@ const STATUS_STYLE = {
   HOLD: ["rgba(255,100,0,0.08)", "#ff8844"],
 };
 
-function LaunchesTab({ launches }) {
-  const card = { border, borderRadius: 8, padding: 14, marginBottom: 8, background: "rgba(255,255,255,0.01)" };
+function LaunchCard({ l }) {
+  const [bg, color] = STATUS_STYLE[l.status] || ["rgba(255,255,255,0.04)", "#888"];
   return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
-        <div style={{ ...sectionLabel, marginBottom: 0 }}>Upcoming Launches · Historical Price Impact</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 10, color: C.green }}>
-          <div style={{ width: 5, height: 5, borderRadius: "50%", background: C.green, animation: "bk 1.5s infinite" }} />LIVE · rocketlaunch.live
+    <div style={{ border, borderRadius: 8, padding: 14, marginBottom: 8, background: "rgba(255,255,255,0.01)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
+        <span style={{ fontSize: 12, color: C.green, fontWeight: 500 }}>{l.date}</span>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          {l.tickers.map((t) => <TickerChip key={t} ticker={t} />)}
+          <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 3, background: bg, color }}>{l.status}</span>
         </div>
       </div>
-      {launches === null && Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} style={card}><Skeleton w="30%" h={11} style={{ marginBottom: 8 }} /><Skeleton w="70%" h={12} /></div>
-      ))}
-      {launches?.length === 0 && <div style={{ padding: 28, textAlign: "center", color: C.muted, fontSize: 12 }}>No launch data available right now.</div>}
-      {launches?.map((l, i) => {
-        const [bg, color] = STATUS_STYLE[l.status] || ["rgba(255,255,255,0.04)", "#888"];
-        return (
-          <div key={i} style={card}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-              <span style={{ fontSize: 12, color: C.green, fontWeight: 500 }}>{l.date}</span>
-              <div style={{ display: "flex", gap: 6 }}>
-                {l.ticker && <span style={{ fontSize: 10, color: C.green, background: "rgba(0,255,136,0.06)", padding: "2px 8px", borderRadius: 3 }}>{l.ticker}</span>}
-                <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 3, background: bg, color }}>{l.status}</span>
-              </div>
-            </div>
-            <div style={{ fontSize: 12, color: "#bbb", marginBottom: 4 }}>{l.mission}</div>
-            <div style={{ fontSize: 10, color: C.muted }}>Historical avg: {l.impact}</div>
-          </div>
-        );
-      })}
+      <div style={{ fontSize: 12, color: "#bbb" }}>{l.mission}</div>
+      {l.location && <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>{l.location}</div>}
     </div>
   );
 }
 
-/* ── Earnings ───────────────────────────────────────────────────────────────── */
-function EarningsTab() {
+function LaunchesTab({ launches }) {
+  const [rosterOnly, setRosterOnly] = useState(false);
+  const shown = launches?.filter((l) => !rosterOnly || l.tickers.length);
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
-        <div style={{ ...sectionLabel, marginBottom: 0 }}>Upcoming Earnings · Space Stocks</div>
-        <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.08em" }}>Updated weekly · EST times</div>
+        <div style={{ ...sectionLabel, marginBottom: 0 }}>Upcoming Launches</div>
+        <button onClick={() => setRosterOnly((v) => !v)} className="stg" style={{ background: rosterOnly ? "rgba(0,255,136,0.05)" : "transparent", color: rosterOnly ? C.green : C.muted, borderColor: rosterOnly ? "rgba(0,255,136,0.3)" : "rgba(255,255,255,0.2)", fontFamily: MONO }}>
+          {rosterOnly ? "✓ " : ""}Only launches involving stocks we cover
+        </button>
       </div>
-      {EARNINGS.map((e) => (
-        <div key={e.ticker} style={{ border: "1px solid rgba(255,255,255,0.07)", borderRadius: 6, padding: "14px 16px", marginBottom: 8, background: "rgba(255,255,255,0.01)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 8, marginBottom: 8 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontWeight: 700, color: C.green, fontSize: 13 }}>{e.ticker}</span>
-              <span style={{ fontSize: 11, color: C.muted }}>{e.name}</span>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 11, color: "#fff", fontWeight: 500 }}>{e.date}</div>
-              <div style={{ fontSize: 9, color: C.muted, marginTop: 2 }}>{e.time}</div>
-            </div>
-          </div>
-          <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.6 }}>
-            <span style={{ marginRight: 6, letterSpacing: "0.08em", fontSize: 9, textTransform: "uppercase" }}>Watch:</span>{e.watch}
+      {launches === null && <ListSkeleton />}
+      {shown?.length === 0 && <Empty>No launch data available right now.</Empty>}
+      {shown?.map((l, i) => <LaunchCard key={i} l={l} />)}
+      <SourceNote>Source: rocketlaunch.live. Tickers show the launch provider or payload owner where we can identify them.</SourceNote>
+    </div>
+  );
+}
+
+/* ── Earnings (live, from /api/earnings) ──────────────────────────────────── */
+function EarningsTab() {
+  const { data, error } = useApi("/api/earnings");
+  return (
+    <div>
+      <div style={{ ...sectionLabel, marginBottom: 14 }}>Upcoming Earnings · Stocks We Cover</div>
+      {!data && !error && <ListSkeleton />}
+      {error && <Empty>Earnings calendar is unavailable right now. Please try again later.</Empty>}
+      {data?.length === 0 && <Empty>No covered companies have confirmed earnings dates in the next 10 weeks yet. Dates usually appear 2 to 4 weeks ahead.</Empty>}
+      {data?.map((e) => <EarningsRow key={e.ticker + e.date} e={e} />)}
+      <SourceNote>Source: Nasdaq earnings calendar. Dates are set by the companies and can change. Not financial advice.</SourceNote>
+    </div>
+  );
+}
+
+/* ── Government contracts (from /api/contracts) ─────────────────────────────── */
+function ContractsTab() {
+  const { data, error } = useApi("/api/contracts");
+  return (
+    <div>
+      <div style={{ ...sectionLabel, marginBottom: 4 }}>Government Contract Awards · Last 12 Months</div>
+      <p style={{ fontSize: 11, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>New federal contracts (NASA, Space Force, DoD and others) awarded to the companies we cover, newest first.</p>
+      {!data && !error && <ListSkeleton rows={6} />}
+      {(error || data?.awards?.length === 0) && <Empty>No contract data available right now.</Empty>}
+      {data?.awards?.map((a) => <ContractRow key={a.awardId + a.start} a={a} showTicker />)}
+      <SourceNote>Source: USAspending.gov (official US federal spending data). Amounts are obligated values to date, not total contract ceilings. Subcontracts and non-US awards are not included.</SourceNote>
+    </div>
+  );
+}
+
+/* ── SEC filings (from /api/filings) ───────────────────────────────────────── */
+const FILING_FILTERS = [["all", "All"], ["insider", "Insider trades"], ["dilution", "Offerings"], ["earnings", "Earnings"], ["event", "Company news"]];
+
+function FilingsTab() {
+  const { data, error } = useApi("/api/filings");
+  const [filter, setFilter] = useState("all");
+  const shown = data?.filings?.filter((f) => filter === "all" || f.kind === filter);
+  return (
+    <div>
+      <div style={{ ...sectionLabel, marginBottom: 4 }}>Notable SEC Filings · Last 3 Weeks</div>
+      <p style={{ fontSize: 11, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>Insider buying and selling, share offerings, earnings releases and material company events, straight from SEC EDGAR.</p>
+      <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 12 }}>
+        {FILING_FILTERS.map(([id, label]) => (
+          <span key={id} className="stg" onClick={() => setFilter(id)} style={{ color: filter === id ? C.green : C.muted, borderColor: filter === id ? "rgba(0,255,136,0.3)" : "rgba(255,255,255,0.2)", background: filter === id ? "rgba(0,255,136,0.05)" : "transparent" }}>{label}</span>
+        ))}
+      </div>
+      {!data && !error && <ListSkeleton rows={6} />}
+      {error && <Empty>SEC filings are unavailable right now.</Empty>}
+      {shown?.length === 0 && <Empty>No filings of this type in the last 3 weeks.</Empty>}
+      {shown?.map((f) => <FilingRow key={f.url} f={f} showTicker />)}
+      <SourceNote>Source: SEC EDGAR. Insider buys and sales are open-market trades reported on Form 4; grants and option exercises are labelled separately. Companies not registered with the SEC (e.g. MDA Space) are not included.</SourceNote>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   STOCK PAGE  (/stocks/rklb)
+   ════════════════════════════════════════════════════════════════════════════ */
+const CHART_RANGES = [["1mo", "1M"], ["3mo", "3M"], ["6mo", "6M"], ["1y", "1Y"]];
+
+function PriceChart({ points }) {
+  const [hover, setHover] = useState(null);
+  const W = 600, H = 190;
+  if (points.length < 2) return <Empty>Chart unavailable right now.</Empty>;
+  const closes = points.map((p) => p.c);
+  const min = Math.min(...closes), max = Math.max(...closes), span = max - min || 1;
+  const x = (i) => (i / (points.length - 1)) * W;
+  const y = (v) => H - 6 - ((v - min) / span) * (H - 12);
+  const line = points.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.c).toFixed(1)}`).join(" ");
+  const color = closes[closes.length - 1] >= closes[0] ? C.green : C.red;
+  const hp = hover !== null ? points[hover] : null;
+  return (
+    <div style={{ position: "relative" }}>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" width="100%" height={H} style={{ display: "block", cursor: "crosshair" }}
+        onMouseLeave={() => setHover(null)}
+        onMouseMove={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          setHover(Math.max(0, Math.min(points.length - 1, Math.round(((e.clientX - r.left) / r.width) * (points.length - 1)))));
+        }}>
+        <defs>
+          <linearGradient id="pcfill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.22" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={`${line} L${W},${H} L0,${H} Z`} fill="url(#pcfill)" />
+        <path d={line} fill="none" stroke={color} strokeWidth="1.8" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+        {hp && <line x1={x(hover)} x2={x(hover)} y1="0" y2={H} stroke={color} strokeWidth="1" strokeDasharray="3,3" vectorEffect="non-scaling-stroke" opacity="0.6" />}
+      </svg>
+      {hp && (
+        <div style={{ position: "absolute", top: 4, left: `${(hover / (points.length - 1)) * 100}%`, transform: `translateX(${hover > points.length / 2 ? "-105%" : "5%"})`, background: "#0a0f1e", border: `1px solid ${color}`, borderRadius: 4, padding: "4px 8px", fontSize: 11, color: "#fff", whiteSpace: "nowrap", pointerEvents: "none" }}>
+          ${hp.c.toFixed(2)} <span style={{ color: C.muted, marginLeft: 4 }}>{new Date(hp.t * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}</span>
+        </div>
+      )}
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, color: "#667", marginTop: 4 }}>
+        <span>Low ${min.toFixed(2)}</span><span>High ${max.toFixed(2)}</span>
+      </div>
+    </div>
+  );
+}
+
+function StockPage({ ticker, prices, launches, news, goSubscribe }) {
+  const profile = PROFILES[ticker];
+  const [range, setRange] = useState("6mo");
+  const chart = useApi(profile ? `/api/quote?ticker=${ticker}&range=${range}` : null);
+  const filings = useApi(profile ? `/api/filings?ticker=${ticker}` : null);
+  const contracts = useApi(profile ? `/api/contracts?ticker=${ticker}` : null);
+  const earnings = useApi(profile ? "/api/earnings" : null);
+  if (!profile) return <NotFound />;
+
+  const live = prices.stocks.find((x) => x.ticker === ticker);
+  const result = chart.data?.chart?.result?.[0];
+  const closes = result?.indicators?.quote?.[0]?.close || [];
+  const points = (result?.timestamp || []).map((t, i) => ({ t, c: closes[i] })).filter((p) => p.c != null);
+  const rangeChange = points.length > 1 ? (points[points.length - 1].c / points[0].c - 1) * 100 : null;
+  const nextEarnings = earnings.data?.find?.((e) => e.ticker === ticker);
+  const upcoming = launches?.filter((l) => l.tickers.includes(ticker)).slice(0, 4);
+  const stories = news.items.filter((item) => matches(item, ticker)).slice(0, 6);
+  const others = Object.keys(PROFILES).filter((t) => t !== ticker);
+
+  return (
+    <div style={{ animation: "fu 0.3s ease", maxWidth: 1000, margin: "0 auto", padding: "24px 20px 60px" }}>
+      <nav style={{ fontSize: 10, color: C.muted, marginBottom: 16, letterSpacing: "0.06em" }}>
+        <Link to="/markets" className="oa-link">Markets</Link> <span style={{ color: "#445" }}>/</span> <span style={{ color: C.light }}>{ticker}</span>
+      </nav>
+
+      {/* Header */}
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 16, marginBottom: 14 }}>
+        <div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+            <h1 style={{ fontFamily: SYNE, fontSize: 34, fontWeight: 800, color: C.green, letterSpacing: "-0.01em" }}>{ticker}</h1>
+            <span style={{ fontSize: 16, color: "#fff" }}>{profile.name}</span>
+            <span style={{ fontSize: 9, color: C.light, border: "1px solid rgba(255,255,255,0.15)", padding: "2px 8px", borderRadius: 3, letterSpacing: "0.08em", textTransform: "uppercase" }}>{profile.sector}</span>
           </div>
         </div>
-      ))}
-      <div style={{ padding: 12, textAlign: "center", fontSize: 10, color: C.light, borderTop: "1px solid rgba(255,255,255,0.04)", marginTop: 8 }}>
-        Estimates sourced from analyst consensus · Updated weekly · Not financial advice
+        {live && (
+          <div className="oa-price">
+            <div style={{ fontSize: 28, color: "#fff", fontWeight: 500 }}>${live.price.toFixed(2)}</div>
+            <div style={{ fontSize: 12 }}>
+              <span style={{ color: signColor(live.changePct), fontWeight: 600 }}>{pct(live.changePct, 2)} today</span>
+              {live.mktCap && live.mktCap !== "ETF" && <span style={{ color: C.muted }}> · Mkt cap {live.mktCap}</span>}
+            </div>
+          </div>
+        )}
+      </header>
+      <p style={{ fontSize: 13, color: C.light, lineHeight: 1.7, maxWidth: 720, marginBottom: 20 }}>{profile.about}</p>
+
+      {/* Chart */}
+      <Card style={{ marginBottom: 14 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, flexWrap: "wrap", gap: 8 }}>
+          <div style={{ display: "flex", gap: 4 }}>
+            {CHART_RANGES.map(([id, label]) => (
+              <button key={id} onClick={() => setRange(id)} className="stg" style={{ fontFamily: MONO, background: range === id ? "rgba(0,255,136,0.08)" : "transparent", color: range === id ? C.green : C.muted, borderColor: range === id ? "rgba(0,255,136,0.3)" : "rgba(255,255,255,0.12)" }}>{label}</button>
+            ))}
+          </div>
+          {rangeChange !== null && <span style={{ fontSize: 12, color: signColor(rangeChange), fontWeight: 600 }}>{pct(rangeChange)} over {CHART_RANGES.find(([id]) => id === range)[1]}</span>}
+        </div>
+        {!chart.data && !chart.error ? <Skeleton w="100%" h={190} /> : <PriceChart points={points} />}
+      </Card>
+
+      {/* Key dates */}
+      <div className="oa-grid" style={{ marginBottom: 14 }}>
+        <Card title="Next earnings">
+          {!earnings.data && !earnings.error && <Skeleton w="60%" h={14} />}
+          {earnings.data && (nextEarnings
+            ? <div><div style={{ fontSize: 18, color: "#fff", fontWeight: 600 }}>{fmtDay(nextEarnings.date)}</div><div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>{nextEarnings.time}{nextEarnings.epsEst ? ` · EPS est. ${nextEarnings.epsEst}` : ""}</div></div>
+            : <Empty>Not yet confirmed. Companies usually announce 2 to 4 weeks ahead.</Empty>)}
+          {earnings.error && <Empty>Unavailable right now.</Empty>}
+        </Card>
+        <Card title="Upcoming launches">
+          {launches === null && <Skeleton w="70%" h={14} />}
+          {upcoming?.length === 0 && <Empty>No scheduled launches involving {ticker} in the current manifest.</Empty>}
+          {upcoming?.map((l, i) => (
+            <div key={i} style={{ padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+              <div style={{ fontSize: 11, color: C.green }}>{l.date} <span style={{ color: C.muted }}>· {l.status}</span></div>
+              <div style={{ fontSize: 12, color: C.light }}>{l.mission}</div>
+            </div>
+          ))}
+        </Card>
+      </div>
+
+      {/* Filings and contracts */}
+      <div className="oa-grid" style={{ marginBottom: 14 }}>
+        <Card title="SEC filings" note="Last 4 months">
+          {!filings.data && !filings.error && <ListSkeleton />}
+          {(filings.error || filings.data?.filings?.length === 0) && <Empty>{ticker === "MDA" ? "MDA Space files in Canada (SEDAR+), not with the SEC." : "No notable SEC filings in the last 4 months."}</Empty>}
+          {filings.data?.filings?.map((f) => <FilingRow key={f.url} f={f} />)}
+          <SourceNote>Source: SEC EDGAR.</SourceNote>
+        </Card>
+        <Card title="Government contracts" note={contracts.data?.total ? `${fmtMoney(contracts.data.total)} in the last 12 months` : "Last 12 months"}>
+          {!contracts.data && !contracts.error && <ListSkeleton />}
+          {(contracts.error || contracts.data?.awards?.length === 0) && <Empty>No new US federal contracts found in the last 12 months.</Empty>}
+          {contracts.data?.awards?.map((a) => <ContractRow key={a.awardId + a.start} a={a} />)}
+          <SourceNote>Source: USAspending.gov. Prime contracts only.</SourceNote>
+        </Card>
+      </div>
+
+      {/* News */}
+      <Card title={`${ticker} news`} style={{ marginBottom: 14 }}>
+        {news.loading && <ListSkeleton rows={3} />}
+        {!news.loading && stories.length === 0 && <Empty>No recent stories in our feed.</Empty>}
+        {stories.map((item, i) => (
+          <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" className="hov" style={{ display: "block", padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none" }}>
+            <div style={{ fontSize: 12, color: C.text, lineHeight: 1.5, marginBottom: 4 }}>{item.title}</div>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}><span style={sourceStyle(item.source)}>{item.source}</span><span style={{ fontSize: 9, color: C.muted }}>{fmtDate(item.pubDate)}</span></div>
+          </a>
+        ))}
+      </Card>
+
+      {/* Newsletter */}
+      <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginBottom: 24 }}>
+        <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Follow {ticker} without the noise</div>
+        <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>{profile.name} and every other space stock, summarised in one free email every Sunday.</p>
+        <SubscribeForm />
+      </section>
+
+      {/* Internal links: other stocks */}
+      <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>Other stocks we cover</div>
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 20 }}>
+        {others.map((t) => <TickerChip key={t} ticker={t} />)}
+      </div>
+      <div style={{ fontSize: 10, color: "#667", lineHeight: 1.6 }}>Prices may be delayed. Information only, not financial advice.</div>
+    </div>
+  );
+}
+
+function NotFound() {
+  return (
+    <div style={{ maxWidth: 520, margin: "0 auto", padding: "80px 20px", textAlign: "center" }}>
+      <div style={{ fontFamily: SYNE, fontSize: 26, fontWeight: 800, color: "#fff", marginBottom: 10 }}>Page not found</div>
+      <p style={{ fontSize: 12, color: C.muted, marginBottom: 20 }}>That page doesn't exist. Try the markets dashboard or one of the stocks we cover.</p>
+      <Link to="/markets" style={{ color: C.green, fontSize: 12 }}>Go to Markets →</Link>
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center", marginTop: 24 }}>
+        {Object.keys(PROFILES).map((t) => <TickerChip key={t} ticker={t} />)}
       </div>
     </div>
   );
@@ -918,7 +1341,7 @@ const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const KEYWORD_RE = Object.fromEntries(
   Object.entries(COMPANY_KEYWORDS).map(([co, kws]) => [co, new RegExp(`\\b(${kws.map(escape).join("|")})\\b`, "i")])
 );
-const matches = (item, co) => item.ticker === co || KEYWORD_RE[co].test(`${item.title} ${item.description || ""}`);
+const matches = (item, co) => item.ticker === co || !!KEYWORD_RE[co]?.test(`${item.title} ${item.description || ""}`);
 
 const pill = (on) => ({
   background: on ? "rgba(255,150,50,0.15)" : "transparent", border: `1px solid ${on ? "rgba(255,150,50,0.3)" : "transparent"}`,
@@ -926,7 +1349,7 @@ const pill = (on) => ({
 });
 const badge = (color, rgb) => ({ position: "absolute", top: 12, right: 12, fontSize: 9, color, background: `rgba(${rgb},0.08)`, border: `1px solid rgba(${rgb},0.2)`, padding: "2px 8px", borderRadius: 3, letterSpacing: "0.1em" });
 
-function Feed({ news, feedMode, setFeedMode }) {
+function Feed({ news, feedMode, setFeedMode }) { // feedMode: "news" (/feed) or "newsletter" (/newsletter)
   const [company, setCompany] = useState("All");
   const items = company === "All" ? news.items : news.items.filter((i) => matches(i, company));
 
@@ -1025,34 +1448,33 @@ function About() {
 /* ════════════════════════════════════════════════════════════════════════════
    APP SHELL
    ════════════════════════════════════════════════════════════════════════════ */
-const NAV = [["home", "Home"], ["markets", "Markets"], ["feed", "Feed"]];
-const PAGES = ["home", "markets", "feed", "about"];
+const NAV = [["/", "home", "Home"], ["/markets", "markets", "Markets"], ["/feed", "feed", "Feed"], ["/newsletter", "newsletter", "Newsletter"]];
 
 export default function App() {
-  const [route, setRoute] = useHashRoute();
+  const [route, navigate] = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const prices = useLivePrices();
   const launches = useLaunches();
   const news = useNews();
 
-  const page = PAGES.includes(route.page) ? route.page : "home"; // old #threads links fall back to home
+  const { page } = route;
+  const path = page === "stock" ? `/stocks/${route.ticker.toLowerCase()}` : window.location.pathname;
+  useDocumentMeta(route, path);
   const latest = issues[0];
 
-  const go = (p, tab, feedMode) => {
-    setRoute({ page: p, ...(tab && { tab }), ...(feedMode && { feedMode }) });
-    setMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-  const goSubscribe = () => go("feed", "news", "newsletter");
+  const go = (to) => { setMenuOpen(false); navigate(to); };
+  const goSubscribe = () => go("/newsletter");
   const share = () =>
     navigator.share
-      ? navigator.share({ title: "Orbit Alpha", text: "Free space stocks dashboard", url: "https://orbitalpha.cloud" })
-      : navigator.clipboard.writeText("https://orbitalpha.cloud").then(() => alert("Link copied!"));
+      ? navigator.share({ title: document.title, url: window.location.href })
+      : navigator.clipboard.writeText(window.location.href).then(() => alert("Link copied!"));
 
   const marketChrome = page === "home" || page === "markets";
+  const showTicker = marketChrome || page === "stock";
   const navBtn = { background: "none", border: "1px solid rgba(255,255,255,0.1)", color: C.light, padding: "7px 12px", borderRadius: 4, fontSize: 10, letterSpacing: "0.06em", fontFamily: MONO, cursor: "pointer" };
 
   return (
+    <NavContext.Provider value={go}>
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: MONO, fontSize: 13, position: "relative", overflowX: "hidden" }}>
       <GlobalStyles />
       <SubscribePopup />
@@ -1064,12 +1486,12 @@ export default function App() {
       <div style={{ position: "relative", zIndex: 2 }}>
         {/* Nav */}
         <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 20px", borderBottom: "1px solid rgba(255,255,255,0.05)", position: "relative" }}>
-          <div onClick={() => go("home")} style={{ cursor: "pointer", fontFamily: SYNE, fontSize: 18, fontWeight: 800 }}>
+          <Link to="/" style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 800 }}>
             <span style={{ color: "#fff", fontWeight: 700 }}>ORBIT</span><span style={{ color: C.green }}>ALPHA.</span>
-          </div>
+          </Link>
           <div className="desk-only" style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", display: "flex", gap: 28 }}>
-            {NAV.map(([p, l]) => (
-              <span key={p} onClick={() => go(p)} style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer", color: page === p ? C.green : C.muted, borderBottom: `1px solid ${page === p ? C.green : "transparent"}`, paddingBottom: 2 }}>{l}</span>
+            {NAV.map(([to, p, l]) => (
+              <Link key={p} to={to} style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: page === p ? C.green : C.muted, borderBottom: `1px solid ${page === p ? C.green : "transparent"}`, paddingBottom: 2 }}>{l}</Link>
             ))}
           </div>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
@@ -1081,14 +1503,14 @@ export default function App() {
 
         {menuOpen && (
           <div style={{ background: "#070a14", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
-            {NAV.map(([p, l]) => (
-              <span key={p} onClick={() => go(p)} style={{ color: page === p ? C.green : C.light, padding: "10px 0", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: "1px solid rgba(255,255,255,0.04)", cursor: "pointer" }}>{l}</span>
+            {NAV.map(([to, p, l]) => (
+              <Link key={p} to={to} style={{ color: page === p ? C.green : C.light, padding: "10px 0", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>{l}</Link>
             ))}
             <button onClick={goSubscribe} style={{ background: C.green, color: C.bg, border: "none", padding: 11, borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: MONO, cursor: "pointer", marginTop: 8 }}>Subscribe Free →</button>
           </div>
         )}
 
-        {marketChrome && <TickerStrip stocks={prices.stocks} />}
+        {showTicker && <TickerStrip stocks={prices.stocks} />}
 
         {page === "home" && (
           <div onClick={() => latest.live && window.open(latest.url, "_blank")} className={latest.live ? "hov" : ""} style={{ background: "rgba(126,184,255,0.06)", borderBottom: "1px solid rgba(126,184,255,0.12)", padding: "8px 20px", textAlign: "center" }}>
@@ -1107,10 +1529,13 @@ export default function App() {
         )}
 
         {page === "home" && <Home go={go} goSubscribe={goSubscribe} news={news} />}
-        {page === "markets" && <Markets prices={prices} launches={launches} tab={route.tab} setTab={(tab) => setRoute({ tab })} goSubscribe={goSubscribe} />}
-        {page === "feed" && <Feed news={news} feedMode={route.feedMode} setFeedMode={(feedMode) => setRoute({ feedMode })} />}
+        {page === "markets" && <Markets prices={prices} launches={launches} tab={route.tab} setTab={(t) => go(t === "stocks" ? "/markets" : `/markets/${t}`)} goSubscribe={goSubscribe} />}
+        {page === "stock" && <StockPage key={route.ticker} ticker={route.ticker} prices={prices} launches={launches} news={news} goSubscribe={goSubscribe} />}
+        {(page === "feed" || page === "newsletter") && <Feed news={news} feedMode={page === "newsletter" ? "newsletter" : "news"} setFeedMode={(m) => go(m === "newsletter" ? "/newsletter" : "/feed")} />}
         {page === "about" && <About />}
+        {page === "notfound" && <NotFound />}
       </div>
     </div>
+    </NavContext.Provider>
   );
 }

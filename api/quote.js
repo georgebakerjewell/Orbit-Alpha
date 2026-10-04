@@ -6,17 +6,21 @@ const SHARES = {
   KRMN: 133000000, SATL: 154000000, KULR: 46000000, TSAT: 15000000,
   GSAT: 1300000000, VSAT: 138000000, MDA: 162000000, SPIR: 391000000,
   DXYZ: 30000000, LMT: 231000000, FLY: 167000000, OKLO: 186000000,
-  BA: 762000000, NOC: 149000000, RTX: 1330000000, SATS: 84000000,
+  BA: 762000000, NOC: 149000000, RTX: 1330000000, ECHO: 290800000,
   IRDM: 135000000, VOYG: 61000000, YSS: 128000000,
   UFO: 20000000, ARKX: 22000000, NASA: 8000000, MARS: 383000, ROKT: 2100000,
-  HAWK: 119000000,
+  HAWK: 119000000, SIDU: 101230000,
 };
+// Chart ranges the site may request (anything else falls back to 7d).
+const RANGES = new Set(['5d', '7d', '1mo', '3mo', '6mo', '1y']);
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
   const { ticker } = req.query;
   if (!ticker) return res.status(400).json({ error: 'No ticker provided' });
-  const key = ticker.toUpperCase();
+  const symbol = ticker.toUpperCase();
+  const range = RANGES.has(req.query.range) ? req.query.range : '7d';
+  const key = `${symbol}:${range}`;
   const now = Date.now();
   if (cache[key] && (now - cache[key].ts) < CACHE_TTL) {
     res.setHeader('X-Cache', 'HIT');
@@ -24,10 +28,10 @@ export default async function handler(req, res) {
   }
   try {
     const [chartRes, res5d] = await Promise.all([
-      fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${key}?interval=1d&range=7d`, {
+      fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=${range}`, {
         headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json', 'Referer': 'https://finance.yahoo.com' }
       }),
-      fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${key}?interval=1d&range=5d`, {
+      fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=5d`, {
         headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json', 'Referer': 'https://finance.yahoo.com' }
       })
     ]);
@@ -43,11 +47,12 @@ export default async function handler(req, res) {
         meta.regularMarketChangePercent = ((price - prevClose) / prevClose) * 100;
         meta.regularMarketChange = price - prevClose;
       }
-      const shares = SHARES[key];
+      const shares = SHARES[symbol];
       if (shares && price) meta.marketCap = shares * price;
     }
     cache[key] = { ts: now, data: chartData };
     res.setHeader('X-Cache', 'MISS');
+    res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=600');
     res.status(200).json(chartData);
   } catch(e) {
     res.status(500).json({ error: e.message });
