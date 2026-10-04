@@ -63,7 +63,7 @@ function render({ path, title, description, body }) {
   return template
     .replace(/\s*<meta name="description"[^>]*>/, "") // drop the generic one from index.html
     .replace(/<title>[\s\S]*?<\/title>/, head)
-    .replace('<div id="root"></div>', `<div id="root"><main>${body}${footer}</main></div>`);
+    .replace('<div id="root"></div>', `<div id="root"><main class="pre">${body}${footer}</main></div>`);
 }
 
 for (const route of routes) {
