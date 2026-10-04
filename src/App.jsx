@@ -43,10 +43,11 @@ const STOCKS = [
   s("NASA", "Tema Space Innovators ETF", 24.18, 3.1, "ETF", "ETF", "etf"),
   s("MARS", "Roundhill Space & Tech ETF", 30.52, 0, "ETF", "ETF", "etf"),
   s("ROKT", "SPDR Kensho Final Frontiers ETF", 42.18, 0, "ETF", "ETF", "etf"),
-  s("SATS", "EchoStar Corporation", 28.44, 0, "2.4B", "Comms"),
+  s("ECHO", "EchoStar Corporation", 94.25, 6.8, "27.4B", "Comms"),
   s("VOYG", "Voyager Technologies", 31.49, 0, "1.9B", "Defence"),
   s("YSS", "York Space Systems", 33.61, 0, "4.3B", "Defence"),
   s("HAWK", "HawkEye 360", 34.0, 30.0, "3.1B", "Earth Obs"),
+  s("SIDU", "Sidus Space", 1.81, 1.7, "183M", "Hardware"),
 ];
 
 // Fetched first so the page goes live quickly.
@@ -95,6 +96,10 @@ const COMPANY_KEYWORDS = {
   NOC: ["Northrop Grumman", "NOC"],
   RTX: ["RTX", "Raytheon"],
   HAWK: ["HawkEye 360", "SIGINT", "RF intelligence"],
+  VOYG: ["Voyager Technologies", "VOYG", "Starlab"],
+  YSS: ["York Space", "YSS"],
+  SIDU: ["Sidus Space", "SIDU", "LizzieSat"],
+  ECHO: ["EchoStar", "Hughes"],
   "Blue Origin": ["Blue Origin", "New Glenn", "BE-4"],
   Relativity: ["Relativity Space", "Terran"],
   Vast: ["Vast Space", "Haven-1"],
