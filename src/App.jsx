@@ -1264,19 +1264,18 @@ function SectorSummary({ byId, stocks, rangeLabel, onPick }) {
   }).sort((a, b) => (b.period ?? -1e9) - (a.period ?? -1e9));
 
   return (
-    <div style={{ marginBottom: 18 }}>
+    <div style={{ marginTop: 22 }}>
       <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>
         Sector summary · {rangeLabel} · equal-weighted · tap a sector to chart it
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 8 }}>
         {cards.map(({ sector, members, period, today, best, worst }) => (
           <button key={sector} onClick={() => onPick(members)} className="oa-tab"
-            style={{ textAlign: "left", cursor: "pointer", fontFamily: MONO, background: "rgba(255,255,255,0.02)", border: `1px solid ${period == null ? "rgba(255,255,255,0.1)" : period >= 0 ? "rgba(0,255,136,0.25)" : "rgba(255,68,102,0.3)"}`, borderRadius: 8, padding: "12px 14px" }}>
+            style={{ textAlign: "left", cursor: "pointer", fontFamily: MONO, background: "rgba(255,255,255,0.02)", border: `1px solid ${period == null ? "rgba(255,255,255,0.1)" : period >= 0 ? "rgba(0,255,136,0.25)" : "rgba(255,68,102,0.3)"}`, borderRadius: 8, padding: "10px 12px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
               <span style={{ fontSize: 10, color: C.light, letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 600 }}>{sector}</span>
-              <span style={{ fontSize: 10, color: "#667" }}>{members.length} stocks</span>
             </div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: period == null ? C.muted : signColor(period), margin: "6px 0 2px" }}>{period == null ? "-" : pct(period)}</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: period == null ? C.muted : signColor(period), margin: "4px 0 2px" }}>{period == null ? "-" : pct(period)}</div>
             <div style={{ fontSize: 10, color: C.muted, marginBottom: 6 }}>
               {rangeLabel}{today != null && <> · Today <span style={{ color: signColor(today) }}>{pct(today)}</span></>}
             </div>
@@ -1297,6 +1296,7 @@ function PerformanceChart({ full = false, prices }) {
   const [range, setRange] = useState("ytd");
   const [selected, setSelected] = useState(full ? ["SPY", "UFO", "ARKX", "MARS"] : ["SPY", "UFO", "ARKX"]);
   const [hover, setHover] = useState(null);
+  const chartRef = useRef(null);
   const { data, error } = useApi(`/api/performance?range=${range}`);
 
   const series = data?.series || [];
@@ -1349,18 +1349,10 @@ function PerformanceChart({ full = false, prices }) {
         </div>
       </div>
 
-      {full && data && (
-        <SectorSummary
-          byId={byId}
-          stocks={prices?.stocks || []}
-          rangeLabel={PERF_RANGES.find(([id]) => id === range)[1]}
-          onPick={(tickers) => setSelected(["SPY", ...tickers])}
-        />
-      )}
       {!data && !error && <Skeleton w="100%" h={H} />}
       {error && <Empty>Performance data is unavailable right now.</Empty>}
       {data && (
-        <div style={{ position: "relative", paddingLeft: 44, marginTop: 14 }}>
+        <div ref={chartRef} style={{ position: "relative", paddingLeft: 44, marginTop: 14 }}>
           {ticks.map((t) => (
             <div key={t} style={{ position: "absolute", left: 0, top: y(t) - 6, fontSize: 9, color: t === 0 ? C.light : "#667", width: 40, textAlign: "right" }}>{t > 0 ? "+" : ""}{t}%</div>
           ))}
@@ -1433,6 +1425,14 @@ function PerformanceChart({ full = false, prices }) {
             </div>
           )}
         </div>
+      )}
+      {full && data && (
+        <SectorSummary
+          byId={byId}
+          stocks={prices?.stocks || []}
+          rangeLabel={PERF_RANGES.find(([id]) => id === range)[1]}
+          onPick={(tickers) => { setSelected(["SPY", ...tickers]); chartRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }}
+        />
       )}
       {full && data && (
         <SourceNote>
