@@ -12,6 +12,13 @@
     <meta name="theme-color" content="#04060e" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <!-- Paint the dark background immediately, and keep the search-engine copy of the page
+         (written into #root by scripts/prerender.mjs) invisible until the app replaces it. -->
+    <style>
+      html, body { margin: 0; background: #04060e; color: #dde1ec; font-family: Inter, system-ui, sans-serif; }
+      #root > .pre { opacity: 0; }
+    </style>
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-SCKJRFJRVG"></script>
     <script>
