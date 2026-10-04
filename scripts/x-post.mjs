@@ -53,7 +53,7 @@ const lines = [
 ];
 const text = [headline, "", ...lines].join("\n");
 const top = Math.abs(sorted[0].v) >= Math.abs(sorted[sorted.length - 1].v) ? sorted[0] : sorted[sorted.length - 1];
-const replyText = `Live heatmap, filings and contracts for every space stock, free:\n${BASE.replace("https://www.", "")}/markets\n\n$${top.t} today: ${BASE.replace("https://www.", "")}/stocks/${top.t.toLowerCase()}`;
+const replyText = `Live heatmap, filings and contracts for every space stock, free:\n${BASE.replace("https://www.", "")}/markets\n\n$${top.t} ${pct(top.v)} ${when}: ${BASE.replace("https://www.", "")}/stocks/${top.t.toLowerCase()}`;
 
 // ── 4. Images ───────────────────────────────────────────────────────────────────
 const browser = await chromium.launch();
