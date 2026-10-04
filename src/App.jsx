@@ -716,17 +716,6 @@ const MoreLink = ({ to, children }) => (
   <Link to={to} className="oa-link" style={{ fontSize: 11, color: C.green, display: "inline-block", marginTop: 12 }}>{children} →</Link>
 );
 
-function MoverRow({ s }) {
-  return (
-    <Link to={`/stocks/${s.ticker.toLowerCase()}`} className="hov" style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-      <span style={{ fontWeight: 700, color: C.green, width: 48, fontSize: 12 }}>{s.ticker}</span>
-      <span style={{ flex: 1, fontSize: 11, color: C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{PROFILES[s.ticker].name}</span>
-      <span style={{ fontSize: 12, color: "#fff" }}>${s.price.toFixed(2)}</span>
-      <span style={{ fontSize: 12, fontWeight: 700, color: signColor(s.changePct), width: 62, textAlign: "right" }}>{pct(s.changePct)}</span>
-    </Link>
-  );
-}
-
 function Home({ news, prices, launches }) {
   const latest = issues[0];
   const filings = useApi("/api/filings");
@@ -734,7 +723,6 @@ function Home({ news, prices, launches }) {
   const earnings = useApi("/api/earnings");
 
   const covered = prices.stocks.filter((s) => PROFILES[s.ticker]);
-  const ranked = [...covered].sort((a, b) => b.changePct - a.changePct);
   const signals = buildFeed([], filings.data?.filings || [], contracts.data?.awards || []).filter((i) => i.key_story).slice(0, 6);
   const signalsLoading = !filings.data && !filings.error && !contracts.data && !contracts.error;
   const headlines = news.items.slice(0, 5);
@@ -773,14 +761,8 @@ function Home({ news, prices, launches }) {
       </Card>
 
       <div className="oa-grid" style={{ marginBottom: 14 }}>
-        <Card title="Today's biggest moves" note={prices.isLive ? `Live · ${prices.lastUpdated}` : "Loading prices"}>
-          {!prices.isLive ? <ListSkeleton rows={5} /> : (
-            <>
-              {ranked.slice(0, 3).map((s) => <MoverRow key={s.ticker} s={s} />)}
-              <div style={{ height: 8 }} />
-              {ranked.slice(-3).reverse().map((s) => <MoverRow key={s.ticker} s={s} />)}
-            </>
-          )}
+        <Card title="Today's moves" note={prices.isLive ? `Live · ${prices.lastUpdated}` : "Loading prices"}>
+          <Heatmap stocks={prices.stocks} isLive={prices.isLive} compact />
           <MoreLink to="/markets">All {covered.length} stocks</MoreLink>
         </Card>
 
@@ -1107,10 +1089,11 @@ function useWidth() {
 
 const weekChange = (s) => (s.spark?.length > 1 ? (s.spark[s.spark.length - 1] / s.spark[0] - 1) * 100 : null);
 
-function Heatmap({ stocks, isLive }) {
+function Heatmap({ stocks, isLive, compact = false }) {
   const [period, setPeriod] = useState("day");
   const [ref, width] = useWidth();
-  const height = width < 600 ? Math.max(460, width * 1.35) : Math.max(380, width * 0.42);
+  // Kept deliberately short so it summarises the day without dominating the page.
+  const height = compact ? (width < 600 ? 240 : 210) : width < 600 ? 300 : 260;
   const items = stocks
     .filter((s) => PROFILES[s.ticker])
     .map((s) => ({ s, chg: period === "day" ? s.changePct : weekChange(s) }))
@@ -1121,11 +1104,11 @@ function Heatmap({ stocks, isLive }) {
   const ups = items.filter((d) => d.chg > 0).length;
 
   return (
-    <div style={{ marginBottom: 20 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
+    <div style={{ marginBottom: compact ? 0 : 20 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, marginBottom: 8 }}>
         <div>
-          <div style={{ ...sectionLabel, marginBottom: 2 }}>Space stocks heatmap {isLive ? "· Live" : ""}</div>
-          {isLive && <div style={{ fontSize: 11, color: C.muted }}>{ups} up, {items.length - ups} down. Bigger tile, bigger move. Tap a tile for the full page.</div>}
+          {!compact && <div style={{ ...sectionLabel, marginBottom: 2 }}>Space stocks heatmap {isLive ? "· Live" : ""}</div>}
+          {isLive && <div style={{ fontSize: 11, color: C.muted }}>{ups} up, {items.length - ups} down. Bigger tile, bigger move.</div>}
         </div>
         <div style={{ display: "flex", gap: 4 }}>
           {[["day", "Today"], ["week", "5 days"]].map(([id, l]) => (
@@ -1139,13 +1122,12 @@ function Heatmap({ stocks, isLive }) {
           const t = Math.min(1, Math.abs(chg) / 8); // colour intensity peaks at an 8% move
           const bg = chg >= 0 ? `rgba(0,${150 + Math.round(t * 70)},${90 + Math.round(t * 20)},${0.28 + t * 0.62})` : `rgba(${200 + Math.round(t * 40)},50,70,${0.28 + t * 0.62})`;
           const big = Math.min(w, h);
-          const fs = Math.max(10, Math.min(30, big / 4));
+          const fs = Math.max(9, Math.min(compact ? 15 : 18, big / 3.6));
           return (
             <Link key={s.ticker} to={`/stocks/${s.ticker.toLowerCase()}`} title={`${PROFILES[s.ticker].name}: ${pct(chg, 2)}`} className="oa-tile"
-              style={{ position: "absolute", left: x, top: y, width: w, height: h, background: bg, border: `1px solid ${C.bg}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", textAlign: "center", padding: 2 }}>
-              {big > 26 && <span style={{ fontSize: fs, fontWeight: 800, color: "#fff", lineHeight: 1.1 }}>{s.ticker}</span>}
-              {big > 40 && <span style={{ fontSize: Math.max(9, fs * 0.6), fontWeight: 600, color: "rgba(255,255,255,0.9)" }}>{pct(chg)}</span>}
-              {big > 110 && <span style={{ fontSize: Math.max(9, fs * 0.38), color: "rgba(255,255,255,0.7)", marginTop: 2 }}>{PROFILES[s.ticker].name}</span>}
+              style={{ position: "absolute", left: x, top: y, width: w, height: h, background: bg, border: `1px solid ${C.bg}`, borderRadius: 3, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", textAlign: "center", padding: 2 }}>
+              {big > 22 && <span style={{ fontSize: fs, fontWeight: 700, color: "#fff", lineHeight: 1.15 }}>{s.ticker}</span>}
+              {big > 34 && <span style={{ fontSize: Math.max(9, fs * 0.72), fontWeight: 500, color: "rgba(255,255,255,0.9)" }}>{pct(chg)}</span>}
             </Link>
           );
         })}
