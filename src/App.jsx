@@ -6,7 +6,7 @@ import issues from "./issues.json";
    ════════════════════════════════════════════════════════════════════════════ */
 // Static config and fallback data. Live quotes from /api/quote replace STOCKS values once loaded.
 
-const SUBSCRIBER_COUNT = 400;
+const SUBSCRIBER_COUNT = 300;
 const SUBSCRIBE_API = "https://www.orbitalpha.cloud/api/subscribe";
 
 const s = (ticker, name, price, changePct, mktCap, sector, type = "stock") =>
@@ -463,22 +463,28 @@ function SubscribeForm({ color = C.green, label = "Join Free →", onDone, style
   );
 }
 
-const POPUP_KEY = "oa_popup_dismissed";
-function popupSuppressed() {
-  try {
-    const v = localStorage.getItem(POPUP_KEY);
-    return v === "subscribed" || (!!v && Date.now() - parseInt(v) < 30 * 86_400_000);
-  } catch { return false; }
+// Subscribe popup: shown ONCE per browser. Remembered in localStorage (works like a cookie).
+const POPUP_KEY = "oa_popup_seen";
+const POPUP_DELAY_MS = 5000; // time on site before it appears
+
+function popupSeen() {
+  try { return !!localStorage.getItem(POPUP_KEY); } catch { return true; } // storage blocked: don't nag
+}
+function markPopupSeen(value) {
+  try { localStorage.setItem(POPUP_KEY, value); } catch {}
 }
 
 function SubscribePopup() {
   const [show, setShow] = useState(false);
   useEffect(() => {
-    if (popupSuppressed()) return;
-    const t = setTimeout(() => setShow(true), 45000);
+    if (popupSeen()) return;
+    const t = setTimeout(() => {
+      markPopupSeen("shown"); // recorded the moment it appears, so it never shows again even if they just close the tab
+      setShow(true);
+    }, POPUP_DELAY_MS);
     return () => clearTimeout(t);
   }, []);
-  const close = (value) => { setShow(false); try { localStorage.setItem(POPUP_KEY, value); } catch {} };
+  const close = (value) => { setShow(false); markPopupSeen(value); };
   if (!show) return null;
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>
