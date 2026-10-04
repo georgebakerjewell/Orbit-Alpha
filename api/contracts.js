@@ -38,9 +38,15 @@ const cache = {};
 
 const isoDate = (d) => d.toISOString().slice(0, 10);
 
+// The API's text search is a loose "contains" match (e.g. GEOST also finds GEOSTABILIZATION),
+// so every result is re-checked here with whole-word matching before it is shown.
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const TERM_RE = Object.fromEntries(
+  Object.entries(RECIPIENTS).map(([t, terms]) => [t, new RegExp(`(^|[^A-Z0-9])(${terms.map(escapeRe).join("|")})([^A-Z0-9]|$)`)])
+);
 export function tickerFor(recipient = "") {
   const name = recipient.toUpperCase();
-  return Object.keys(RECIPIENTS).find((t) => RECIPIENTS[t].some((term) => name.includes(term))) || null;
+  return Object.keys(TERM_RE).find((t) => TERM_RE[t].test(name)) || null;
 }
 
 // "IGF::OT::IGF LAUNCH SERVICES FOR ..." -> "Launch services for ..."
@@ -80,9 +86,12 @@ export default async function handler(req, res) {
 
   const now = new Date();
   const yearAgo = new Date(now.getTime() - 365 * 86_400_000);
-  const terms = ticker ? RECIPIENTS[ticker] : Object.values(RECIPIENTS).flat();
+  // USAspending rejects very long search lists, so the all-roster view queries a few companies at a time.
+  const tickers = ticker ? [ticker] : Object.keys(RECIPIENTS);
+  const groups = [];
+  for (let i = 0; i < tickers.length; i += 4) groups.push(tickers.slice(i, i + 4).flatMap((t) => RECIPIENTS[t]));
 
-  try {
+  const query = async (terms) => {
     const response = await fetch(API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -100,15 +109,26 @@ export default async function handler(req, res) {
       }),
     });
     if (!response.ok) throw new Error(`USAspending ${response.status}`);
-    const json = await response.json();
-    const awards = shapeResults(json.results || [], isoDate(yearAgo));
+    return (await response.json()).results || [];
+  };
+
+  try {
+    const settled = await Promise.allSettled(groups.map(query));
+    const ok = settled.filter((r) => r.status === "fulfilled");
+    if (!ok.length) throw settled[0].reason;
+    const seen = new Set();
+    const awards = shapeResults(ok.flatMap((r) => r.value), isoDate(yearAgo))
+      .filter((a) => (seen.has(a.awardId) ? false : seen.add(a.awardId)))
+      .sort((a, b) => b.start.localeCompare(a.start));
     const data = {
       awards: awards.slice(0, ticker ? 15 : 40),
       total: awards.reduce((sum, a) => sum + a.amount, 0),
       asOf: isoDate(now),
     };
-    cache[key] = { ts: Date.now(), data };
-    res.setHeader("Cache-Control", "s-maxage=21600, stale-while-revalidate=86400");
+    // Cache complete results for 6 hours; if some queries failed, retry within 5 minutes.
+    const complete = ok.length === settled.length;
+    if (complete) cache[key] = { ts: Date.now(), data };
+    res.setHeader("Cache-Control", complete ? "s-maxage=21600, stale-while-revalidate=86400" : "s-maxage=300");
     res.status(200).json(data);
   } catch (e) {
     res.status(502).json({ error: e.message, awards: [], total: 0 });

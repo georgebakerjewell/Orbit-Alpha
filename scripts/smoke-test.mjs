@@ -78,7 +78,7 @@ await check("Earnings", "/api/earnings", (j) => ({
   detail: (Array.isArray(j) ? j : []).map((e) => `${e.date}  ${e.ticker}  ${e.time}  EPS est ${e.epsEst}`),
 }), { timeoutMs: 90000 });
 
-await check("Launches", "/api/launches", (j) => count(j.result?.length || 0, 5));
+await check("Launches", "/api/launches", (j) => ({ ok: (j.result?.length || 0) >= 5, summary: `${j.result?.length || 0} upcoming, source: ${j.source || "rocketlaunch.live"}`, detail: (j.result || []).slice(0, 4).map((l) => `${l.date_str}  ${l.provider?.name} ${l.vehicle?.name} / ${l.missions?.[0]?.name}`) }));
 await check("News (Google)", "/api/news?limit=50", (j) => ({ ...count(Array.isArray(j) ? j.length : 0, 5), detail: (Array.isArray(j) ? j : []).slice(0, 3).map((n) => `${n.source}: ${n.title}`) }));
 await check("News (Yahoo)", "/api/yahoonews", (j) => count(Array.isArray(j) ? j.length : 0, 5), { critical: false });
 
