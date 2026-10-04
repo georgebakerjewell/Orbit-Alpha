@@ -4,6 +4,8 @@
 
 const BASE = process.argv[2] || "https://www.orbitalpha.cloud";
 let failures = 0;
+const report = [];
+const log = (line) => { console.log(line); report.push(line); };
 
 async function check(name, path, validate, { critical = true, timeoutMs = 60000 } = {}) {
   const started = Date.now();
@@ -14,11 +16,11 @@ async function check(name, path, validate, { critical = true, timeoutMs = 60000 
     let json;
     try { json = JSON.parse(text); } catch { throw new Error(`HTTP ${res.status}, not JSON: ${text.slice(0, 120)}`); }
     const { ok, summary, detail = [] } = validate(json, res.status);
-    console.log(`${ok ? "PASS" : critical ? "FAIL" : "WARN"}  ${name}  (${ms} ms, HTTP ${res.status})  ${summary}`);
-    detail.slice(0, 6).forEach((d) => console.log(`        ${d}`));
+    log(`${ok ? "PASS" : critical ? "FAIL" : "WARN"}  ${name}  (${ms} ms, HTTP ${res.status})  ${summary}`);
+    detail.slice(0, 6).forEach((d) => log(`        ${d}`));
     if (!ok && critical) failures++;
   } catch (e) {
-    console.log(`${critical ? "FAIL" : "WARN"}  ${name}  ${e.message}`);
+    log(`${critical ? "FAIL" : "WARN"}  ${name}  ${e.message}`);
     if (critical) failures++;
   }
 }
@@ -80,5 +82,10 @@ await check("Launches", "/api/launches", (j) => count(j.result?.length || 0, 5))
 await check("News (Google)", "/api/news?limit=50", (j) => ({ ...count(Array.isArray(j) ? j.length : 0, 5), detail: (Array.isArray(j) ? j : []).slice(0, 3).map((n) => `${n.source}: ${n.title}`) }));
 await check("News (Yahoo)", "/api/yahoonews", (j) => count(Array.isArray(j) ? j.length : 0, 5), { critical: false });
 
-console.log(failures ? `\n${failures} critical check(s) failed` : "\nAll critical checks passed");
+log(failures ? `${failures} critical check(s) failed` : "All critical checks passed");
+// In GitHub Actions, also publish the full report as an annotation so it is readable from the run page and API.
+if (process.env.GITHUB_ACTIONS) {
+  const enc = (t) => t.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
+  console.log(`::${failures ? "error" : "notice"} title=Live data report::${enc(report.join("\n"))}`);
+}
 process.exit(failures ? 1 : 0);
