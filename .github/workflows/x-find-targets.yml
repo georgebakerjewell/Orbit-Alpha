@@ -1,0 +1,36 @@
+name: X reply targets (search)
+
+# Dispatched by the reply-drafting scheduled task. Searches X for fresh popular posts about the
+# roster's cashtags and publishes out/latest.json to the x-targets branch.
+on:
+  workflow_dispatch:
+    inputs:
+      hours: { description: "Look-back window in hours", default: "8" }
+      max:   { description: "Max posts to fetch (10-100, each costs a read)", default: "20" }
+
+permissions: { contents: write }
+concurrency: { group: x-find-targets, cancel-in-progress: false }
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Search X
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+          HOURS: ${{ inputs.hours }}
+          MAX: ${{ inputs.max }}
+        run: node scripts/x-find-targets.mjs
+      - name: Publish to x-targets branch
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          mkdir pub && cp out/latest.json pub/ && cd pub
+          git init -q -b x-targets && git config user.name orbit-alpha-bot && git config user.email actions@users.noreply.github.com
+          git add latest.json && git commit -qm "X reply targets $(date -u +%FT%TZ)"
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" x-targets
