@@ -29,6 +29,30 @@ export function ll2ToLaunch(l) {
     pad: { location: { name: l.pad?.location?.name || "" } },
     win_open: abbrev === "Go" ? l.net : null,
     result: abbrev === "Success" ? 1 : null,
+    // Extra detail shown when a launch card is opened
+    details: {
+      net: valid ? l.net : null,
+      exactTime: valid && ["Second", "Minute"].includes(precision),
+      windowStart: l.window_start || null,
+      windowEnd: l.window_end || null,
+      status: l.status?.name || "",
+      statusNote: l.status?.description || "",
+      rocket: l.rocket?.configuration?.full_name || l.rocket?.configuration?.name || "",
+      providerType: l.launch_service_provider?.type?.name || "",
+      missionType: l.mission?.type || "",
+      orbit: l.mission?.orbit?.name || "",
+      description: l.mission?.description || "",
+      customers: (l.mission?.agencies || []).map((a) => a.name).filter(Boolean),
+      programs: (l.program || []).map((p) => p.name).filter(Boolean),
+      pad: [l.pad?.name, l.pad?.location?.name || l.pad?.country?.name].filter(Boolean).join(", "),
+      probability: typeof l.probability === "number" ? l.probability : null,
+      weather: l.weather_concerns || "",
+      holdReason: l.holdreason || "",
+      providerLaunchesThisYear: l.agency_launch_attempt_count_year ?? null,
+      image: l.image?.thumbnail_url || l.image?.image_url || null,
+      webcast: l.mission?.vid_urls?.[0]?.url || null,
+      info: l.mission?.info_urls?.[0]?.url || null,
+    },
   };
 }
 

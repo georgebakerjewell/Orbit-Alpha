@@ -209,6 +209,7 @@ function toLaunch(l) {
     location: l.pad?.location?.name || "",
     status: l.result === 1 ? "SUCCESS" : l.win_open ? "GO" : "TBD",
     tickers: LAUNCH_TAGS.filter(([re]) => re.test(text)).map(([, t]) => t),
+    details: l.details || null,
   };
 }
 
@@ -356,6 +357,7 @@ const GlobalStyles = () => (
     .oa-news-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:28px;align-items:start}
     @media(max-width:860px){.oa-news-grid{grid-template-columns:1fr}}
     .oa-tile{transition:filter 0.15s}.oa-tile:hover{filter:brightness(1.25);z-index:1}
+    .oa-launch{transition:background 0.15s}.oa-launch:hover{background:rgba(255,255,255,0.03)!important}
     .oa-tab:hover{border-color:rgba(0,255,136,0.35)!important;background:rgba(0,255,136,0.05)!important}
     .oa-tabs::-webkit-scrollbar{height:0}
     @media(max-width:600px){.oa-tabs{flex-wrap:wrap;overflow-x:visible!important}.oa-tab{flex:1 1 calc(50% - 4px)!important;min-width:0!important;padding:8px 12px!important}.oa-price{text-align:left}.desk-only{display:none!important}.mob-only{display:block!important}}
@@ -1079,19 +1081,86 @@ const STATUS_STYLE = {
   HOLD: ["rgba(255,100,0,0.08)", "#ff8844"],
 };
 
-function LaunchCard({ l }) {
-  const [bg, color] = STATUS_STYLE[l.status] || ["rgba(255,255,255,0.04)", "#888"];
+const fmtLaunchTime = (iso) => new Date(iso).toLocaleString(undefined, { weekday: "short", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZoneName: "short" });
+
+function countdown(iso) {
+  const ms = new Date(iso) - Date.now();
+  if (!(ms > 0)) return "";
+  const d = Math.floor(ms / 86_400_000), h = Math.floor((ms % 86_400_000) / 3_600_000), m = Math.floor((ms % 3_600_000) / 60_000);
+  return d ? `T-${d}d ${h}h` : `T-${h}h ${m}m`;
+}
+
+function DetailRow({ label, children }) {
+  if (!children) return null;
   return (
-    <div style={{ border, borderRadius: 8, padding: 14, marginBottom: 8, background: "rgba(255,255,255,0.01)" }}>
+    <div style={{ display: "flex", gap: 12, padding: "5px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", fontSize: 11 }}>
+      <span style={{ color: C.muted, width: 110, flexShrink: 0 }}>{label}</span>
+      <span style={{ color: C.light }}>{children}</span>
+    </div>
+  );
+}
+
+function LaunchDetails({ d }) {
+  const windowText = d.windowStart && d.windowEnd && d.windowStart !== d.windowEnd
+    ? `${fmtLaunchTime(d.windowStart)} to ${new Date(d.windowEnd).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}`
+    : d.windowStart && d.exactTime ? "Instantaneous" : "";
+  const link = { color: C.green, textDecoration: "none" };
+  return (
+    <div style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", gap: 14, flexWrap: "wrap" }} onClick={(e) => e.stopPropagation()}>
+      {d.image && <img src={d.image} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} style={{ width: 120, height: 120, objectFit: "cover", borderRadius: 6, flexShrink: 0 }} />}
+      <div style={{ flex: 1, minWidth: 240 }}>
+        {d.description && <p style={{ fontSize: 12, color: "#bbb", lineHeight: 1.6, margin: "0 0 10px" }}>{d.description}</p>}
+        <DetailRow label="Launch time">{d.net && (d.exactTime ? `${fmtLaunchTime(d.net)}  ·  ${countdown(d.net)}` : "Exact time not yet set")}</DetailRow>
+        <DetailRow label="Window">{windowText}</DetailRow>
+        <DetailRow label="Status">{d.status && `${d.status}${d.statusNote ? `. ${d.statusNote}` : ""}`}</DetailRow>
+        <DetailRow label="Rocket">{d.rocket}</DetailRow>
+        <DetailRow label="Mission type">{d.missionType}</DetailRow>
+        <DetailRow label="Orbit">{d.orbit}</DetailRow>
+        <DetailRow label="Customer">{d.customers.join(", ")}</DetailRow>
+        <DetailRow label="Programme">{d.programs.join(", ")}</DetailRow>
+        <DetailRow label="Launch pad">{d.pad}</DetailRow>
+        <DetailRow label="Weather">{d.probability != null ? `${d.probability}% chance of favourable weather${d.weather ? `. ${d.weather}` : ""}` : d.weather}</DetailRow>
+        <DetailRow label="Hold reason">{d.holdReason}</DetailRow>
+        <DetailRow label="Provider">{d.providerLaunchesThisYear != null && `${d.providerLaunchesThisYear} launch attempt${d.providerLaunchesThisYear === 1 ? "" : "s"} this year${d.providerType ? ` · ${d.providerType}` : ""}`}</DetailRow>
+        {(d.webcast || d.info) && (
+          <div style={{ display: "flex", gap: 16, marginTop: 10, fontSize: 11 }}>
+            {d.webcast && <a href={d.webcast} target="_blank" rel="noopener noreferrer" style={link}>Watch the webcast ↗</a>}
+            {d.info && <a href={d.info} target="_blank" rel="noopener noreferrer" style={link}>Mission page ↗</a>}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function LaunchCard({ l }) {
+  const [open, setOpen] = useState(false);
+  const [bg, color] = STATUS_STYLE[l.status] || ["rgba(255,255,255,0.04)", "#888"];
+  const expandable = !!l.details;
+  return (
+    <div
+      onClick={expandable ? () => setOpen((v) => !v) : undefined}
+      role={expandable ? "button" : undefined}
+      aria-expanded={expandable ? open : undefined}
+      tabIndex={expandable ? 0 : undefined}
+      onKeyDown={expandable ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpen((v) => !v); } } : undefined}
+      className={expandable ? "oa-launch" : undefined}
+      style={{ border, borderRadius: 8, padding: 14, marginBottom: 8, background: open ? "rgba(255,255,255,0.025)" : "rgba(255,255,255,0.01)", cursor: expandable ? "pointer" : "default" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
         <span style={{ fontSize: 12, color: C.green, fontWeight: 500 }}>{l.date}</span>
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }} onClick={(e) => e.stopPropagation()}>
           {l.tickers.map((t) => <TickerChip key={t} ticker={t} />)}
           <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 3, background: bg, color }}>{l.status}</span>
         </div>
       </div>
-      <div style={{ fontSize: 12, color: "#bbb" }}>{l.mission}</div>
-      {l.location && <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>{l.location}</div>}
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "flex-end" }}>
+        <div>
+          <div style={{ fontSize: 12, color: "#bbb" }}>{l.mission}</div>
+          {l.location && <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>{l.location}</div>}
+        </div>
+        {expandable && <span style={{ fontSize: 10, color: C.muted, whiteSpace: "nowrap" }}>{open ? "Less ▴" : "Details ▾"}</span>}
+      </div>
+      {open && <LaunchDetails d={l.details} />}
     </div>
   );
 }
@@ -1110,7 +1179,7 @@ function LaunchesTab({ launches }) {
       {launches === null && <ListSkeleton />}
       {shown?.length === 0 && <Empty>No launch data available right now.</Empty>}
       {shown?.map((l, i) => <LaunchCard key={i} l={l} />)}
-      <SourceNote>Source: Launch Library 2 (The Space Devs). Tickers show the launch provider or payload owner where we can identify them. Dates marked NET are "no earlier than".</SourceNote>
+      <SourceNote>Source: Launch Library 2 (The Space Devs). Tickers show the launch provider or payload owner where we can identify them. Dates marked NET are "no earlier than". Click a launch for full details; times are shown in your time zone.</SourceNote>
     </div>
   );
 }
