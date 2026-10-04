@@ -1,0 +1,47 @@
+name: X daily post
+
+# Weekdays after the US close: posts the space stocks heatmap to X (Fridays add the 3-month sector card).
+# Skips US market holidays. Runs as a dry run (no posting) until the X secrets are added.
+# 21:30 UTC is after the 4pm New York close in both summer and winter time.
+on:
+  schedule:
+    - cron: "30 21 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: build the images and text but do not post"
+        type: boolean
+        default: true
+      force:
+        description: "Run even if the US market was closed today"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm i --no-save playwright@1.47.2 && npx playwright install --with-deps chromium
+      - name: Build and post
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '0' }}
+          FORCE: ${{ inputs.force && '1' || '0' }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+          X_LINK_REPLY: ${{ vars.X_LINK_REPLY || '1' }}
+        run: node scripts/x-post.mjs
+      - name: Save the images to the x-posts branch for review
+        if: always()
+        run: |
+          [ -d shots ] || exit 0
+          cd shots && git init -q && git checkout -q -b x-posts
+          git config user.name "github-actions" && git config user.email "actions@github.com"
+          git add -A && git commit -qm "X post $(date -u +%F)" && git push -f -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" x-posts
