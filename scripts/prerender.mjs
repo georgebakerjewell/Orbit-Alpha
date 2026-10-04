@@ -61,6 +61,7 @@ function render({ path, title, description, body }) {
     `<meta name="twitter:card" content="summary" />`,
   ].join("\n    ");
   return template
+    .replace(/\s*<meta name="description"[^>]*>/, "") // drop the generic one from index.html
     .replace(/<title>[\s\S]*?<\/title>/, head)
     .replace('<div id="root"></div>', `<div id="root"><main>${body}${footer}</main></div>`);
 }
