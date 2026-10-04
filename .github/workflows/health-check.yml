@@ -1,0 +1,19 @@
+name: Live data health check
+
+# Calls every data endpoint on the live site and fails (GitHub emails the repo owner)
+# if any critical one stops returning real data.
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "15 7 * * *" # daily, about 8:15am UK time
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check live endpoints
+        run: node scripts/smoke-test.mjs https://www.orbitalpha.cloud
