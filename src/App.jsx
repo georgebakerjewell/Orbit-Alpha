@@ -478,7 +478,7 @@ function SubscribeForm({ color = C.green, label = "Join Free →", onDone, style
 
 // Subscribe popup: shown ONCE per browser. Remembered in localStorage (works like a cookie).
 const POPUP_KEY = "oa_popup_seen";
-const POPUP_DELAY_MS = 5000; // time on site before it appears
+const POPUP_DELAY_MS = 12000; // time on site before it appears
 
 function popupSeen() {
   try { return !!localStorage.getItem(POPUP_KEY); } catch { return true; } // storage blocked: don't nag
