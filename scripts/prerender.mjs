@@ -8,7 +8,7 @@ import { dirname } from "node:path";
 
 const SITE = "https://www.orbitalpha.cloud";
 const DIST = new URL("../dist/", import.meta.url);
-const profiles = JSON.parse(readFileSync(new URL("../src/stocks.json", import.meta.url), "utf8"));
+import { COVERED as profiles } from "../lib/roster.js";
 const template = readFileSync(new URL("index.html", DIST), "utf8");
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");

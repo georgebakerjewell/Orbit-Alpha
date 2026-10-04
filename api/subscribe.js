@@ -1,3 +1,22 @@
+import { ROSTER } from "../lib/roster.js";
+
+const PUBLICATION = "pub_e101efa6-d509-4743-a46d-ff8ada14d522";
+const clean = (v, max = 120) => (typeof v === "string" ? v.replace(/[^\w\s/.:#?=&-]/g, "").slice(0, max) : undefined);
+
+// Adds Beehiiv tags to a new subscription. Failures here never block the signup itself.
+async function addTags(subscriptionId, tags) {
+  if (!subscriptionId || !tags.length) return;
+  try {
+    await fetch(`https://api.beehiiv.com/v2/publications/${PUBLICATION}/subscriptions/${subscriptionId}/tags`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.BEEHIIV_API_KEY}` },
+      body: JSON.stringify({ tags }),
+    });
+  } catch (e) {
+    console.error("Beehiiv tagging failed:", e.message);
+  }
+}
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -12,11 +31,14 @@ export default async function handler(req, res) {
     });
   }
 
-  let email;
+  let email, source, page, follow;
 
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
     email = body?.email;
+    source = clean(body?.source, 60) || "website"; // which signup box, e.g. "stock-page", "popup"
+    page = clean(body?.page, 120); // the page path it was on, e.g. "/stocks/rklb"
+    follow = String(body?.follow || "").toUpperCase(); // ticker for "Follow RKLB" signups
   } catch (e) {
     return res.status(400).json({
       success: false,
@@ -41,7 +63,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      "https://api.beehiiv.com/v2/publications/pub_e101efa6-d509-4743-a46d-ff8ada14d522/subscriptions",
+      `https://api.beehiiv.com/v2/publications/${PUBLICATION}/subscriptions`,
       {
         method: "POST",
         headers: {
@@ -54,6 +76,8 @@ export default async function handler(req, res) {
           send_welcome_email: true,
           utm_source: "orbitalpha.cloud",
           utm_medium: "website",
+          utm_campaign: source,
+          ...(page && { utm_content: page, referring_site: `https://www.orbitalpha.cloud${page}` }),
         }),
       }
     );
@@ -84,6 +108,11 @@ export default async function handler(req, res) {
         beehiivResponse: data,
       });
     }
+
+    // Tag who signed up from where, and which company they follow (only real covered tickers).
+    const tags = [`Signup: ${source}`];
+    if (ROSTER.includes(follow)) tags.push(`Follows ${follow}`);
+    await addTags(data?.data?.id, tags);
 
     return res.status(200).json({
       success: true,

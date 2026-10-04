@@ -1,7 +1,9 @@
 // Upcoming earnings dates for roster companies, from the Nasdaq earnings calendar.
-// Scans the next 75 days (weekdays only), in parallel batches, cached for 6 hours.
+// Scans the next 75 days (weekdays only), all in parallel (about 0.2s), cached for 6 hours.
 
-const ROSTER = new Set(["RKLB", "ASTS", "GSAT", "VSAT", "PL", "KRMN", "MDA", "FLY", "LUNR", "TSAT", "RDW", "BKSY", "SATL", "SPIR", "SPCE", "KULR", "MNTS", "SPCX", "VOYG", "YSS", "HAWK", "SIDU", "ECHO"]);
+import { ROSTER as ROSTER_LIST } from "../lib/roster.js";
+
+const ROSTER = new Set(ROSTER_LIST);
 const DAYS_AHEAD = 75;
 const TTL = 6 * 60 * 60 * 1000;
 let cache = null;
@@ -52,10 +54,7 @@ export default async function handler(req, res) {
     if (d.getUTCDay() !== 0 && d.getUTCDay() !== 6) dates.push(d.toISOString().slice(0, 10));
   }
 
-  const results = [];
-  for (let i = 0; i < dates.length; i += 10) {
-    results.push(...(await Promise.all(dates.slice(i, i + 10).map(fetchDay))).flat());
-  }
+  const results = (await Promise.all(dates.map(fetchDay))).flat();
   results.sort((a, b) => a.date.localeCompare(b.date));
 
   // Only cache a non-empty result, so a temporary Nasdaq outage isn't cached for 6 hours.

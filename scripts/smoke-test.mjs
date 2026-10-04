@@ -26,6 +26,22 @@ async function check(name, path, validate, { critical = true, timeoutMs = 60000 
 }
 
 const count = (n, min) => ({ ok: n >= min, summary: `${n} item(s)` });
+const pctStr = (v) => (typeof v === "number" ? `${v >= 0 ? "+" : ""}${v.toFixed(2)}%` : "-");
+
+await check("Quotes (all, one request)", "/api/quotes", (j) => {
+  const q = j.quotes || {};
+  const n = Object.keys(q).length;
+  const capB = (t) => (q[t]?.marketCap ? q[t].marketCap / 1e9 : null);
+  // Sanity: market caps in a believable range (catches stale share counts like GSAT at $108B)
+  const sane = capB("GSAT") > 3 && capB("GSAT") < 40 && capB("RKLB") > 10 && capB("SPCX") > 500;
+  return {
+    ok: n >= 26 && sane,
+    summary: `${n} symbols${sane ? "" : ", MARKET CAPS LOOK WRONG"}`,
+    detail: ["SPCX", "RKLB", "ASTS", "GSAT", "RDW", "SPIR", "SPCE", "TSAT", "UFO"].map((t) => `${t}: $${q[t]?.price} · ${pctStr(q[t]?.changePct)} · cap ${capB(t)?.toFixed(2)}B`),
+  };
+});
+
+await check("Subscriber count", "/api/stats", (j) => ({ ok: typeof j.subscribers === "number", summary: `${j.subscribers ?? j.error}` }), { critical: false });
 
 await check("Quote RKLB 6mo", "/api/quote?ticker=RKLB&range=6mo", (j) => {
   const r = j?.chart?.result?.[0];

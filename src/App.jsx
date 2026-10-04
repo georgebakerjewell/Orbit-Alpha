@@ -1,122 +1,27 @@
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import issues from "./issues.json";
-import PROFILES from "./stocks.json"; // roster company profiles (also used by scripts/prerender.mjs)
+import { COVERED as PROFILES, ETFS } from "../lib/roster.js"; // the single list of covered stocks
 
 /* ════════════════════════════════════════════════════════════════════════════
-   DATA (edit tickers, earnings, news keywords here)
+   DATA  (stocks, ETFs and keywords all come from lib/roster.js)
    ════════════════════════════════════════════════════════════════════════════ */
-// Static config and fallback data. Live quotes from /api/quote replace STOCKS values once loaded.
-
-const SUBSCRIBER_COUNT = 400;
+const SUBSCRIBER_COUNT = 400; // shown only if the live count from Beehiiv is unavailable
 const SITE_URL = "https://www.orbitalpha.cloud";
 const SUBSCRIBE_API = "https://www.orbitalpha.cloud/api/subscribe";
 
-const s = (ticker, name, price, changePct, mktCap, sector, type = "stock") =>
-  ({ ticker, name, price, changePct, mktCap, sector, type });
-
+// Base list for the Markets table: covered stocks plus space ETFs. Prices fill in from /api/quotes.
 const STOCKS = [
-  s("SPCX", "SpaceX", 153.23, -1.5, "272B", "Launch", "large"),
-  s("RKLB", "Rocket Lab", 24.82, 15.9, "11.2B", "Launch"),
-  s("ASTS", "AST SpaceMobile", 31.17, 4.1, "6.8B", "Comms"),
-  s("LUNR", "Intuitive Machines", 8.44, -6.8, "0.9B", "Lunar"),
-  s("PL", "Planet Labs", 3.91, 2.1, "0.7B", "Earth Obs"),
-  s("BKSY", "BlackSky Technology", 6.14, 3.2, "0.4B", "Earth Obs"),
-  s("RDW", "Redwire", 11.23, 4.1, "0.8B", "Hardware"),
-  s("MNTS", "Momentus", 1.82, -5.7, "0.1B", "Transport"),
-  s("SPCE", "Virgin Galactic", 2.14, -3.2, "0.5B", "Tourism"),
-  s("KRMN", "Karman Space", 18.4, 1.8, "1.2B", "Hardware"),
-  s("SATL", "Satellogic", 1.23, -2.4, "0.2B", "Earth Obs"),
-  s("KULR", "KULR Technology", 1.94, 3.3, "0.3B", "Hardware"),
-  s("TSAT", "Telesat", 9.81, -0.8, "0.5B", "Comms"),
-  s("GSAT", "Globalstar", 1.67, 1.4, "3.1B", "Comms"),
-  s("VSAT", "Viasat", 14.32, -1.1, "1.8B", "Comms"),
-  s("MDA", "MDA Space", 19.44, 0.6, "2.1B", "Hardware"),
-  s("SPIR", "Spire Global", 4.22, 2.9, "0.4B", "Earth Obs"),
-  s("GILT", "Gilat Satellite", 7.88, 0.3, "0.3B", "Comms"),
-  s("DXYZ", "Destiny Tech100", 38.44, 4.2, "1.1B", "Private Access"),
-  s("LMT", "Lockheed Martin", 441.2, 0.4, "105B", "Defence", "large"),
-  s("FLY", "Firefly Aerospace", 14.82, 2.1, "1.8B", "Launch"),
-  s("OKLO", "Oklo", 22.14, 1.8, "2.4B", "Energy"),
-  s("BA", "Boeing", 172.4, -0.6, "120B", "Defence", "large"),
-  s("NOC", "Northrop Grumman", 489.2, 0.3, "72B", "Defence", "large"),
-  s("RTX", "RTX Corp", 138.6, 0.8, "181B", "Defence", "large"),
-  s("UFO", "Procure Space ETF", 18.92, 1.8, "ETF", "ETF", "etf"),
-  s("ARKX", "ARK Space ETF", 22.14, 2.3, "ETF", "ETF", "etf"),
-  s("NASA", "Tema Space Innovators ETF", 24.18, 3.1, "ETF", "ETF", "etf"),
-  s("MARS", "Roundhill Space & Tech ETF", 30.52, 0, "ETF", "ETF", "etf"),
-  s("ROKT", "SPDR Kensho Final Frontiers ETF", 42.18, 0, "ETF", "ETF", "etf"),
-  s("ECHO", "EchoStar Corporation", 94.25, 6.8, "27.4B", "Comms"),
-  s("VOYG", "Voyager Technologies", 31.49, 0, "1.9B", "Defence"),
-  s("YSS", "York Space Systems", 33.61, 0, "4.3B", "Defence"),
-  s("HAWK", "HawkEye 360", 34.0, 30.0, "3.1B", "Earth Obs"),
-  s("SIDU", "Sidus Space", 1.81, 1.7, "183M", "Hardware"),
-];
+  ...Object.entries(PROFILES).map(([ticker, p]) => ({ ticker, name: p.name, sector: p.sector, type: "stock" })),
+  ...Object.entries(ETFS).map(([ticker, e]) => ({ ticker, name: e.name, sector: "ETF", type: "etf" })),
+].map((x) => ({ ...x, price: null, changePct: null, marketCap: null, mktCap: null }));
 
-// Fetched first so the page goes live quickly.
-const PRIORITY_TICKERS = ["SPCX", "RKLB", "ASTS", "LUNR", "PL", "HAWK", "BKSY", "RDW", "SPCE", "OKLO", "LMT"];
+const SECTORS = ["All", ...new Set(STOCKS.map((x) => x.sector))];
 
-const SECTORS = ["All", "Launch", "Comms", "Earth Obs", "Hardware", "Lunar", "Tourism", "Transport", "Defence", "Energy", "ETF", "Private Access"];
+// Tags launches with the covered tickers involved (launch provider or payload owner).
+const LAUNCH_TAGS = Object.entries(PROFILES).filter(([, p]) => p.launch).map(([t, p]) => [new RegExp(p.launch, "i"), t]);
 
-// Tags launches with the roster tickers involved (launch provider or payload owner).
-const LAUNCH_TAGS = [
-  [/rocket lab|electron|neutron/i, "RKLB"],
-  [/firefly|\balpha\b|blue ghost/i, "FLY"],
-  [/spacex|falcon|starship|starlink|dragon/i, "SPCX"],
-  [/intuitive machines|\bIM-\d/i, "LUNR"],
-  [/bluebird|ast spacemobile/i, "ASTS"],
-  [/blacksky|gen-3/i, "BKSY"],
-  [/planet labs|pelican|superdove|\bflock\b/i, "PL"],
-  [/spire|lemur/i, "SPIR"],
-  [/hawkeye/i, "HAWK"],
-  [/satellogic|newsat/i, "SATL"],
-  [/telesat|lightspeed/i, "TSAT"],
-  [/globalstar/i, "GSAT"],
-  [/viasat|inmarsat/i, "VSAT"],
-  [/sidus|lizziesat/i, "SIDU"],
-  [/momentus|vigoride/i, "MNTS"],
-  [/starlab/i, "VOYG"],
-];
-
-// News filter chips (in display order). Matched as whole words against title + description.
-const COMPANY_KEYWORDS = {
-  SPCX: ["SPCX", "SpaceX", "Starship", "Falcon", "Starlink"],
-  RKLB: ["Rocket Lab", "RKLB", "Electron", "Neutron", "Peter Beck"],
-  ASTS: ["AST SpaceMobile", "ASTS", "BlueBird", "Abel Avellan"],
-  LUNR: ["Intuitive Machines", "LUNR", "IM-3", "IM-4", "lunar lander"],
-  PL: ["Planet Labs", "Pelican"],
-  BKSY: ["BlackSky", "BKSY"],
-  RDW: ["Redwire", "RDW"],
-  MNTS: ["Momentus", "MNTS"],
-  SPCE: ["Virgin Galactic", "SPCE", "VSS"],
-  KRMN: ["Karman", "KRMN"],
-  SATL: ["Satellogic", "SATL"],
-  KULR: ["KULR Technology", "KULR"],
-  TSAT: ["Telesat", "TSAT", "Lightspeed"],
-  GSAT: ["Globalstar", "GSAT"],
-  VSAT: ["Viasat", "VSAT"],
-  MDA: ["MDA Space", "MDA Ltd"],
-  SPIR: ["Spire Global", "SPIR"],
-  DXYZ: ["Destiny Tech", "DXYZ"],
-  LMT: ["Lockheed Martin", "LMT"],
-  FLY: ["Firefly Aerospace", "Alpha rocket"],
-  OKLO: ["Oklo", "nuclear microreactor"],
-  BA: ["Boeing"],
-  NOC: ["Northrop Grumman", "NOC"],
-  RTX: ["RTX", "Raytheon"],
-  HAWK: ["HawkEye 360", "SIGINT", "RF intelligence"],
-  VOYG: ["Voyager Technologies", "VOYG", "Starlab"],
-  YSS: ["York Space", "YSS"],
-  SIDU: ["Sidus Space", "SIDU", "LizzieSat"],
-  ECHO: ["EchoStar", "Hughes"],
-  "Blue Origin": ["Blue Origin", "New Glenn", "BE-4"],
-  Relativity: ["Relativity Space", "Terran"],
-  Vast: ["Vast Space", "Haven-1"],
-  ispace: ["ispace", "HAKUTO"],
-  NASA: ["NASA", "Artemis", "ISS"],
-  ESA: ["ESA", "European Space Agency", "Ariane"],
-  ISRO: ["ISRO", "Gaganyaan", "Chandrayaan"],
-  "Space Force": ["Space Force", "USSF", "NSSL", "Golden Dome"],
-};
+// Words that tag a news story to a covered stock (matched as whole words).
+const COMPANY_KEYWORDS = Object.fromEntries(Object.entries(PROFILES).map(([t, p]) => [t, p.keywords]));
 
 /* ════════════════════════════════════════════════════════════════════════════
    HOOKS (data fetching, routing, storage)
@@ -124,7 +29,7 @@ const COMPANY_KEYWORDS = {
 /* ── Routing: real URLs ───────────────────────────────────────────────────────
    /                      home
    /markets[/launches|earnings|contracts|filings]
-   /stocks/rklb           stock page (roster tickers in stocks.json)
+   /stocks/rklb           stock page (covered tickers in lib/roster.js)
    /news, /newsletter, /about    (/feed redirects to /news)
    Old #hash links (e.g. #feed/news/newsletter in Reddit posts) are redirected. */
 const MARKET_TABS = ["stocks", "performance", "launches", "earnings", "contracts", "filings"];
@@ -247,47 +152,24 @@ const formatMktCap = (v) =>
   : v >= 1e6 ? `$${(v / 1e6).toFixed(0)}M`
   : `$${v}`;
 
-// "11.2B", "$2.00T", "450M" -> number (for sorting)
-function capValue(str) {
-  const m = String(str || "").match(/([\d.]+)\s*([TBM])?/i);
-  if (!m) return 0;
-  return parseFloat(m[1]) * ({ T: 1e12, B: 1e9, M: 1e6 }[(m[2] || "").toUpperCase()] || 1);
-}
-
-async function fetchQuote(ticker, range) {
-  try {
-    const json = await (await fetch(`/api/quote?ticker=${ticker}&range=${range}`)).json();
-    const result = json?.chart?.result?.[0];
-    const meta = result?.meta;
-    if (!meta) return null;
-    const closes = result.indicators?.quote?.[0]?.close?.filter(Boolean) || [];
-    const price = meta.regularMarketPrice || meta.previousClose;
-    const prevClose = closes.length >= 2 ? closes[closes.length - 2] : meta.chartPreviousClose || meta.previousClose;
-    const changePct = meta.regularMarketChangePercent ?? (prevClose ? ((price - prevClose) / prevClose) * 100 : 0);
-    const cap = meta.marketCap || meta.netAssets;
-    return { ticker, price, changePct, volume: meta.regularMarketVolume || 0, spark: closes, ...(cap && { mktCap: formatMktCap(cap) }) };
-  } catch {
-    return null;
-  }
-}
-
-const fetchTicker = async (t) => (await fetchQuote(t, "7d")) || (await fetchQuote(t, "1d"));
-
+// All live prices in one request (shared across visitors via Vercel's edge cache).
 function useLivePrices() {
   const [stocks, setStocks] = useState(STOCKS);
   const [lastUpdated, setLastUpdated] = useState(null);
 
   useEffect(() => {
-    const apply = (results) => {
-      const updates = Object.fromEntries(results.filter(Boolean).map((r) => [r.ticker, r]));
-      if (!Object.keys(updates).length) return;
-      setStocks((prev) => prev.map((s) => (updates[s.ticker] ? { ...s, ...updates[s.ticker] } : s)));
-      setLastUpdated(new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }));
-    };
-    const rest = STOCKS.map((s) => s.ticker).filter((t) => !PRIORITY_TICKERS.includes(t));
     const load = async () => {
-      apply(await Promise.all(PRIORITY_TICKERS.map(fetchTicker)));
-      apply(await Promise.all(rest.map(fetchTicker)));
+      try {
+        const { quotes } = await (await fetch("/api/quotes")).json();
+        if (!quotes || !Object.keys(quotes).length) return;
+        setStocks((prev) => prev.map((s) => {
+          const q = quotes[s.ticker];
+          return q ? { ...s, ...q, mktCap: q.marketCap ? formatMktCap(q.marketCap) : null } : s;
+        }));
+        setLastUpdated(new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }));
+      } catch (e) {
+        console.log("Price fetch error:", e);
+      }
     };
     load();
     const id = setInterval(load, 5 * 60 * 1000);
@@ -533,7 +415,7 @@ const Stars = () => (
 );
 
 function TickerStrip({ stocks }) {
-  const items = stocks.filter((s) => s.type === "stock" || s.type === "etf");
+  const items = stocks.filter((s) => s.price != null);
   return (
     <div style={{ overflow: "hidden", background: "rgba(0,0,0,0.5)", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "6px 0" }}>
       <div style={{ display: "flex", gap: 32, animation: "ts 50s linear infinite", width: "max-content" }}>
@@ -549,20 +431,37 @@ function TickerStrip({ stocks }) {
 }
 
 /* ── Subscribe ──────────────────────────────────────────────────────────────── */
-async function subscribe(email) {
+// source: which signup box (e.g. "home-hero"); follow: ticker for "Follow RKLB" signups.
+// Both are recorded in Beehiiv (UTM fields and tags) so you can see which pages convert.
+async function subscribe(email, { source = "website", follow } = {}) {
   if (!email?.includes("@")) { alert("Please enter a valid email address."); return false; }
   try {
-    const res = await fetch(SUBSCRIBE_API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
-    if ((await res.json()).success) { window.rdt?.("track", "SignUp"); return true; }
+    const res = await fetch(SUBSCRIBE_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, source, follow, page: window.location.pathname }),
+    });
+    if ((await res.json()).success) {
+      window.rdt?.("track", "SignUp");
+      window.gtag?.("event", "sign_up", { method: source, ticker: follow });
+      return true;
+    }
   } catch {}
   alert("Something went wrong. Please try again.");
   return false;
 }
 
-function SubscribeForm({ color = C.green, label = "Join Free →", onDone, style }) {
+// Live subscriber count from Beehiiv, rounded down (e.g. 437 -> "430+").
+function useSubscriberLabel() {
+  const { data } = useApi("/api/stats");
+  const n = data?.subscribers;
+  return `${n >= 10 ? Math.floor(n / 10) * 10 : SUBSCRIBER_COUNT}+`;
+}
+
+function SubscribeForm({ color = C.green, label = "Join Free →", onDone, style, source, follow }) {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
-  const submit = async () => { if (await subscribe(email)) { setDone(true); onDone?.(); } };
+  const submit = async () => { if (await subscribe(email, { source, follow })) { setDone(true); onDone?.(); } };
   if (done) return <div style={{ fontSize: 13, color: C.green, padding: "10px 0" }}>✓ You're subscribed. Welcome to Orbit Alpha.</div>;
   return (
     <div style={{ display: "flex", gap: 8, maxWidth: 400, ...style }}>
@@ -587,6 +486,7 @@ function markPopupSeen(value) {
 
 function SubscribePopup() {
   const [show, setShow] = useState(false);
+  const subscribers = useSubscriberLabel();
   useEffect(() => {
     if (popupSeen()) return;
     const t = setTimeout(() => {
@@ -604,8 +504,8 @@ function SubscribePopup() {
         <div style={{ fontSize: 9, color: C.green, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 10 }}>Free Weekly Newsletter</div>
         <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>The only weekly covering every space stock.</div>
         <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>Macro overview · Broker target changes · One stock deep dive. Every Sunday morning. Free.</div>
-        <SubscribeForm onDone={() => close("subscribed")} style={{ maxWidth: "none", marginBottom: 14 }} />
-        <div style={{ fontSize: 10, color: C.muted }}><span style={{ color: C.green }}>✓</span> {SUBSCRIBER_COUNT}+ subscribers · Unsubscribe anytime</div>
+        <SubscribeForm source="popup" onDone={() => close("subscribed")} style={{ maxWidth: "none", marginBottom: 14 }} />
+        <div style={{ fontSize: 10, color: C.muted }}><span style={{ color: C.green }}>✓</span> {subscribers} subscribers · Unsubscribe anytime</div>
       </div>
     </div>
   );
@@ -718,6 +618,7 @@ const MoreLink = ({ to, children }) => (
 
 function Home({ news, prices, launches }) {
   const latest = issues[0];
+  const subscribers = useSubscriberLabel();
   const filings = useApi("/api/filings");
   const contracts = useApi("/api/contracts");
   const earnings = useApi("/api/earnings");
@@ -741,8 +642,8 @@ function Home({ news, prices, launches }) {
           <p style={{ fontSize: 13, color: C.light, lineHeight: 1.7, marginBottom: 20, maxWidth: 460 }}>
             What moved, why it moved and what's coming next across {Object.keys(PROFILES).length} space stocks, from SpaceX and Rocket Lab to the small caps. Five minutes every Sunday morning.
           </p>
-          <SubscribeForm style={{ marginBottom: 10 }} />
-          <div style={{ fontSize: 10, color: C.muted }}><span style={{ color: C.green }}>✓</span> Join {SUBSCRIBER_COUNT}+ investors · Free · Unsubscribe anytime</div>
+          <SubscribeForm source="home-hero" style={{ marginBottom: 10 }} />
+          <div style={{ fontSize: 10, color: C.muted }}><span style={{ color: C.green }}>✓</span> Join {subscribers} investors · Free · Unsubscribe anytime</div>
         </div>
         {latest && (
           <a href={latest.live ? latest.url : undefined} target="_blank" rel="noopener noreferrer" className="hov" style={{ ...cardStyle, display: "block", textDecoration: "none", border: "1px solid rgba(126,184,255,0.25)", background: "rgba(126,184,255,0.04)", padding: 24 }}>
@@ -832,7 +733,7 @@ function Home({ news, prices, launches }) {
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", textAlign: "center", padding: "32px 20px", marginBottom: 24 }}>
         <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Get the Sunday briefing</div>
         <p style={{ fontSize: 12, color: C.muted, marginBottom: 18 }}>The week in space stocks, in five minutes. Free.</p>
-        <SubscribeForm style={{ margin: "0 auto" }} />
+        <SubscribeForm source="home-bottom" style={{ margin: "0 auto" }} />
       </section>
 
       <footer style={{ padding: "24px 0", borderTop: "1px solid rgba(255,255,255,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
@@ -949,14 +850,15 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
   const flashClass = (t) => (flash[t] ? `flash-${flash[t]}` : "");
 
   const q = search.toLowerCase();
-  const sortVal = (s) => (sort.col === "mktCap" ? capValue(s.mktCap) : s[sort.col]);
-  const filtered = stocks
+  const sortVal = (s) => (sort.col === "mktCap" ? s.marketCap || 0 : s[sort.col] ?? -Infinity);
+  const priced = stocks.filter((s) => s.price != null);
+  const filtered = priced
     .filter((s) => (sector === "All" || s.sector === sector) && (s.ticker.toLowerCase().includes(q) || s.name.toLowerCase().includes(q)) && (!watchOnly || watchlist.includes(s.ticker)))
     .sort((a, b) => {
       if (sort.col) return (sort.dir === "desc" ? 1 : -1) * (sortVal(b) - sortVal(a));
       // Default order: ETFs first, then stocks, each by size (market cap / fund assets), largest first.
       const etf = (x) => (x.type === "etf" ? 0 : 1);
-      return etf(a) - etf(b) || capValue(b.mktCap) - capValue(a.mktCap);
+      return etf(a) - etf(b) || (b.marketCap || 0) - (a.marketCap || 0);
     });
 
   return (
@@ -1041,7 +943,11 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
         ))}
       </div>
 
-      {filtered.length === 0 && <div style={{ padding: 28, textAlign: "center", color: C.muted, fontSize: 12 }}>No results.</div>}
+      {!loading && filtered.length === 0 && (
+        <div style={{ padding: 28, textAlign: "center", color: C.muted, fontSize: 12 }}>
+          {priced.length ? "No results." : "Live prices are unavailable right now. Please refresh in a minute."}
+        </div>
+      )}
     </div>
   );
 }
@@ -1100,7 +1006,7 @@ function Heatmap({ stocks, isLive, compact = false }) {
   // Kept deliberately short so it summarises the day without dominating the page.
   const height = compact ? (width < 600 ? 240 : 210) : width < 600 ? 300 : 260;
   const items = stocks
-    .filter((s) => PROFILES[s.ticker])
+    .filter((s) => PROFILES[s.ticker] && s.price != null)
     .map((s) => ({ s, chg: period === "day" ? s.changePct : weekChange(s) }))
     .filter((d) => typeof d.chg === "number" && isFinite(d.chg))
     .map((d) => ({ ...d, value: Math.abs(d.chg) + 0.35 })) // small floor so flat stocks still get a tile
@@ -1474,7 +1380,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
   const earnings = useApi(profile ? "/api/earnings" : null);
   if (!profile) return <NotFound />;
 
-  const live = prices.stocks.find((x) => x.ticker === ticker);
+  const live = prices.stocks.find((x) => x.ticker === ticker && x.price != null);
   const result = chart.data?.chart?.result?.[0];
   const closes = result?.indicators?.quote?.[0]?.close || [];
   const points = (result?.timestamp || []).map((t, i) => ({ t, c: closes[i] })).filter((p) => p.c != null);
@@ -1509,7 +1415,16 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
           </div>
         )}
       </header>
-      <p style={{ fontSize: 13, color: C.light, lineHeight: 1.7, maxWidth: 720, marginBottom: 20 }}>{profile.about}</p>
+      <p style={{ fontSize: 13, color: C.light, lineHeight: 1.7, maxWidth: 720, marginBottom: 16 }}>{profile.about}</p>
+
+      {/* Follow bar */}
+      <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.04)", borderRadius: 10, padding: "12px 16px", marginBottom: 20 }}>
+        <div style={{ flex: "1 1 240px" }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>🔔 Follow {ticker}</div>
+          <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{profile.name} news, filings and contract wins in your free Sunday email.</div>
+        </div>
+        <SubscribeForm source="stock-page-top" follow={ticker} label={`Follow ${ticker} →`} style={{ flex: "1 1 320px" }} />
+      </div>
 
       {/* Chart */}
       <Card style={{ marginBottom: 14 }}>
@@ -1577,7 +1492,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginBottom: 24 }}>
         <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Follow {ticker} without the noise</div>
         <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>{profile.name} and every other space stock, summarised in one free email every Sunday.</p>
-        <SubscribeForm />
+        <SubscribeForm source="stock-page-bottom" follow={ticker} label={`Follow ${ticker} →`} />
       </section>
 
       {/* Internal links: other stocks */}
@@ -1734,7 +1649,7 @@ function News({ news }) {
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginTop: 28 }}>
         <div style={{ fontFamily: SYNE, fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Too much to keep up with?</div>
         <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>The week's space stock news that actually mattered, in one free email every Sunday.</p>
-        <SubscribeForm />
+        <SubscribeForm source="news-page" />
       </section>
       <SourceNote>Sources: Google News, Yahoo Finance, SEC EDGAR, USAspending.gov. Headlines link to the original publisher. Not financial advice.</SourceNote>
     </div>
@@ -1753,12 +1668,13 @@ const NEWSLETTER_SECTIONS = [
 const badge = (color, rgb) => ({ position: "absolute", top: 12, right: 12, fontSize: 9, color, background: `rgba(${rgb},0.08)`, border: `1px solid rgba(${rgb},0.2)`, padding: "2px 8px", borderRadius: 3, letterSpacing: "0.1em" });
 
 function Newsletter() {
+  const subscribers = useSubscriberLabel();
   return (
     <div style={{ animation: "fu 0.3s ease", maxWidth: 800, margin: "0 auto", padding: "40px 20px 60px" }}>
       <div style={{ fontSize: 10, color: C.green, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 10 }}>Free · Every Sunday · 5-minute read</div>
       <h1 style={{ fontFamily: SYNE, fontSize: "clamp(28px,5vw,40px)", fontWeight: 800, color: "#fff", lineHeight: 1.15, marginBottom: 12 }}>The week in space stocks, <span style={{ color: C.green }}>in one email.</span></h1>
-      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.7, maxWidth: 600, marginBottom: 22 }}>Join {SUBSCRIBER_COUNT}+ investors who get Orbit Alpha every Sunday morning: what moved, why it moved, and what to watch next across every space stock we cover.</p>
-      <SubscribeForm style={{ marginBottom: 32 }} />
+      <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.7, maxWidth: 600, marginBottom: 22 }}>Join {subscribers} investors who get Orbit Alpha every Sunday morning: what moved, why it moved, and what to watch next across every space stock we cover.</p>
+      <SubscribeForm source="newsletter-page" style={{ marginBottom: 32 }} />
 
       <div className="oa-grid" style={{ marginBottom: 36 }}>
         {NEWSLETTER_SECTIONS.map(([t, d]) => (
@@ -1801,7 +1717,7 @@ function About() {
       <Rule />
       <div style={{ fontSize: 10, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>Get in touch</div>
       <a href="mailto:OrbitAlphaApp@proton.me" style={{ color: C.green, fontSize: 13, textDecoration: "none" }}>📬 OrbitAlphaApp@proton.me</a>
-      <SubscribeForm label="Subscribe →" style={{ marginTop: 24 }} />
+      <SubscribeForm source="about-page" label="Subscribe →" style={{ marginTop: 24 }} />
     </div>
   );
 }
@@ -1875,7 +1791,7 @@ export default function App() {
         {marketChrome && (
           <div style={{ background: prices.isLive ? "rgba(0,255,136,0.05)" : "rgba(255,204,0,0.07)", borderBottom: `1px solid ${prices.isLive ? "rgba(0,255,136,0.15)" : "rgba(255,204,0,0.15)"}`, padding: "8px 16px", textAlign: "center", fontSize: 11, letterSpacing: "0.04em", color: prices.isLive ? C.green : C.yellow }}>
             <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "currentColor", animation: "bk 1.5s infinite", marginRight: 8 }} />
-            {prices.isLive ? `LIVE DATA · Updated ${prices.lastUpdated}` : "⚠ DEMO DATA ONLY. All prices and metrics are illustrative."}
+            {prices.isLive ? `LIVE DATA · Updated ${prices.lastUpdated}` : "Loading live prices..."}
           </div>
         )}
 

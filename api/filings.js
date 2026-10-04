@@ -5,7 +5,7 @@
 
 export const config = { maxDuration: 30 };
 
-const ROSTER = ["RKLB", "ASTS", "GSAT", "VSAT", "PL", "KRMN", "MDA", "FLY", "LUNR", "TSAT", "RDW", "BKSY", "SATL", "SPIR", "SPCE", "KULR", "MNTS", "SPCX", "VOYG", "YSS", "HAWK", "SIDU", "ECHO"];
+import { ROSTER } from "../lib/roster.js";
 
 // SEC requires a descriptive User-Agent with contact details.
 const HEADERS = { "User-Agent": "Orbit Alpha OrbitAlphaApp@proton.me", Accept: "application/json" };
