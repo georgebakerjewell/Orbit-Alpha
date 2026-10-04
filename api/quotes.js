@@ -3,7 +3,7 @@
 //   GET /api/quotes?symbols=RKLB,PL -> just those (must be covered stocks, ETFs or benchmarks)
 // Cached at Vercel's edge for 60 seconds, so all visitors share one fetch.
 import { ROSTER, ETF_TICKERS, BENCHMARKS } from "../lib/roster.js";
-import { yahooChart, sharesFor, summarize } from "../lib/market.js";
+import { yahooChart, marketCapUsd, summarize } from "../lib/market.js";
 
 const ALLOWED = new Set([...ROSTER, ...ETF_TICKERS, ...Object.keys(BENCHMARKS)]);
 
@@ -18,8 +18,7 @@ export default async function handler(req, res) {
     requested.map(async (symbol) => {
       const q = summarize(await yahooChart(symbol, "7d"));
       if (!q) return;
-      const shares = await sharesFor(symbol, q.price);
-      quotes[symbol] = { ...q, marketCap: shares ? shares * q.price : null };
+      quotes[symbol] = { ...q, marketCap: await marketCapUsd(symbol, q.price, q.currency) };
     })
   );
 

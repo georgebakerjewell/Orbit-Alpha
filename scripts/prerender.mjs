@@ -42,8 +42,10 @@ const routes = [
   ...Object.entries(profiles).map(([t, p]) => ({
     path: `/stocks/${t.toLowerCase()}`,
     title: `${t} Stock: ${p.name} News, Filings and Contracts | Orbit Alpha`,
-    description: `${p.name} (${t}) live price, SEC filings, insider trades, government contracts, earnings date and launches. ${p.about}`,
-    body: `<h1>${t} stock: ${esc(p.name)}</h1><p>${esc(p.about)}</p><p>Live price and chart, recent SEC filings and insider trades, US government contract awards, next earnings date, upcoming launches and the latest ${t} news.</p>`,
+    description: p.listing
+      ? `${p.name} (${t}, ${p.listing}) live price, chart, news and launches. ${p.about}`
+      : `${p.name} (${t}) live price, SEC filings, insider trades, government contracts, earnings date and launches. ${p.about}`,
+    body: `<h1>${t} stock: ${esc(p.name)}</h1><p>${esc(p.about)}</p><p>${p.listing ? `Live price and chart (listed on ${esc(p.listing)}), upcoming launches and the latest ${t} news.` : `Live price and chart, recent SEC filings and insider trades, US government contract awards, next earnings date, upcoming launches and the latest ${t} news.`}</p>`,
   })),
 ];
 

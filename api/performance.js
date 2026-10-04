@@ -4,7 +4,7 @@
 
 export const config = { maxDuration: 30 };
 
-import { ROSTER, ETFS as ETF_INFO, BENCHMARKS as BENCH_INFO } from "../lib/roster.js";
+import { ROSTER, ETFS as ETF_INFO, BENCHMARKS as BENCH_INFO, yahooSymbol } from "../lib/roster.js";
 
 const BENCHMARKS = Object.entries(BENCH_INFO).map(([id, label]) => ({ id, label, kind: "benchmark" }));
 const ETFS = Object.entries(ETF_INFO).map(([id, e]) => ({ id, label: e.name, kind: "etf" }));
@@ -15,7 +15,7 @@ const cache = {};
 
 async function closes(symbol, range) {
   try {
-    const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=${range}`, {
+    const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yahooSymbol(symbol))}?interval=1d&range=${range}`, {
       headers: { "User-Agent": "Mozilla/5.0", Accept: "application/json", Referer: "https://finance.yahoo.com" },
     });
     const r = (await res.json())?.chart?.result?.[0];

@@ -1,7 +1,7 @@
 // Upcoming earnings dates for roster companies, from the Nasdaq earnings calendar.
 // Scans the next 75 days (weekdays only), all in parallel (about 0.2s), cached for 6 hours.
 
-import { ROSTER as ROSTER_LIST } from "../lib/roster.js";
+import { US_ROSTER as ROSTER_LIST } from "../lib/roster.js"; // US listings only, so European tickers never match a US symbol
 
 const ROSTER = new Set(ROSTER_LIST);
 const DAYS_AHEAD = 75;

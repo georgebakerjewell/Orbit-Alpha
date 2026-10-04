@@ -12,7 +12,7 @@ const SUBSCRIBE_API = "https://www.orbitalpha.cloud/api/subscribe";
 // Base list for the Markets table: covered stocks plus space ETFs. Prices fill in from /api/quotes.
 const STOCKS = [
   ...Object.entries(PROFILES).map(([ticker, p]) => ({ ticker, name: p.name, sector: p.sector, type: "stock" })),
-  ...Object.entries(ETFS).map(([ticker, e]) => ({ ticker, name: e.name, sector: "ETF", type: "etf" })),
+  ...Object.entries(ETFS).map(([ticker, e]) => ({ ticker, name: e.name, sector: "ETF", type: "etf", tag: e.tag })),
 ].map((x) => ({ ...x, price: null, changePct: null, marketCap: null, mktCap: null }));
 
 const SECTORS = ["All", ...SECTOR_ORDER, "ETF"];
@@ -96,7 +96,9 @@ function routeMeta(route) {
   const p = PROFILES[route.ticker];
   if (route.page === "stock" && p) return {
     title: `${route.ticker} Stock: ${p.name} News, Filings and Contracts | Orbit Alpha`,
-    description: `${p.name} (${route.ticker}) live price, SEC filings, insider trades, government contracts, earnings date and launches. ${p.about}`,
+    description: p.listing
+      ? `${p.name} (${route.ticker}, ${p.listing}) live price, chart, news and launches. ${p.about}`
+      : `${p.name} (${route.ticker}) live price, SEC filings, insider trades, government contracts, earnings date and launches. ${p.about}`,
   };
   const tab = route.tab && route.tab !== "stocks" ? route.tab : null;
   return {
@@ -145,6 +147,14 @@ function useApi(url) {
 }
 
 /* ── Prices ─────────────────────────────────────────────────────────────────── */
+// Prices show in the currency the stock trades in (European listings: EUR, SEK, pence). Market caps are always US dollars.
+const CURRENCY = { USD: ["$", ""], EUR: ["€", ""], CAD: ["C$", ""], GBP: ["£", ""], GBp: ["", "p"], SEK: ["", " kr"] };
+const money = (v, cur = "USD") => {
+  if (v == null) return "-";
+  const [pre, post] = CURRENCY[cur] || ["", ` ${cur}`];
+  return `${pre}${v.toFixed(2)}${post}`;
+};
+const yahooUrl = (t) => `https://finance.yahoo.com/quote/${PROFILES[t]?.yahoo || ETFS[t]?.yahoo || t}`;
 const formatMktCap = (v) =>
   !v ? "-"
   : v >= 1e12 ? `$${(v / 1e12).toFixed(2)}T`
@@ -368,7 +378,7 @@ const GlobalStyles = () => (
 /* ── Small components ───────────────────────────────────────────────────────── */
 const Skeleton = ({ w, h, style }) => <div className="skeleton" style={{ width: w, height: h, ...style }} />;
 
-function Sparkline({ data, positive }) {
+function Sparkline({ data, positive, currency }) {
   const [hover, setHover] = useState(null);
   if (!data?.length) return <div style={{ width: 72, height: 28 }} />;
   const w = 72, h = 28;
@@ -403,7 +413,7 @@ function Sparkline({ data, positive }) {
       </svg>
       {hover !== null && (
         <div style={{ position: "absolute", bottom: "110%", left: "50%", transform: "translateX(-50%)", background: "#0a0f1e", border: `1px solid ${color}`, borderRadius: 4, padding: "3px 8px", fontSize: 10, color: "#fff", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 99 }}>
-          ${data[hover].toFixed(2)}<span style={{ color: C.muted, marginLeft: 4 }}>D{hover + 1}</span>
+          {money(data[hover], currency)}<span style={{ color: C.muted, marginLeft: 4 }}>D{hover + 1}</span>
         </div>
       )}
     </div>
@@ -440,7 +450,7 @@ function TickerStrip({ stocks }) {
         <div key={`${run}-${items.length}`} style={{ display: "flex", animation: "ts 50s linear infinite", WebkitAnimation: "ts 50s linear infinite", width: "max-content", willChange: "transform" }}>
           {[...items, ...items].map((s, i) => (
             <span key={i} style={{ fontSize: 11, whiteSpace: "nowrap", color: signColor(s.changePct), paddingRight: 32 }}>
-              <span style={{ color: C.muted, marginRight: 4 }}>{s.ticker}</span>${s.price.toFixed(2)}
+              <span style={{ color: C.muted, marginRight: 4 }}>{s.ticker}</span>{money(s.price, s.currency)}
               <span style={{ marginLeft: 3 }}>{s.changePct >= 0 ? "▲" : "▼"}{Math.abs(s.changePct).toFixed(1)}%</span>
             </span>
           ))}
@@ -841,7 +851,7 @@ const ChangeBadge = ({ v }) => (
   </span>
 );
 
-const EtfTag = () => <span style={{ fontSize: 8, color: C.blue, background: "rgba(126,184,255,0.1)", padding: "1px 4px", borderRadius: 2 }}>ETF</span>;
+const EtfTag = ({ label = "ETF" }) => <span style={{ fontSize: 8, color: C.blue, background: "rgba(126,184,255,0.1)", padding: "1px 4px", borderRadius: 2 }}>{label}</span>;
 
 function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
   const [sector, setSector] = useState("All");
@@ -918,13 +928,13 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
               <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                 <Star on={watchlist.includes(s.ticker)} onClick={() => toggleWatch(s.ticker)} />
                 <span style={{ fontWeight: 700, color: C.green, fontSize: 12 }}>{s.ticker}</span>
-                {s.type === "etf" && <EtfTag />}
+                {s.type === "etf" && <EtfTag label={s.tag} />}
               </div>
               <div><div style={{ fontSize: 12, color: "#fff" }}>{s.name}</div><div style={{ fontSize: 9, color: C.muted, marginTop: 1 }}>{s.sector}</div></div>
-              <span style={{ fontSize: 14, color: "#fff", fontWeight: 500 }}>${s.price.toFixed(2)}</span>
+              <span style={{ fontSize: 14, color: "#fff", fontWeight: 500 }}>{money(s.price, s.currency)}</span>
               <ChangeBadge v={s.changePct} />
               <span style={{ color: C.text, fontSize: 10 }}>{s.mktCap}</span>
-              <Sparkline data={s.spark} positive={s.changePct >= 0} />
+              <Sparkline data={s.spark} positive={s.changePct >= 0} currency={s.currency} />
             </div>
             {expanded === s.ticker && <StockDetail s={s} goSubscribe={goSubscribe} />}
           </div>
@@ -940,17 +950,17 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   <Star size={16} on={watchlist.includes(s.ticker)} onClick={() => toggleWatch(s.ticker)} />
                   <span style={{ fontSize: 14, fontWeight: 700, color: C.green }}>{s.ticker}</span>
-                  {s.type === "etf" && <EtfTag />}
+                  {s.type === "etf" && <EtfTag label={s.tag} />}
                   <span style={{ fontSize: 11, color: C.muted }}>{s.name}</span>
                 </div>
                 <ChangeBadge v={s.changePct} />
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                <span style={{ fontSize: 20, color: "#fff", fontWeight: 500 }}>${s.price.toFixed(2)}</span>
+                <span style={{ fontSize: 20, color: "#fff", fontWeight: 500 }}>{money(s.price, s.currency)}</span>
                 <span style={{ fontSize: 10, color: C.muted }}>{s.mktCap}</span>
               </div>
               <div style={{ fontSize: 8, color: C.muted, marginBottom: 3, letterSpacing: "0.08em" }}>7D</div>
-              <Sparkline data={s.spark} positive={s.changePct >= 0} />
+              <Sparkline data={s.spark} positive={s.changePct >= 0} currency={s.currency} />
               <div style={{ textAlign: "center", marginTop: 6, fontSize: 9, color: C.light }}>{PROFILES[s.ticker] ? "Tap for full page →" : expanded === s.ticker ? "▲ tap to close" : "▼ tap for more"}</div>
             </div>
             {expanded === s.ticker && <StockDetail s={s} goSubscribe={goSubscribe} />}
@@ -1075,13 +1085,13 @@ function StockDetail({ s, goSubscribe }) {
   return (
     <div style={{ background: "rgba(0,255,136,0.02)", border: "1px solid rgba(0,255,136,0.1)", borderRadius: 6, margin: "0 0 4px", padding: "14px 16px", animation: "fu 0.2s ease" }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 12, marginBottom: 12 }}>
-        {stat("Current Price", `$${s.price.toFixed(2)}`)}
+        {stat("Current Price", money(s.price, s.currency))}
         {stat("1D Change", pct(s.changePct, 2), signColor(s.changePct))}
         {stat("Mkt Cap", s.mktCap || "-")}
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
         <span style={{ fontSize: 10, color: C.light, background: "rgba(255,255,255,0.04)", padding: "5px 10px", borderRadius: 3 }}>{s.sector}</span>
-        {link("View on Yahoo Finance →", C.blue, () => window.open(`https://finance.yahoo.com/quote/${s.ticker}`, "_blank"))}
+        {link("View on Yahoo Finance →", C.blue, () => window.open(yahooUrl(s.ticker), "_blank"))}
         {link(`${s.ticker} in this week's issue →`, C.green, goSubscribe)}
       </div>
     </div>
@@ -1461,7 +1471,7 @@ function PerformanceChart({ full = false, prices }) {
    ════════════════════════════════════════════════════════════════════════════ */
 const CHART_RANGES = [["1d", "1D"], ["5d", "5D"], ["1mo", "1M"], ["3mo", "3M"], ["6mo", "6M"], ["1y", "1Y"]];
 
-function PriceChart({ points, intraday = false }) {
+function PriceChart({ points, intraday = false, currency = "USD" }) {
   const [hover, setHover] = useState(null);
   const W = 600, H = 190;
   if (points.length < 2) return <Empty>Chart unavailable right now.</Empty>;
@@ -1492,13 +1502,13 @@ function PriceChart({ points, intraday = false }) {
       </svg>
       {hp && (
         <div style={{ position: "absolute", top: 4, left: `${(hover / (points.length - 1)) * 100}%`, transform: `translateX(${hover > points.length / 2 ? "-105%" : "5%"})`, background: "#0a0f1e", border: `1px solid ${color}`, borderRadius: 4, padding: "4px 8px", fontSize: 11, color: "#fff", whiteSpace: "nowrap", pointerEvents: "none" }}>
-          ${hp.c.toFixed(2)} <span style={{ color: C.muted, marginLeft: 4 }}>{intraday
+          {money(hp.c, currency)} <span style={{ color: C.muted, marginLeft: 4 }}>{intraday
             ? new Date(hp.t * 1000).toLocaleString("en-GB", { weekday: "short", hour: "2-digit", minute: "2-digit", timeZone: "America/New_York" }) + " ET"
             : new Date(hp.t * 1000).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}</span>
         </div>
       )}
       <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, color: "#667", marginTop: 4 }}>
-        <span>Low ${min.toFixed(2)}</span><span>High ${max.toFixed(2)}</span>
+        <span>Low {money(min, currency)}</span><span>High {money(max, currency)}</span>
       </div>
     </div>
   );
@@ -1538,11 +1548,12 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
             <h1 style={{ fontFamily: SYNE, fontSize: 34, fontWeight: 800, color: C.green, letterSpacing: "-0.01em" }}>{ticker}</h1>
             <span style={{ fontSize: 16, color: "#fff" }}>{profile.name}</span>
             <span style={{ fontSize: 9, color: C.light, border: "1px solid rgba(255,255,255,0.15)", padding: "2px 8px", borderRadius: 3, letterSpacing: "0.08em", textTransform: "uppercase" }}>{profile.sector}</span>
+            {profile.listing && <span style={{ fontSize: 9, color: C.blue, border: "1px solid rgba(126,184,255,0.25)", padding: "2px 8px", borderRadius: 3, letterSpacing: "0.08em", textTransform: "uppercase" }}>{profile.listing}</span>}
           </div>
         </div>
         {live && (
           <div className="oa-price">
-            <div style={{ fontSize: 28, color: "#fff", fontWeight: 500 }}>${live.price.toFixed(2)}</div>
+            <div style={{ fontSize: 28, color: "#fff", fontWeight: 500 }}>{money(live.price, live.currency)}</div>
             <div style={{ fontSize: 12 }}>
               <span style={{ color: signColor(live.changePct), fontWeight: 600 }}>{pct(live.changePct, 2)} today</span>
               {live.mktCap && live.mktCap !== "ETF" && <span style={{ color: C.muted }}> · Mkt cap {live.mktCap}</span>}
@@ -1571,7 +1582,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
           </div>
           {rangeChange !== null && <span style={{ fontSize: 12, color: signColor(rangeChange), fontWeight: 600 }}>{pct(rangeChange)} over {CHART_RANGES.find(([id]) => id === range)[1]}</span>}
         </div>
-        {!chart.data && !chart.error ? <Skeleton w="100%" h={190} /> : <PriceChart points={points} intraday={range === "1d" || range === "5d"} />}
+        {!chart.data && !chart.error ? <Skeleton w="100%" h={190} /> : <PriceChart points={points} intraday={range === "1d" || range === "5d"} currency={result?.meta?.currency || live?.currency} />}
       </Card>
 
       {/* Key dates */}
@@ -1599,7 +1610,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       <div className="oa-grid" style={{ marginBottom: 14 }}>
         <Card title="SEC filings" note="Last 4 months">
           {!filings.data && !filings.error && <ListSkeleton />}
-          {(filings.error || filings.data?.filings?.length === 0) && <Empty>{ticker === "MDA" ? "MDA Space files in Canada (SEDAR+), not with the SEC." : "No notable SEC filings in the last 4 months."}</Empty>}
+          {(filings.error || filings.data?.filings?.length === 0) && <Empty>{ticker === "MDA" ? "MDA Space files in Canada (SEDAR+), not with the SEC." : profile.listing ? `${profile.name} is listed on ${profile.listing} and does not file with the SEC.` : "No notable SEC filings in the last 4 months."}</Empty>}
           {filings.data?.filings?.map((f) => <FilingRow key={f.url} f={f} />)}
           <SourceNote>Source: SEC EDGAR.</SourceNote>
         </Card>

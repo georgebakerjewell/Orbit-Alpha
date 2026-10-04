@@ -6,7 +6,7 @@
 import { COVERED } from "../lib/roster.js";
 
 // Recipient-name search terms per ticker (edit them in lib/roster.js).
-const RECIPIENTS = Object.fromEntries(Object.entries(COVERED).map(([t, c]) => [t, c.recipients]));
+const RECIPIENTS = Object.fromEntries(Object.entries(COVERED).filter(([, c]) => c.recipients?.length).map(([t, c]) => [t, c.recipients]));
 
 const API = "https://api.usaspending.gov/api/v2/search/spending_by_award/";
 const FIELDS = ["Award ID", "Recipient Name", "Award Amount", "Awarding Agency", "Awarding Sub Agency", "Start Date", "Description"];

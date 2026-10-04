@@ -1,4 +1,4 @@
-import { ROSTER } from "../lib/roster.js";
+import { ROSTER, yahooSymbol } from "../lib/roster.js";
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
   const fetchTickerNews = async (ticker) => {
     try {
-      const newsUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${ticker}&newsCount=10&enableFuzzyQuery=false`;
+      const newsUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(yahooSymbol(ticker))}&newsCount=10&enableFuzzyQuery=false`;
       const newsRes = await fetch(newsUrl, {
         headers: { 'User-Agent': 'Mozilla/5.0' }
       });

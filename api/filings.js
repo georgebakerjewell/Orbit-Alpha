@@ -5,7 +5,7 @@
 
 export const config = { maxDuration: 30 };
 
-import { ROSTER } from "../lib/roster.js";
+import { US_ROSTER as ROSTER } from "../lib/roster.js"; // SEC filers only (non-US listings excluded)
 
 // SEC requires a descriptive User-Agent with contact details.
 const HEADERS = { "User-Agent": "Orbit Alpha OrbitAlphaApp@proton.me", Accept: "application/json" };

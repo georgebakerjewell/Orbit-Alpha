@@ -41,6 +41,13 @@ await check("Quotes (all, one request)", "/api/quotes", (j) => {
   };
 });
 
+await check("European listings (local currency, USD market caps)", "/api/quotes?symbols=ETL,SESG,OHB,AVIO,GOMX,ACCL,FTC,SSIT", (j) => {
+  const q = j.quotes || {};
+  const want = { ETL: "EUR", SESG: "EUR", OHB: "EUR", AVIO: "EUR", GOMX: "SEK", ACCL: "SEK", FTC: "GBp", SSIT: "GBp" };
+  const ok = Object.entries(want).every(([t, c]) => q[t]?.price && q[t].currency === c && q[t].marketCap > 1e7 && q[t].marketCap < 5e10);
+  return { ok, summary: `${Object.keys(q).length}/8 symbols`, detail: Object.keys(want).map((t) => `${t}: ${q[t]?.price} ${q[t]?.currency} · ${pctStr(q[t]?.changePct)} · cap $${q[t]?.marketCap ? (q[t].marketCap / 1e9).toFixed(2) + "B" : "missing"}`) };
+});
+
 await check("Subscriber count", "/api/stats", (j) => ({ ok: typeof j.subscribers === "number", summary: `${j.subscribers ?? j.error}` }), { critical: false });
 
 await check("Quote RKLB 1D intraday", "/api/quote?ticker=RKLB&range=1d", (j) => {
