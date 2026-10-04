@@ -4,18 +4,10 @@
 
 export const config = { maxDuration: 30 };
 
-export const BENCHMARKS = [
-  { id: "SPY", label: "S&P 500", kind: "benchmark" },
-  { id: "QQQ", label: "Nasdaq 100", kind: "benchmark" },
-];
-export const ETFS = [
-  { id: "UFO", label: "Procure Space ETF", kind: "etf" },
-  { id: "ARKX", label: "ARK Space ETF", kind: "etf" },
-  { id: "ROKT", label: "SPDR Kensho Final Frontiers ETF", kind: "etf" },
-  { id: "MARS", label: "Roundhill Space & Tech ETF", kind: "etf" },
-  { id: "NASA", label: "Tema Space Innovators ETF", kind: "etf" },
-];
-export const ROSTER = ["RKLB", "ASTS", "GSAT", "VSAT", "PL", "KRMN", "MDA", "FLY", "LUNR", "TSAT", "RDW", "BKSY", "SATL", "SPIR", "SPCE", "KULR", "MNTS", "SPCX", "VOYG", "YSS", "HAWK", "SIDU", "ECHO"];
+import { ROSTER, ETFS as ETF_INFO, BENCHMARKS as BENCH_INFO } from "../lib/roster.js";
+
+const BENCHMARKS = Object.entries(BENCH_INFO).map(([id, label]) => ({ id, label, kind: "benchmark" }));
+const ETFS = Object.entries(ETF_INFO).map(([id, e]) => ({ id, label: e.name, kind: "etf" }));
 
 const RANGES = new Set(["1mo", "3mo", "6mo", "ytd", "1y"]);
 const TTL = 30 * 60 * 1000;

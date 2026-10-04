@@ -1,3 +1,5 @@
+import { COVERED } from "../lib/roster.js";
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
@@ -5,34 +7,11 @@ export default async function handler(req, res) {
 
   const { ticker, limit = 50 } = req.query;
 
-  // Covered stocks (keep in step with src/stocks.json) plus industry context.
-  // Excluded from Orbit Alpha coverage, so not queried: LMT, BA, NOC, OKLO, GILT, DXYZ.
+  // One query per covered stock (from lib/roster.js) plus industry context.
   const GOOGLE_QUERIES = ticker ? [
     { q: `${ticker} stock` },
   ] : [
-    { q: 'Rocket Lab RKLB stock' },
-    { q: 'AST SpaceMobile ASTS stock' },
-    { q: 'Intuitive Machines LUNR stock' },
-    { q: 'Planet Labs PL stock' },
-    { q: 'BlackSky Technology BKSY stock' },
-    { q: 'Redwire RDW stock' },
-    { q: 'Momentus MNTS stock' },
-    { q: 'Virgin Galactic SPCE stock' },
-    { q: 'Karman Space KRMN stock' },
-    { q: 'Satellogic SATL stock' },
-    { q: 'KULR Technology stock' },
-    { q: 'Telesat TSAT stock' },
-    { q: 'Globalstar GSAT stock' },
-    { q: 'Viasat VSAT stock' },
-    { q: 'MDA Space stock' },
-    { q: 'Spire Global SPIR stock' },
-    { q: 'Firefly Aerospace FLY stock' },
-    { q: 'SpaceX SPCX stock' },
-    { q: 'HawkEye 360 HAWK stock' },
-    { q: 'EchoStar ECHO stock' },
-    { q: 'Voyager Technologies VOYG stock' },
-    { q: 'York Space Systems YSS stock' },
-    { q: 'Sidus Space SIDU stock' },
+    ...Object.entries(COVERED).map(([t, c]) => ({ q: `${c.name} ${t} stock` })),
     { q: 'space stocks' },
     { q: 'NASA commercial space contract' },
     { q: 'US Space Force contract award' },

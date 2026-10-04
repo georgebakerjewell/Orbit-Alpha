@@ -3,33 +3,10 @@
 //   GET /api/contracts            -> recent awards across the whole roster
 //   GET /api/contracts?ticker=RKLB -> awards for one company
 
-// Recipient-name search terms per ticker. USAspending stores legal entity names in upper case,
-// so terms must be specific enough not to match unrelated companies.
-const RECIPIENTS = {
-  RKLB: ["ROCKET LAB", "GEOST"],
-  ASTS: ["AST & SCIENCE"],
-  GSAT: ["GLOBALSTAR"],
-  VSAT: ["VIASAT"],
-  PL: ["PLANET LABS"],
-  KRMN: ["KARMAN SPACE", "KARMAN HOLDINGS", "SYSTIMA TECHNOLOGIES"],
-  MDA: ["MDA US SYSTEMS", "MACDONALD DETTWILER", "MDA SPACE"],
-  FLY: ["FIREFLY AEROSPACE"],
-  LUNR: ["INTUITIVE MACHINES"],
-  TSAT: ["TELESAT"],
-  RDW: ["REDWIRE"],
-  BKSY: ["BLACKSKY"],
-  SATL: ["SATELLOGIC"],
-  SPIR: ["SPIRE GLOBAL"],
-  SPCE: ["VIRGIN GALACTIC"],
-  KULR: ["KULR TECHNOLOGY"],
-  MNTS: ["MOMENTUS"],
-  SPCX: ["SPACE EXPLORATION TECHNOLOGIES"],
-  VOYG: ["VOYAGER TECHNOLOGIES", "VOYAGER SPACE", "NANORACKS"],
-  YSS: ["YORK SPACE SYSTEMS"],
-  HAWK: ["HAWKEYE 360"],
-  SIDU: ["SIDUS SPACE"],
-  ECHO: ["HUGHES NETWORK SYSTEMS", "ECHOSTAR"],
-};
+import { COVERED } from "../lib/roster.js";
+
+// Recipient-name search terms per ticker (edit them in lib/roster.js).
+const RECIPIENTS = Object.fromEntries(Object.entries(COVERED).map(([t, c]) => [t, c.recipients]));
 
 const API = "https://api.usaspending.gov/api/v2/search/spending_by_award/";
 const FIELDS = ["Award ID", "Recipient Name", "Award Amount", "Awarding Agency", "Awarding Sub Agency", "Start Date", "Description"];
