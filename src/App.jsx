@@ -502,6 +502,8 @@ function captureFirstTouch() {
 }
 captureFirstTouch();
 const firstTouch = () => { try { return JSON.parse(localStorage.getItem("oa_src")) || null; } catch { return null; } };
+// Attach the visitor's first channel to every PostHog event, so all reports can be split by X, Reddit, Google...
+{ const ft = firstTouch(); window.posthog?.register?.({ first_source: ft?.source || "direct", first_medium: ft?.medium || "none", first_landing: ft?.landing }); }
 
 /* ── Subscribe ──────────────────────────────────────────────────────────────── */
 // source: which signup box (e.g. "home-hero"); follow: ticker for "Follow RKLB" signups.
@@ -517,6 +519,7 @@ async function subscribe(email, { source = "website", follow } = {}) {
     if ((await res.json()).success) {
       window.rdt?.("track", "SignUp");
       window.gtag?.("event", "sign_up", { method: source, ticker: follow });
+      window.posthog?.capture?.("sign_up", { signup_box: source, ticker: follow, page: window.location.pathname });
       return true;
     }
   } catch {}
