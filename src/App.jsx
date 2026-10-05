@@ -470,6 +470,39 @@ function TickerStrip({ stocks }) {
   );
 }
 
+/* ── Where visitors came from ─────────────────────────────────────────────── */
+// First visit only: remember the channel (from ?ref= / ?utm_source= on our own links, else the
+// referring site) so a sign-up days later is still credited to X, Reddit, Google etc.
+const REF_HOSTS = [
+  [/(^|\.)(t\.co|x\.com|twitter\.com)$/, "x", "social"], [/(^|\.)reddit\.com$|^redd\.it$/, "reddit", "social"],
+  [/(^|\.)google\./, "google", "search"], [/(^|\.)bing\.com$/, "bing", "search"], [/(^|\.)duckduckgo\.com$/, "duckduckgo", "search"],
+  [/(^|\.)(linkedin\.com|lnkd\.in)$/, "linkedin", "social"], [/(^|\.)(facebook\.com|fb\.me|instagram\.com)$/, "facebook", "social"],
+  [/(^|\.)news\.ycombinator\.com$/, "hackernews", "social"], [/(^|\.)(beehiiv\.com|mail\.)/, "newsletter", "email"],
+];
+const REF_ALIASES = { twitter: "x", "x.com": "x", rd: "reddit", nl: "newsletter", email: "newsletter" };
+function captureFirstTouch() {
+  try {
+    const url = new URL(window.location.href);
+    const tag = (url.searchParams.get("ref") || url.searchParams.get("utm_source") || "").toLowerCase().replace(/[^a-z0-9._-]/g, "").slice(0, 40);
+    let hit = null;
+    if (tag) hit = { source: REF_ALIASES[tag] || tag, medium: url.searchParams.get("utm_medium") || (["x", "reddit", "linkedin", "facebook"].includes(REF_ALIASES[tag] || tag) ? "social" : "link") };
+    else if (document.referrer) {
+      const host = new URL(document.referrer).hostname.replace(/^www\./, "");
+      if (!/orbitalpha\.cloud$/.test(host)) {
+        const m = REF_HOSTS.find(([re]) => re.test(host));
+        hit = m ? { source: m[1], medium: m[2] } : { source: host, medium: "referral" };
+        hit.referrer = document.referrer.slice(0, 200);
+      }
+    }
+    // Tidy our own tracking params out of the address bar so shared links don't carry them on.
+    if (url.searchParams.has("ref")) { url.searchParams.delete("ref"); window.history.replaceState(null, "", url.pathname + url.search + url.hash); }
+    if (!hit || localStorage.getItem("oa_src")) return;
+    localStorage.setItem("oa_src", JSON.stringify({ ...hit, landing: window.location.pathname, at: new Date().toISOString().slice(0, 10) }));
+  } catch {}
+}
+captureFirstTouch();
+const firstTouch = () => { try { return JSON.parse(localStorage.getItem("oa_src")) || null; } catch { return null; } };
+
 /* ── Subscribe ──────────────────────────────────────────────────────────────── */
 // source: which signup box (e.g. "home-hero"); follow: ticker for "Follow RKLB" signups.
 // Both are recorded in Beehiiv (UTM fields and tags) so you can see which pages convert.
@@ -479,7 +512,7 @@ async function subscribe(email, { source = "website", follow } = {}) {
     const res = await fetch(SUBSCRIBE_API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source, follow, page: window.location.pathname }),
+      body: JSON.stringify({ email, source, follow, page: window.location.pathname, origin: firstTouch() }),
     });
     if ((await res.json()).success) {
       window.rdt?.("track", "SignUp");

@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     });
   }
 
-  let email, source, page, follow;
+  let email, source, page, follow, origin;
 
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
@@ -39,6 +39,14 @@ export default async function handler(req, res) {
     source = clean(body?.source, 60) || "website"; // which signup box, e.g. "stock-page", "popup"
     page = clean(body?.page, 120); // the page path it was on, e.g. "/stocks/rklb"
     follow = String(body?.follow || "").toUpperCase(); // ticker for "Follow RKLB" signups
+    // Where the visitor first came from (captured by the site on their first visit).
+    const o = body?.origin || {};
+    origin = {
+      source: (clean(o.source, 40) || "direct").toLowerCase(),
+      medium: (clean(o.medium, 20) || (o.source ? "referral" : "none")).toLowerCase(),
+      referrer: typeof o.referrer === "string" && /^https?:\/\//.test(o.referrer) ? o.referrer.slice(0, 200) : undefined,
+      landing: clean(o.landing, 120),
+    };
   } catch (e) {
     return res.status(400).json({
       success: false,
@@ -74,10 +82,12 @@ export default async function handler(req, res) {
           email,
           reactivate_existing: true,
           send_welcome_email: true,
-          utm_source: "orbitalpha.cloud",
-          utm_medium: "website",
-          utm_campaign: source,
-          ...(page && { utm_content: page, referring_site: `https://www.orbitalpha.cloud${page}` }),
+          // Channel the subscriber originally came from (x, reddit, google, newsletter, direct...).
+          utm_source: origin.source,
+          utm_medium: origin.medium,
+          utm_campaign: source, // which signup box
+          ...(page && { utm_content: page }),
+          referring_site: origin.referrer || `https://www.orbitalpha.cloud${origin.landing || page || "/"}`,
         }),
       }
     );
@@ -110,7 +120,8 @@ export default async function handler(req, res) {
     }
 
     // Tag who signed up from where, and which company they follow (only real covered tickers).
-    const tags = [`Signup: ${source}`];
+    const SOURCE_NAMES = { x: "X", reddit: "Reddit", google: "Google", bing: "Bing", duckduckgo: "DuckDuckGo", linkedin: "LinkedIn", facebook: "Facebook", hackernews: "Hacker News", newsletter: "Newsletter", direct: "Direct" };
+    const tags = [`Signup: ${source}`, `Source: ${SOURCE_NAMES[origin.source] || origin.source}`];
     if (ROSTER.includes(follow)) tags.push(`Follows ${follow}`);
     await addTags(data?.data?.id, tags);
 
