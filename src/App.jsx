@@ -1276,7 +1276,7 @@ function FilingsTab() {
    PERFORMANCE CHART  (space ETFs and covered stocks vs the S&P 500)
    ════════════════════════════════════════════════════════════════════════════ */
 const PERF_RANGES = [["1mo", "1M"], ["3mo", "3M"], ["6mo", "6M"], ["ytd", "YTD"], ["1y", "1Y"]];
-const PERF_COLORS = { SPY: "#e8ecf4", QQQ: "#8fa3c0", UFO: C.orange, ARKX: "#b18cff", ROKT: C.yellow, MARS: C.blue, NASA: "#ff7eb6" };
+const PERF_COLORS = { SPY: "#e8ecf4", QQQ: "#8fa3c0", UFO: C.orange, ARKX: "#b18cff", ROKT: C.yellow, MARS: C.blue, NASA: "#ff7eb6", SSIT: "#38d9a9" };
 const STOCK_COLORS = ["#4de1ff", "#ff6b6b", "#c3f73a", "#ffa94d", "#f783ff", "#38d9a9", "#ffe066", "#a5b4fc"];
 const PERF_GROUPS = [["benchmark", "Benchmarks"], ["etf", "Space ETFs"]];
 
