@@ -38,6 +38,7 @@ const seenTitle = new Set();
 const newsItems = [...(yahooNews || []), ...(news || [])]
   .filter((n) => n?.title && n.pubDate && ageDays(n.pubDate) <= 1.5)
   .filter((n) => { const k = n.title.toLowerCase().slice(0, 60); if (seenTitle.has(k)) return false; seenTitle.add(k); return true; })
+  .map((n) => ({ ...n, title: n.title.replace(/\s*[\u2014\u2013]\s*|\s+--\s+/g, ": ") })) // house style: no em dashes, even in quoted headlines
   .map((n) => ({ ...n, tickers: n.ticker && COVERED[n.ticker] ? [n.ticker] : Object.keys(KEYWORDS).filter((t) => KEYWORDS[t].some((re) => re.test(n.title))) }));
 // Coming up: earnings in the next 7 days, launches in the next 3.
 const earnings = (Array.isArray(earningsRes) ? earningsRes : []).filter((e) => { const d = (new Date(e.date).getTime() - NOW) / DAY; return d >= -0.5 && d <= 7; });
@@ -61,7 +62,7 @@ function buildDigest(follow) {
   const events = {};
   const add = (t, kind, html, weight) => { (events[t] ||= []).push({ kind, html, weight }); };
   for (const a of contracts) if (tickers.includes(a.ticker))
-    add(a.ticker, "Contract", `<b>${usd(a.amount)}</b> from ${esc(a.subAgency || a.agency)}: ${esc(a.description)} <a href="${a.url}" style="color:${MUTED}">(source)</a>`, 3 + Math.log10(a.amount));
+    add(a.ticker, "Contract", `<b>${usd(a.amount)}</b> from ${esc(a.subAgency || a.agency)}: ${esc((a.description || "").replace(/^./, (c) => c.toUpperCase()))} <a href="${a.url}" style="color:${MUTED}">(source)</a>`, 3 + Math.log10(a.amount));
   for (const f of filings) if (tickers.includes(f.ticker)) {
     const who = f.owner ? ` · ${esc(f.owner)}${f.role ? `, ${esc(f.role)}` : ""}` : "";
     const val = f.value ? ` · ${usd(f.value)}` : "";
