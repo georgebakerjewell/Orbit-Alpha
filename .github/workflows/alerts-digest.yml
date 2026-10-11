@@ -29,6 +29,6 @@ jobs:
         if: inputs.mode == 'preview'
         env: { GH_TOKEN: "${{ github.token }}" }
         run: |
-          cd out/alerts && git init -q -b alerts-preview && git config user.name orbit-alpha-bot && git config user.email actions@users.noreply.github.com
+          cd out/alerts && git init -q -b alerts-preview && printf '{"git":{"deploymentEnabled":false},"ignoreCommand":"exit 0"}\n' > vercel.json && git config user.name orbit-alpha-bot && git config user.email actions@users.noreply.github.com
           git add -A && git commit -qm "Alerts preview $(date -u +%FT%TZ)"
           git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" alerts-preview

@@ -31,6 +31,6 @@ jobs:
         env: { GH_TOKEN: "${{ github.token }}" }
         run: |
           mkdir pub && cp out/latest.json pub/ && cd pub
-          git init -q -b x-targets && git config user.name orbit-alpha-bot && git config user.email actions@users.noreply.github.com
-          git add latest.json && git commit -qm "X reply targets $(date -u +%FT%TZ)"
+          git init -q -b x-targets && printf '{"git":{"deploymentEnabled":false},"ignoreCommand":"exit 0"}\n' > vercel.json && git config user.name orbit-alpha-bot && git config user.email actions@users.noreply.github.com
+          git add -A && git commit -qm "X reply targets $(date -u +%FT%TZ)"
           git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" x-targets

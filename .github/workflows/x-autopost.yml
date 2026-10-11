@@ -47,6 +47,6 @@ jobs:
         if: always()
         run: |
           [ -d shots ] || exit 0
-          cd shots && git init -q && git checkout -q -b x-posts
+          cd shots && git init -q && git checkout -q -b x-posts && printf '{"git":{"deploymentEnabled":false},"ignoreCommand":"exit 0"}\n' > vercel.json
           git config user.name "github-actions" && git config user.email "actions@github.com"
           git add -A && git commit -qm "X post $(date -u +%F)" && git push -f -q "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" x-posts
