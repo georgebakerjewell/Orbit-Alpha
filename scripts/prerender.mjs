@@ -9,6 +9,7 @@ import { COVERED as profiles, ETFS, SECTOR_ORDER } from "../lib/roster.js";
 
 const SITE = "https://www.orbitalpha.cloud";
 const X_HANDLE = "OrbitAlphaApp";
+const REDDIT = "https://www.reddit.com/r/SpaceCapital/";
 const DIST = new URL("../dist/", import.meta.url);
 const template = readFileSync(new URL("index.html", DIST), "utf8");
 
@@ -30,17 +31,17 @@ const SECTOR_TEXT = {
 
 const sources = `<h2>Where the data comes from</h2><p>Prices come from ${ext("https://finance.yahoo.com/", "Yahoo Finance")}, company filings and insider trades from the SEC's ${ext("https://www.sec.gov/edgar/search/", "EDGAR")} database, US government contract awards from ${ext("https://www.usaspending.gov/", "USAspending.gov")}, and launch schedules from public launch trackers. Orbit Alpha is information, not investment advice.</p>`;
 const sectorDirectory = `<h2>Space stocks we cover, by sector</h2>${SECTOR_ORDER.map((s) => `<h3>${s}</h3><p>${SECTOR_TEXT[s]}</p>${list(bySector[s].map(stockLink))}`).join("")}<h3>Space ETFs and funds</h3>${list(Object.entries(ETFS).map(([t, e]) => `${esc(e.name)} (${t})`))}`;
-const footer = `<p>Orbit Alpha is a free space stocks dashboard and weekly newsletter covering ${Object.keys(profiles).length} listed space companies, with live prices, launches, earnings dates, SEC filings, insider trades and US government contracts in one place.</p><nav aria-label="Site"><ul><li><a href="/">Home</a></li><li><a href="/markets">Live space stocks dashboard</a></li><li><a href="/markets/performance">Performance vs the S&amp;P 500</a></li><li><a href="/news">News, filings and contracts</a></li><li><a href="/newsletter">Free weekly newsletter</a></li><li><a href="/about">About</a></li><li>${ext(`https://x.com/${X_HANDLE}`, "Orbit Alpha on X")}</li></ul></nav>`;
+const footer = `<p>Orbit Alpha is a free space stocks dashboard and weekly newsletter covering ${Object.keys(profiles).length} listed space companies, with live prices, launches, earnings dates, SEC filings, insider trades and US government contracts in one place.</p><nav aria-label="Site"><ul><li><a href="/">Home</a></li><li><a href="/markets">Live space stocks dashboard</a></li><li><a href="/markets/performance">Performance vs the S&amp;P 500</a></li><li><a href="/news">News, filings and contracts</a></li><li><a href="/newsletter">Free weekly newsletter</a></li><li><a href="/about">About</a></li><li>${ext(`https://x.com/${X_HANDLE}`, "Orbit Alpha on X")}</li><li>${ext(REDDIT, "r/SpaceCapital on Reddit")}</li></ul></nav>`;
 const share = (path, text) => {
   const u = encodeURIComponent(SITE + path), t = encodeURIComponent(text);
-  return `<p>Share this page: ${ext(`https://x.com/intent/tweet?url=${u}&text=${t}`, "X")} · ${ext(`https://www.reddit.com/submit?url=${u}&title=${t}`, "Reddit")} · ${ext(`https://www.linkedin.com/sharing/share-offsite/?url=${u}`, "LinkedIn")}</p>`;
+  return `<p>Follow Orbit Alpha on ${ext(`https://x.com/${X_HANDLE}`, `X (@${X_HANDLE})`)} and join the discussion on ${ext(REDDIT, "r/SpaceCapital")}.</p><p>Share this page: ${ext(`https://x.com/intent/tweet?url=${u}&text=${t}`, "X")} · ${ext(`https://www.reddit.com/submit?url=${u}&title=${t}`, "Reddit")} · ${ext(`https://www.linkedin.com/sharing/share-offsite/?url=${u}`, "LinkedIn")}</p>`;
 };
 const faq = (pairs) => ({
   html: `<h2>Frequently asked questions</h2>${pairs.map(([q, a]) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join("")}`,
   ld: { "@type": "FAQPage", mainEntity: pairs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
 });
 const crumbs = (items) => ({ "@type": "BreadcrumbList", itemListElement: items.map(([name, path], i) => ({ "@type": "ListItem", position: i + 1, name, item: SITE + path })) });
-const ORG = { "@type": "Organization", "@id": `${SITE}/#org`, name: "Orbit Alpha", url: SITE, logo: `${SITE}/icon-512.png`, sameAs: [`https://x.com/${X_HANDLE}`] };
+const ORG = { "@type": "Organization", "@id": `${SITE}/#org`, name: "Orbit Alpha", url: SITE, logo: `${SITE}/icon-512.png`, sameAs: [`https://x.com/${X_HANDLE}`, REDDIT] };
 
 const count = Object.keys(profiles).length;
 const homeFaq = faq([

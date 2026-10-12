@@ -814,6 +814,8 @@ function Home({ news, prices, launches }) {
           <Link to="/news" className="oa-link">News</Link>
           <Link to="/newsletter" className="oa-link">Newsletter</Link>
           <Link to="/about" className="oa-link">About</Link>
+          <a href="https://x.com/OrbitAlphaApp" target="_blank" rel="noopener me" style={{ color: C.muted, textDecoration: "none" }} className="oa-link">X @OrbitAlphaApp</a>
+          <a href="https://www.reddit.com/r/SpaceCapital/" target="_blank" rel="noopener" style={{ color: C.muted, textDecoration: "none" }} className="oa-link">r/SpaceCapital</a>
           <a href="mailto:OrbitAlphaApp@proton.me" style={{ color: C.muted, textDecoration: "none" }} className="oa-link">Contact</a>
         </div>
       </footer>
