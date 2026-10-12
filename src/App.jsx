@@ -116,7 +116,7 @@ function routeMeta(route) {
     markets: { title: tab === "performance" ? "Space Stocks vs the S&P 500: ETF and Stock Performance | Orbit Alpha" : `Space Stocks ${tab ? tab[0].toUpperCase() + tab.slice(1) : "Dashboard"} | Orbit Alpha`, description: "Live prices, launches, earnings dates, SEC filings and government contract awards for publicly traded space companies." },
     news: { title: "Space Stock News, Filings and Contract Wins | Orbit Alpha", description: "Live space stock news, SEC filings, insider trades and government contract wins in one feed, filterable by company." },
     newsletter: { title: "The Orbit Alpha Newsletter | Free Weekly Space Stocks Briefing", description: "Every Sunday: the week in space stocks, analyst target changes and one stock deep dive. Free." },
-    about: { title: "About | Orbit Alpha", description: "What Orbit Alpha is and how it is made." },
+    about: { title: "About | Orbit Alpha", description: "What Orbit Alpha is, which space stocks it covers and where its data comes from." },
   }[route.page] || { title: "Page not found | Orbit Alpha", description: "" };
 }
 
@@ -1137,7 +1137,7 @@ function StockDetail({ s, goSubscribe }) {
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
         <span style={{ fontSize: 10, color: C.light, background: "rgba(255,255,255,0.04)", padding: "5px 10px", borderRadius: 3 }}>{s.sector}</span>
-        {link("View on Yahoo Finance →", C.blue, () => window.open(yahooUrl(s.ticker), "_blank"))}
+        <a href={yahooUrl(s.ticker)} target="_blank" rel="noopener" style={{ color: C.blue, border: `1px solid ${C.blue}33`, fontSize: 10, padding: "5px 10px", borderRadius: 3, fontFamily: MONO, textDecoration: "none" }}>View on Yahoo Finance →</a>
         {link(`${s.ticker} in this week's issue →`, C.green, goSubscribe)}
       </div>
     </div>
@@ -1679,6 +1679,20 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
           </a>
         ))}
       </Card>
+
+      {/* Research and share links (real <a> links: useful to readers and to search engines) */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 16px", alignItems: "center", fontSize: 11, color: C.muted, marginBottom: 14 }}>
+        <span>Research {ticker}:</span>
+        <a className="oa-link" style={{ color: C.blue, textDecoration: "none" }} href={yahooUrl(ticker)} target="_blank" rel="noopener">Yahoo Finance</a>
+        {!profile.listing && <a className="oa-link" style={{ color: C.blue, textDecoration: "none" }} href={`https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${ticker}&owner=include&count=40`} target="_blank" rel="noopener">SEC EDGAR</a>}
+        {!profile.listing && <a className="oa-link" style={{ color: C.blue, textDecoration: "none" }} href={`https://www.usaspending.gov/search/?hash=&keyword=${encodeURIComponent(profile.name)}`} target="_blank" rel="noopener">USAspending</a>}
+        <span style={{ marginLeft: "auto" }}>Share:</span>
+        {[["X", `https://x.com/intent/tweet?url=${encodeURIComponent(`https://www.orbitalpha.cloud/stocks/${ticker.toLowerCase()}`)}&text=${encodeURIComponent(`${profile.name} ($${ticker}): live price, filings and contracts`)}`],
+          ["Reddit", `https://www.reddit.com/submit?url=${encodeURIComponent(`https://www.orbitalpha.cloud/stocks/${ticker.toLowerCase()}`)}&title=${encodeURIComponent(`${profile.name} ($${ticker}): live price, filings and contracts`)}`],
+          ["LinkedIn", `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://www.orbitalpha.cloud/stocks/${ticker.toLowerCase()}`)}`]].map(([n, href]) => (
+          <a key={n} className="oa-link" style={{ color: C.blue, textDecoration: "none" }} href={href} target="_blank" rel="noopener">{n}</a>
+        ))}
+      </div>
 
       {/* Newsletter */}
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginBottom: 24 }}>
