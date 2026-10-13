@@ -1711,7 +1711,7 @@ function KeyStats({ ticker, data, error, live }) {
           <Stat label="Market cap" value={live?.marketCap ? formatMktCap(live.marketCap) : "-"} sub={PROFILES[ticker]?.listing ? "In US dollars" : null} />
           <Stat label="52-week range" value={`${money(s.low52, cur)} to ${money(s.high52, cur)}`} sub={s.fromHigh != null ? `${pct(s.fromHigh)} from 52-week high` : null} />
           <Stat label="YTD return" value={pctOrDash(s.ytd)} color={s.ytd == null ? null : signColor(s.ytd)} sub={[vs(s.ytd, data.sectorMedian?.ytd, "Sector median"), vs(s.ytd, data.ufo?.ytd, "UFO ETF")].filter(Boolean).join(" · ")} />
-          <Stat label="1-year return" value={pctOrDash(s.y1)} color={s.y1 == null ? null : signColor(s.y1)} sub={[vs(s.y1, data.sectorMedian?.y1, "Sector median"), vs(s.y1, data.ufo?.y1, "UFO ETF")].filter(Boolean).join(" · ") + (s.days < 240 ? ` · Listed for ${s.days} trading days` : "")} />
+          <Stat label={s.partial ? "Since listing" : "1-year return"} value={pctOrDash(s.y1)} color={s.y1 == null ? null : signColor(s.y1)} sub={s.partial ? `Listed ${s.days} trading days ago` : [vs(s.y1, data.sectorMedian?.y1, "Sector median"), vs(s.y1, data.ufo?.y1, "UFO ETF")].filter(Boolean).join(" · ")} />
           <Stat label="Volume" value={fmtVol(s.vol)} sub={s.avgVol ? `3-month average ${fmtVol(s.avgVol)}${s.vol != null ? ` (${(s.vol / s.avgVol).toFixed(1)}x)` : ""}` : null} />
         </div>
       )}

@@ -52,7 +52,8 @@ export function classify(form, items = "") {
 
 // Parse a Form 4 XML document: who, role, and whether it was an open-market buy or sale.
 export function parseForm4(xml) {
-  const pick = (re, s = xml) => (s.match(re) || [])[1]?.trim() || "";
+  const unescape = (v) => v.replace(/&amp;/g, "&").replace(/&apos;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+  const pick = (re, s = xml) => unescape((s.match(re) || [])[1]?.trim() || "");
   const owner = pick(/<rptOwnerName>([\s\S]*?)<\/rptOwnerName>/);
   const title = pick(/<officerTitle>([\s\S]*?)<\/officerTitle>/);
   const isDirector = /<isDirector>\s*(1|true)\s*<\/isDirector>/i.test(xml);

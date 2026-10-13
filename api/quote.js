@@ -43,6 +43,7 @@ export function yearStats(result, now = new Date()) {
     avgVol: vols.length ? Math.round(vols.reduce((a, b) => a + b, 0) / vols.length) : null,
     vol: last.v ?? null,
     days: rows.length,
+    partial: rows.length < 240, // listed for less than a year: y1 is the return since listing
     currency: result.meta?.currency || "USD",
   };
 }
@@ -53,7 +54,7 @@ async function keyStats(symbol) {
   const symbols = [...new Set([symbol, ...peers, "UFO"])];
   const charts = await Promise.all(symbols.map((s) => yahooChart(s, "1y", "1d")));
   const by = Object.fromEntries(symbols.map((s, i) => [s, yearStats(charts[i])]));
-  const peerRows = peers.map((t) => ({ ticker: t, name: COVERED[t].name, ytd: by[t]?.ytd ?? null, y1: by[t]?.y1 ?? null, fromHigh: by[t]?.fromHigh ?? null }));
+  const peerRows = peers.map((t) => ({ ticker: t, name: COVERED[t].name, ytd: by[t]?.ytd ?? null, y1: by[t]?.partial ? null : by[t]?.y1 ?? null, fromHigh: by[t]?.fromHigh ?? null }));
   return {
     ticker: symbol,
     sector: sector || null,
