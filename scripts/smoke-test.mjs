@@ -80,6 +80,14 @@ await check("Insiders RKLB", "/api/filings?ticker=RKLB&insiders=1", (j) => ({
   detail: (j.largest || []).map((t) => `${t.date} ${t.owner} (${t.role}) ${t.direction} ${t.value}`),
 }), { critical: false });
 await check("Insiders ASTS", "/api/filings?ticker=ASTS&insiders=1", (j) => ({ ok: !!j.m12, summary: `${j.form4s} Form 4s, 12m bought ${j.m12?.bought} sold ${j.m12?.sold}` }), { critical: false });
+const finSummary = (j) => {
+  const f = j.snapshot;
+  if (!f) return "no snapshot";
+  return `to ${f.periodEnd} ${f.currency} rev ${f.revenue.ttm} (${f.revenue.ttmGrowth}%) q ${f.revenue.quarter} (${f.revenue.quarterGrowth}%) GM ${f.grossMargin}% NI ${f.netIncome.ttm} FCF ${f.freeCashFlow} cash ${f.liquidity} debt ${f.debt} runway ${f.runwayMonths} shares ${f.shares?.latest?.shares} 1y ${f.shares?.y1?.pct}% 3y ${f.shares?.y3?.pct}% offerings ${j.offerings?.length} tags ${JSON.stringify(f.tags)}`;
+};
+for (const t of (process.env.FIN_ALL ? (await import("../lib/roster.js")).US_ROSTER.filter((x) => x !== "MDA") : ["RKLB", "ASTS"])) {
+  await check(`Financials ${t}`, `/api/filings?ticker=${t}&financials=1`, (j) => ({ ok: !!j.snapshot?.revenue, summary: finSummary(j) }), { critical: false });
+}
 await check("Performance YTD", "/api/performance?range=ytd", (j) => {
   const last = (id) => { const s = j.series?.find((x) => x.id === id); return s ? [...s.values].reverse().find((v) => v != null) : null; };
   const stocks = j.series?.filter((s) => s.kind === "stock").length || 0;

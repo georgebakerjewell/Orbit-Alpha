@@ -16,4 +16,4 @@ jobs:
         with:
           node-version: 20
       - name: Check live endpoints
-        run: node scripts/smoke-test.mjs https://www.orbitalpha.cloud
+        run: FIN_ALL=1 node scripts/smoke-test.mjs https://www.orbitalpha.cloud

@@ -1684,6 +1684,7 @@ function PriceChart({ points, intraday = false, currency = "USD" }) {
 
 /* ── Stock page: key stats, insider activity, peers ────────────────────────── */
 // Canadian filers report insider trades on SEDI, not SEC Form 4.
+const hasSec = (t) => !PROFILES[t]?.listing && t !== "MDA";
 const hasForm4 = (t) => !PROFILES[t]?.listing && t !== "MDA" && t !== "TSAT";
 const fmtVol = (v) => (v == null ? "-" : v >= 1e9 ? `${(v / 1e9).toFixed(2)}B` : v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${Math.round(v / 1e3)}K` : `${v}`);
 const pctOrDash = (v) => (v == null ? "-" : pct(v));
@@ -1798,6 +1799,99 @@ function PeerTable({ ticker, data, prices }) {
   );
 }
 
+const SHORT_DATE = { day: "numeric", month: "short", year: "numeric" };
+const CUR_SYM = { USD: "$", CAD: "C$", EUR: "€", GBP: "£" };
+// Signed amount, e.g. -$41.2M
+const fmtAmt = (v, cur = "USD") => {
+  if (v == null) return "-";
+  const sym = CUR_SYM[cur] ?? `${cur} `;
+  const a = Math.abs(v);
+  const body = a >= 1e9 ? `${(a / 1e9).toFixed(2)}B` : a >= 1e6 ? `${(a / 1e6).toFixed(1)}M` : a >= 1e3 ? `${Math.round(a / 1e3)}K` : `${Math.round(a)}`;
+  return `${v < 0 ? "-" : ""}${sym}${body}`;
+};
+const fmtShares = (v) => (v == null ? "-" : v >= 1e9 ? `${(v / 1e9).toFixed(2)}B` : `${(v / 1e6).toFixed(1)}M`);
+
+function FinRow({ label, value, sub, color }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, padding: "7px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+      <span style={{ fontSize: 12, color: C.light }}>{label}</span>
+      <span style={{ textAlign: "right" }}>
+        <span style={{ fontSize: 13, color: color || "#fff", fontWeight: 600, whiteSpace: "nowrap" }}>{value}</span>
+        {sub && <span style={{ fontSize: 10, color: C.muted, marginLeft: 6, whiteSpace: "nowrap" }}>{sub}</span>}
+      </span>
+    </div>
+  );
+}
+
+function FinancialSnapshot({ data, error, live }) {
+  const f = data?.snapshot;
+  const cur = f?.currency || "USD";
+  const yoy = (g) => (g == null ? null : `${pct(g)} YoY`);
+  const runway = !f ? null
+    : f.cashGenerative ? { value: "Cash generative", sub: "positive free cash flow", color: C.green }
+    : f.runwayMonths == null ? null
+    : { value: f.runwayMonths >= 120 ? "10+ years" : f.runwayMonths >= 36 ? `${(f.runwayMonths / 12).toFixed(1)} years` : `${Math.round(f.runwayMonths)} months`, sub: "at current burn", color: f.runwayMonths < 12 ? C.red : f.runwayMonths < 24 ? C.orange : "#fff" };
+  const ps = f?.revenue?.ttm > 0 && cur === "USD" && live?.marketCap ? live.marketCap / f.revenue.ttm : null;
+  return (
+    <Card title="Financials" note={f ? `Last 12 months to ${fmtDay(f.periodEnd, SHORT_DATE)}` : "Last 12 months"}>
+      {!data && !error && <ListSkeleton rows={6} />}
+      {(error || data?.none || (data && !f)) && <Empty>Financial data unavailable for this company.</Empty>}
+      {f && (
+        <>
+          <FinRow label="Revenue" value={fmtAmt(f.revenue.ttm, cur)} sub={yoy(f.revenue.ttmGrowth)} />
+          <FinRow label="Latest quarter revenue" value={fmtAmt(f.revenue.quarter, cur)} sub={yoy(f.revenue.quarterGrowth)} />
+          {f.grossMargin != null && <FinRow label="Gross margin" value={`${f.grossMargin.toFixed(1)}%`} color={f.grossMargin < 0 ? C.red : null} />}
+          <FinRow label="Net income" value={fmtAmt(f.netIncome.ttm, cur)} color={f.netIncome.ttm < 0 ? C.red : null} />
+          <FinRow label="Free cash flow" value={fmtAmt(f.freeCashFlow, cur)} sub={f.operatingCashFlow != null ? `operating ${fmtAmt(f.operatingCashFlow, cur)}, capex ${fmtAmt(f.capex || 0, cur)}` : null} color={f.freeCashFlow < 0 ? C.red : null} />
+          <FinRow label={f.shortTermInvestments ? "Cash and investments" : "Cash"} value={fmtAmt(f.liquidity, cur)} />
+          <FinRow label="Debt" value={fmtAmt(f.debt, cur)} />
+          {runway && <FinRow label="Cash runway" value={runway.value} sub={runway.sub} color={runway.color} />}
+          {ps != null && <FinRow label="Price to sales" value={`${ps.toFixed(1)}x`} sub="market cap / revenue" />}
+        </>
+      )}
+      <SourceNote>Source: SEC XBRL filings{f && cur !== "USD" ? ` (${cur})` : ""}. Free cash flow is operating cash flow minus capital spending. Runway is cash and short-term investments divided by the last 12 months' free cash outflow, before any new funding. Debt as tagged in filings, excluding leases.</SourceNote>
+    </Card>
+  );
+}
+
+function DilutionTracker({ data, error }) {
+  const sh = data?.snapshot?.shares;
+  const hist = sh?.history || [];
+  const max = Math.max(...hist.map((p) => p.shares), 1);
+  const chg = (c, label) => c && <FinRow label={label} value={pct(c.pct)} sub={`from ${fmtShares(c.shares)}`} color={c.pct > 10 ? C.red : c.pct > 3 ? C.orange : c.pct < 0 ? C.green : null} />;
+  return (
+    <Card title="Dilution" note="Shares outstanding">
+      {!data && !error && <ListSkeleton rows={4} />}
+      {(error || data?.none || (data && !sh && !data.offerings?.length)) && <Empty>Share count data unavailable for this company.</Empty>}
+      {sh && (
+        <>
+          <FinRow label="Shares outstanding" value={fmtShares(sh.latest.shares)} sub={fmtDay(sh.latest.date, SHORT_DATE)} />
+          {chg(sh.y1, "1-year change")}
+          {chg(sh.y3, "3-year change")}
+          {hist.length > 2 && (
+            <div aria-label="Share count history" style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 54, marginTop: 12 }}>
+              {hist.map((p) => <div key={p.date} title={`${fmtDay(p.date, SHORT_DATE)}: ${fmtShares(p.shares)}`} style={{ flex: 1, height: `${Math.max(6, (p.shares / max) * 100)}%`, background: "rgba(126,184,255,0.45)", borderRadius: "2px 2px 0 0" }} />)}
+            </div>
+          )}
+          {hist.length > 2 && <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, color: C.muted, marginTop: 4 }}><span>{fmtDay(hist[0].date, { month: "short", year: "numeric" })}</span><span>{fmtDay(hist[hist.length - 1].date, { month: "short", year: "numeric" })}</span></div>}
+        </>
+      )}
+      {data?.offerings?.length > 0 && (
+        <div style={{ marginTop: 14 }}>
+          <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>Offering filings, last 2 years</div>
+          {data.offerings.slice(0, 6).map((o) => (
+            <a key={o.url} href={o.url} target="_blank" rel="noopener noreferrer" className="hov" style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none", fontSize: 11 }}>
+              <span style={{ color: C.light }}>{o.label} <span style={{ color: C.muted }}>({o.form})</span></span>
+              <span style={{ color: C.muted, whiteSpace: "nowrap" }}>{fmtDay(o.date, SHORT_DATE)}</span>
+            </a>
+          ))}
+        </div>
+      )}
+      <SourceNote>Source: SEC filings (cover page share counts, all classes). A registration or prospectus allows a sale; it does not mean shares were sold.</SourceNote>
+    </Card>
+  );
+}
+
 function StockPage({ ticker, prices, launches, news, goSubscribe }) {
   const profile = PROFILES[ticker];
   const [range, setRange] = useState("6mo");
@@ -1806,6 +1900,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
   const contracts = useApi(profile ? `/api/contracts?ticker=${ticker}` : null);
   const earnings = useApi(profile ? "/api/earnings" : null);
   const keyStats = useApi(profile ? `/api/quote?ticker=${ticker}&stats=1` : null);
+  const fin = useApi(profile && hasSec(ticker) ? `/api/filings?ticker=${ticker}&financials=1` : null);
   const insiders = useApi(profile && hasForm4(ticker) ? `/api/filings?ticker=${ticker}&insiders=1` : null);
   if (!profile) return <NotFound />;
 
@@ -1874,6 +1969,13 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       </Card>
 
       <KeyStats ticker={ticker} data={keyStats.data} error={keyStats.error} live={live} />
+
+      {hasSec(ticker) && (
+        <div className="oa-grid" style={{ marginBottom: 14 }}>
+          <FinancialSnapshot data={fin.data} error={fin.error} live={live} />
+          <DilutionTracker data={fin.data} error={fin.error} />
+        </div>
+      )}
 
       {/* Key dates */}
       <div className="oa-grid" style={{ marginBottom: 14 }}>

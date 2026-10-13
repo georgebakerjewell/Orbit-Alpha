@@ -2,11 +2,13 @@
 //   GET /api/filings             -> recent notable filings across the roster
 //   GET /api/filings?ticker=RKLB -> recent notable filings for one company
 //   GET /api/filings?ticker=RKLB&insiders=1 -> open-market insider buys and sales, last 3 and 12 months
+//   GET /api/filings?ticker=RKLB&financials=1 -> TTM financials, cash runway, share count history and offering filings
 // Form 4s are parsed so insider buys and sales are labelled as such.
 
 export const config = { maxDuration: 30 };
 
-import { US_ROSTER as ROSTER } from "../lib/roster.js"; // SEC filers only (non-US listings excluded)
+import { US_ROSTER as ROSTER } from "../lib/roster.js";
+import { buildSnapshot } from "../lib/financials.js"; // SEC filers only (non-US listings excluded)
 
 // SEC requires a descriptive User-Agent with contact details.
 const HEADERS = { "User-Agent": "Orbit Alpha OrbitAlphaApp@proton.me", Accept: "application/json" };
@@ -179,10 +181,55 @@ async function insiderActivity(ticker, cik) {
   };
 }
 
+const FIN_TTL = 12 * 60 * 60 * 1000;
+
+async function financials(ticker, cik) {
+  const id = String(cik).padStart(10, "0");
+  const [factsRes, subRes] = await Promise.all([
+    fetch(`https://data.sec.gov/api/xbrl/companyfacts/CIK${id}.json`, { headers: HEADERS }),
+    fetch(`https://data.sec.gov/submissions/CIK${id}.json`, { headers: HEADERS }),
+  ]);
+  const snapshot = factsRes.ok ? buildSnapshot(await factsRes.json()) : null;
+  // Offering-related filings in the last 2 years. Prospectus supplements are grouped by month,
+  // because at-the-market programmes can file many.
+  const offerings = [];
+  if (subRes.ok) {
+    const r = (await subRes.json()).filings?.recent || {};
+    const since = new Date(Date.now() - 730 * 86_400_000).toISOString().slice(0, 10);
+    const seen = new Set();
+    for (let i = 0; i < (r.form || []).length && offerings.length < 12; i++) {
+      if (r.filingDate[i] < since) break;
+      const info = classify(r.form[i], r.items?.[i] || "");
+      if (info?.kind !== "dilution") continue;
+      const key = /^424B/.test(r.form[i]) ? `424-${r.filingDate[i].slice(0, 7)}` : r.accessionNumber[i];
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const acc = r.accessionNumber[i].replace(/-/g, "");
+      offerings.push({ date: r.filingDate[i], form: r.form[i], label: info.label, url: `https://www.sec.gov/Archives/edgar/data/${cik}/${acc}/${r.primaryDocument[i]}` });
+    }
+  }
+  return { ticker, snapshot, offerings, asOf: new Date().toISOString().slice(0, 10) };
+}
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   const ticker = (req.query.ticker || "").toUpperCase();
   if (ticker && !ROSTER.includes(ticker)) return res.status(200).json({ filings: [] });
+
+  if (ticker && req.query.financials) {
+    const key = `FIN:${ticker}`;
+    if (!cache[key] || Date.now() - cache[key].ts > FIN_TTL) {
+      try {
+        const cik = (await getCikMap())[ticker];
+        if (!cik) return res.status(200).json({ ticker, none: true });
+        cache[key] = { ts: Date.now(), data: await financials(ticker, cik) };
+      } catch (e) {
+        return res.status(502).json({ error: e.message });
+      }
+    }
+    res.setHeader("Cache-Control", "s-maxage=43200, stale-while-revalidate=86400");
+    return res.status(200).json(cache[key].data);
+  }
 
   if (ticker && req.query.insiders) {
     const key = `INS:${ticker}`;
