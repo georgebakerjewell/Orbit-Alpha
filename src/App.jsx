@@ -494,6 +494,9 @@ function captureFirstTouch() {
         hit.referrer = document.referrer.slice(0, 200);
       }
     }
+    // Visitors clicking through from the newsletter are already subscribers.
+    const medium = (url.searchParams.get("utm_medium") || "").toLowerCase();
+    if (tag === "newsletter" || tag === "nl" || tag.includes("orbit-alpha") || tag.includes("beehiiv") || medium === "email" || medium === "newsletter") { try { localStorage.setItem("oa_subscribed", "1"); } catch {} }
     // Tidy our own tracking params out of the address bar so shared links don't carry them on.
     if (url.searchParams.has("ref")) { url.searchParams.delete("ref"); window.history.replaceState(null, "", url.pathname + url.search + url.hash); }
     if (!hit || localStorage.getItem("oa_src")) return;
@@ -504,6 +507,32 @@ captureFirstTouch();
 const firstTouch = () => { try { return JSON.parse(localStorage.getItem("oa_src")) || null; } catch { return null; } };
 // Attach the visitor's first channel to every PostHog event, so all reports can be split by X, Reddit, Google...
 { const ft = firstTouch(); window.posthog?.register?.({ first_source: ft?.source || "direct", first_medium: ft?.medium || "none", first_landing: ft?.landing }); }
+
+/* ── Subscribed state ──────────────────────────────────────────────────────── */
+// Remembered in this browser once someone subscribes (or arrives from the newsletter),
+// so sign-up boxes and the popup stop asking people who are already on the list.
+const SUB_KEY = "oa_subscribed";
+const isSubscribed = () => { try { return localStorage.getItem(SUB_KEY) === "1"; } catch { return false; } };
+function markSubscribed(notify = true) {
+  try { localStorage.setItem(SUB_KEY, "1"); } catch {}
+  if (notify) window.dispatchEvent(new Event("oa-subscribed"));
+}
+// live=false: decide once when the component appears, so a form can still show its own "you're subscribed" message.
+function useSubscribed(live = true) {
+  const [subscribed, setSubscribed] = useState(isSubscribed);
+  useEffect(() => {
+    if (!live) return;
+    const on = () => setSubscribed(true);
+    window.addEventListener("oa-subscribed", on);
+    return () => window.removeEventListener("oa-subscribed", on);
+  }, [live]);
+  return subscribed;
+}
+// Wraps promo boxes that only make sense for people who haven't subscribed yet.
+function ForNonSubscribers({ children }) {
+  return useSubscribed(false) ? null : children;
+}
+const LATEST_ISSUE = issues.find((i) => i.live) || null;
 
 /* ── Subscribe ──────────────────────────────────────────────────────────────── */
 // source: which signup box (e.g. "home-hero"); follow: ticker for "Follow RKLB" signups.
@@ -517,6 +546,7 @@ async function subscribe(email, { source = "website", follow } = {}) {
       body: JSON.stringify({ email, source, follow, page: window.location.pathname, origin: firstTouch() }),
     });
     if ((await res.json()).success) {
+      markSubscribed();
       window.rdt?.("track", "SignUp");
       window.gtag?.("event", "sign_up", { method: source, ticker: follow });
       window.posthog?.capture?.("sign_up", { signup_box: source, ticker: follow, page: window.location.pathname });
@@ -532,24 +562,53 @@ function useSubscriberLabel() {
   return `${SUBSCRIBER_COUNT}+`;
 }
 
-function SubscribeForm({ color = C.green, label = "Join Free →", onDone, style, source, follow }) {
+function SubscribeForm({ color = C.green, label = "Join Free →", onDone, style, source, follow, sample = true }) {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
-  const submit = async () => { if (await subscribe(email, { source, follow })) { setDone(true); onDone?.(); } };
+  const [busy, setBusy] = useState(false);
+  const already = useSubscribed(false);
+  const submit = async (e) => {
+    e?.preventDefault();
+    if (busy) return;
+    setBusy(true);
+    const ok = await subscribe(email, { source, follow });
+    setBusy(false);
+    if (ok) { setDone(true); onDone?.(); }
+  };
+  const sampleLink = sample && LATEST_ISSUE && (
+    <a href={LATEST_ISSUE.url} target="_blank" rel="noopener" className="oa-link" onClick={() => window.posthog?.capture?.("sample_issue_click", { from: source })}
+      style={{ display: "inline-block", marginTop: 8, fontSize: 10.5, color: C.light, textDecoration: "none", lineHeight: 1.5 }}>
+      Read last Sunday's issue first: <span style={{ color: C.green }}>{LATEST_ISSUE.headline} →</span>
+    </a>
+  );
   if (done) return <div style={{ fontSize: 13, color: C.green, padding: "10px 0" }}>✓ You're subscribed. Welcome to Orbit Alpha.</div>;
+  if (already) return (
+    <div style={{ fontSize: 12, color: C.green, padding: "8px 0", ...(style?.margin != null && { margin: style.margin }), ...(style?.marginTop != null && { marginTop: style.marginTop }) }}>
+      ✓ You're subscribed.{LATEST_ISSUE && <> <a href={LATEST_ISSUE.url} target="_blank" rel="noopener" className="oa-link" style={{ color: C.light, textDecoration: "none" }}>Read the latest issue →</a></>}
+    </div>
+  );
   return (
-    <div style={{ display: "flex", gap: 8, maxWidth: 400, ...style }}>
-      <input value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} placeholder="your@email.com" style={inputStyle} />
-      <button onClick={submit} style={{ background: color, color: C.bg, border: "none", padding: "10px 20px", borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: MONO, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>
-        {label}
-      </button>
+    <div style={{ maxWidth: 400, ...style }}>
+      <form onSubmit={submit} style={{ display: "flex", gap: 8, flexWrap: style?.flexWrap }}>
+        <input type="email" inputMode="email" autoComplete="email" required aria-label="Email address" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com" style={{ ...inputStyle, minWidth: 0, flex: "1 1 160px" }} />
+        <button type="submit" disabled={busy} style={{ background: color, color: C.bg, border: "none", padding: "10px 20px", borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: MONO, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, opacity: busy ? 0.6 : 1 }}>
+          {busy ? "Joining…" : label}
+        </button>
+      </form>
+      {sampleLink}
     </div>
   );
 }
 
+// A function whose identity never changes but always calls the latest version (for event listeners).
+function useCallbackRef(fn) {
+  const ref = useRef(fn);
+  ref.current = fn;
+  return useRef((...a) => ref.current(...a)).current;
+}
+
 // Subscribe popup: shown ONCE per browser. Remembered in localStorage (works like a cookie).
 const POPUP_KEY = "oa_popup_seen";
-const POPUP_DELAY_MS = 12000; // time on site before it appears
 
 function popupSeen() {
   try { return !!localStorage.getItem(POPUP_KEY); } catch { return true; } // storage blocked: don't nag
@@ -558,17 +617,40 @@ function markPopupSeen(value) {
   try { localStorage.setItem(POPUP_KEY, value); } catch {}
 }
 
-function SubscribePopup() {
+// Shown at most once per browser, never to subscribers, and only once the visitor has shown interest:
+// a second page view, reading half of a stock or news page, or moving to leave on desktop. Never in the first 10s.
+const POPUP_MIN_MS = 10000;
+function SubscribePopup({ path }) {
   const [show, setShow] = useState(false);
+  const subscribed = useSubscribed();
   const subscribers = useSubscriberLabel();
+  const startedAt = useRef(Date.now());
+  const open = useCallbackRef((trigger) => {
+    if (show || subscribed || popupSeen() || path === "/newsletter") return;
+    const wait = POPUP_MIN_MS - (Date.now() - startedAt.current);
+    if (wait > 0) { setTimeout(() => open(trigger), wait); return; } // too early: try again once the 10s have passed
+    markPopupSeen("shown"); // recorded the moment it appears, so it never shows again even if they just close the tab
+    setShow(true);
+    window.posthog?.capture?.("popup_shown", { trigger, page: path });
+  });
+  // Page views this session: the second one triggers it.
   useEffect(() => {
-    if (popupSeen()) return;
-    const t = setTimeout(() => {
-      markPopupSeen("shown"); // recorded the moment it appears, so it never shows again even if they just close the tab
-      setShow(true);
-    }, POPUP_DELAY_MS);
-    return () => clearTimeout(t);
-  }, []);
+    let n = 1;
+    try { n = Number(sessionStorage.getItem("oa_pv") || 0) + 1; sessionStorage.setItem("oa_pv", String(n)); } catch {}
+    if (n >= 2) { const t = setTimeout(() => open("second_page"), 1500); return () => clearTimeout(t); }
+  }, [path]);
+  // Reading depth on stock and news pages, and exit intent on desktop.
+  useEffect(() => {
+    const deep = path.startsWith("/stocks/") || path === "/news";
+    const onScroll = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      if (deep && h > 0 && window.scrollY / h >= 0.5) open("scroll_50");
+    };
+    const onLeave = (e) => { if (!e.relatedTarget && e.clientY <= 0) open("exit_intent"); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("mouseout", onLeave);
+    return () => { window.removeEventListener("scroll", onScroll); document.removeEventListener("mouseout", onLeave); };
+  }, [path]);
   const close = (value) => { setShow(false); markPopupSeen(value); };
   if (!show) return null;
   return (
@@ -578,9 +660,34 @@ function SubscribePopup() {
         <div style={{ fontSize: 9, color: C.green, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 10 }}>Free Weekly Newsletter</div>
         <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>The only weekly covering every space stock.</div>
         <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>Macro overview · Broker target changes · One stock deep dive. Every Sunday morning. Free.</div>
-        <SubscribeForm source="popup" onDone={() => close("subscribed")} style={{ maxWidth: "none", marginBottom: 14 }} />
+        <SubscribeForm source="popup" onDone={() => setTimeout(() => close("subscribed"), 2000)} style={{ maxWidth: "none", marginBottom: 14 }} />
         <div style={{ fontSize: 10, color: C.muted }}><span style={{ color: C.green }}>✓</span> {subscribers} subscribers · 100% free, no paywall · Unsubscribe anytime</div>
       </div>
+    </div>
+  );
+}
+
+// Mobile only: a slim email bar pinned to the bottom of the screen once the visitor scrolls.
+// Hidden for subscribers, on the newsletter page, and for 7 days after it is closed.
+const BAR_KEY = "oa_bar_closed";
+function MobileSubscribeBar({ path }) {
+  const subscribed = useSubscribed();
+  const [closed, setClosed] = useState(() => { try { return Date.now() - Number(localStorage.getItem(BAR_KEY) || 0) < 7 * 864e5; } catch { return false; } });
+  const [scrolled, setScrolled] = useState(false);
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 500);
+    on(); window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, []);
+  useEffect(() => { if (done) { const t = setTimeout(() => setClosed(true), 2500); return () => clearTimeout(t); } }, [done]);
+  if (closed || (subscribed && !done) || path === "/newsletter" || !scrolled) return null;
+  const close = () => { setClosed(true); try { localStorage.setItem(BAR_KEY, String(Date.now())); } catch {} };
+  return (
+    <div className="mob-only" style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 9000, background: "rgba(8,12,22,0.97)", borderTop: "1px solid rgba(0,255,136,0.35)", padding: "10px 14px calc(10px + env(safe-area-inset-bottom, 0px))", boxShadow: "0 -10px 30px rgba(0,0,0,0.5)", animation: "fu 0.25s ease" }}>
+      <button onClick={close} aria-label="Close" style={{ position: "absolute", top: 4, right: 8, background: "none", border: "none", color: C.muted, fontSize: 18, lineHeight: 1, cursor: "pointer", padding: 4 }}>×</button>
+      <div style={{ fontSize: 11, color: "#fff", fontWeight: 700, marginBottom: 7, paddingRight: 24 }}>Every space stock, one free email each Sunday</div>
+      <SubscribeForm source="mobile-bar" label="Join →" sample={false} onDone={() => setDone(true)} style={{ maxWidth: "none" }} />
     </div>
   );
 }
@@ -720,7 +827,7 @@ function Home({ news, prices, launches }) {
           <p style={{ fontSize: 13, color: C.light, lineHeight: 1.7, marginBottom: 20, maxWidth: 460 }}>
             What moved, why it moved and what's coming next across {Object.keys(PROFILES).length} space stocks, from SpaceX and Rocket Lab to the small caps. Five minutes every Sunday morning.
           </p>
-          <SubscribeForm source="home-hero" style={{ marginBottom: 10 }} />
+          <SubscribeForm source="home-hero" sample={false} style={{ marginBottom: 10 }} />
           <div style={{ fontSize: 10, color: C.muted }}><span style={{ color: C.green }}>✓</span> Join {subscribers} investors · 100% free, no paywall · Unsubscribe anytime</div>
         </div>
         {latest && (
@@ -801,11 +908,13 @@ function Home({ news, prices, launches }) {
       </Card>
 
       {/* Closing CTA */}
+      <ForNonSubscribers>
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", textAlign: "center", padding: "32px 20px", marginBottom: 24 }}>
         <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Get the Sunday briefing</div>
         <p style={{ fontSize: 12, color: C.muted, marginBottom: 18 }}>The week in space stocks, in five minutes. 100% free: no paywall, no premium tier, no account needed.</p>
         <SubscribeForm source="home-bottom" style={{ margin: "0 auto" }} />
       </section>
+      </ForNonSubscribers>
 
       <footer style={{ padding: "24px 0", borderTop: "1px solid rgba(255,255,255,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
         <span style={{ fontFamily: SYNE, fontSize: 13, fontWeight: 800, color: "#556" }}>ORBIT<span style={{ color: C.green }}>ALPHA</span>.</span>
@@ -873,6 +982,17 @@ function Markets({ prices, launches, tab, setTab, goSubscribe }) {
           );
         })}
       </nav>
+
+      {/* Newsletter bar on every Markets tab */}
+      <ForNonSubscribers>
+        <div style={{ margin: "12px 20px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px 18px", border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.04)", borderRadius: 10, padding: "12px 16px" }}>
+          <div style={{ flex: "1 1 260px", minWidth: 0 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Get the Sunday briefing</div>
+            <div style={{ fontSize: 11, color: C.muted, marginTop: 2, lineHeight: 1.5 }}>What moved across every space stock this week, why it moved and what's next. Free, five minutes, every Sunday.</div>
+          </div>
+          <SubscribeForm source={`markets-${active}`} style={{ flex: "1 1 340px" }} />
+        </div>
+      </ForNonSubscribers>
 
       <div style={{ padding: "16px 20px 40px" }}>
         {active === "stocks" && <StocksTab prices={prices} goSubscribe={goSubscribe} />}
@@ -1612,6 +1732,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       <p style={{ fontSize: 13, color: C.light, lineHeight: 1.7, maxWidth: 720, marginBottom: 16 }}>{profile.about}</p>
 
       {/* Follow bar */}
+      <ForNonSubscribers>
       <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.04)", borderRadius: 10, padding: "12px 16px", marginBottom: 20 }}>
         <div style={{ flex: "1 1 240px" }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>🔔 Follow {ticker}</div>
@@ -1619,6 +1740,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
         </div>
         <SubscribeForm source="stock-page-top" follow={ticker} label={`Follow ${ticker} →`} style={{ flex: "1 1 320px" }} />
       </div>
+      </ForNonSubscribers>
 
       {/* Chart */}
       <Card style={{ marginBottom: 14 }}>
@@ -1697,11 +1819,13 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       </div>
 
       {/* Newsletter */}
+      <ForNonSubscribers>
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginBottom: 24 }}>
         <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Follow {ticker} without the noise</div>
         <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>{profile.name} and every other space stock, summarised in one free email every Sunday.</p>
         <SubscribeForm source="stock-page-bottom" follow={ticker} label={`Follow ${ticker} →`} />
       </section>
+      </ForNonSubscribers>
 
       {/* Internal links: other stocks */}
       <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>Other stocks we cover</div>
@@ -1964,11 +2088,13 @@ function News({ news, prices }) {
             </Card>
           )}
 
+          <ForNonSubscribers>
           <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginTop: 14 }}>
             <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 6 }}>The week's news, summarised</div>
             <p style={{ fontSize: 11, color: C.muted, lineHeight: 1.6, marginBottom: 12 }}>The stories that mattered, in one free email every Sunday. No paywall.</p>
             <SubscribeForm source="news-page" style={{ flexWrap: "wrap" }} />
           </section>
+          </ForNonSubscribers>
         </aside>
       </div>
       <SourceNote>Sources: Google News, Yahoo Finance, SEC EDGAR, USAspending.gov. Headlines link to the original publisher. Not financial advice.</SourceNote>
@@ -2072,7 +2198,8 @@ export default function App() {
     <NavContext.Provider value={go}>
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: MONO, fontSize: 13, position: "relative", overflowX: "hidden" }}>
       <GlobalStyles />
-      <SubscribePopup />
+      <SubscribePopup path={path} />
+      <MobileSubscribeBar path={path} />
       <Stars />
       <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 1, overflow: "hidden", opacity: 0.02 }}>
         <div style={{ position: "absolute", width: "100%", height: 2, background: "linear-gradient(transparent,rgba(0,255,136,1),transparent)", animation: "sc 10s linear infinite" }} />
