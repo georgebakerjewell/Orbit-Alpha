@@ -1,0 +1,11 @@
+name: PostHog region check (temporary)
+on: workflow_dispatch
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          for h in eu us; do
+            r=$(curl -s -m 20 -X POST "https://$h.i.posthog.com/flags/?v=2" -H 'Content-Type: application/json' -d '{"api_key":"phc_AswqpyTnpwW7PsFzNmf4qWpqywhD2XrLg3P8x2DYNBvq","distinct_id":"setup-check"}' | head -c 160)
+            echo "::notice::$h -> $r"
+          done
