@@ -1831,20 +1831,20 @@ function FinancialSnapshot({ data, error, live }) {
     : f.cashGenerative ? { value: "Cash generative", sub: "positive free cash flow", color: C.green }
     : f.runwayMonths == null ? null
     : { value: f.runwayMonths >= 120 ? "10+ years" : f.runwayMonths >= 36 ? `${(f.runwayMonths / 12).toFixed(1)} years` : `${Math.round(f.runwayMonths)} months`, sub: "at current burn", color: f.runwayMonths < 12 ? C.red : f.runwayMonths < 24 ? C.orange : "#fff" };
-  const ps = f?.revenue?.ttm > 0 && cur === "USD" && live?.marketCap ? live.marketCap / f.revenue.ttm : null;
+  const ps = f?.revenue?.ttm >= 5e6 && cur === "USD" && live?.marketCap ? live.marketCap / f.revenue.ttm : null;
   return (
     <Card title="Financials" note={f ? `Last 12 months to ${fmtDay(f.periodEnd, SHORT_DATE)}` : "Last 12 months"}>
       {!data && !error && <ListSkeleton rows={6} />}
       {(error || data?.none || (data && !f)) && <Empty>Financial data unavailable for this company.</Empty>}
       {f && (
         <>
-          <FinRow label="Revenue" value={fmtAmt(f.revenue.ttm, cur)} sub={yoy(f.revenue.ttmGrowth)} />
+          <FinRow label="Revenue" value={f.revenue.ttm == null ? "Not yet available" : fmtAmt(f.revenue.ttm, cur)} sub={yoy(f.revenue.ttmGrowth)} color={f.revenue.ttm == null ? C.muted : null} />
           <FinRow label="Latest quarter revenue" value={fmtAmt(f.revenue.quarter, cur)} sub={yoy(f.revenue.quarterGrowth)} />
           {f.grossMargin != null && <FinRow label="Gross margin" value={`${f.grossMargin.toFixed(1)}%`} color={f.grossMargin < 0 ? C.red : null} />}
           <FinRow label="Net income" value={fmtAmt(f.netIncome.ttm, cur)} color={f.netIncome.ttm < 0 ? C.red : null} />
           <FinRow label="Free cash flow" value={fmtAmt(f.freeCashFlow, cur)} sub={f.operatingCashFlow != null ? `operating ${fmtAmt(f.operatingCashFlow, cur)}, capex ${fmtAmt(f.capex || 0, cur)}` : null} color={f.freeCashFlow < 0 ? C.red : null} />
           <FinRow label={f.shortTermInvestments ? "Cash and investments" : "Cash"} value={fmtAmt(f.liquidity, cur)} />
-          <FinRow label="Debt" value={fmtAmt(f.debt, cur)} />
+          <FinRow label="Debt" value={f.debt == null ? "Not reported" : fmtAmt(f.debt, cur)} color={f.debt == null ? C.muted : null} />
           {runway && <FinRow label="Cash runway" value={runway.value} sub={runway.sub} color={runway.color} />}
           {ps != null && <FinRow label="Price to sales" value={`${ps.toFixed(1)}x`} sub="market cap / revenue" />}
         </>
@@ -1865,7 +1865,7 @@ function DilutionTracker({ data, error }) {
       {(error || data?.none || (data && !sh && !data.offerings?.length)) && <Empty>Share count data unavailable for this company.</Empty>}
       {sh && (
         <>
-          <FinRow label="Shares outstanding" value={fmtShares(sh.latest.shares)} sub={fmtDay(sh.latest.date, SHORT_DATE)} />
+          <FinRow label={sh.kind === "weighted" ? "Shares (quarterly average)" : "Shares outstanding"} value={fmtShares(sh.latest.shares)} sub={fmtDay(sh.latest.date, SHORT_DATE)} />
           {chg(sh.y1, "1-year change")}
           {chg(sh.y3, "3-year change")}
           {hist.length > 2 && (
@@ -1887,7 +1887,7 @@ function DilutionTracker({ data, error }) {
           ))}
         </div>
       )}
-      <SourceNote>Source: SEC filings (cover page share counts, all classes). A registration or prospectus allows a sale; it does not mean shares were sold.</SourceNote>
+      <SourceNote>Source: SEC filings ({sh?.kind === "weighted" ? "weighted average basic shares, which can exclude some share classes" : "share count on each 10-Q and 10-K cover"}).{sh?.splitAdjusted ? " Earlier counts adjusted for reverse splits." : ""} A registration or prospectus allows a sale; it does not mean shares were sold.</SourceNote>
     </Card>
   );
 }
