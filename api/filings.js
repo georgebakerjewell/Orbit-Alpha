@@ -1,6 +1,7 @@
 // Notable SEC filings for roster companies, from SEC EDGAR (official, free).
 //   GET /api/filings             -> recent notable filings across the roster
 //   GET /api/filings?ticker=RKLB -> recent notable filings for one company
+//   GET /api/filings?ticker=RKLB&insiders=1 -> open-market insider buys and sales, last 3 and 12 months
 // Form 4s are parsed so insider buys and sales are labelled as such.
 
 export const config = { maxDuration: 30 };
@@ -64,9 +65,10 @@ export function parseForm4(xml) {
     if (code === "S") sold += shares * price;
   }
   const role = title || (isDirector ? "Director" : "Insider");
-  if (bought > 0) return { label: "Insider buy", owner, role, value: Math.round(bought), direction: "buy" };
-  if (sold > 0) return { label: "Insider sale", owner, role, value: Math.round(sold), direction: "sale" };
-  return { label: "Insider grant or exercise", owner, role, value: 0, direction: "other" };
+  const totals = { bought: Math.round(bought), sold: Math.round(sold) };
+  if (bought > 0) return { label: "Insider buy", owner, role, value: Math.round(bought), direction: "buy", ...totals };
+  if (sold > 0) return { label: "Insider sale", owner, role, value: Math.round(sold), direction: "sale", ...totals };
+  return { label: "Insider grant or exercise", owner, role, value: 0, direction: "other", ...totals };
 }
 
 async function getCikMap() {
@@ -118,10 +120,83 @@ async function enrichForm4s(filings, limit) {
   return filings;
 }
 
+const INSIDER_MAX = 100; // Form 4s parsed per company (newest first)
+const INSIDER_TTL = 6 * 60 * 60 * 1000;
+
+// Sum open-market buys (code P) and sales (code S) for one window. Grants, option exercises
+// and tax withholding are excluded because they are not buy or sell decisions.
+export function summarizeInsiders(rows, sinceIso) {
+  const w = rows.filter((r) => r.date >= sinceIso);
+  const bought = w.reduce((a, r) => a + r.bought, 0);
+  const sold = w.reduce((a, r) => a + r.sold, 0);
+  return {
+    bought, sold, net: bought - sold,
+    buyers: new Set(w.filter((r) => r.bought > 0).map((r) => r.owner)).size,
+    sellers: new Set(w.filter((r) => r.sold > 0).map((r) => r.owner)).size,
+  };
+}
+
+async function insiderActivity(ticker, cik) {
+  const res = await fetch(`https://data.sec.gov/submissions/CIK${String(cik).padStart(10, "0")}.json`, { headers: HEADERS });
+  if (!res.ok) throw new Error(`SEC ${res.status}`);
+  const r = (await res.json()).filings?.recent || {};
+  const day = (n) => new Date(Date.now() - n * 86_400_000).toISOString().slice(0, 10);
+  const since = day(365);
+  const forms = [];
+  let total = 0;
+  for (let i = 0; i < (r.form || []).length; i++) {
+    if (r.filingDate[i] < since) break;
+    if (r.form[i] !== "4") continue;
+    total++;
+    if (forms.length >= INSIDER_MAX) continue;
+    const acc = r.accessionNumber[i].replace(/-/g, "");
+    const base = `https://www.sec.gov/Archives/edgar/data/${cik}/${acc}`;
+    forms.push({ date: r.filingDate[i], url: `${base}/${r.primaryDocument[i]}`, xml: `${base}/${r.primaryDocument[i].replace(/^xsl[^/]+\//, "")}` });
+  }
+  const rows = [];
+  for (let i = 0; i < forms.length; i += 8) { // SEC allows 10 requests a second
+    await Promise.all(forms.slice(i, i + 8).map(async (f) => {
+      try {
+        const p = parseForm4(await (await fetch(f.xml, { headers: { ...HEADERS, Accept: "application/xml" } })).text());
+        rows.push({ date: f.date, url: f.url, owner: p.owner, role: p.role, bought: p.bought, sold: p.sold });
+      } catch {}
+    }));
+    if (i + 8 < forms.length) await new Promise((ok) => setTimeout(ok, 1000));
+  }
+  // Oldest date the parsed filings fully cover (if the cap was hit, older months are missing).
+  const coveredFrom = total > forms.length ? forms[forms.length - 1].date : since;
+  const trades = rows.filter((x) => x.bought || x.sold).sort((a, b) => Math.max(b.bought, b.sold) - Math.max(a.bought, a.sold));
+  return {
+    ticker,
+    m3: summarizeInsiders(rows, day(91)),
+    m12: summarizeInsiders(rows, since),
+    coveredFrom,
+    complete: total <= forms.length,
+    form4s: total,
+    largest: trades.slice(0, 5).map((x) => ({ date: x.date, owner: x.owner, role: x.role, direction: x.bought >= x.sold ? "buy" : "sale", value: Math.max(x.bought, x.sold), url: x.url })),
+    asOf: new Date().toISOString().slice(0, 10),
+  };
+}
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   const ticker = (req.query.ticker || "").toUpperCase();
   if (ticker && !ROSTER.includes(ticker)) return res.status(200).json({ filings: [] });
+
+  if (ticker && req.query.insiders) {
+    const key = `INS:${ticker}`;
+    if (!cache[key] || Date.now() - cache[key].ts > INSIDER_TTL) {
+      try {
+        const cik = (await getCikMap())[ticker];
+        if (!cik) return res.status(200).json({ ticker, none: true });
+        cache[key] = { ts: Date.now(), data: await insiderActivity(ticker, cik) };
+      } catch (e) {
+        return res.status(502).json({ error: e.message });
+      }
+    }
+    res.setHeader("Cache-Control", "s-maxage=21600, stale-while-revalidate=86400");
+    return res.status(200).json(cache[key].data);
+  }
 
   const key = ticker || "ALL";
   if (cache[key] && Date.now() - cache[key].ts < TTL) {

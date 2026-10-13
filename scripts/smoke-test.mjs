@@ -68,6 +68,18 @@ for (const t of ["ECHO", "SIDU", "SPCX"]) {
   });
 }
 
+await check("Key stats RKLB", "/api/quote?ticker=RKLB&stats=1", (j) => ({
+  ok: j.stats?.high52 > 0 && j.stats?.ytd != null && (j.peers?.length || 0) >= 3,
+  summary: `52w ${j.stats?.low52?.toFixed?.(2)}-${j.stats?.high52?.toFixed?.(2)}, YTD ${j.stats?.ytd}%, 1y ${j.stats?.y1}%, sector median YTD ${j.sectorMedian?.ytd}%, UFO YTD ${j.ufo?.ytd}%`,
+  detail: (j.peers || []).map((p) => `${p.ticker} YTD ${p.ytd}% 1y ${p.y1}% from high ${p.fromHigh}%`),
+}));
+await check("Key stats OHB (Europe)", "/api/quote?ticker=OHB&stats=1", (j) => ({ ok: j.stats?.high52 > 0, summary: `${j.stats?.currency} 52w ${j.stats?.low52}-${j.stats?.high52}, YTD ${j.stats?.ytd}%` }), { critical: false });
+await check("Insiders RKLB", "/api/filings?ticker=RKLB&insiders=1", (j) => ({
+  ok: !!j.m12,
+  summary: `${j.form4s} Form 4s, 3m net ${j.m3?.net}, 12m bought ${j.m12?.bought} sold ${j.m12?.sold}, complete ${j.complete}`,
+  detail: (j.largest || []).map((t) => `${t.date} ${t.owner} (${t.role}) ${t.direction} ${t.value}`),
+}), { critical: false });
+await check("Insiders ASTS", "/api/filings?ticker=ASTS&insiders=1", (j) => ({ ok: !!j.m12, summary: `${j.form4s} Form 4s, 12m bought ${j.m12?.bought} sold ${j.m12?.sold}` }), { critical: false });
 await check("Performance YTD", "/api/performance?range=ytd", (j) => {
   const last = (id) => { const s = j.series?.find((x) => x.id === id); return s ? [...s.values].reverse().find((v) => v != null) : null; };
   const stocks = j.series?.filter((s) => s.kind === "stock").length || 0;

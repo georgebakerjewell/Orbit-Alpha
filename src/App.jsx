@@ -381,7 +381,7 @@ const GlobalStyles = () => (
     .oa-launch{transition:background 0.15s}.oa-launch:hover{background:rgba(255,255,255,0.03)!important}
     .oa-tab:hover{border-color:rgba(0,255,136,0.35)!important;background:rgba(0,255,136,0.05)!important}
     .oa-tabs::-webkit-scrollbar{height:0}
-    @media(max-width:600px){.oa-tabs{flex-wrap:wrap;overflow-x:visible!important}.oa-tab{flex:1 1 calc(50% - 4px)!important;min-width:0!important;padding:8px 12px!important}.oa-price{text-align:left}.desk-only{display:none!important}.mob-only{display:block!important}}
+    @media(max-width:600px){.oa-tabs{flex-wrap:wrap;overflow-x:visible!important}.oa-tab{flex:1 1 calc(50% - 4px)!important;min-width:0!important;padding:8px 12px!important}.oa-price{text-align:left}.oa-peer-name,.oa-peer-hi{display:none}.desk-only{display:none!important}.mob-only{display:block!important}}
   `}</style>
 );
 
@@ -1682,6 +1682,122 @@ function PriceChart({ points, intraday = false, currency = "USD" }) {
   );
 }
 
+/* ── Stock page: key stats, insider activity, peers ────────────────────────── */
+// Canadian filers report insider trades on SEDI, not SEC Form 4.
+const hasForm4 = (t) => !PROFILES[t]?.listing && t !== "MDA" && t !== "TSAT";
+const fmtVol = (v) => (v == null ? "-" : v >= 1e9 ? `${(v / 1e9).toFixed(2)}B` : v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `${Math.round(v / 1e3)}K` : `${v}`);
+const pctOrDash = (v) => (v == null ? "-" : pct(v));
+
+function Stat({ label, value, sub, color }) {
+  return (
+    <div style={{ minWidth: 0 }}>
+      <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 16, color: color || "#fff", fontWeight: 600, whiteSpace: "nowrap" }}>{value}</div>
+      {sub && <div style={{ fontSize: 10, color: C.muted, marginTop: 3, lineHeight: 1.4 }}>{sub}</div>}
+    </div>
+  );
+}
+
+function KeyStats({ ticker, data, error, live }) {
+  const s = data?.stats;
+  const cur = s?.currency || live?.currency;
+  const vs = (v, ref, name) => (v == null || ref == null ? null : `${name} ${pct(ref)}`);
+  return (
+    <Card title="Key stats" note="Last 12 months" style={{ marginBottom: 14 }}>
+      {!data && !error && <Skeleton w="100%" h={60} />}
+      {error && !data && <Empty>Unavailable right now.</Empty>}
+      {s && (
+        <div className="oa-stats" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: "16px 20px" }}>
+          <Stat label="Market cap" value={live?.marketCap ? formatMktCap(live.marketCap) : "-"} sub={PROFILES[ticker]?.listing ? "In US dollars" : null} />
+          <Stat label="52-week range" value={`${money(s.low52, cur)} to ${money(s.high52, cur)}`} sub={s.fromHigh != null ? `${pct(s.fromHigh)} from 52-week high` : null} />
+          <Stat label="YTD return" value={pctOrDash(s.ytd)} color={s.ytd == null ? null : signColor(s.ytd)} sub={[vs(s.ytd, data.sectorMedian?.ytd, "Sector median"), vs(s.ytd, data.ufo?.ytd, "UFO ETF")].filter(Boolean).join(" · ")} />
+          <Stat label="1-year return" value={pctOrDash(s.y1)} color={s.y1 == null ? null : signColor(s.y1)} sub={[vs(s.y1, data.sectorMedian?.y1, "Sector median"), vs(s.y1, data.ufo?.y1, "UFO ETF")].filter(Boolean).join(" · ") + (s.days < 240 ? ` · Listed for ${s.days} trading days` : "")} />
+          <Stat label="Volume" value={fmtVol(s.vol)} sub={s.avgVol ? `3-month average ${fmtVol(s.avgVol)}${s.vol != null ? ` (${(s.vol / s.avgVol).toFixed(1)}x)` : ""}` : null} />
+        </div>
+      )}
+      <SourceNote>Prices: Yahoo Finance daily closes. Sector median covers the {data?.sectorMedian?.count || ""} {PROFILES[ticker]?.sector} stocks we track.</SourceNote>
+    </Card>
+  );
+}
+
+function InsiderSummary({ ticker, data, error }) {
+  const windowRow = (label, w) => (
+    <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr 1fr 1fr", gap: 8, padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", fontSize: 12, alignItems: "baseline" }}>
+      <span style={{ color: C.light }}>{label}</span>
+      <span style={{ color: w.bought ? C.green : C.muted }}>{w.bought ? fmtMoney(w.bought) : "$0"}<span style={{ color: C.muted, fontSize: 10 }}> · {w.buyers} {w.buyers === 1 ? "buyer" : "buyers"}</span></span>
+      <span style={{ color: w.sold ? C.red : C.muted }}>{w.sold ? fmtMoney(w.sold) : "$0"}<span style={{ color: C.muted, fontSize: 10 }}> · {w.sellers} {w.sellers === 1 ? "seller" : "sellers"}</span></span>
+      <span style={{ color: w.net ? signColor(w.net) : C.muted, fontWeight: 600 }}>{w.net ? `${w.net > 0 ? "+" : "-"}${fmtMoney(Math.abs(w.net))}` : "$0"}</span>
+    </div>
+  );
+  return (
+    <Card title="Insider activity" note="Open-market trades, Form 4" style={{ marginBottom: 14 }}>
+      {!data && !error && <ListSkeleton rows={2} />}
+      {error && !data && <Empty>Unavailable right now.</Empty>}
+      {data?.m12 && (
+        <>
+          <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr 1fr 1fr", gap: 8, fontSize: 9, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", paddingBottom: 4 }}>
+            <span>Period</span><span>Bought</span><span>Sold</span><span>Net</span>
+          </div>
+          {windowRow("Last 3 months", data.m3)}
+          {windowRow(data.complete ? "Last 12 months" : `Since ${new Date(data.coveredFrom + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })}`, data.m12)}
+          {data.largest?.length > 0 ? (
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>Largest trades</div>
+              {data.largest.map((t) => (
+                <a key={t.url} href={t.url} target="_blank" rel="noopener noreferrer" className="hov" style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none", fontSize: 11 }}>
+                  <span style={{ color: C.light, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.owner}<span style={{ color: C.muted }}> · {t.role}</span></span>
+                  <span style={{ whiteSpace: "nowrap" }}><span style={{ color: t.direction === "buy" ? C.green : C.red }}>{t.direction === "buy" ? "Bought" : "Sold"} {fmtMoney(t.value)}</span><span style={{ color: C.muted }}> · {fmtDay(t.date)}</span></span>
+                </a>
+              ))}
+            </div>
+          ) : <Empty>No open-market insider buys or sales in the last 12 months.</Empty>}
+        </>
+      )}
+      <SourceNote>Source: SEC EDGAR Form 4 filings. Excludes grants, option exercises and shares withheld for tax.{data && !data.complete ? ` Based on the latest ${data.form4s > 100 ? 100 : data.form4s} Form 4s.` : ""} Sales are often pre-planned (Rule 10b5-1).</SourceNote>
+    </Card>
+  );
+}
+
+function PeerTable({ ticker, data, prices }) {
+  const sector = PROFILES[ticker]?.sector;
+  const rows = (data?.peers || Object.keys(PROFILES).filter((t) => PROFILES[t].sector === sector).map((t) => ({ ticker: t, name: PROFILES[t].name })))
+    .map((p) => ({ ...p, live: prices.stocks.find((x) => x.ticker === p.ticker) }))
+    .sort((a, b) => (b.live?.marketCap || 0) - (a.live?.marketCap || 0));
+  const th = { fontSize: 9, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 400, textAlign: "right", padding: "0 0 6px 10px", whiteSpace: "nowrap" };
+  const td = { fontSize: 12, textAlign: "right", padding: "8px 0 8px 10px", borderTop: "1px solid rgba(255,255,255,0.04)", whiteSpace: "nowrap" };
+  return (
+    <Card title={`${sector} peers`} note="Sorted by market cap" style={{ marginBottom: 14 }}>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: MONO }}>
+          <thead><tr>
+            <th style={{ ...th, textAlign: "left", padding: "0 0 6px" }}>Company</th>
+            <th style={th}>Mkt cap</th><th style={th}>Today</th><th style={th}>YTD</th><th style={th}>1 year</th><th className="oa-peer-hi" style={th}>From high</th>
+          </tr></thead>
+          <tbody>
+            {rows.map((p) => {
+              const me = p.ticker === ticker;
+              const cell = (v) => <td style={{ ...td, color: v == null ? C.muted : signColor(v) }}>{data ? pctOrDash(v) : "…"}</td>;
+              return (
+                <tr key={p.ticker} style={{ background: me ? "rgba(0,255,136,0.05)" : "transparent" }}>
+                  <td style={{ ...td, textAlign: "left", padding: "8px 0" }}>
+                    {me ? <span style={{ color: C.green, fontWeight: 700 }}>{p.ticker}</span> : <Link to={`/stocks/${p.ticker.toLowerCase()}`} className="oa-link" style={{ color: C.blue, fontWeight: 700 }}>{p.ticker}</Link>}
+                    <span className="oa-peer-name" style={{ color: C.muted, fontSize: 11, marginLeft: 8 }}>{p.name}</span>
+                  </td>
+                  <td style={{ ...td, color: C.light }}>{p.live?.marketCap ? formatMktCap(p.live.marketCap) : "-"}</td>
+                  <td style={{ ...td, color: p.live?.changePct == null ? C.muted : signColor(p.live.changePct) }}>{p.live?.changePct == null ? "-" : pct(p.live.changePct)}</td>
+                  {cell(p.ytd)}{cell(p.y1)}
+                  <td className="oa-peer-hi" style={{ ...td, color: C.muted }}>{data ? pctOrDash(p.fromHigh) : "…"}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <SourceNote>Market caps in US dollars. From high is the distance from each stock's 52-week high.</SourceNote>
+    </Card>
+  );
+}
+
 function StockPage({ ticker, prices, launches, news, goSubscribe }) {
   const profile = PROFILES[ticker];
   const [range, setRange] = useState("6mo");
@@ -1689,6 +1805,8 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
   const filings = useApi(profile ? `/api/filings?ticker=${ticker}` : null);
   const contracts = useApi(profile ? `/api/contracts?ticker=${ticker}` : null);
   const earnings = useApi(profile ? "/api/earnings" : null);
+  const keyStats = useApi(profile ? `/api/quote?ticker=${ticker}&stats=1` : null);
+  const insiders = useApi(profile && hasForm4(ticker) ? `/api/filings?ticker=${ticker}&insiders=1` : null);
   if (!profile) return <NotFound />;
 
   const live = prices.stocks.find((x) => x.ticker === ticker && x.price != null);
@@ -1755,6 +1873,8 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
         {!chart.data && !chart.error ? <Skeleton w="100%" h={190} /> : <PriceChart points={points} intraday={range === "1d" || range === "5d"} currency={result?.meta?.currency || live?.currency} />}
       </Card>
 
+      <KeyStats ticker={ticker} data={keyStats.data} error={keyStats.error} live={live} />
+
       {/* Key dates */}
       <div className="oa-grid" style={{ marginBottom: 14 }}>
         <Card title="Next earnings">
@@ -1776,6 +1896,8 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
         </Card>
       </div>
 
+      {hasForm4(ticker) && <InsiderSummary ticker={ticker} data={insiders.data} error={insiders.error} />}
+
       {/* Filings and contracts */}
       <div className="oa-grid" style={{ marginBottom: 14 }}>
         <Card title="SEC filings" note="Last 4 months">
@@ -1791,6 +1913,8 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
           <SourceNote>Source: USAspending.gov. Prime contracts only.</SourceNote>
         </Card>
       </div>
+
+      <PeerTable ticker={ticker} data={keyStats.data} prices={prices} />
 
       {/* News */}
       <Card title={`${ticker} news`} style={{ marginBottom: 14 }}>
