@@ -562,7 +562,7 @@ function useSubscriberLabel() {
   return `${SUBSCRIBER_COUNT}+`;
 }
 
-function SubscribeForm({ color = C.green, label = "Join Free →", onDone, style, source, follow, sample = true }) {
+function SubscribeForm({ color = C.green, label = "Subscribe", onDone, style, source, follow, sample = true }) {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -578,21 +578,21 @@ function SubscribeForm({ color = C.green, label = "Join Free →", onDone, style
   const sampleLink = sample && LATEST_ISSUE && (
     <a href={LATEST_ISSUE.url} target="_blank" rel="noopener" className="oa-link" onClick={() => window.posthog?.capture?.("sample_issue_click", { from: source })}
       style={{ display: "inline-block", marginTop: 8, fontSize: 10.5, color: C.light, textDecoration: "none", lineHeight: 1.5 }}>
-      Read last Sunday's issue first: <span style={{ color: C.green }}>{LATEST_ISSUE.headline} →</span>
+      Read last Sunday's issue first: <span style={{ color: C.green }}>{LATEST_ISSUE.headline}</span>
     </a>
   );
-  if (done) return <div style={{ fontSize: 13, color: C.green, padding: "10px 0" }}>✓ You're subscribed. Welcome to Orbit Alpha.</div>;
+  if (done) return <div style={{ fontSize: 13, color: C.green, padding: "10px 0" }}>You're subscribed. The next issue arrives on Sunday.</div>;
   if (already) return (
     <div style={{ fontSize: 12, color: C.green, padding: "8px 0", ...(style?.margin != null && { margin: style.margin }), ...(style?.marginTop != null && { marginTop: style.marginTop }) }}>
-      ✓ You're subscribed.{LATEST_ISSUE && <> <a href={LATEST_ISSUE.url} target="_blank" rel="noopener" className="oa-link" style={{ color: C.light, textDecoration: "none" }}>Read the latest issue →</a></>}
+      You're subscribed.{LATEST_ISSUE && <> <a href={LATEST_ISSUE.url} target="_blank" rel="noopener" className="oa-link" style={{ color: C.light, textDecoration: "none" }}>Read the latest issue</a></>}
     </div>
   );
   return (
     <div style={{ maxWidth: 400, ...style }}>
       <form onSubmit={submit} style={{ display: "flex", gap: 8, flexWrap: style?.flexWrap }}>
-        <input type="email" inputMode="email" autoComplete="email" required aria-label="Email address" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com" style={{ ...inputStyle, minWidth: 0, flex: "1 1 160px" }} />
-        <button type="submit" disabled={busy} style={{ background: color, color: C.bg, border: "none", padding: "10px 20px", borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: MONO, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, opacity: busy ? 0.6 : 1 }}>
-          {busy ? "Joining…" : label}
+        <input type="email" inputMode="email" autoComplete="email" required aria-label="Email address" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" style={{ ...inputStyle, minWidth: 0, flex: "1 1 160px" }} />
+        <button type="submit" disabled={busy} style={{ background: color, color: C.bg, border: "none", padding: "10px 20px", borderRadius: 4, fontSize: 11, fontWeight: 700, fontFamily: MONO, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, opacity: busy ? 0.6 : 1 }}>
+          {busy ? "Subscribing…" : label}
         </button>
       </form>
       {sampleLink}
@@ -657,11 +657,10 @@ function SubscribePopup({ path }) {
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>
       <div style={{ background: "#0d1220", border: "1px solid rgba(0,255,136,0.25)", borderRadius: 12, padding: 32, maxWidth: 420, width: "100%", position: "relative", animation: "fu 0.3s ease", boxShadow: "0 20px 60px rgba(0,0,0,0.8)" }}>
         <button onClick={() => close(Date.now().toString())} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", color: C.muted, fontSize: 20, cursor: "pointer", lineHeight: 1 }}>×</button>
-        <div style={{ fontSize: 9, color: C.green, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 10 }}>Free Weekly Newsletter</div>
-        <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>The only weekly covering every space stock.</div>
-        <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>Macro overview · Broker target changes · One stock deep dive. Every Sunday morning. Free.</div>
+                <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>The week in space stocks, every Sunday</div>
+        <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>What moved across the {Object.keys(PROFILES).length} stocks we track and why, analyst rating changes, and one company in depth. Free.</div>
         <SubscribeForm source="popup" onDone={() => setTimeout(() => close("subscribed"), 2000)} style={{ maxWidth: "none", marginBottom: 14 }} />
-        <div style={{ fontSize: 10, color: C.muted }}><span style={{ color: C.green }}>✓</span> {subscribers} subscribers · 100% free, no paywall · Unsubscribe anytime</div>
+        <div style={{ fontSize: 11, color: C.muted }}>{subscribers} subscribers. Unsubscribe in one click.</div>
       </div>
     </div>
   );
@@ -686,8 +685,8 @@ function MobileSubscribeBar({ path }) {
   return (
     <div className="mob-only" style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 9000, background: "rgba(8,12,22,0.97)", borderTop: "1px solid rgba(0,255,136,0.35)", padding: "10px 14px calc(10px + env(safe-area-inset-bottom, 0px))", boxShadow: "0 -10px 30px rgba(0,0,0,0.5)", animation: "fu 0.25s ease" }}>
       <button onClick={close} aria-label="Close" style={{ position: "absolute", top: 4, right: 8, background: "none", border: "none", color: C.muted, fontSize: 18, lineHeight: 1, cursor: "pointer", padding: 4 }}>×</button>
-      <div style={{ fontSize: 11, color: "#fff", fontWeight: 700, marginBottom: 7, paddingRight: 24 }}>Every space stock, one free email each Sunday</div>
-      <SubscribeForm source="mobile-bar" label="Join →" sample={false} onDone={() => setDone(true)} style={{ maxWidth: "none" }} />
+      <div style={{ fontSize: 11, color: "#fff", fontWeight: 700, marginBottom: 7, paddingRight: 24 }}>The week in space stocks, free every Sunday</div>
+      <SubscribeForm source="mobile-bar" sample={false} onDone={() => setDone(true)} style={{ maxWidth: "none" }} />
     </div>
   );
 }
@@ -707,8 +706,8 @@ function Card({ title, note, children, style }) {
     <section style={{ ...cardStyle, ...style }}>
       {title && (
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-          <h2 style={{ fontSize: 10, color: C.muted, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 500 }}>{title}</h2>
-          {note && <span style={{ fontSize: 9, color: "#667" }}>{note}</span>}
+          <h2 style={{ fontSize: 14, color: "#fff", fontWeight: 600 }}>{title}</h2>
+          {note && <span style={{ fontSize: 11, color: C.muted }}>{note}</span>}
         </div>
       )}
       {children}
@@ -754,7 +753,7 @@ function FilingRow({ f, showTicker }) {
           </div>
         )}
       </div>
-      <a href={f.url} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: 10, color: C.blue, flexShrink: 0, textDecoration: "none", paddingTop: 2 }}>SEC →</a>
+      <a href={f.url} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: 10, color: C.blue, flexShrink: 0, textDecoration: "none", paddingTop: 2 }}>SEC filing</a>
     </div>
   );
 }
@@ -771,7 +770,7 @@ function ContractRow({ a, showTicker }) {
         </div>
         {a.description && <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.5 }}>{a.description}</div>}
       </div>
-      {a.url && <a href={a.url} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: 10, color: C.blue, flexShrink: 0, textDecoration: "none", paddingTop: 2 }}>Details →</a>}
+      {a.url && <a href={a.url} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: 10, color: C.blue, flexShrink: 0, textDecoration: "none", paddingTop: 2 }}>Details</a>}
     </div>
   );
 }
@@ -794,7 +793,7 @@ const SourceNote = ({ children }) => <div style={{ fontSize: 9, color: "#667", m
    HOME PAGE
    ════════════════════════════════════════════════════════════════════════════ */
 const MoreLink = ({ to, children }) => (
-  <Link to={to} className="oa-link" style={{ fontSize: 11, color: C.green, display: "inline-block", marginTop: 12 }}>{children} →</Link>
+  <Link to={to} className="oa-link" style={{ fontSize: 11, color: C.green, display: "inline-block", marginTop: 12 }}>{children}</Link>
 );
 
 function Home({ news, prices, launches }) {
@@ -820,22 +819,22 @@ function Home({ news, prices, launches }) {
       {/* Hero: newsletter signup first */}
       <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 28, alignItems: "center", padding: "44px 0 32px" }}>
         <div>
-          <div style={{ fontSize: 10, color: C.green, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>Free weekly newsletter · Every Sunday</div>
+          <div style={{ fontSize: 11.5, color: C.green, marginBottom: 12 }}>A free newsletter, every Sunday</div>
           <h1 style={{ fontFamily: SYNE, fontSize: "clamp(30px,5.5vw,50px)", fontWeight: 800, lineHeight: 1.06, letterSpacing: "-0.02em", color: "#fff", marginBottom: 14 }}>
-            Every space stock.<br /><span style={{ color: C.green }}>One email.</span>
+            Every space stock.<br />One email.
           </h1>
           <p style={{ fontSize: 13, color: C.light, lineHeight: 1.7, marginBottom: 20, maxWidth: 460 }}>
             What moved, why it moved and what's coming next across {Object.keys(PROFILES).length} space stocks, from SpaceX and Rocket Lab to the small caps. Five minutes every Sunday morning.
           </p>
           <SubscribeForm source="home-hero" sample={false} style={{ marginBottom: 10 }} />
-          <div style={{ fontSize: 10, color: C.muted }}><span style={{ color: C.green }}>✓</span> Join {subscribers} investors · 100% free, no paywall · Unsubscribe anytime</div>
+          <div style={{ fontSize: 11, color: C.muted }}>Read by {subscribers} investors. Unsubscribe in one click.</div>
         </div>
         {latest && (
           <a href={latest.live ? latest.url : undefined} target="_blank" rel="noopener noreferrer" className="hov" style={{ ...cardStyle, display: "block", textDecoration: "none", border: "1px solid rgba(126,184,255,0.25)", background: "rgba(126,184,255,0.04)", padding: 24 }}>
-            <div style={{ fontSize: 10, color: C.blue, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 10 }}>📬 Latest issue · #{latest.issue} · {latest.date}</div>
+            <div style={{ fontSize: 11.5, color: C.blue, marginBottom: 10 }}>Latest issue, #{latest.issue}, {latest.date}</div>
             <div style={{ fontFamily: SYNE, fontSize: 20, fontWeight: 700, color: "#fff", lineHeight: 1.3, marginBottom: 14 }}>{latest.headline}</div>
-            <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>Market overview · Broker pulse · Launch watch · Deep dive</div>
-            <span style={{ fontSize: 11, color: C.blue }}>{latest.live ? "Read it free →" : "Out this Sunday"}</span>
+            <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>Market overview, analyst changes, launch watch and one deep dive.</div>
+            <span style={{ fontSize: 11, color: C.blue }}>{latest.live ? "Read the issue" : "Out this Sunday"}</span>
           </a>
         )}
       </section>
@@ -911,14 +910,14 @@ function Home({ news, prices, launches }) {
       <ForNonSubscribers>
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", textAlign: "center", padding: "32px 20px", marginBottom: 24 }}>
         <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Get the Sunday briefing</div>
-        <p style={{ fontSize: 12, color: C.muted, marginBottom: 18 }}>The week in space stocks, in five minutes. 100% free: no paywall, no premium tier, no account needed.</p>
+        <p style={{ fontSize: 12, color: C.muted, marginBottom: 18 }}>The week in space stocks, in five minutes. Free, and one click to unsubscribe.</p>
         <SubscribeForm source="home-bottom" style={{ margin: "0 auto" }} />
       </section>
       </ForNonSubscribers>
 
       <footer style={{ padding: "24px 0", borderTop: "1px solid rgba(255,255,255,0.04)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
         <span style={{ fontFamily: SYNE, fontSize: 13, fontWeight: 800, color: "#556" }}>ORBIT<span style={{ color: C.green }}>ALPHA</span>.</span>
-        <span style={{ fontSize: 10, color: C.muted }}>Free for everyone, no paywall · Not financial advice · Data: Yahoo Finance, SEC EDGAR, USAspending.gov, Nasdaq, The Space Devs</span>
+        <span style={{ fontSize: 10, color: C.muted }}>Not financial advice. Data from Yahoo Finance, SEC EDGAR, USAspending.gov, Nasdaq and The Space Devs.</span>
         <div style={{ display: "flex", gap: 16, fontSize: 10, color: C.muted }}>
           <Link to="/news" className="oa-link">News</Link>
           <Link to="/newsletter" className="oa-link">Newsletter</Link>
@@ -936,15 +935,15 @@ function Home({ news, prices, launches }) {
    MARKETS PAGE
    ════════════════════════════════════════════════════════════════════════════ */
 const TABS = [
-  ["stocks", "Stocks", "📈", "Live prices"],
-  ["performance", "Performance", "📊", "vs the S&P 500"],
-  ["launches", "Launches", "🚀", "What's flying next"],
-  ["earnings", "Earnings", "📅", "Upcoming dates"],
-  ["contracts", "Contracts", "🏛️", "Government wins"],
-  ["filings", "Filings", "🧾", "Insider buys and sells"],
+  ["stocks", "Stocks", "", "Live prices"],
+  ["performance", "Performance", "", "vs the S&P 500"],
+  ["launches", "Launches", "", "What's flying next"],
+  ["earnings", "Earnings", "", "Upcoming dates"],
+  ["contracts", "Contracts", "", "Government wins"],
+  ["filings", "Filings", "", "Insider buys and sells"],
 ];
 const ROW_GRID = "68px 1fr 82px 72px 72px 80px";
-const sectionLabel = { fontSize: 9, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 };
+const sectionLabel = { fontSize: 11, color: C.muted, marginBottom: 8 };
 const border = "1px solid rgba(255,255,255,0.06)";
 
 function Markets({ prices, launches, tab, setTab, goSubscribe }) {
@@ -958,11 +957,11 @@ function Markets({ prices, launches, tab, setTab, goSubscribe }) {
       <div style={{ padding: "12px 20px 0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 5, background: `${oc}14`, border: `1px solid ${oc}33`, borderRadius: 4, padding: "3px 10px" }}>
           <div style={{ width: 5, height: 5, borderRadius: "50%", background: oc, animation: "bk 1.5s infinite" }} />
-          <span style={{ fontSize: 10, color: oc, letterSpacing: "0.08em" }}>{open ? "MARKET OPEN" : "MARKET CLOSED"}</span>
+          <span style={{ fontSize: 10, color: oc, letterSpacing: "0.08em" }}>{open ? "US market open" : "US market closed"}</span>
         </div>
         <span style={{ fontSize: 10, color: C.muted }}>
-          {clock.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase()} ·{" "}
-          {clock.toLocaleTimeString("en-US", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", second: "2-digit" })} EST
+          {clock.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })},{" "}
+          {clock.toLocaleTimeString("en-US", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit" })} New York
         </span>
       </div>
 
@@ -973,9 +972,9 @@ function Markets({ prices, launches, tab, setTab, goSubscribe }) {
             <button key={id} onClick={() => setTab(id)} aria-current={on ? "page" : undefined} className="oa-tab"
               style={{ flex: "1 0 auto", minWidth: 130, textAlign: "left", cursor: "pointer", fontFamily: MONO, borderRadius: 8, padding: "10px 14px",
                 background: on ? "rgba(0,255,136,0.1)" : "rgba(255,255,255,0.03)", border: `1px solid ${on ? "rgba(0,255,136,0.55)" : "rgba(255,255,255,0.1)"}`,
-                boxShadow: on ? "0 0 18px rgba(0,255,136,0.12)" : "none", transition: "all 0.15s" }}>
+                transition: "all 0.15s" }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: on ? C.green : "#fff", letterSpacing: "0.04em", whiteSpace: "nowrap" }}>
-                <span style={{ marginRight: 7 }}>{icon}</span>{label}
+                {label}
               </div>
               <div style={{ fontSize: 10, color: on ? C.light : C.muted, marginTop: 3, whiteSpace: "nowrap" }}>{hint}</div>
             </button>
@@ -988,7 +987,7 @@ function Markets({ prices, launches, tab, setTab, goSubscribe }) {
         <div style={{ margin: "12px 20px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px 18px", border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.04)", borderRadius: 10, padding: "12px 16px" }}>
           <div style={{ flex: "1 1 260px", minWidth: 0 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Get the Sunday briefing</div>
-            <div style={{ fontSize: 11, color: C.muted, marginTop: 2, lineHeight: 1.5 }}>What moved across every space stock this week, why it moved and what's next. Free, five minutes, every Sunday.</div>
+            <div style={{ fontSize: 11, color: C.muted, marginTop: 2, lineHeight: 1.5 }}>What moved across the space stocks we track this week, why, and what is coming next. Free, every Sunday.</div>
           </div>
           <SubscribeForm source={`markets-${active}`} style={{ flex: "1 1 340px" }} />
         </div>
@@ -1073,7 +1072,7 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
 
       {/* Desktop table */}
       <div className="desk-only" style={{ overflowX: "auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: ROW_GRID, gap: 6, padding: "7px 8px", fontSize: 9, color: C.text, letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ display: "grid", gridTemplateColumns: ROW_GRID, gap: 6, padding: "7px 8px", fontSize: 11, color: C.text, borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <span>Ticker</span><span>Name</span>
           {[["price", "Price"], ["changePct", "1D Chg%"], ["mktCap", "Mkt Cap"]].map(([col, label]) => (
             <span key={col} onClick={() => handleSort(col)} style={{ cursor: "pointer", color: sort.col === col ? C.green : "#fff", userSelect: "none" }}>
@@ -1129,7 +1128,7 @@ function StocksTab({ prices: { stocks, isLive }, goSubscribe }) {
               </div>
               <div style={{ fontSize: 8, color: C.muted, marginBottom: 3, letterSpacing: "0.08em" }}>7D</div>
               <Sparkline data={s.spark} positive={s.changePct >= 0} currency={s.currency} />
-              <div style={{ textAlign: "center", marginTop: 6, fontSize: 9, color: C.light }}>{PROFILES[s.ticker] ? "Tap for full page →" : expanded === s.ticker ? "▲ tap to close" : "▼ tap for more"}</div>
+              <div style={{ textAlign: "center", marginTop: 6, fontSize: 9, color: C.light }}>{PROFILES[s.ticker] ? "Open full page" : expanded === s.ticker ? "▲ tap to close" : "▼ tap for more"}</div>
             </div>
             {expanded === s.ticker && <StockDetail s={s} goSubscribe={goSubscribe} />}
           </div>
@@ -1259,8 +1258,8 @@ function StockDetail({ s, goSubscribe }) {
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
         <span style={{ fontSize: 10, color: C.light, background: "rgba(255,255,255,0.04)", padding: "5px 10px", borderRadius: 3 }}>{s.sector}</span>
-        <a href={yahooUrl(s.ticker)} target="_blank" rel="noopener" style={{ color: C.blue, border: `1px solid ${C.blue}33`, fontSize: 10, padding: "5px 10px", borderRadius: 3, fontFamily: MONO, textDecoration: "none" }}>View on Yahoo Finance →</a>
-        {link(`${s.ticker} in this week's issue →`, C.green, goSubscribe)}
+        <a href={yahooUrl(s.ticker)} target="_blank" rel="noopener" style={{ color: C.blue, border: `1px solid ${C.blue}33`, fontSize: 10, padding: "5px 10px", borderRadius: 3, fontFamily: MONO, textDecoration: "none" }}>View on Yahoo Finance</a>
+        {link(`${s.ticker} in this week's issue`, C.green, goSubscribe)}
       </div>
     </div>
   );
@@ -1380,7 +1379,7 @@ function EarningsTab() {
   const { data, error } = useApi("/api/earnings");
   return (
     <div>
-      <div style={{ ...sectionLabel, marginBottom: 14 }}>Upcoming Earnings · Stocks We Cover</div>
+      <div style={{ ...sectionLabel, marginBottom: 14 }}>Upcoming earnings for the stocks we cover</div>
       {!data && !error && <ListSkeleton />}
       {error && <Empty>Earnings calendar is unavailable right now. Please try again later.</Empty>}
       {data?.length === 0 && <Empty>No covered companies have confirmed earnings dates in the next 10 weeks yet. Dates usually appear 2 to 4 weeks ahead.</Empty>}
@@ -1395,7 +1394,7 @@ function ContractsTab() {
   const { data, error } = useApi("/api/contracts");
   return (
     <div>
-      <div style={{ ...sectionLabel, marginBottom: 4 }}>Government Contract Awards · Last 12 Months</div>
+      <div style={{ ...sectionLabel, marginBottom: 4 }}>US government contract awards in the last 12 months</div>
       <p style={{ fontSize: 11, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>New federal contracts (NASA, Space Force, DoD and others) awarded to the companies we cover, newest first.</p>
       {!data && !error && <ListSkeleton rows={6} />}
       {(error || data?.awards?.length === 0) && <Empty>No contract data available right now.</Empty>}
@@ -1414,7 +1413,7 @@ function FilingsTab() {
   const shown = data?.filings?.filter((f) => filter === "all" || f.kind === filter);
   return (
     <div>
-      <div style={{ ...sectionLabel, marginBottom: 4 }}>Notable SEC Filings · Last 3 Weeks</div>
+      <div style={{ ...sectionLabel, marginBottom: 4 }}>Notable SEC filings in the last 3 weeks</div>
       <p style={{ fontSize: 11, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>Insider buying and selling, share offerings, earnings releases and material company events, straight from SEC EDGAR.</p>
       <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 12 }}>
         {FILING_FILTERS.map(([id, label]) => (
@@ -1456,15 +1455,15 @@ function SectorSummary({ byId, stocks, rangeLabel, onPick }) {
 
   return (
     <div style={{ marginTop: 22 }}>
-      <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>
-        Sector summary · {rangeLabel} · equal-weighted · tap a sector to chart it
+      <div style={{ fontSize: 11, color: C.muted, marginBottom: 8 }}>
+        Sector averages over {rangeLabel} (equal-weighted). Tap a sector to chart it.
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 8 }}>
         {cards.map(({ sector, members, period, today, best, worst }) => (
           <button key={sector} onClick={() => onPick(members)} className="oa-tab"
             style={{ textAlign: "left", cursor: "pointer", fontFamily: MONO, background: "rgba(255,255,255,0.02)", border: `1px solid ${period == null ? "rgba(255,255,255,0.1)" : period >= 0 ? "rgba(0,255,136,0.25)" : "rgba(255,68,102,0.3)"}`, borderRadius: 8, padding: "10px 12px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
-              <span style={{ fontSize: 10, color: C.light, letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 600 }}>{sector}</span>
+              <span style={{ fontSize: 11.5, color: C.light, fontWeight: 600 }}>{sector}</span>
             </div>
             <div style={{ fontSize: 20, fontWeight: 700, color: period == null ? C.muted : signColor(period), margin: "4px 0 2px" }}>{period == null ? "-" : pct(period)}</div>
             <div style={{ fontSize: 10, color: C.muted, marginBottom: 6 }}>
@@ -1516,7 +1515,7 @@ function PerformanceChart({ full = false, prices }) {
     <div style={{ display: "flex", gap: 28, flexWrap: "wrap", marginBottom: 14 }}>
       {[[ufo, "Space stocks (UFO ETF)"], [spy, "S&P 500"]].map(([s, name]) => (
         <div key={s.id}>
-          <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 4 }}>{name}</div>
+          <div style={{ fontSize: 11, color: C.muted, marginBottom: 4 }}>{name}</div>
           <div style={{ fontFamily: SYNE, fontSize: full ? 26 : 30, fontWeight: 800, color: signColor(lastValue(s)) }}>{pct(lastValue(s))}</div>
         </div>
       ))}
@@ -1585,7 +1584,7 @@ function PerformanceChart({ full = false, prices }) {
             if (!items.length) return null;
             return (
               <div key={kind} style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center", marginBottom: 6 }}>
-                {full && <span style={{ fontSize: 9, color: "#667", letterSpacing: "0.1em", textTransform: "uppercase", width: 90 }}>{title}</span>}
+                {full && <span style={{ fontSize: 11, color: "#667", width: 90 }}>{title}</span>}
                 {items.map((s) => {
                   const on = selected.includes(s.id);
                   return (
@@ -1602,7 +1601,7 @@ function PerformanceChart({ full = false, prices }) {
           })}
           {full && (
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center", marginTop: 4 }}>
-              <span style={{ fontSize: 9, color: "#667", letterSpacing: "0.1em", textTransform: "uppercase", width: 90 }}>Stocks</span>
+              <span style={{ fontSize: 11, color: "#667", width: 90 }}>Stocks</span>
               {stockIds.map((id) => (
                 <span key={id} onClick={() => toggle(id)} title="Remove" style={{ fontSize: 11, border: `1px solid ${colorOf(id)}66`, borderRadius: 4, padding: "4px 8px", color: "#fff", cursor: "pointer", display: "flex", gap: 6, alignItems: "center" }}>
                   <span style={{ width: 10, height: 2, background: colorOf(id), display: "inline-block" }} />{id}
@@ -1692,7 +1691,7 @@ const pctOrDash = (v) => (v == null ? "-" : pct(v));
 function Stat({ label, value, sub, color }) {
   return (
     <div style={{ minWidth: 0 }}>
-      <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 11, color: C.muted, marginBottom: 4 }}>{label}</div>
       <div style={{ fontSize: 16, color: color || "#fff", fontWeight: 600, whiteSpace: "nowrap" }}>{value}</div>
       {sub && <div style={{ fontSize: 10, color: C.muted, marginTop: 3, lineHeight: 1.4 }}>{sub}</div>}
     </div>
@@ -1736,14 +1735,14 @@ function InsiderSummary({ ticker, data, error }) {
       {error && !data && <Empty>Unavailable right now.</Empty>}
       {data?.m12 && (
         <>
-          <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr 1fr 1fr", gap: 8, fontSize: 9, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", paddingBottom: 4 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr 1fr 1fr", gap: 8, fontSize: 11, color: C.muted, paddingBottom: 4 }}>
             <span>Period</span><span>Bought</span><span>Sold</span><span>Net</span>
           </div>
           {windowRow("Last 3 months", data.m3)}
           {windowRow(data.complete ? "Last 12 months" : `Since ${new Date(data.coveredFrom + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })}`, data.m12)}
           {data.largest?.length > 0 ? (
             <div style={{ marginTop: 12 }}>
-              <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>Largest trades</div>
+              <div style={{ fontSize: 11, color: C.muted, marginBottom: 4 }}>Largest trades</div>
               {data.largest.map((t) => (
                 <a key={t.url} href={t.url} target="_blank" rel="noopener noreferrer" className="hov" style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none", fontSize: 11 }}>
                   <span style={{ color: C.light, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.owner}<span style={{ color: C.muted }}> · {t.role}</span></span>
@@ -1754,7 +1753,7 @@ function InsiderSummary({ ticker, data, error }) {
           ) : <Empty>No open-market insider buys or sales in the last 12 months.</Empty>}
         </>
       )}
-      <SourceNote>Source: SEC EDGAR Form 4 filings. Excludes grants, option exercises and shares withheld for tax.{data && !data.complete ? ` Based on the latest ${data.form4s > 100 ? 100 : data.form4s} Form 4s.` : ""} Sales are often pre-planned (Rule 10b5-1).</SourceNote>
+      <SourceNote>Source: SEC EDGAR Form 4 filings. Excludes grants, option exercises and shares withheld for tax.{data?.m12 && !data.complete ? ` Based on the latest ${data.form4s > 100 ? 100 : data.form4s} Form 4s.` : ""} Sales are often pre-planned (Rule 10b5-1).</SourceNote>
     </Card>
   );
 }
@@ -1764,7 +1763,7 @@ function PeerTable({ ticker, data, prices }) {
   const rows = (data?.peers || Object.keys(PROFILES).filter((t) => PROFILES[t].sector === sector).map((t) => ({ ticker: t, name: PROFILES[t].name })))
     .map((p) => ({ ...p, live: prices.stocks.find((x) => x.ticker === p.ticker) }))
     .sort((a, b) => (b.live?.marketCap || 0) - (a.live?.marketCap || 0));
-  const th = { fontSize: 9, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 400, textAlign: "right", padding: "0 0 6px 10px", whiteSpace: "nowrap" };
+  const th = { fontSize: 11, color: C.muted, fontWeight: 400, textAlign: "right", padding: "0 0 6px 10px", whiteSpace: "nowrap" };
   const td = { fontSize: 12, textAlign: "right", padding: "8px 0 8px 10px", borderTop: "1px solid rgba(255,255,255,0.04)", whiteSpace: "nowrap" };
   return (
     <Card title={`${sector} peers`} note="Sorted by market cap" style={{ marginBottom: 14 }}>
@@ -1878,7 +1877,7 @@ function DilutionTracker({ data, error }) {
       )}
       {data?.offerings?.length > 0 && (
         <div style={{ marginTop: 14 }}>
-          <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>Offering filings, last 2 years</div>
+          <div style={{ fontSize: 11, color: C.muted, marginBottom: 4 }}>Offering filings, last 2 years</div>
           {data.offerings.slice(0, 6).map((o) => (
             <a key={o.url} href={o.url} target="_blank" rel="noopener noreferrer" className="hov" style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none", fontSize: 11 }}>
               <span style={{ color: C.light }}>{o.label} <span style={{ color: C.muted }}>({o.form})</span></span>
@@ -1928,8 +1927,8 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
           <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
             <h1 style={{ fontFamily: SYNE, fontSize: 34, fontWeight: 800, color: C.green, letterSpacing: "-0.01em" }}>{ticker}</h1>
             <span style={{ fontSize: 16, color: "#fff" }}>{profile.name}</span>
-            <span style={{ fontSize: 9, color: C.light, border: "1px solid rgba(255,255,255,0.15)", padding: "2px 8px", borderRadius: 3, letterSpacing: "0.08em", textTransform: "uppercase" }}>{profile.sector}</span>
-            {profile.listing && <span style={{ fontSize: 9, color: C.blue, border: "1px solid rgba(126,184,255,0.25)", padding: "2px 8px", borderRadius: 3, letterSpacing: "0.08em", textTransform: "uppercase" }}>{profile.listing}</span>}
+            <span style={{ fontSize: 11, color: C.light, border: "1px solid rgba(255,255,255,0.15)", padding: "2px 8px", borderRadius: 3 }}>{profile.sector}</span>
+            {profile.listing && <span style={{ fontSize: 11, color: C.blue, border: "1px solid rgba(126,184,255,0.25)", padding: "2px 8px", borderRadius: 3 }}>{profile.listing}</span>}
           </div>
         </div>
         {live && (
@@ -1948,10 +1947,10 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       <ForNonSubscribers>
       <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.04)", borderRadius: 10, padding: "12px 16px", marginBottom: 20 }}>
         <div style={{ flex: "1 1 240px" }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>🔔 Follow {ticker}</div>
-          <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>Get the free Sunday briefing on {profile.name} and every space stock we cover. No paywall.</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Follow {ticker}</div>
+          <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{profile.name} news, filings and price moves in a free email every Sunday.</div>
         </div>
-        <SubscribeForm source="stock-page-top" follow={ticker} label={`Follow ${ticker} →`} style={{ flex: "1 1 320px" }} />
+        <SubscribeForm source="stock-page-top" follow={ticker} label={`Follow ${ticker}`} style={{ flex: "1 1 320px" }} />
       </div>
       </ForNonSubscribers>
 
@@ -2047,14 +2046,14 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       {/* Newsletter */}
       <ForNonSubscribers>
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginBottom: 24 }}>
-        <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Follow {ticker} without the noise</div>
-        <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>{profile.name} and every other space stock, summarised in one free email every Sunday.</p>
-        <SubscribeForm source="stock-page-bottom" follow={ticker} label={`Follow ${ticker} →`} />
+        <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Follow {profile.name}</div>
+        <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>A free email every Sunday covering {profile.name} and the other space stocks we track.</p>
+        <SubscribeForm source="stock-page-bottom" follow={ticker} label={`Follow ${ticker}`} />
       </section>
       </ForNonSubscribers>
 
       {/* Internal links: other stocks */}
-      <div style={{ fontSize: 9, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>Other stocks we cover</div>
+      <div style={{ fontSize: 11, color: C.muted, marginBottom: 8 }}>Other stocks we cover</div>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 20 }}>
         {others.map((t) => <TickerChip key={t} ticker={t} />)}
       </div>
@@ -2068,7 +2067,7 @@ function NotFound() {
     <div style={{ maxWidth: 520, margin: "0 auto", padding: "80px 20px", textAlign: "center" }}>
       <div style={{ fontFamily: SYNE, fontSize: 26, fontWeight: 800, color: "#fff", marginBottom: 10 }}>Page not found</div>
       <p style={{ fontSize: 12, color: C.muted, marginBottom: 20 }}>That page doesn't exist. Try the markets dashboard or one of the stocks we cover.</p>
-      <Link to="/markets" style={{ color: C.green, fontSize: 12 }}>Go to Markets →</Link>
+      <Link to="/markets" style={{ color: C.green, fontSize: 12 }}>Go to Markets</Link>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center", marginTop: 24 }}>
         {Object.keys(PROFILES).map((t) => <TickerChip key={t} ticker={t} />)}
       </div>
@@ -2229,7 +2228,7 @@ function News({ news, prices }) {
     .filter((i) => i.key_story && i.day >= sinceDay && (!company || i.tickers.includes(company)));
   const signalsLoading = !filings.data && !filings.error && !contracts.data && !contracts.error;
   const control = { background: "#0d1220", border: "1px solid rgba(255,255,255,0.18)", color: "#e8ecf4", padding: "8px 12px", borderRadius: 6, fontSize: 12, fontFamily: MONO, cursor: "pointer" };
-  const h2 = { fontSize: 10, color: C.orange, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 600, marginBottom: 4 };
+  const h2 = { fontSize: 11.5, color: C.orange, fontWeight: 600, marginBottom: 4 };
 
   return (
     <div style={{ animation: "fu 0.3s ease", maxWidth: 1100, margin: "0 auto", padding: "32px 20px 60px" }}>
@@ -2283,7 +2282,7 @@ function News({ news, prices }) {
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
                 <h2 style={{ ...h2, marginBottom: 0 }}>{PROFILES[company].name}</h2>
                 <Move v={moveOf(company)} />
-                <Link to={`/stocks/${company.toLowerCase()}`} className="oa-link" style={{ fontSize: 10, color: C.green, marginLeft: "auto" }}>Full {company} page →</Link>
+                <Link to={`/stocks/${company.toLowerCase()}`} className="oa-link" style={{ fontSize: 10, color: C.green, marginLeft: "auto" }}>Full {company} page</Link>
                 <span onClick={() => setCompany("")} style={{ fontSize: 10, color: C.muted, cursor: "pointer" }}>✕ All companies</span>
               </div>
               {companyStories.length === 0 && <Empty>No {company} stories in this period. Try a longer period.</Empty>}
@@ -2343,7 +2342,7 @@ function Newsletter() {
   const subscribers = useSubscriberLabel();
   return (
     <div style={{ animation: "fu 0.3s ease", maxWidth: 800, margin: "0 auto", padding: "40px 20px 60px" }}>
-      <div style={{ fontSize: 10, color: C.green, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 10 }}>100% free, no paywall · Every Sunday · 5-minute read</div>
+      <div style={{ fontSize: 11.5, color: C.green, marginBottom: 10 }}>Free, every Sunday, about a five-minute read</div>
       <h1 style={{ fontFamily: SYNE, fontSize: "clamp(28px,5vw,40px)", fontWeight: 800, color: "#fff", lineHeight: 1.15, marginBottom: 12 }}>The week in space stocks, <span style={{ color: C.green }}>in one email.</span></h1>
       <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.7, maxWidth: 600, marginBottom: 22 }}>Join {subscribers} investors who get Orbit Alpha every Sunday morning: what moved, why it moved, and what to watch next across every space stock we cover.</p>
       <SubscribeForm source="newsletter-page" style={{ marginBottom: 32 }} />
@@ -2357,13 +2356,13 @@ function Newsletter() {
         ))}
       </div>
 
-      <h2 style={{ fontSize: 10, color: C.muted, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14, fontWeight: 500 }}>Read past issues</h2>
+      <h2 style={{ fontSize: 11.5, color: C.muted, marginBottom: 14, fontWeight: 500 }}>Read past issues</h2>
       {issues.map((issue, i) => (
         <a key={issue.issue} href={issue.live ? issue.url : undefined} target="_blank" rel="noopener noreferrer" className="hov"
           style={{ display: "block", textDecoration: "none", border: `1px solid ${i === 0 ? "rgba(0,255,136,0.25)" : "rgba(255,255,255,0.06)"}`, borderRadius: 8, padding: 20, marginBottom: 10, background: "rgba(255,255,255,0.01)", cursor: issue.live ? "pointer" : "default", opacity: issue.live ? 1 : 0.5, position: "relative" }}>
           {!issue.live && <span style={badge(C.yellow, "255,204,0")}>COMING SUNDAY</span>}
           {i === 0 && issue.live && <span style={badge(C.green, "0,255,136")}>LATEST</span>}
-          <div style={{ fontSize: 10, color: C.orange, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>Issue #{issue.issue} · {issue.date}</div>
+          <div style={{ fontSize: 11.5, color: C.orange, marginBottom: 6 }}>Issue #{issue.issue} · {issue.date}</div>
           <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6, lineHeight: 1.4, paddingRight: 90 }}>{issue.headline}</div>
           {issue.summary && <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.6 }}>{issue.summary}</div>}
         </a>
@@ -2375,21 +2374,67 @@ function Newsletter() {
 /* ════════════════════════════════════════════════════════════════════════════
    ABOUT PAGE
    ════════════════════════════════════════════════════════════════════════════ */
-const P = ({ children, mb = 16 }) => <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.8, marginBottom: mb }}>{children}</p>;
+const P = ({ children, mb = 16 }) => <p style={{ fontSize: 14, color: C.light, lineHeight: 1.75, marginBottom: mb }}>{children}</p>;
 const Rule = ({ mb = 24 }) => <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: `20px 0 ${mb}px` }} />;
 
+const ABOUT_SOURCES = [
+  ["Share prices and charts", "Yahoo Finance", "About every minute during market hours. Prices may be delayed."],
+  ["Market caps", "Nasdaq share counts multiplied by the live price; European listings use the latest reported share count, converted to US dollars", "Share counts every 12 hours"],
+  ["SEC filings, insider trades, financials and share counts", "SEC EDGAR", "Filings hourly, insider summaries every 6 hours, financials every 12 hours"],
+  ["US government contracts", "USAspending.gov (prime awards only)", "Every 6 hours"],
+  ["Earnings dates", "Nasdaq earnings calendar", "Every 6 hours"],
+  ["Launches", "Launch Library 2 (The Space Devs)", "Hourly"],
+  ["News", "Google News and Yahoo Finance headlines", "Every 10 minutes"],
+];
+
 function About() {
+  const h2 = { fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", margin: "32px 0 10px" };
   return (
-    <div style={{ animation: "fu 0.3s ease", maxWidth: 640, margin: "0 auto", padding: "32px 20px 60px" }}>
-      <div style={{ fontFamily: SYNE, fontSize: 28, fontWeight: 800, color: "#fff" }}>ABOUT <span style={{ color: C.green }}>ORBIT ALPHA</span></div>
-      <Rule mb={20} />
-      <P>Orbit Alpha is a free dashboard and weekly newsletter built for retail investors who follow space equities. It covers every publicly traded space stock, ETF and private company, with live prices, launch catalysts, broker target changes and weekly deep dives.</P>
-      <P>The newsletter goes out every Sunday morning and covers three things: a macro overview of the week in space stocks, a broker pulse showing all analyst rating and price target changes, and one stock of the week (bull case, bear case, key catalysts, honest view on valuation).</P>
-      <P mb={32}>Everything is free. No paywall. No signup required to use the dashboard.</P>
-      <Rule />
-      <div style={{ fontSize: 10, color: C.muted, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>Get in touch</div>
-      <a href="mailto:OrbitAlphaApp@proton.me" style={{ color: C.green, fontSize: 13, textDecoration: "none" }}>📬 OrbitAlphaApp@proton.me</a>
-      <SubscribeForm source="about-page" label="Subscribe →" style={{ marginTop: 24 }} />
+    <div style={{ animation: "fu 0.3s ease", maxWidth: 680, margin: "0 auto", padding: "32px 20px 60px" }}>
+      <h1 style={{ fontFamily: SYNE, fontSize: 28, fontWeight: 800, color: "#fff", marginBottom: 16 }}>About Orbit Alpha</h1>
+      <P>Orbit Alpha is a free dashboard and weekly newsletter for investors who follow listed space companies. It tracks {Object.keys(PROFILES).length} stocks, from SpaceX and Rocket Lab to small caps in the US and Europe, plus the main space ETFs.</P>
+      <P>It does not cover Lockheed Martin, Boeing or Northrop Grumman, where space is a small part of a much larger business. The focus is on companies where space is the main story.</P>
+
+      <h2 style={h2}>Where the data comes from</h2>
+      <P mb={12}>All market and company data comes from public sources, pulled automatically.</P>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, minWidth: 480 }}>
+          <thead>
+            <tr style={{ color: C.muted, textAlign: "left" }}>
+              <th style={{ fontWeight: 500, padding: "6px 10px 6px 0" }}>What</th>
+              <th style={{ fontWeight: 500, padding: "6px 10px" }}>Source</th>
+              <th style={{ fontWeight: 500, padding: "6px 0 6px 10px" }}>Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ABOUT_SOURCES.map(([what, src, when]) => (
+              <tr key={what} style={{ borderTop: "1px solid rgba(255,255,255,0.06)", verticalAlign: "top" }}>
+                <td style={{ padding: "9px 10px 9px 0", color: "#fff" }}>{what}</td>
+                <td style={{ padding: "9px 10px", color: C.light, lineHeight: 1.5 }}>{src}</td>
+                <td style={{ padding: "9px 0 9px 10px", color: C.muted, lineHeight: 1.5 }}>{when}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 style={h2}>How the figures are worked out</h2>
+      <P mb={10}><strong style={{ color: "#fff" }}>Returns.</strong> Year-to-date returns run from the last close of the previous year. Sector figures are the median of the stocks we track in that sector.</P>
+      <P mb={10}><strong style={{ color: "#fff" }}>Financials.</strong> Taken from the figures companies tag in their 10-Q and 10-K filings. The last 12 months are the latest full year plus this year to date, minus the same period last year.</P>
+      <P mb={10}><strong style={{ color: "#fff" }}>Cash runway.</strong> Cash and short-term investments divided by the last 12 months of free cash outflow (operating cash flow minus capital spending). It assumes no new funding.</P>
+      <P mb={10}><strong style={{ color: "#fff" }}>Insider trades.</strong> Open-market buys and sales from Form 4 filings. Share grants, option exercises and shares withheld for tax are left out.</P>
+      <P><strong style={{ color: "#fff" }}>Share counts.</strong> From the cover of each 10-Q and 10-K, adjusted for reverse splits so the history can be compared.</P>
+
+      <h2 style={h2}>Not investment advice</h2>
+      <P>Orbit Alpha is information only. It is not a recommendation to buy or sell anything. Data can be late or wrong, so check the original filing before acting on it. Every filing on the site links to its source.</P>
+
+      <h2 style={h2}>Contact</h2>
+      <P mb={8}>Spotted a wrong number or a company we should cover? Email <a href="mailto:OrbitAlphaApp@proton.me" style={{ color: C.green }}>OrbitAlphaApp@proton.me</a>.</P>
+      <ForNonSubscribers>
+        <h2 style={h2}>The newsletter</h2>
+        <P mb={12}>A free email every Sunday with the week's moves, filings, contracts and one company in depth.</P>
+        <SubscribeForm source="about-page" />
+      </ForNonSubscribers>
     </div>
   );
 }
@@ -2418,7 +2463,7 @@ export default function App() {
 
   const marketChrome = page === "markets";
   const showTicker = page === "home" || page === "markets" || page === "stock";
-  const navBtn = { background: "none", border: "1px solid rgba(255,255,255,0.1)", color: C.light, padding: "7px 12px", borderRadius: 4, fontSize: 10, letterSpacing: "0.06em", fontFamily: MONO, cursor: "pointer" };
+  const navBtn = { background: "none", border: "1px solid rgba(255,255,255,0.1)", color: C.light, padding: "7px 12px", borderRadius: 4, fontSize: 12, fontFamily: MONO, cursor: "pointer" };
 
   return (
     <NavContext.Provider value={go}>
@@ -2427,9 +2472,6 @@ export default function App() {
       <SubscribePopup path={path} />
       <MobileSubscribeBar path={path} />
       <Stars />
-      <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 1, overflow: "hidden", opacity: 0.02 }}>
-        <div style={{ position: "absolute", width: "100%", height: 2, background: "linear-gradient(transparent,rgba(0,255,136,1),transparent)", animation: "sc 10s linear infinite" }} />
-      </div>
 
       <div style={{ position: "relative", zIndex: 2 }}>
         {/* Nav */}
@@ -2439,12 +2481,12 @@ export default function App() {
           </Link>
           <div className="desk-only" style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", display: "flex", gap: 28 }}>
             {NAV.map(([to, p, l]) => (
-              <Link key={p} to={to} style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: page === p ? C.green : C.muted, borderBottom: `1px solid ${page === p ? C.green : "transparent"}`, paddingBottom: 2 }}>{l}</Link>
+              <Link key={p} to={to} style={{ fontSize: 11, color: page === p ? C.green : C.muted, borderBottom: `1px solid ${page === p ? C.green : "transparent"}`, paddingBottom: 2 }}>{l}</Link>
             ))}
           </div>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <button className="desk-only" onClick={goSubscribe} style={{ ...navBtn, background: "rgba(0,255,136,0.07)", border: "1px solid rgba(0,255,136,0.2)", color: C.green, letterSpacing: "0.1em", textTransform: "uppercase" }}>Subscribe Free</button>
-            <button className="desk-only" onClick={share} style={navBtn}>Share ↗</button>
+            <button className="desk-only" onClick={goSubscribe} style={{ ...navBtn, background: "rgba(0,255,136,0.07)", border: "1px solid rgba(0,255,136,0.2)", color: C.green }}>Subscribe</button>
+            <button className="desk-only" onClick={share} style={navBtn}>Share</button>
             <button className="mob-only" onClick={() => setMenuOpen(!menuOpen)} style={{ ...navBtn, padding: "6px 10px", fontSize: 16 }}>{menuOpen ? "✕" : "☰"}</button>
           </div>
         </nav>
@@ -2452,9 +2494,9 @@ export default function App() {
         {menuOpen && (
           <div style={{ background: "#070a14", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
             {NAV.map(([to, p, l]) => (
-              <Link key={p} to={to} style={{ color: page === p ? C.green : C.light, padding: "10px 0", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>{l}</Link>
+              <Link key={p} to={to} style={{ color: page === p ? C.green : C.light, padding: "10px 0", fontSize: 12, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>{l}</Link>
             ))}
-            <button onClick={goSubscribe} style={{ background: C.green, color: C.bg, border: "none", padding: 11, borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: MONO, cursor: "pointer", marginTop: 8 }}>Subscribe Free →</button>
+            <button onClick={goSubscribe} style={{ background: C.green, color: C.bg, border: "none", padding: 11, borderRadius: 4, fontSize: 11, fontWeight: 700, fontFamily: MONO, cursor: "pointer", marginTop: 8 }}>Subscribe</button>
           </div>
         )}
 
@@ -2464,7 +2506,7 @@ export default function App() {
         {marketChrome && (
           <div style={{ background: prices.isLive ? "rgba(0,255,136,0.05)" : "rgba(255,204,0,0.07)", borderBottom: `1px solid ${prices.isLive ? "rgba(0,255,136,0.15)" : "rgba(255,204,0,0.15)"}`, padding: "8px 16px", textAlign: "center", fontSize: 11, letterSpacing: "0.04em", color: prices.isLive ? C.green : C.yellow }}>
             <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "currentColor", animation: "bk 1.5s infinite", marginRight: 8 }} />
-            {prices.isLive ? `LIVE DATA · Updated ${prices.lastUpdated}` : "Loading live prices..."}
+            {prices.isLive ? `Prices updated ${prices.lastUpdated}` : "Loading live prices..."}
           </div>
         )}
 
