@@ -1,0 +1,24 @@
+name: Temp live visit check
+on: workflow_dispatch
+jobs:
+  visit:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm i playwright-core@1.48.2 --no-save --prefix /tmp/pw
+      - run: |
+          cat > /tmp/pw/v.mjs <<'JS'
+          import { chromium } from "/tmp/pw/node_modules/playwright-core/index.mjs";
+          const b = await chromium.launch({ executablePath: "/usr/bin/google-chrome" });
+          const p = await b.newPage();
+          const sent = [];
+          p.on("request", (r) => { if (r.url().includes("posthog")) sent.push(r.method() + " " + r.url().split("?")[0]); });
+          await p.goto("https://www.orbitalpha.cloud/stocks/rklb?ref=setupcheck", { waitUntil: "networkidle" });
+          await p.waitForTimeout(6000);
+          console.log("url now:", p.url());
+          console.log("props:", JSON.stringify(await p.evaluate(() => window.__oaTouchProps)));
+          console.log("cookieless:", await p.evaluate(() => window.posthog?.config?.cookieless_mode));
+          console.log("posthog requests:", sent.join(" | "));
+          console.log("cookies:", JSON.stringify((await p.context().cookies()).map((c) => c.name)));
+          await b.close();
+          JS
+          node /tmp/pw/v.mjs | while read l; do echo "::notice::$l"; done
