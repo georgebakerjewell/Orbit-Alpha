@@ -9,7 +9,7 @@ jobs:
           cat > /tmp/pw/v.mjs <<'JS'
           import { chromium } from "/tmp/pw/node_modules/playwright-core/index.mjs";
           const b = await chromium.launch({ executablePath: "/usr/bin/google-chrome" });
-          const p = await b.newPage();
+          const p = await b.newPage({ userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" });
           const sent = [];
           p.on("request", (r) => { if (r.url().includes("posthog")) sent.push(r.method() + " " + r.url().split("?")[0]); });
           await p.goto("https://www.orbitalpha.cloud/stocks/rklb?ref=setupcheck", { waitUntil: "networkidle" });
