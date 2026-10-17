@@ -611,7 +611,7 @@ function SubscribePopup({ path }) {
     if (n >= 2) { const t = setTimeout(() => open("second_page"), 1500); return () => clearTimeout(t); }
   }, [path]);
   // Time on site: most visitors read one page for a while and never scroll far or move to leave.
-  useEffect(() => { const t = setTimeout(() => { if (document.activeElement?.tagName !== "INPUT") open("time_45s"); }, 45000); return () => clearTimeout(t); }, []); // not while they are typing
+  useEffect(() => { const t = setTimeout(() => { if (document.activeElement?.tagName !== "INPUT") open("time_20s"); }, 20000); return () => clearTimeout(t); }, []); // not while they are typing
   // Reading depth on stock and news pages, and exit intent on desktop.
   useEffect(() => {
     const deep = path.startsWith("/stocks/") || path === "/news";
