@@ -8,7 +8,7 @@ jobs:
       - run: |
           cat > /tmp/pw/v.mjs <<'JS'
           import { chromium } from "/tmp/pw/node_modules/playwright-core/index.mjs";
-          const b = await chromium.launch({ executablePath: "/usr/bin/google-chrome" });
+          const b = await chromium.launch({ executablePath: "/usr/bin/google-chrome", args: ["--disable-blink-features=AutomationControlled"] });
           const p = await b.newPage({ userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" });
           const sent = [];
           p.on("request", (r) => { if (r.url().includes("posthog")) sent.push(r.method() + " " + r.url().split("?")[0]); });
@@ -18,6 +18,7 @@ jobs:
           console.log("props:", JSON.stringify(await p.evaluate(() => window.__oaTouchProps)));
           console.log("cookieless:", await p.evaluate(() => window.posthog?.config?.cookieless_mode));
           console.log("posthog requests:", sent.join(" | "));
+          console.log("webdriver:", await p.evaluate(() => navigator.webdriver), "optedOut:", await p.evaluate(() => window.posthog?.has_opted_out_capturing?.()));
           console.log("cookies:", JSON.stringify((await p.context().cookies()).map((c) => c.name)));
           await b.close();
           JS
