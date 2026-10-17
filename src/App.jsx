@@ -473,40 +473,8 @@ function TickerStrip({ stocks }) {
 /* ── Where visitors came from ─────────────────────────────────────────────── */
 // First visit only: remember the channel (from ?ref= / ?utm_source= on our own links, else the
 // referring site) so a sign-up days later is still credited to X, Reddit, Google etc.
-const REF_HOSTS = [
-  [/(^|\.)(t\.co|x\.com|twitter\.com)$/, "x", "social"], [/(^|\.)reddit\.com$|^redd\.it$/, "reddit", "social"],
-  [/(^|\.)google\./, "google", "search"], [/(^|\.)bing\.com$/, "bing", "search"], [/(^|\.)duckduckgo\.com$/, "duckduckgo", "search"],
-  [/(^|\.)(linkedin\.com|lnkd\.in)$/, "linkedin", "social"], [/(^|\.)(facebook\.com|fb\.me|instagram\.com)$/, "facebook", "social"],
-  [/(^|\.)news\.ycombinator\.com$/, "hackernews", "social"], [/(^|\.)(beehiiv\.com|mail\.)/, "newsletter", "email"],
-];
-const REF_ALIASES = { twitter: "x", "x.com": "x", rd: "reddit", nl: "newsletter", email: "newsletter" };
-function captureFirstTouch() {
-  try {
-    const url = new URL(window.location.href);
-    const tag = (url.searchParams.get("ref") || url.searchParams.get("utm_source") || "").toLowerCase().replace(/[^a-z0-9._-]/g, "").slice(0, 40);
-    let hit = null;
-    if (tag) hit = { source: REF_ALIASES[tag] || tag, medium: url.searchParams.get("utm_medium") || (["x", "reddit", "linkedin", "facebook"].includes(REF_ALIASES[tag] || tag) ? "social" : "link") };
-    else if (document.referrer) {
-      const host = new URL(document.referrer).hostname.replace(/^www\./, "");
-      if (!/orbitalpha\.cloud$/.test(host)) {
-        const m = REF_HOSTS.find(([re]) => re.test(host));
-        hit = m ? { source: m[1], medium: m[2] } : { source: host, medium: "referral" };
-        hit.referrer = document.referrer.slice(0, 200);
-      }
-    }
-    // Visitors clicking through from the newsletter are already subscribers.
-    const medium = (url.searchParams.get("utm_medium") || "").toLowerCase();
-    if (tag === "newsletter" || tag === "nl" || tag.includes("orbit-alpha") || tag.includes("beehiiv") || medium === "email" || medium === "newsletter") { try { localStorage.setItem("oa_subscribed", "1"); } catch {} }
-    // Tidy our own tracking params out of the address bar so shared links don't carry them on.
-    if (url.searchParams.has("ref")) { url.searchParams.delete("ref"); window.history.replaceState(null, "", url.pathname + url.search + url.hash); }
-    if (!hit || localStorage.getItem("oa_src")) return;
-    localStorage.setItem("oa_src", JSON.stringify({ ...hit, landing: window.location.pathname, at: new Date().toISOString().slice(0, 10) }));
-  } catch {}
-}
-captureFirstTouch();
+// First touch (source, medium, landing page) is worked out in index.html before analytics loads.
 const firstTouch = () => { try { return JSON.parse(localStorage.getItem("oa_src")) || null; } catch { return null; } };
-// Attach the visitor's first channel to every PostHog event, so all reports can be split by X, Reddit, Google...
-{ const ft = firstTouch(); window.posthog?.register?.({ first_source: ft?.source || "direct", first_medium: ft?.medium || "none", first_landing: ft?.landing }); }
 
 /* ── Subscribed state ──────────────────────────────────────────────────────── */
 // Remembered in this browser once someone subscribes (or arrives from the newsletter),
@@ -567,6 +535,9 @@ function SubscribeForm({ color = C.green, label = "Subscribe", onDone, style, so
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
   const already = useSubscribed(false);
+  const started = useRef(false);
+  // Someone clicked into the email box: shows which forms people begin but don't finish.
+  const onFocus = () => { if (!started.current) { started.current = true; window.posthog?.capture?.("signup_started", { signup_box: source, page: window.location.pathname }); } };
   const submit = async (e) => {
     e?.preventDefault();
     if (busy) return;
@@ -590,7 +561,7 @@ function SubscribeForm({ color = C.green, label = "Subscribe", onDone, style, so
   return (
     <div style={{ maxWidth: 400, ...style }}>
       <form onSubmit={submit} style={{ display: "flex", gap: 8, flexWrap: style?.flexWrap }}>
-        <input type="email" inputMode="email" autoComplete="email" required aria-label="Email address" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" style={{ ...inputStyle, minWidth: 0, flex: "1 1 160px" }} />
+        <input type="email" inputMode="email" autoComplete="email" required aria-label="Email address" value={email} onChange={(e) => setEmail(e.target.value)} onFocus={onFocus} placeholder="you@example.com" style={{ ...inputStyle, minWidth: 0, flex: "1 1 160px" }} />
         <button type="submit" disabled={busy} style={{ background: color, color: C.bg, border: "none", padding: "10px 20px", borderRadius: 4, fontSize: 11, fontWeight: 700, fontFamily: MONO, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, opacity: busy ? 0.6 : 1 }}>
           {busy ? "Subscribing…" : label}
         </button>
@@ -639,6 +610,8 @@ function SubscribePopup({ path }) {
     try { n = Number(sessionStorage.getItem("oa_pv") || 0) + 1; sessionStorage.setItem("oa_pv", String(n)); } catch {}
     if (n >= 2) { const t = setTimeout(() => open("second_page"), 1500); return () => clearTimeout(t); }
   }, [path]);
+  // Time on site: most visitors read one page for a while and never scroll far or move to leave.
+  useEffect(() => { const t = setTimeout(() => { if (document.activeElement?.tagName !== "INPUT") open("time_45s"); }, 45000); return () => clearTimeout(t); }, []); // not while they are typing
   // Reading depth on stock and news pages, and exit intent on desktop.
   useEffect(() => {
     const deep = path.startsWith("/stocks/") || path === "/news";
@@ -680,7 +653,10 @@ function MobileSubscribeBar({ path }) {
     return () => window.removeEventListener("scroll", on);
   }, []);
   useEffect(() => { if (done) { const t = setTimeout(() => setClosed(true), 2500); return () => clearTimeout(t); } }, [done]);
-  if (closed || (subscribed && !done) || path === "/newsletter" || !scrolled) return null;
+  const visible = !(closed || (subscribed && !done) || path === "/newsletter" || !scrolled);
+  const logged = useRef(false);
+  useEffect(() => { if (visible && !logged.current && window.matchMedia?.("(max-width: 600px)").matches) { logged.current = true; window.posthog?.capture?.("mobile_bar_shown", { page: path }); } }, [visible]);
+  if (!visible) return null;
   const close = () => { setClosed(true); try { localStorage.setItem(BAR_KEY, String(Date.now())); } catch {} };
   return (
     <div className="mob-only" style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 9000, background: "rgba(8,12,22,0.97)", borderTop: "1px solid rgba(0,255,136,0.35)", padding: "10px 14px calc(10px + env(safe-area-inset-bottom, 0px))", boxShadow: "0 -10px 30px rgba(0,0,0,0.5)", animation: "fu 0.25s ease" }}>
