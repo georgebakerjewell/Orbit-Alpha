@@ -35,18 +35,22 @@
     // First touch: where this visitor originally came from (?ref= tag, utm_source or referrer).
     // Worked out before analytics loads so every event, including the first page view, carries it.
     (function () {
-      var HOSTS = [[/(^|\.)(t\.co|x\.com|twitter\.com)$/, "x", "social"], [/(^|\.)reddit\.com$|^redd\.it$/, "reddit", "social"],
+      // AI assistants first, so gemini.google.com is not counted as Google search.
+      var HOSTS = [[/(^|\.)(chatgpt\.com|openai\.com)$/, "chatgpt", "ai"], [/(^|\.)perplexity\.ai$/, "perplexity", "ai"], [/^gemini\.google\.com$/, "gemini", "ai"],
+        [/^copilot\.microsoft\.com$/, "copilot", "ai"], [/(^|\.)claude\.ai$/, "claude", "ai"], [/(^|\.)(you\.com|kagi\.com|phind\.com)$/, "ai-search", "ai"],
+        [/(^|\.)(t\.co|x\.com|twitter\.com)$/, "x", "social"], [/(^|\.)reddit\.com$|^redd\.it$/, "reddit", "social"],
         [/(^|\.)google\./, "google", "search"], [/(^|\.)bing\.com$/, "bing", "search"], [/(^|\.)duckduckgo\.com$/, "duckduckgo", "search"],
         [/(^|\.)(linkedin\.com|lnkd\.in)$/, "linkedin", "social"], [/(^|\.)(facebook\.com|fb\.me|instagram\.com)$/, "facebook", "social"],
         [/(^|\.)news\.ycombinator\.com$/, "hackernews", "social"], [/(^|\.)(beehiiv\.com|mail\.)/, "newsletter", "email"]];
-      var ALIASES = { twitter: "x", "x.com": "x", rd: "reddit", nl: "newsletter", email: "newsletter" };
+      var ALIASES = { twitter: "x", "x.com": "x", rd: "reddit", nl: "newsletter", email: "newsletter", "com.reddit.frontpage": "reddit", "chatgpt.com": "chatgpt", openai: "chatgpt", "perplexity.ai": "perplexity" };
+      var AI = ["chatgpt", "perplexity", "gemini", "copilot", "claude"];
       var ft = null;
       try {
         var url = new URL(window.location.href);
         var tag = (url.searchParams.get("ref") || url.searchParams.get("utm_source") || "").toLowerCase().replace(/[^a-z0-9._-]/g, "").slice(0, 40);
         var medium = (url.searchParams.get("utm_medium") || "").toLowerCase();
         var hit = null;
-        if (tag) { var src = ALIASES[tag] || tag; hit = { source: src, medium: medium || (["x", "reddit", "linkedin", "facebook"].indexOf(src) >= 0 ? "social" : "link") }; }
+        if (tag) { var src = ALIASES[tag] || tag; hit = { source: src, medium: medium || (AI.indexOf(src) >= 0 ? "ai" : ["x", "reddit", "linkedin", "facebook"].indexOf(src) >= 0 ? "social" : "link") }; }
         else if (document.referrer) {
           var host = new URL(document.referrer).hostname.replace(/^www\./, "");
           if (!/orbitalpha\.cloud$/.test(host)) {

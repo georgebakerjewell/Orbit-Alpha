@@ -120,6 +120,23 @@ function stockFacts(t, name) {
   if (e) rows.push(`Next earnings: ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}${e.epsEst ? ` (consensus EPS ${esc(e.epsEst)})` : ""}`);
   let html = "";
   if (rows.length) html += `<h2>${esc(name)} (${t}) stock at a glance</h2>${list(rows)}<p>Figures as of ${fmtDate(quotesDate || today)}. Prices on the live page update through the trading day.</p>`;
+  // Key financials from the latest 10-Q/10-K (US SEC filers), so "<company> revenue" and "<company>
+  // cash" searches find a direct answer. 12-month figures where available, else the latest quarter.
+  const f = finBy[t]?.snapshot;
+  if (f && f.currency === "USD") {
+    const sgn = (n) => `${n < 0 ? "-" : ""}${fmtUsd(Math.abs(n))}`;
+    const fr = [
+      f.revenue?.ttm ? `Revenue, last 12 months: ${fmtUsd(f.revenue.ttm)}${f.revenue.ttmGrowth != null ? ` (${fmtPct(f.revenue.ttmGrowth)} on the year before)` : ""}` : f.revenue?.quarter ? `Revenue, latest quarter: ${fmtUsd(f.revenue.quarter)}${f.revenue.quarterGrowth != null ? ` (${fmtPct(f.revenue.quarterGrowth)} on a year earlier)` : ""}` : null,
+      f.grossMargin != null ? `Gross margin: ${f.grossMargin.toFixed(1)}%` : null,
+      f.netIncome?.ttm != null ? `Net income, last 12 months: ${sgn(f.netIncome.ttm)}` : f.netIncome?.quarter != null ? `Net income, latest quarter: ${sgn(f.netIncome.quarter)}` : null,
+      f.liquidity != null ? `Cash and short-term investments: ${fmtUsd(f.liquidity)}` : null,
+      f.debt != null ? `Long-term debt: ${fmtUsd(f.debt)}` : null,
+      f.freeCashFlow != null ? `Free cash flow, last 12 months: ${sgn(f.freeCashFlow)}` : null,
+      f.cashGenerative || (f.freeCashFlow != null && f.freeCashFlow >= 0) ? "Cash runway: cash generative" : f.runwayMonths != null ? `Cash runway: about ${f.runwayMonths >= 36 ? `${(f.runwayMonths / 12).toFixed(1)} years` : `${Math.round(f.runwayMonths)} months`} at the current burn rate` : null,
+      f.shares?.kind === "outstanding" && f.shares.y1?.pct != null ? `Shares outstanding: ${fmtPct(f.shares.y1.pct)} over the past year` : null,
+    ].filter(Boolean);
+    if (fr.length) html += `<h2>${esc(name)} financials</h2>${list(fr)}<p>From ${esc(name)}'s filings for the period to ${fmtDate(f.periodEnd)}. See the <a href="/space-stocks/cash-runway">cash runway ranking</a> to compare.</p>`;
+  }
   if (filings.length) html += `<h2>Latest ${esc(name)} SEC filings</h2>${list(filings.map((f) => `${fmtDate(f.date)}: ${esc(f.label || f.form)}${f.owner ? `, ${esc(f.owner)}${f.role ? ` (${esc(f.role)})` : ""}` : ""}${f.value ? `, ${fmtUsd(f.value)}` : ""} (Form ${esc(f.form)})`))}`;
   if (awards.length) html += `<h2>Recent ${esc(name)} government contracts</h2>${list(awards.map((a) => `${fmtDate(a.start)}: ${fmtUsd(a.amount)} from ${esc(a.subAgency || a.agency)}${a.description ? `, ${esc(a.description.slice(0, 140))}` : ""}`))}`;
   // One-paragraph answer to "how is <ticker> doing", written to be quoted on its own.

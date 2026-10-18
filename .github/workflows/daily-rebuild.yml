@@ -1,21 +1,35 @@
 name: Daily rebuild for search engines
 
-# Rebuilds the site once each weekday after the US close, so the prices, filings and contracts
-# baked into the static pages (scripts/prerender.mjs) and the sitemap dates stay current.
-# Needs a Vercel Deploy Hook URL saved as the repo secret VERCEL_DEPLOY_HOOK
-# (Vercel > Project > Settings > Git > Deploy Hooks, branch main). Does nothing until it is set.
+# Rebuilds the site once each weekday after the US close, so the prices, filings, contracts and
+# "Updated" dates baked into the static pages (scripts/prerender.mjs) and the sitemap stay current.
+# Uses a Vercel Deploy Hook if the repo secret VERCEL_DEPLOY_HOOK is set; otherwise it commits a
+# one-line date stamp (public/last-rebuild.txt), and the push makes Vercel deploy.
 on:
   workflow_dispatch: {}
   schedule:
     - cron: "30 22 * * 1-5" # 10:30pm UTC, after the US market close
 
+permissions:
+  contents: write
+
 jobs:
   rebuild:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Vercel deploy
+      - name: Trigger Vercel deploy hook
+        id: hook
         env:
           HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
-          if [ -z "$HOOK" ]; then echo "VERCEL_DEPLOY_HOOK not set, skipping."; exit 0; fi
-          curl -fsS -X POST "$HOOK"
+          if [ -z "$HOOK" ]; then echo "used=no" >> "$GITHUB_OUTPUT"; exit 0; fi
+          curl -fsS -X POST "$HOOK" && echo "used=yes" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        if: steps.hook.outputs.used != 'yes'
+      - name: Commit a rebuild stamp
+        if: steps.hook.outputs.used != 'yes'
+        run: |
+          date -u +"%Y-%m-%dT%H:%MZ" > public/last-rebuild.txt
+          git config user.name "orbit-alpha-bot"
+          git config user.email "actions@github.com"
+          git add public/last-rebuild.txt
+          git commit -m "Daily rebuild $(date -u +%Y-%m-%d)" && git push
