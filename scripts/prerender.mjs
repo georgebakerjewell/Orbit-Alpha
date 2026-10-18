@@ -240,6 +240,7 @@ const routes = [
 <p>This page tracks ${esc(p.name)} (${t}) stock in one place: the live ${t} share price and chart${us ? ", recent SEC filings and insider trades, US government contract awards, the next earnings date" : ` (listed on ${esc(p.listing)})`}, upcoming launches involving the company, and the latest ${esc(p.name)} news. ${esc(p.name)} is one of the ${count} space stocks Orbit Alpha covers, in the ${p.sector.toLowerCase()} sector. ${SECTOR_TEXT[p.sector]}</p>
 ${facts.html}
 <h2>${esc(p.name)} key facts</h2>${list([`Ticker: ${t}`, `Listing: ${us ? "US (NYSE or Nasdaq)" : esc(p.listing)}`, `Sector: ${p.sector}`, `Prices shown in: ${p.currency === "GBp" ? "pence" : p.currency || "US dollars"}`, `On this page: ${us ? "live price and chart, SEC filings, insider trades, government contracts, earnings date, launches and news" : "live price and chart, launches and news"}`])}
+${Object.entries(GUIDES).some(([, g]) => g.tickers?.includes(t)) ? `<h2>${esc(p.name)} guides</h2>${list(Object.entries(GUIDES).filter(([, g]) => g.tickers?.includes(t)).map(([gp, g]) => `<a href="${gp}">${esc(g.label)}</a>`))}` : ""}
 ${storiesHtml(stories.filter((x) => x.tickers?.includes(t)).slice(0, 5), `${esc(p.name)} news from Orbit Alpha`)}
 ${issueArchive.some((x) => x.tickers.includes(t)) ? `<h2>${esc(p.name)} in the Orbit Alpha newsletter</h2>${list(issueArchive.filter((x) => x.tickers.includes(t)).slice(0, 3).map(issueLink))}` : ""}
 <h2>${esc(p.name)} research links</h2>${list([ext(yahoo(t), `${t} quote and financials on Yahoo Finance`), ...(us ? [ext(edgar(t), `${esc(p.name)} filings on SEC EDGAR`), ext(`https://www.usaspending.gov/search/?hash=&keyword=${encodeURIComponent(p.name)}`, `${esc(p.name)} awards on USAspending.gov`)] : [])])}
@@ -270,7 +271,7 @@ ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): liv
   }),
   ...buildGuides({
     SITE, profiles, ETFS, SECTOR_ORDER, quotes, ytdBy, perfBy, earnings: Array.isArray(earningsRes) ? earningsRes : [],
-    filingsBy, contractsBy: contractsFull, finBy, insidersBy, asOf: tradingDay || today, count,
+    filingsBy, contractsBy: contractsFull, finBy, insidersBy, asOf: tradingDay || today, today, count,
     esc, list, crumbs, ORG, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate,
   }),
 ];
@@ -305,8 +306,10 @@ let cards = 0;
 mkdirSync(new URL("og/stocks/", DIST).pathname, { recursive: true });
 for (const route of routes.filter((r) => r.og)) {
   try {
-    writeFileSync(new URL(`og/stocks/${route.og.ticker.toLowerCase()}.png`, DIST), await stockCard(route.og));
-    route.ogImage = `/og/stocks/${route.og.ticker.toLowerCase()}.png`;
+    const file = route.og.file || `og/stocks/${route.og.ticker.toLowerCase()}.png`; // guides set their own file
+    mkdirSync(dirname(new URL(file, DIST).pathname), { recursive: true });
+    writeFileSync(new URL(file, DIST), await stockCard(route.og));
+    route.ogImage = `/${file}`;
     cards++;
   } catch (e) {
     console.log(`og: ${route.og.ticker} failed (${e.message})`);

@@ -3,6 +3,7 @@
 // already fetched. Each guide still renders (with a short note) if a data source was unavailable.
 // Titles and descriptions live in lib/pagemeta.js (GUIDES) so the app and the static HTML match.
 import { GUIDES } from "../lib/pagemeta.js";
+import { buildSpaceX } from "./spacex.mjs";
 
 export function buildGuides(ctx) {
   const { SITE, profiles, ETFS, SECTOR_ORDER, quotes, ytdBy, perfBy, earnings, filingsBy, contractsBy, finBy, insidersBy, asOf, count,
@@ -19,15 +20,19 @@ export function buildGuides(ctx) {
     ld: { "@type": "FAQPage", mainEntity: pairs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
   });
   const moreGuides = (path) => `<h2>More space stock guides</h2>${list(Object.entries(GUIDES).filter(([p]) => p !== path).map(([p, g]) => `<a href="${p}">${esc(g.label)}</a>`))}`;
-  const page = (path, h1, body, extraLd = [], lastmod = asOf) => ({
-    path,
-    title: GUIDES[path].title,
-    description: GUIDES[path].description,
-    lastmod,
-    guide: true,
-    body: `<div class="oa-guide"><h1>${h1}</h1>${body}${moreGuides(path)}</div>`,
-    ld: [ORG, ...extraLd, crumbs([["Home", "/"], [GUIDES[path].label, path]])],
-  });
+  const page = (path, h1, body, extraLd = [], lastmod = asOf, og) => {
+    const parent = GUIDES[path].parent;
+    return {
+      path,
+      title: GUIDES[path].title,
+      description: GUIDES[path].description,
+      lastmod,
+      guide: true,
+      og,
+      body: `<div class="oa-guide"><h1>${h1}</h1>${body}${moreGuides(path)}</div>`,
+      ld: [ORG, ...extraLd, crumbs([["Home", "/"], ...(parent ? [[GUIDES[parent].label, parent]] : []), [GUIDES[path].label, path]])],
+    };
+  };
 
   /* ── 1. The list of space stocks ─────────────────────────────────────────── */
   const capOf = (t) => quotes[t]?.marketCap || 0;
@@ -191,5 +196,6 @@ ${ssit ? `<h2>Seraphim Space Investment Trust</h2><p>The Seraphim Space Investme
 ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the latest reported share counts, converted to US dollars.")}`,
     [euroFaq.ld]);
 
-  return [listPage, insiderPage, runwayPage, contractsPage, earningsPage, euroPage, etfPage];
+  return [listPage, insiderPage, runwayPage, contractsPage, earningsPage, euroPage, etfPage,
+    ...buildSpaceX({ ...ctx, page, table, faq, and, usd, asOfLine })];
 }

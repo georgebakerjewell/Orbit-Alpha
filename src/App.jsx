@@ -404,6 +404,8 @@ const GlobalStyles = () => (
     .oa-guide-page table{display:table;width:100%;white-space:normal}
     .oa-guide-page td,.oa-guide-page th{white-space:normal}
     @media(max-width:700px){.oa-guide-page table{display:block}.oa-guide-page td,.oa-guide-page th{white-space:nowrap}}
+    .oa-issue .oa-callout{border:1px solid rgba(0,255,136,0.25);background:rgba(0,255,136,0.04);border-radius:10px;padding:14px 16px 2px;margin:0 0 20px}
+    .oa-issue ol li b{color:#fff}
     .oa-issue .oa-note{font-size:11.5px;color:${C.muted}}
     .oa-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .oa-news-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:28px;align-items:start}
@@ -2045,6 +2047,16 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
           </a>
         ))}
       </Card>
+
+      {/* Guides written about this stock (lib/pagemeta.js GUIDES with tickers) */}
+      {Object.entries(GUIDES).some(([, g]) => g.tickers?.includes(ticker)) && (
+        <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginBottom: 16, display: "flex", flexWrap: "wrap", gap: "8px 18px", alignItems: "center" }}>
+          <span style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>{profile.name} guides</span>
+          {Object.entries(GUIDES).filter(([, g]) => g.tickers?.includes(ticker)).map(([p, g]) => (
+            <Link key={p} to={p} className="oa-link" style={{ color: C.green, fontSize: 13 }}>{g.label}</Link>
+          ))}
+        </div>
+      )}
 
       <OrbitBriefs ticker={ticker} limit={5} title={`${profile.name} news from Orbit Alpha`} />
 

@@ -18,7 +18,7 @@ const C = { bg: "#04060e", green: "#00ff88", red: "#ff5c6c", text: "#ffffff", mu
 const h = (type, style, children) => ({ type, props: { style: { display: "flex", ...style }, children } });
 
 // stats: [[label, value, color?], ...] (empty when no live data was available at build time)
-export async function stockCard({ ticker, name, sector, stats, asOf, path }) {
+export async function stockCard({ ticker, name, sector, stats, asOf, path, headline }) {
   const tree = h("div", { width: 1200, height: 630, background: C.bg, flexDirection: "column", padding: "56px 64px", fontFamily: "Inter", color: C.text }, [
     h("div", { justifyContent: "space-between", alignItems: "center" }, [
       h("div", { fontSize: 30, fontWeight: 800, letterSpacing: "-0.01em" }, [h("span", {}, "ORBIT"), h("span", { color: C.green }, "ALPHA.")]),
@@ -26,7 +26,7 @@ export async function stockCard({ ticker, name, sector, stats, asOf, path }) {
     ]),
     h("div", { flexDirection: "column", marginTop: 70 }, [
       h("div", { fontSize: 120, fontWeight: 800, color: C.green, lineHeight: 1, letterSpacing: "-0.02em" }, ticker),
-      h("div", { fontSize: 46, fontWeight: 600, marginTop: 14 }, `${name} stock`),
+      h("div", { fontSize: 46, fontWeight: 600, marginTop: 14 }, headline || `${name} stock`),
     ]),
     stats.length
       ? h("div", { marginTop: "auto", gap: 56 }, stats.map(([label, value, color]) =>
