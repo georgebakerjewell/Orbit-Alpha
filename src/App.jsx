@@ -1,8 +1,9 @@
 import { useState, useEffect, useLayoutEffect, useRef, createContext, useContext } from "react";
 import issues from "./issues.json";
-import issueArchive from "./issueArchive.json"; // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
+import issueArchive from "./issueArchive.json";
+import stories from "./stories.json"; // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
-import { MARKET_PAGES } from "../lib/pagemeta.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
+import { MARKET_PAGES, GUIDES } from "../lib/pagemeta.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
 /* ════════════════════════════════════════════════════════════════════════════
    DATA  (stocks, ETFs and keywords all come from lib/roster.js)
@@ -37,6 +38,8 @@ const COMPANY_KEYWORDS = Object.fromEntries(Object.entries(PROFILES).map(([t, p]
 const MARKET_TABS = ["stocks", "performance", "launches", "earnings", "contracts", "filings"];
 
 function parsePath(pathname) {
+  const clean = pathname.toLowerCase().replace(/\/+$/, "") || "/";
+  if (GUIDES[clean]) return { page: "guide", path: clean };
   const [first, second] = pathname.toLowerCase().split("/").filter(Boolean);
   if (!first) return { page: "home" };
   if (first === "markets") return { page: "markets", tab: MARKET_TABS.includes(second) ? second : "stocks" };
@@ -116,6 +119,7 @@ function routeMeta(route) {
       ? `${p.name} (${route.ticker}, ${p.listing}) live price, chart, news and launches. ${p.about}`
       : `${p.name} (${route.ticker}) live price, SEC filings, insider trades, government contracts, earnings date and launches. ${p.about}`,
   };
+  if (route.page === "guide") return GUIDES[route.path];
   const archived = route.page === "issue" && issueArchive.find((x) => x.issue === route.issue);
   if (archived) return { title: `${archived.title} | Orbit Alpha Issue ${archived.issue}`, description: archived.description };
   const tab = route.tab && route.tab !== "stocks" ? route.tab : null;
@@ -396,6 +400,11 @@ const GlobalStyles = () => (
     .oa-issue table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:12.5px;display:block;overflow-x:auto}
     .oa-issue th,.oa-issue td{text-align:left;padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.07);white-space:nowrap}
     .oa-issue th{color:${C.muted};font-weight:500}
+    .oa-guide-page h1{font-family:${SYNE};font-size:clamp(26px,4.5vw,36px);font-weight:800;color:#fff;line-height:1.2;margin:0 0 18px}
+    .oa-guide-page table{display:table;width:100%;white-space:normal}
+    .oa-guide-page td,.oa-guide-page th{white-space:normal}
+    @media(max-width:700px){.oa-guide-page table{display:block}.oa-guide-page td,.oa-guide-page th{white-space:nowrap}}
+    .oa-issue .oa-note{font-size:11.5px;color:${C.muted}}
     .oa-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .oa-news-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:28px;align-items:start}
     @media(max-width:860px){.oa-news-grid{grid-template-columns:1fr}}
@@ -901,6 +910,13 @@ function Home({ news, prices, launches }) {
               {t} <span style={{ color: C.muted, fontWeight: 400 }}>{p.name}</span>
             </Link>
           ))}
+        </div>
+      </Card>
+
+      {/* Guides */}
+      <Card title="Space stock guides" note="Rankings and lists, updated from live data" style={{ marginBottom: 14 }}>
+        <div style={{ display: "flex", gap: "8px 18px", flexWrap: "wrap", fontSize: 12 }}>
+          {Object.entries(GUIDES).map(([p, g]) => <Link key={p} to={p} className="oa-link" style={{ color: C.blue }}>{g.label}</Link>)}
         </div>
       </Card>
 
@@ -2030,6 +2046,8 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
         ))}
       </Card>
 
+      <OrbitBriefs ticker={ticker} limit={5} title={`${profile.name} news from Orbit Alpha`} />
+
       {/* Newsletter issues that covered this stock (internal links help search engines connect the pages) */}
       {issueArchive.some((x) => x.tickers.includes(ticker)) && (
         <div style={{ fontSize: 11, color: C.muted, marginBottom: 12, lineHeight: 1.8 }}>
@@ -2213,6 +2231,27 @@ function StoryCard({ c, moveOf, compact }) {
 
 const PERIODS = [[1, "24 hours"], [3, "3 days"], [7, "7 days"]];
 
+/* ── Orbit Alpha news briefs (src/stories.json) ──────────────────────────── */
+function OrbitBriefs({ ticker, limit = 6, title = "From Orbit Alpha" }) {
+  const items = stories.filter((s) => !ticker || s.tickers?.includes(ticker)).slice(0, limit);
+  if (!items.length) return null;
+  return (
+    <Card title={title} note="Space news, checked and summarised" style={{ marginBottom: 18 }}>
+      {items.map((s) => (
+        <article key={s.id} style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <div style={{ fontSize: 10, color: C.muted, marginBottom: 4 }}>
+            {new Date(s.published).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+            {s.tickers?.length > 0 && <> · {s.tickers.map((t, i) => <span key={t}>{i ? ", " : ""}{PROFILES[t] ? <Link to={`/stocks/${t.toLowerCase()}`} className="oa-link" style={{ color: C.green }}>{t}</Link> : t}</span>)}</>}
+          </div>
+          <h3 style={{ fontSize: 14, color: "#fff", fontWeight: 600, lineHeight: 1.4, marginBottom: 6 }}>{s.title}</h3>
+          {String(s.body || "").split(/\n\n+/).map((para, i) => <p key={i} style={{ fontSize: 12.5, color: C.light, lineHeight: 1.65, marginBottom: 6 }}>{para}</p>)}
+          {s.source?.url && <div style={{ fontSize: 10.5, color: C.muted }}>Source: <a href={s.source.url} target="_blank" rel="noopener" className="oa-link" style={{ color: C.blue }}>{s.source.name || "original report"}</a></div>}
+        </article>
+      ))}
+    </Card>
+  );
+}
+
 function News({ news, prices }) {
   const filings = useApi("/api/filings");
   const contracts = useApi("/api/contracts");
@@ -2258,6 +2297,8 @@ function News({ news, prices }) {
           </select>
         </div>
       </div>
+
+      <OrbitBriefs ticker={company} limit={company ? 10 : 6} />
 
       <div className="oa-news-grid">
         <main>
@@ -2428,6 +2469,46 @@ function IssuePage({ n }) {
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
+   GUIDE PAGES (/space-stocks, /space-etfs ...): finished HTML built by scripts/guides.mjs
+   ════════════════════════════════════════════════════════════════════════════ */
+function GuidePage({ path }) {
+  const navigate = useContext(NavContext);
+  const first = window.__oaGuide?.path === path ? window.__oaGuide.html : null;
+  const [html, setHtml] = useState(first);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    if (html) return;
+    let alive = true;
+    fetch(path).then((r) => (r.ok ? r.text() : Promise.reject(r.status))).then((text) => {
+      const el = new DOMParser().parseFromString(text, "text/html").querySelector(".oa-guide");
+      if (!alive) return;
+      if (el) setHtml(el.innerHTML); else setFailed(true);
+    }).catch(() => alive && setFailed(true));
+    return () => { alive = false; };
+  }, [path]);
+  const onClick = (e) => {
+    const href = e.target.closest("a")?.getAttribute("href");
+    if (!href || !href.startsWith("/") || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    navigate(href);
+  };
+  return (
+    <article style={{ animation: "fu 0.3s ease", maxWidth: 860, margin: "0 auto", padding: "32px 20px 60px" }}>
+      {html ? <div className="oa-issue oa-guide-page" onClick={onClick} dangerouslySetInnerHTML={{ __html: html }} />
+        : failed ? <P>This page could not be loaded. <a href={path} className="oa-link" style={{ color: C.green }}>Try again</a>.</P>
+        : <ListSkeleton rows={8} />}
+      <ForNonSubscribers>
+        <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", margin: "32px 0 0" }}>
+          <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>The week in space stocks, every Sunday</div>
+          <p style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>Free, five minutes, one click to unsubscribe.</p>
+          <SubscribeForm source="guide-page" />
+        </div>
+      </ForNonSubscribers>
+    </article>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
    ABOUT PAGE
    ════════════════════════════════════════════════════════════════════════════ */
 const P = ({ children, mb = 16 }) => <p style={{ fontSize: 14, color: C.light, lineHeight: 1.75, marginBottom: mb }}>{children}</p>;
@@ -2572,6 +2653,7 @@ export default function App() {
         {page === "news" && <News news={news} prices={prices} />}
         {page === "newsletter" && <Newsletter />}
         {page === "issue" && <IssuePage n={route.issue} />}
+        {page === "guide" && <GuidePage key={route.path} path={route.path} />}
         {page === "about" && <About />}
         {page === "notfound" && <NotFound />}
       </div>

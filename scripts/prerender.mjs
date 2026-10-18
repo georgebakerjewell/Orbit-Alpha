@@ -6,7 +6,8 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { COVERED as profiles, ETFS, SECTOR_ORDER } from "../lib/roster.js";
-import { MARKET_PAGES } from "../lib/pagemeta.js";
+import { MARKET_PAGES, GUIDES } from "../lib/pagemeta.js";
+import { buildGuides } from "./guides.mjs";
 
 const SITE = "https://www.orbitalpha.cloud";
 const X_HANDLE = "OrbitAlphaApp";
@@ -32,7 +33,7 @@ const SECTOR_TEXT = {
 
 const sources = `<h2>Where the data comes from</h2><p>Prices come from ${ext("https://finance.yahoo.com/", "Yahoo Finance")}, company filings and insider trades from the SEC's ${ext("https://www.sec.gov/edgar/search/", "EDGAR")} database, US government contract awards from ${ext("https://www.usaspending.gov/", "USAspending.gov")}, and launch schedules from public launch trackers. Orbit Alpha is information, not investment advice.</p>`;
 const sectorDirectory = `<h2>Space stocks we cover, by sector</h2>${SECTOR_ORDER.map((s) => `<h3>${s}</h3><p>${SECTOR_TEXT[s]}</p>${list(bySector[s].map(stockLink))}`).join("")}<h3>Space ETFs and funds</h3>${list(Object.entries(ETFS).map(([t, e]) => `${esc(e.name)} (${t})`))}`;
-const footer = `<p>Orbit Alpha is a free space stocks dashboard and weekly newsletter covering ${Object.keys(profiles).length} listed space companies, with live prices, launches, earnings dates, SEC filings, insider trades and US government contracts in one place.</p><nav aria-label="Site"><ul><li><a href="/">Home</a></li><li><a href="/markets">Live space stocks dashboard</a></li><li><a href="/markets/performance">Performance vs the S&amp;P 500</a></li><li><a href="/news">News, filings and contracts</a></li><li><a href="/newsletter">Free weekly newsletter</a></li><li><a href="/about">About</a></li><li>${ext(`https://x.com/${X_HANDLE}`, "Orbit Alpha on X")}</li><li>${ext(REDDIT, "r/SpaceCapital on Reddit")}</li></ul></nav>`;
+const footer = `<p>Orbit Alpha is a free space stocks dashboard and weekly newsletter covering ${Object.keys(profiles).length} listed space companies, with live prices, launches, earnings dates, SEC filings, insider trades and US government contracts in one place.</p><nav aria-label="Site"><ul><li><a href="/">Home</a></li><li><a href="/markets">Live space stocks dashboard</a></li><li><a href="/markets/performance">Performance vs the S&amp;P 500</a></li><li><a href="/news">News, filings and contracts</a></li><li><a href="/newsletter">Free weekly newsletter</a></li><li><a href="/about">About</a></li>${Object.entries(GUIDES).map(([p, g]) => `<li><a href="${p}">${esc(g.label)}</a></li>`).join("")}<li>${ext(`https://x.com/${X_HANDLE}`, "Orbit Alpha on X")}</li><li>${ext(REDDIT, "r/SpaceCapital on Reddit")}</li></ul></nav>`;
 const share = (path, text) => {
   const u = encodeURIComponent(SITE + path), t = encodeURIComponent(text);
   return `<p>Follow Orbit Alpha on ${ext(`https://x.com/${X_HANDLE}`, `X (@${X_HANDLE})`)} and join the discussion on ${ext(REDDIT, "r/SpaceCapital")}.</p><p>Share this page: ${ext(`https://x.com/intent/tweet?url=${u}&text=${t}`, "X")} · ${ext(`https://www.reddit.com/submit?url=${u}&title=${t}`, "Reddit")} · ${ext(`https://www.linkedin.com/sharing/share-offsite/?url=${u}`, "LinkedIn")}</p>`;
@@ -73,14 +74,24 @@ async function pool(items, size, fn) {
 
 const tickers = Object.keys(profiles);
 const usTickers = tickers.filter((t) => !profiles[t].listing);
-const [quotesRes, perfRes, earningsRes] = await Promise.all([api("/api/quotes"), api("/api/performance?range=ytd", 40000), api("/api/earnings")]);
+const secTickers = usTickers.filter((t) => t !== "MDA"); // SEC filers (MDA Space reports in Canada)
+const form4Tickers = secTickers.filter((t) => t !== "TSAT"); // Telesat is a foreign private issuer: no Form 4s
+const [quotesRes, perfRes, earningsRes, perf1mo, perf3mo, perf1y] = await Promise.all([
+  api("/api/quotes"), api("/api/performance?range=ytd", 40000), api("/api/earnings"),
+  api("/api/performance?range=1mo", 40000), api("/api/performance?range=3mo", 40000), api("/api/performance?range=1y", 40000),
+]);
+const perfBy = { ytd: perfRes, "1mo": perf1mo, "3mo": perf3mo, "1y": perf1y };
 const filingsBy = await pool(usTickers, 6, (t) => api(`/api/filings?ticker=${t}`).then((d) => d?.filings || []));
-const contractsBy = await pool(usTickers, 6, (t) => api(`/api/contracts?ticker=${t}`).then((d) => d?.awards || []));
+const contractsFull = await pool(usTickers, 6, (t) => api(`/api/contracts?ticker=${t}`));
+const contractsBy = Object.fromEntries(Object.entries(contractsFull).map(([t, d]) => [t, d?.awards || []]));
+const finBy = await pool(secTickers, 4, (t) => api(`/api/filings?ticker=${t}&financials=1`, 30000));
+const insidersBy = await pool(form4Tickers, 4, (t) => api(`/api/filings?ticker=${t}&insiders=1`, 30000));
 const quotes = quotesRes?.quotes || {};
 const quotesDate = quotesRes?.asOf ? quotesRes.asOf.slice(0, 10) : null;
 const ytdBy = Object.fromEntries((perfRes?.series || []).filter((s) => s.kind === "stock").map((s) => [s.id, [...s.values].reverse().find((v) => v != null)]));
 const nextEarnings = {};
 (Array.isArray(earningsRes) ? earningsRes : []).forEach((e) => { if (e.date >= today && !nextEarnings[e.ticker]) nextEarnings[e.ticker] = e; });
+console.log(`prerender: ${Object.values(finBy).filter((d) => d?.snapshot).length} financials, ${Object.values(insidersBy).filter((d) => d?.m12).length} insider summaries`);
 console.log(`prerender: facts for ${Object.keys(quotes).length} quotes, ${Object.keys(ytdBy).length} YTD, ${Object.values(filingsBy).filter((f) => f.length).length} filings lists, ${Object.values(contractsBy).filter((c) => c.length).length} contract lists`);
 
 const CUR = { USD: "$", EUR: "€", GBP: "£", CAD: "C$", SEK: "SEK ", DKK: "DKK ", NOK: "NOK " };
@@ -103,7 +114,7 @@ function stockFacts(t, name) {
   if (rows.length) html += `<h2>${esc(name)} (${t}) stock at a glance</h2>${list(rows)}<p>Figures as of ${fmtDate(quotesDate || today)}. Prices on the live page update through the trading day.</p>`;
   if (filings.length) html += `<h2>Latest ${esc(name)} SEC filings</h2>${list(filings.map((f) => `${fmtDate(f.date)}: ${esc(f.label || f.form)}${f.owner ? `, ${esc(f.owner)}${f.role ? ` (${esc(f.role)})` : ""}` : ""}${f.value ? `, ${fmtUsd(f.value)}` : ""} (Form ${esc(f.form)})`))}`;
   if (awards.length) html += `<h2>Recent ${esc(name)} government contracts</h2>${list(awards.map((a) => `${fmtDate(a.start)}: ${fmtUsd(a.amount)} from ${esc(a.subAgency || a.agency)}${a.description ? `, ${esc(a.description.slice(0, 140))}` : ""}`))}`;
-  return { html, lastmod: latest(filings[0]?.date, awards[0]?.start) };
+  return { html, lastmod: latest(filings[0]?.date, awards[0]?.start, stories.find((x) => x.tickers?.includes(t))?.published?.slice(0, 10)) };
 }
 const newestFiling = latest(...Object.values(filingsBy).map((f) => f[0]?.date));
 const newestAward = latest(...Object.values(contractsBy).map((a) => a[0]?.start));
@@ -123,6 +134,9 @@ const issueArchive = JSON.parse(readFileSync(new URL("../src/issueArchive.json",
 const issueHtml = (n) => {
   try { return JSON.parse(readFileSync(new URL(`../public/issues/${n}.json`, import.meta.url), "utf8")).html; } catch { return ""; }
 };
+// Orbit Alpha news briefs (src/stories.json), newest first.
+const stories = JSON.parse(readFileSync(new URL("../src/stories.json", import.meta.url), "utf8"));
+const storiesHtml = (items, heading) => items.length ? `<h2>${heading}</h2>${items.map((x) => `<article><p>${fmtDate(x.published.slice(0, 10))}${x.tickers?.length ? ` · ${x.tickers.map((t) => (profiles[t] ? `<a href="/stocks/${t.toLowerCase()}">${t}</a>` : esc(t))).join(", ")}` : ""}</p><h3>${esc(x.title)}</h3>${String(x.body || "").split(/\n\n+/).map((p) => `<p>${esc(p)}</p>`).join("")}${x.source?.url ? `<p>Source: <a href="${esc(x.source.url)}" rel="noopener" target="_blank">${esc(x.source.name || "original report")}</a></p>` : ""}</article>`).join("")}` : "";
 const issueLink = (x) => `<a href="/newsletter/issue-${x.issue}">Issue ${x.issue}: ${esc(x.title)}</a>`;
 
 const count = Object.keys(profiles).length;
@@ -148,7 +162,7 @@ const routes = [
       `<a href="/markets/contracts">See government contract wins</a> from NASA, the Space Force and other US agencies.`,
       `<a href="/markets/filings">Read SEC filings and insider trades</a> as they are published.`,
       `<a href="/newsletter">Subscribe to the newsletter</a> for a weekly briefing.`,
-    ])}${sectorDirectory}${sources}${homeFaq.html}`,
+    ])}<h2>Space stock guides</h2>${list(Object.entries(GUIDES).map(([p, g]) => `<a href="${p}">${esc(g.label)}</a>`))}${sectorDirectory}${sources}${homeFaq.html}`,
     lastmod: tradingDay,
     ld: [ORG, { "@type": "WebSite", "@id": `${SITE}/#site`, name: "Orbit Alpha", url: SITE, publisher: { "@id": `${SITE}/#org` } }, homeFaq.ld],
   },
@@ -175,9 +189,9 @@ const routes = [
     };
   }),
   {
-    path: "/news", title: "Space Stock News, Filings and Contract Wins | Orbit Alpha", lastmod: latest(newestFiling, newestAward),
+    path: "/news", title: "Space Stock News, Filings and Contract Wins | Orbit Alpha", lastmod: latest(newestFiling, newestAward, stories[0]?.published?.slice(0, 10)),
     description: "Live space stock news, SEC filings, insider trades and government contract wins in one feed, filterable by company.",
-    body: `<h1>Space stock news</h1><p>One feed for everything that moves space stocks: news headlines from financial and industry sources, SEC filings and insider trades, and US government contract wins. Filter by company to follow just the stocks you hold, or by type to see only filings or contracts.</p><p>Key stories, such as large contracts, insider buying and share offerings, are highlighted so they stand out from routine news.</p>${sectorDirectory}${sources}`,
+    body: `<h1>Space stock news</h1><p>One feed for everything that moves space stocks: news headlines from financial and industry sources, SEC filings and insider trades, and US government contract wins. Filter by company to follow just the stocks you hold, or by type to see only filings or contracts.</p><p>Key stories, such as large contracts, insider buying and share offerings, are highlighted so they stand out from routine news.</p>${storiesHtml(stories.slice(0, 10), "From Orbit Alpha")}${sectorDirectory}${sources}`,
     ld: [crumbs([["Home", "/"], ["News", "/news"]])],
   },
   {
@@ -214,6 +228,7 @@ const routes = [
 <p>This page tracks ${esc(p.name)} (${t}) stock in one place: the live ${t} share price and chart${us ? ", recent SEC filings and insider trades, US government contract awards, the next earnings date" : ` (listed on ${esc(p.listing)})`}, upcoming launches involving the company, and the latest ${esc(p.name)} news. ${esc(p.name)} is one of the ${count} space stocks Orbit Alpha covers, in the ${p.sector.toLowerCase()} sector. ${SECTOR_TEXT[p.sector]}</p>
 ${facts.html}
 <h2>${esc(p.name)} key facts</h2>${list([`Ticker: ${t}`, `Listing: ${us ? "US (NYSE or Nasdaq)" : esc(p.listing)}`, `Sector: ${p.sector}`, `Prices shown in: ${p.currency === "GBp" ? "pence" : p.currency || "US dollars"}`, `On this page: ${us ? "live price and chart, SEC filings, insider trades, government contracts, earnings date, launches and news" : "live price and chart, launches and news"}`])}
+${storiesHtml(stories.filter((x) => x.tickers?.includes(t)).slice(0, 5), `${esc(p.name)} news from Orbit Alpha`)}
 ${issueArchive.some((x) => x.tickers.includes(t)) ? `<h2>${esc(p.name)} in the Orbit Alpha newsletter</h2>${list(issueArchive.filter((x) => x.tickers.includes(t)).slice(0, 6).map(issueLink))}` : ""}
 <h2>${esc(p.name)} research links</h2>${list([ext(yahoo(t), `${t} quote and financials on Yahoo Finance`), ...(us ? [ext(edgar(t), `${esc(p.name)} filings on SEC EDGAR`), ext(`https://www.usaspending.gov/search/?hash=&keyword=${encodeURIComponent(p.name)}`, `${esc(p.name)} awards on USAspending.gov`)] : [])])}
 <h2>Other ${p.sector.toLowerCase()} stocks</h2>${list(peers.map(stockLink))}
@@ -240,6 +255,11 @@ ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): liv
         crumbs([["Home", "/"], ["Newsletter", "/newsletter"], [`Issue ${x.issue}`, path]]),
       ],
     };
+  }),
+  ...buildGuides({
+    SITE, profiles, ETFS, SECTOR_ORDER, quotes, ytdBy, perfBy, earnings: Array.isArray(earningsRes) ? earningsRes : [],
+    filingsBy, contractsBy: contractsFull, finBy, insidersBy, asOf: tradingDay || today, count,
+    esc, list, crumbs, ORG, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate,
   }),
 ];
 
