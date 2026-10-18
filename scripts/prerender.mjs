@@ -45,7 +45,12 @@ const faq = (pairs) => ({
   ld: { "@type": "FAQPage", mainEntity: pairs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
 });
 const crumbs = (items) => ({ "@type": "BreadcrumbList", itemListElement: items.map(([name, path], i) => ({ "@type": "ListItem", position: i + 1, name, item: SITE + path })) });
-const ORG = { "@type": "Organization", "@id": `${SITE}/#org`, name: "Orbit Alpha", url: SITE, logo: `${SITE}/icon-512.png`, sameAs: [`https://x.com/${X_HANDLE}`, REDDIT] };
+const ORG = {
+  "@type": "Organization", "@id": `${SITE}/#org`, name: "Orbit Alpha", alternateName: "OrbitAlpha", url: SITE, logo: `${SITE}/icon-512.png`,
+  description: "Free space stocks dashboard and weekly newsletter covering listed space companies, with live prices, SEC filings, insider trades, government contracts, earnings dates and launches.",
+  knowsAbout: ["Space stocks", "SpaceX stock", "Rocket Lab stock", "Satellite communications", "Space ETFs", "SEC filings", "Lock-up expirations"],
+  sameAs: [`https://x.com/${X_HANDLE}`, REDDIT, "https://orbit-alpha.beehiiv.com"],
+};
 
 // ── Live facts baked into the static HTML ─────────────────────────────────────────────
 // Prices, market caps, YTD returns, earnings dates, filings and contracts are read from the
@@ -117,7 +122,14 @@ function stockFacts(t, name) {
   if (rows.length) html += `<h2>${esc(name)} (${t}) stock at a glance</h2>${list(rows)}<p>Figures as of ${fmtDate(quotesDate || today)}. Prices on the live page update through the trading day.</p>`;
   if (filings.length) html += `<h2>Latest ${esc(name)} SEC filings</h2>${list(filings.map((f) => `${fmtDate(f.date)}: ${esc(f.label || f.form)}${f.owner ? `, ${esc(f.owner)}${f.role ? ` (${esc(f.role)})` : ""}` : ""}${f.value ? `, ${fmtUsd(f.value)}` : ""} (Form ${esc(f.form)})`))}`;
   if (awards.length) html += `<h2>Recent ${esc(name)} government contracts</h2>${list(awards.map((a) => `${fmtDate(a.start)}: ${fmtUsd(a.amount)} from ${esc(a.subAgency || a.agency)}${a.description ? `, ${esc(a.description.slice(0, 140))}` : ""}`))}`;
-  return { html, lastmod: latest(filings[0]?.date, awards[0]?.start, stories.find((x) => x.tickers?.includes(t))?.published?.slice(0, 10)) };
+  // One-paragraph answer to "how is <ticker> doing", written to be quoted on its own.
+  const answer = q?.price != null ? [
+    `${name} (${t}) last closed at ${fmtPrice(q.price, q.currency)} on ${fmtDate(quotesDate || today)}${q.changePct != null ? `, ${q.changePct >= 0 ? "up" : "down"} ${Math.abs(q.changePct).toFixed(1)}% on the day` : ""}${q.marketCap ? `, giving it a market value of about ${fmtCap(q.marketCap)}` : ""}.`,
+    ytd != null && t !== "SPCX" ? `The shares are ${ytd >= 0 ? "up" : "down"} ${Math.abs(ytd).toFixed(1)}% this year.` : "",
+    t === "SPCX" ? `They are ${q.price >= 135 ? "up" : "down"} ${Math.abs((q.price / 135 - 1) * 100).toFixed(1)}% on the $135 IPO price of June 2026.` : "",
+    e ? `${name} next reports results on ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}.` : "",
+  ].filter(Boolean).join(" ") : "";
+  return { html, answer, lastmod: latest(filings[0]?.date, awards[0]?.start, stories.find((x) => x.tickers?.includes(t))?.published?.slice(0, 10)) };
 }
 const newestFiling = latest(...Object.values(filingsBy).map((f) => f[0]?.date));
 const newestAward = latest(...Object.values(contractsBy).map((a) => a[0]?.start));
@@ -206,7 +218,7 @@ const routes = [
   {
     path: "/about", title: "About | Orbit Alpha",
     description: "What Orbit Alpha is, which space stocks it covers and where its data comes from.",
-    body: `<h1>About Orbit Alpha</h1><p>Orbit Alpha is a free dashboard and weekly newsletter for investors who follow listed space companies. It tracks ${count} stocks in the US and Europe, plus the main space ETFs, with prices, SEC filings, insider trades, financials, US government contracts, earnings dates and launches in one place.</p><p>It does not cover Lockheed Martin, Boeing or Northrop Grumman, where space is a small part of a much larger business.</p><h2>How the figures are worked out</h2>${list(["Year-to-date returns run from the last close of the previous year. Sector figures are the median of the stocks tracked in that sector.", "Financials come from the figures companies tag in their 10-Q and 10-K filings. The last 12 months are the latest full year plus this year to date, minus the same period last year.", "Cash runway is cash and short-term investments divided by the last 12 months of free cash outflow, assuming no new funding.", "Insider trades are open-market buys and sales from Form 4 filings. Grants, option exercises and shares withheld for tax are left out.", "Share counts come from the cover of each 10-Q and 10-K, adjusted for reverse splits."])}<p>Orbit Alpha is information, not investment advice. Check the original filing before acting on any figure.</p>${sectorDirectory}${sources}`,
+    body: `<h1>About Orbit Alpha</h1><p>Orbit Alpha is a free dashboard and weekly newsletter for investors who follow listed space companies. It tracks ${count} stocks in the US and Europe, plus the main space ETFs, with prices, SEC filings, insider trades, financials, US government contracts, earnings dates and launches in one place.</p><p>It does not cover Lockheed Martin, Boeing or Northrop Grumman, where space is a small part of a much larger business.</p><h2>How the figures are worked out</h2>${list(["Year-to-date returns run from the last close of the previous year. Sector figures are the median of the stocks tracked in that sector.", "Financials come from the figures companies tag in their 10-Q and 10-K filings. The last 12 months are the latest full year plus this year to date, minus the same period last year.", "Cash runway is cash and short-term investments divided by the last 12 months of free cash outflow, assuming no new funding.", "Insider trades are open-market buys and sales from Form 4 filings. Grants, option exercises and shares withheld for tax are left out.", "Share counts come from the cover of each 10-Q and 10-K, adjusted for reverse splits."])}<h2>How pages stay current</h2><p>Every stock page and guide is rebuilt from live data each time the site updates and shows the date its figures are from. Fixed facts, such as IPO terms or lock-up dates, are taken from company filings and announcements and cited on the page.</p><h2>Data downloads</h2><p>The tables behind the main guides can be downloaded as CSV or JSON and reused with credit: the <a href="/data/space-stocks.csv">list of space stocks</a>, the <a href="/data/space-stocks-earnings-calendar.csv">earnings calendar</a> and the <a href="/data/spacex-lockup-schedule.csv">SpaceX lock-up schedule</a>. A summary of the site for AI tools is at <a href="/llms.txt">llms.txt</a>.</p><p>Orbit Alpha is information, not investment advice. Check the original filing before acting on any figure.</p>${sectorDirectory}${sources}`,
     ld: [crumbs([["Home", "/"], ["About", "/about"]])],
   },
   ...Object.entries(profiles).map(([t, p]) => {
@@ -238,6 +250,7 @@ const routes = [
         ? `${p.name} (${t}, ${p.listing}) live price, chart, news and launches. ${p.about}`
         : `${p.name} (${t}) live price, SEC filings, insider trades, government contracts, earnings date and launches. ${p.about}`,
       body: `<h1>${t} stock: ${esc(p.name)}</h1>
+<p class="oa-updated">Updated <time datetime="${quotesDate || today}">${fmtDate(quotesDate || today)}</time></p>${facts.answer ? `<div class="oa-answer"><p>${esc(facts.answer)}</p></div>` : ""}
 <p>${esc(p.about)}</p>
 <p>This page tracks ${esc(p.name)} (${t}) stock in one place: the live ${t} share price and chart${us ? ", recent SEC filings and insider trades, US government contract awards, the next earnings date" : ` (listed on ${esc(p.listing)})`}, upcoming launches involving the company, and the latest ${esc(p.name)} news. ${esc(p.name)} is one of the ${count} space stocks Orbit Alpha covers, in the ${p.sector.toLowerCase()} sector. ${SECTOR_TEXT[p.sector]}</p>
 ${facts.html}
@@ -250,6 +263,7 @@ ${issueArchive.some((x) => x.tickers.includes(t)) ? `<h2>${esc(p.name)} in the O
 ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): live price, filings and contracts`)}`,
       ld: [
         { "@type": "Corporation", name: p.name, tickerSymbol: t, description: p.about, url: `${SITE}/stocks/${t.toLowerCase()}` },
+        { "@type": "WebPage", "@id": `${SITE}/stocks/${t.toLowerCase()}#page`, url: `${SITE}/stocks/${t.toLowerCase()}`, name: `${t} stock: ${p.name}`, dateModified: quotesDate || today, isPartOf: { "@id": `${SITE}/#site` }, publisher: { "@id": `${SITE}/#org` }, about: { "@type": "Corporation", name: p.name, tickerSymbol: t }, ...(facts.answer ? { abstract: facts.answer } : {}), speakable: { "@type": "SpeakableSpecification", cssSelector: [".oa-answer"] } },
         crumbs([["Home", "/"], ["Markets", "/markets"], [`${t} stock`, `/stocks/${t.toLowerCase()}`]]),
         q.ld,
       ],
@@ -335,7 +349,56 @@ writeFileSync(
     .map((r) => `  <url><loc>${SITE}${r.path}</loc>${r.lastmod ? `<lastmod>${r.lastmod}</lastmod>` : ""}<changefreq>daily</changefreq><priority>${prio(r.path)}</priority></url>`)
     .join("\n")}\n</urlset>\n`
 );
-writeFileSync(new URL("robots.txt", DIST), `User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE}/sitemap.xml\n`);
+// Search and AI crawlers are named explicitly so there is no doubt they are welcome; /api/ stays
+// out of every index. (Google-Extended and Applebot-Extended govern use in AI answers and training.)
+const AI_BOTS = ["Googlebot", "Bingbot", "OAI-SearchBot", "ChatGPT-User", "GPTBot", "PerplexityBot", "Perplexity-User", "ClaudeBot", "Claude-SearchBot", "Claude-User", "Google-Extended", "Applebot", "Applebot-Extended", "DuckAssistBot", "MistralAI-User", "CCBot"];
+writeFileSync(new URL("robots.txt", DIST), `${AI_BOTS.map((b) => `User-agent: ${b}`).join("\n")}\nAllow: /\nDisallow: /api/\n\nUser-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE}/sitemap.xml\n`);
+
+// Data downloads behind the "Download this data" links on guides (CSV and JSON).
+mkdirSync(new URL("data/", DIST).pathname, { recursive: true });
+const csvCell = (v) => (/[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v));
+for (const d of routes.flatMap((r) => (r.datasets || []).map((x) => ({ ...x, path: r.path, lastmod: r.lastmod })))) {
+  writeFileSync(new URL(`data/${d.slug}.csv`, DIST), [d.columns, ...d.rows].map((row) => row.map(csvCell).join(",")).join("\n") + "\n");
+  writeFileSync(new URL(`data/${d.slug}.json`, DIST), JSON.stringify({
+    name: d.name, description: d.description, source: SITE + d.path, updated: d.lastmod || today, license: "CC BY 4.0 (credit Orbit Alpha with a link)",
+    rows: d.rows.map((row) => Object.fromEntries(d.columns.map((c, i) => [c, row[i]]))),
+  }, null, 1));
+}
+
+// llms.txt (a map of the site for AI tools) and llms-full.txt (every guide's text as markdown).
+const md = (html) => html
+  .replace(/<script[\s\S]*?<\/script>/g, "")
+  .replace(/<h1[^>]*>([\s\S]*?)<\/h1>/g, "\n# $1\n").replace(/<h2[^>]*>([\s\S]*?)<\/h2>/g, "\n## $1\n").replace(/<h3[^>]*>([\s\S]*?)<\/h3>/g, "\n### $1\n")
+  .replace(/<a [^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g, (m, href, text) => `[${text}](${href.startsWith("/") ? SITE + href : href})`)
+  .replace(/<tr>([\s\S]*?)<\/tr>/g, (m, row) => `| ${[...row.matchAll(/<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/g)].map((c) => c[1].trim()).join(" | ")} |\n`)
+  .replace(/<\/thead>/g, "|---|\n").replace(/<li[^>]*>/g, "- ").replace(/<\/(p|li|div|ul|ol|table)>/g, "\n").replace(/<br\s*\/?>/g, "\n")
+  .replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&ldquo;|&rdquo;/g, '"').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+  .replace(/\n{3,}/g, "\n\n").trim();
+const guideRoutes = GUIDE_LIST.map(([p]) => routes.find((r) => r.path === p)).filter(Boolean);
+writeFileSync(new URL("llms.txt", DIST), `# Orbit Alpha
+
+> Orbit Alpha (orbitalpha.cloud) is a free space stocks dashboard and weekly newsletter. It covers ${count} listed space companies (including SpaceX, Rocket Lab and AST SpaceMobile) with live prices, SEC filings, insider trades, US government contracts, earnings dates, launches and lock-up schedules. Pages are rebuilt from live data and each shows the date it was updated. Information only, not investment advice.
+
+## Guides
+${guideRoutes.map((r) => `- [${GUIDES[r.path].label}](${SITE}${r.path}): ${GUIDES[r.path].description}`).join("\n")}
+
+## Data downloads (CSV and JSON, free to use with credit)
+${routes.flatMap((r) => (r.datasets || []).map((d) => `- [${d.name}](${SITE}/data/${d.slug}.csv): ${d.description} JSON: ${SITE}/data/${d.slug}.json`)).join("\n")}
+
+## Stock pages
+${Object.entries(profiles).map(([t, p]) => `- [${t} stock: ${p.name}](${SITE}/stocks/${t.toLowerCase()}): ${p.about}`).join("\n")}
+
+## Live data and newsletter
+- [Live space stocks dashboard](${SITE}/markets)
+- [Space stocks vs the S&P 500](${SITE}/markets/performance)
+- [News, filings and contract wins](${SITE}/news)
+- [Weekly newsletter and archive](${SITE}/newsletter)
+
+## Optional
+- [Full text of every guide](${SITE}/llms-full.txt)
+- [About and methodology](${SITE}/about)
+`);
+writeFileSync(new URL("llms-full.txt", DIST), `# Orbit Alpha guides (full text)\n\nGenerated ${today} from ${SITE}. Figures are as of the date shown in each guide.\n\n${guideRoutes.map((r) => `---\nSource: ${SITE}${r.path}\n\n${md(r.body.replace(/<h2>More space stock guides<\/h2>[\s\S]*$/, ""))}`).join("\n\n")}\n`);
 
 console.log(`prerender: wrote ${routes.length} pages, sitemap.xml and robots.txt`);
 

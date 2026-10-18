@@ -36,7 +36,7 @@ export function buildGuides(ctx) {
       lastmod,
       guide: true,
       og,
-      body: `<div class="oa-guide"><h1>${h1}</h1>${body}${moreGuides(path)}</div>`,
+      body: `<div class="oa-guide"><h1>${h1}</h1><!--oa-answer-->${body}${moreGuides(path)}</div>`,
       ld: [ORG, ...extraLd, crumbs([["Home", "/"], ...(parent ? [[GUIDES[parent].label, parent]] : []), [GUIDES[path].label, path]])],
     };
   };
@@ -203,8 +203,59 @@ ${ssit ? `<h2>Seraphim Space Investment Trust</h2><p>The Seraphim Space Investme
 ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the latest reported share counts, converted to US dollars.")}`,
     [euroFaq.ld]);
 
-  return [listPage, insiderPage, runwayPage, contractsPage, earningsPage, euroPage, etfPage,
+  /* ── Quick answers: the first lines under each heading, written to be quoted on their own by
+     search snippets and AI answer engines (a direct answer with its numbers and date). ── */
+  const nm = (t) => `${profiles[t].name} (${t})`;
+  const on = `As of ${fmtDate(asOf)}`;
+  if (ranked.length) listPage.answer = `${on}, Orbit Alpha tracks ${count} listed space companies. The largest by market value is ${nm(ranked[0])} at about ${fmtCap(capOf(ranked[0]))}, followed by ${and(ranked.slice(1, 3).map(nm))}. ${count - foreign.length - Object.keys(LISTING).filter((t) => profiles[t] && !profiles[t].listing).length} trade in the US and ${foreign.length + Object.keys(LISTING).filter((t) => profiles[t] && !profiles[t].listing).length} in Canada or Europe.`;
+  if (ins.length) {
+    const sellers = ins.filter(([, d]) => d.m12.net < 0).sort((a, b) => a[1].m12.net - b[1].m12.net);
+    insiderPage.answer = `${on}, insiders were net sellers at ${sellers.length} of the ${insAll.length} US-listed space companies with Form 4 data over the last 12 months${sellers.length ? `, led by ${nm(sellers[0][0])} at ${usd(Math.abs(sellers[0][1].m12.net))} net sold` : ""}. ${buyers12.length ? `Insiders bought shares on the open market at ${buyers12.length}: ${and(buyers12.map(nm))}.` : "No insider made an open-market purchase."}`;
+  }
+  if (burning.length || generative.length) runwayPage.answer = `${on}, ${under12.length ? `${and(under12.map(nm))} ${under12.length === 1 ? "has" : "have"} less than 12 months of cash at the current burn rate` : "no US-listed space company covered has less than 12 months of cash at the current burn rate"}. ${generative.length ? `${and(generative.map(([t]) => nm(t)))} ${generative.length === 1 ? "is" : "are"} cash generative.` : ""}`.trim();
+  if (con.length) contractsPage.answer = `${on}, the listed space company with the most US government contract awards over the last 12 months is ${nm(con[0][0])}, with ${fmtUsd(con[0][1].total)} in prime awards${con[1] ? `, followed by ${and(con.slice(1, 3).map(([t, d]) => `${profiles[t].name} (${t}, ${fmtUsd(d.total)})`))}` : ""}, according to USAspending.gov.`;
+  if (upcoming.length) earningsPage.answer = `The next space stock to report is ${nm(upcoming[0].ticker)} on ${fmtDate(upcoming[0].date)}${upcoming[0].time && upcoming[0].time !== "Time TBC" ? `, ${upcoming[0].time.toLowerCase()}` : ""}. ${upcoming.length} US-listed space companies have results dates in the next 75 days.`;
+  if (euro.length && capOf(euro[0])) euroPage.answer = `${on}, the largest UK or European space stock Orbit Alpha covers is ${nm(euro[0])} at about ${fmtCap(capOf(euro[0]))}. In London, Filtronic (FTC) is the listed space company${ssit ? " and the Seraphim Space Investment Trust (SSIT) holds mainly private space companies" : ""}. UK investors can hold most of these shares in a Stocks and Shares ISA or SIPP.`;
+  const etf1y = funds.map(([t, e]) => [t, e, (perfBy["1y"]?.series || []).find((x) => x.id === t)]).map(([t, e, sr]) => [t, e, sr ? [...sr.values].reverse().find((x) => x != null) : null]).filter(([, , v]) => v != null).sort((a, b) => b[2] - a[2]);
+  if (etf1y.length) etfPage.answer = `${on}, the best-performing space fund over the past year is ${esc(etf1y[0][1].name)} (${etf1y[0][0]}) at ${fmtPct(etf1y[0][2])}${last("1y", "SPY") ? `, against ${last("1y", "SPY")} for the S&P 500` : ""}. ${etf1y.length > 1 ? `The weakest is ${esc(etf1y[etf1y.length - 1][1].name)} (${etf1y[etf1y.length - 1][0]}) at ${fmtPct(etf1y[etf1y.length - 1][2])}.` : ""}`.trim();
+
+  /* ── Downloadable data (written to /data by prerender.mjs; described as Dataset for search) ── */
+  listPage.datasets = [{
+    slug: "space-stocks", name: "Listed space stocks", description: "Every listed space company Orbit Alpha covers, with sector, listing, latest price, market value in US dollars and year-to-date return.",
+    columns: ["ticker", "name", "sector", "listing", "price", "currency", "market_cap_usd", "ytd_return_pct"],
+    rows: Object.keys(profiles).map((t) => [t, profiles[t].name, profiles[t].sector, LISTING[t] || profiles[t].listing || "US", quotes[t]?.price ?? "", quotes[t]?.currency || "", quotes[t]?.marketCap ? Math.round(quotes[t].marketCap) : "", ytdBy[t] != null ? +ytdBy[t].toFixed(2) : ""]),
+  }];
+  earningsPage.datasets = [{
+    slug: "space-stocks-earnings-calendar", name: "Space stocks earnings calendar", description: "Upcoming quarterly results dates for US-listed space stocks, with timing and consensus EPS estimate where published.",
+    columns: ["date", "ticker", "name", "timing", "consensus_eps"],
+    rows: upcoming.map((e) => [e.date, e.ticker, profiles[e.ticker].name, e.time || "", e.epsEst || ""]),
+  }];
+
+  const pages = [listPage, insiderPage, runwayPage, contractsPage, earningsPage, euroPage, etfPage,
     ...buildSpaceX({ ...ctx, page, table, faq, and, usd, asOfLine }),
     ...buildMoreGuides({ ...ctx, page, table, faq, and, usd, asOfLine }),
     buildHub(ctx)];
+  // Finish every guide: the quick answer, a visible "updated" date and WebPage data with dateModified.
+  for (const g of pages) {
+    const updated = `<p class="oa-updated">Updated <time datetime="${g.lastmod || asOf}">${fmtDate(g.lastmod || asOf)}</time> from live prices and SEC filings</p>`;
+    const answer = g.answer ? `<div class="oa-answer"><p>${g.answer}</p></div>` : "";
+    g.body = g.body.includes("<!--oa-answer-->") ? g.body.replace("<!--oa-answer-->", updated + answer) : g.body.replace("</h1>", `</h1>${updated}`);
+    for (const d of g.datasets || []) {
+      const block = `<h2>Download this data</h2><p>${esc(d.description)} Free to use with a link back: <a href="/data/${d.slug}.csv">CSV</a> · <a href="/data/${d.slug}.json">JSON</a>. Cite as: Orbit Alpha, &ldquo;${esc(d.name)}&rdquo;, orbitalpha.cloud${g.path}, updated ${fmtDate(g.lastmod || asOf)}.</p>`;
+      g.body = g.body.replace("<h2>More space stock guides</h2>", `${block}<h2>More space stock guides</h2>`);
+      g.ld.push({
+        "@type": "Dataset", name: d.name, description: d.description, url: SITE + g.path, dateModified: g.lastmod || asOf,
+        creator: { "@id": `${SITE}/#org` }, isAccessibleForFree: true, license: "https://creativecommons.org/licenses/by/4.0/",
+        variableMeasured: d.columns,
+        distribution: [{ "@type": "DataDownload", encodingFormat: "text/csv", contentUrl: `${SITE}/data/${d.slug}.csv` }, { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: `${SITE}/data/${d.slug}.json` }],
+      });
+    }
+    g.ld.splice(1, 0, {
+      "@type": "WebPage", "@id": `${SITE}${g.path}#page`, url: SITE + g.path, name: g.title, description: g.description,
+      dateModified: g.lastmod || asOf, inLanguage: "en-GB", isPartOf: { "@id": `${SITE}/#site` }, publisher: { "@id": `${SITE}/#org` },
+      ...(g.answer ? { abstract: g.answer.replace(/<[^>]+>/g, "") } : {}),
+      speakable: { "@type": "SpeakableSpecification", cssSelector: [".oa-answer"] },
+    });
+  }
+  return pages;
 }

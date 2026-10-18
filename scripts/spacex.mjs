@@ -125,7 +125,7 @@ ${list([
       "Account fees: some platforms charge a percentage of your holdings or a flat monthly fee, which can matter more than dealing costs over time.",
       "Stamp duty: none. The 0.5% UK stamp duty does not apply to US shares.",
     ])}
-<p>Platforms change their fees often, so compare the current tariff before choosing. Orbit Alpha has no commercial relationship with any of the platforms named here.</p>
+<p>Platforms change their fees often, so compare the current tariff before choosing.</p>
 <h2>Buying SpaceX stock in the US</h2>
 <p>US investors can buy SPCX through any brokerage account, including tax-advantaged accounts such as IRAs, at the normal commission for US stocks (zero at most large brokers). SPCX trades on Nasdaq during regular hours, 9:30am to 4pm Eastern, and many brokers also offer pre-market and after-hours trading.</p>
 <h2>What you are buying</h2>
@@ -185,7 +185,7 @@ ${sources([
   ]);
   const lockPage = page("/spacex-stock/lockup-calendar", "SpaceX lockup calendar",
     `<p>Most SpaceX shares were not sold in the IPO. They belong to employees, early investors and Elon Musk, who agreed not to sell for a set period. Instead of releasing everything on one date, SpaceX's lock-up frees the shares in stages, some on fixed days counted from the IPO pricing on 11 June 2026 and some two trading days after quarterly results. This page lists every release with its date and share count, taken from the IPO prospectus.</p>
-${next ? `<div class="oa-callout"><p><b>Next release: ${next.q3 ? "Q3 earnings tranche" : esc(next.what)}</b>, ${whenText(next)}. Up to ${shares(next.n)} shares (${next.pct.toLowerCase()} of the main lock-up pool).${next.trade !== today ? ` ${daysBetween(today, next.trade)} days away.` : ""}</p>${priceLine ? `<p>${priceLine} <a href="/stocks/spcx">Live SPCX price</a>.</p>` : ""}</div>` : ""}
+${next && (next.trade !== today || priceLine) ? `<div class="oa-callout"><p>${next.trade !== today ? `<b>${daysBetween(today, next.trade)} days</b> to the next release. ` : "<b>The next release is today.</b> "}${priceLine ? `${priceLine} <a href="/stocks/spcx">Live SPCX price</a>.` : ""}</p></div>` : ""}
 <h2>Main lock-up: employees and pre-IPO investors</h2>
 <p>This 180-day lock-up covers most employees and early investors. Each release lets holders sell up to the stated share of what they held; percentages are of each holder's locked shares, so the share counts are maximums.</p>
 ${table(["Date", "Release", "Shares, up to", "Share of pool", "Status", "SPCX on the day"], [...TRANCHES].sort((a, b) => sortKey(a).localeCompare(sortKey(b))).map((t) => [
@@ -233,6 +233,13 @@ ${sources([
         : [],
     });
 
+  buyPage.answer = `SpaceX trades on Nasdaq under the ticker SPCX. Buy it through any platform that offers US shares; in the UK it can be held in a Stocks and Shares ISA or SIPP after you complete a W-8BEN form, with no stamp duty to pay.${price != null ? ` As of ${fmtDate(asOf)}, SPCX was ${fmtPrice(price)}, ${vsIpo >= 0 ? "up" : "down"} ${Math.abs(vsIpo).toFixed(1)}% on the $135 IPO price.` : ""}`;
+  lockPage.answer = `${next ? `The next SpaceX lockup release is ${DAYS[weekday(next.trade)]} ${fmtDate(next.trade)}: up to ${shares(next.n)} shares become free to sell (${next.q3 ? "the second full trading day after Q3 results" : next.what.toLowerCase()}). ` : ""}The main 180-day lock-up ${today > dayN(180) ? "ended" : "ends"} on 8 December 2026, and Elon Musk cannot sell before ${fmtDate(musk)}, after a 366-day lock-up.`;
+  lockPage.datasets = [{
+    slug: "spacex-lockup-schedule", name: "SpaceX (SPCX) lock-up release schedule", description: "Every SpaceX IPO lock-up release from the June 2026 prospectus: date, first trading day, trigger, maximum shares released and share of the main lock-up pool.",
+    columns: ["date", "first_trading_day", "release", "shares_up_to", "share_of_pool", "status"],
+    rows: [...TRANCHES].sort((x, y) => sortKey(x).localeCompare(sortKey(y))).map((t) => [t.date || "", t.trade || "", t.what, Math.round(t.n), t.pct, status(t)]),
+  }];
   return [buyPage, lockPage];
 }
 const latest = (...d) => d.filter(Boolean).sort().pop();

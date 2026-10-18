@@ -406,6 +406,9 @@ const GlobalStyles = () => (
     @media(max-width:700px){.oa-guide-page table{display:block}.oa-guide-page td,.oa-guide-page th{white-space:nowrap}}
     .oa-issue .oa-callout{border:1px solid rgba(0,255,136,0.25);background:rgba(0,255,136,0.04);border-radius:10px;padding:14px 16px 2px;margin:0 0 20px}
     .oa-issue ol li b{color:#fff}
+    .oa-issue .oa-updated{font-size:11px;color:${C.muted};margin:-8px 0 14px;letter-spacing:0.03em}
+    .oa-issue .oa-answer{border-left:3px solid ${C.green};background:rgba(0,255,136,0.04);padding:12px 16px 1px;margin:0 0 22px;border-radius:0 8px 8px 0}
+    .oa-issue .oa-answer p{color:#fff;font-size:14.5px}
     .oa-guide-list{list-style:none;padding-left:0!important}
     .oa-guide-list li{margin-bottom:14px!important;color:${C.muted}}
     .oa-guide-list li a{font-weight:600}

@@ -146,6 +146,8 @@ ${asOfLine(`Starlink figures from SpaceX's ${STARLINK.quarter} results.`)}`,
       stats: [["SPCX", fmtPrice(sq.price)], ["Subscribers", STARLINK.subscribers.replace(" million", "M")], ...(sq.marketCap ? [["SpaceX value", fmtCap(sq.marketCap)]] : [])],
     } : undefined);
 
+  starlinkPage.answer = `There is no separate Starlink stock. Starlink is owned by SpaceX, which trades on Nasdaq as SPCX, so buying SpaceX shares is the only way to own it. Starlink had ${STARLINK.subscribers} subscribers at the end of ${STARLINK.quarter} and is SpaceX's largest and only profitable business.`;
+
   /* ═══ Space stocks under $10 ═════════════════════════════════════════════════ */
   const cheap = Object.keys(profiles).filter((t) => !profiles[t].listing && quotes[t]?.price != null && quotes[t].price < 10 && (quotes[t].currency || "USD") === "USD")
     .sort((a, b) => (quotes[b].marketCap || 0) - (quotes[a].marketCap || 0));
@@ -178,6 +180,8 @@ ${list([
 <p>For every space stock at any price, see the <a href="/space-stocks">full list of space stocks</a> and the <a href="/space-stocks/cash-runway">cash runway ranking</a>.</p>
 ${cheapFaq.html}${asOfLine("Prices from Yahoo Finance; cash and share counts from SEC filings.")}`,
     [cheapFaq.ld, { "@type": "ItemList", name: "Space stocks under $10", itemListElement: cheap.map((t, i) => ({ "@type": "ListItem", position: i + 1, url: `${SITE}/stocks/${t.toLowerCase()}`, name: `${profiles[t].name} (${t})` })) }]);
+
+  cheapPage.answer = cheap.length ? `As of ${fmtDate(asOf)}, ${cheap.length} US-listed space ${cheap.length === 1 ? "stock trades" : "stocks trade"} below $10 a share: ${and(cheap.map((t) => `${profiles[t].name} (${t})`))}. ${short.length ? `${and(short.map((t) => profiles[t].name))} ${short.length === 1 ? "has" : "have"} less than a year of cash at the current burn rate.` : ""}`.trim() : "";
 
   /* ═══ Comparisons ════════════════════════════════════════════════════════════ */
   const comparePages = Object.entries(GUIDES).filter(([, g]) => g.compare).map(([path, g]) => {
@@ -223,9 +227,8 @@ ${cheapFaq.html}${asOfLine("Prices from Yahoo Finance; cash and share counts fro
       [`What is the difference between ${pa.name} and ${pb.name} stock?`, `${pa.name}: ${pa.about} ${pb.name}: ${pb.about}`],
       [`Which is better, ${A} or ${B}?`, "That depends on what you want to own and how much risk you can take. Orbit Alpha does not make recommendations; the table compares size, growth, cash and dilution so you can weigh them yourself."],
     ]);
-    return page(path, `${esc(pa.name)} vs ${esc(pb.name)} stock: ${A} vs ${B}`,
+    const cmpPage = page(path, `${esc(pa.name)} vs ${esc(pb.name)} stock: ${A} vs ${B}`,
       `<p>${esc(ctxt.intro)}</p>
-${summary.length ? `<div class="oa-callout"><p>${summary.join(" ")}</p></div>` : ""}
 <h2>${A} vs ${B} side by side</h2>
 ${table(["", `${tick(A)} ${esc(pa.name)}`, `${tick(B)} ${esc(pb.name)}`], rows.map(([l, x, y]) => [esc(l), x, y]))}
 <p class="oa-note">Financials are from each company's latest 10-Q and 10-K filings. Where 12-month figures are not yet available (for example, after a recent listing), the latest quarter is shown and labelled.</p>
@@ -241,6 +244,8 @@ ${pairFaq.html}${asOfLine("Prices from Yahoo Finance; financials, insider trades
         file: `og/guides/${path.split("/").pop()}.png`, asOf: fmtDate(asOf),
         stats: [[A, fmtPrice(a.q.price)], [B, fmtPrice(b.q.price)], ...(a.capText && b.capText ? [["Market caps", `${a.capText} / ${b.capText}`]] : [])],
       } : undefined);
+    if (summary.length) cmpPage.answer = `As of ${fmtDate(asOf)}: ${summary.join(" ")}`;
+    return cmpPage;
   });
 
   return [starlinkPage, cheapPage, ...comparePages];
