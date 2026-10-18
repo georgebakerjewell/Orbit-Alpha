@@ -1,4 +1,5 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { parseFeed } from "../lib/issue-archive.js";
 
 const RSS_URL = "https://rss.beehiiv.com/feeds/cthncj24W4.xml";
 const ISSUES_PATH = new URL("../src/issues.json", import.meta.url);
@@ -51,10 +52,29 @@ function extractHeadline(html) {
   return text;
 }
 
+// Full text of every issue in the feed, published word for word at /newsletter/issue-N.
+//   public/issues/N.json   the issue itself (loaded by the page when someone opens it)
+//   src/issueArchive.json  a small index (title, date, tickers) bundled into the app
+// Rewritten on every run, so edits made in Beehiiv after sending are picked up too.
+function writeArchive(xml) {
+  const known = JSON.parse(readFileSync(ISSUES_PATH, "utf8"));
+  const archive = parseFeed(xml, (n) => known.find((i) => i.issue === n)?.headline);
+  const dir = new URL("../public/issues/", import.meta.url);
+  mkdirSync(dir, { recursive: true });
+  for (const issue of archive) writeFileSync(new URL(`${issue.issue}.json`, dir), JSON.stringify(issue) + "\n");
+  writeFileSync(new URL("../src/issueArchive.json", import.meta.url), JSON.stringify(archive.map(({ html, ...rest }) => rest), null, 2) + "\n");
+  console.log(`Archive: wrote ${archive.length} issues (${archive.map((i) => i.issue).join(", ")}).`);
+}
+
 async function main() {
-  const res = await fetch(RSS_URL);
-  if (!res.ok) throw new Error(`RSS fetch failed: ${res.status}`);
-  const xml = await res.text();
+  // RSS_FILE lets the script run against a saved copy of the feed (for testing).
+  let xml;
+  if (process.env.RSS_FILE) xml = readFileSync(process.env.RSS_FILE, "utf8");
+  else {
+    const res = await fetch(RSS_URL);
+    if (!res.ok) throw new Error(`RSS fetch failed: ${res.status}`);
+    xml = await res.text();
+  }
 
   const firstItemMatch = xml.match(/<item[^>]*>([\s\S]*?)<\/item>/i);
   if (!firstItemMatch) throw new Error("No <item> found in RSS feed");
@@ -79,6 +99,7 @@ async function main() {
 
   if (issueNum <= currentTop) {
     console.log(`No new issue (RSS has #${issueNum}, repo already has #${currentTop}).`);
+    writeArchive(xml);
     return;
   }
 
@@ -102,6 +123,7 @@ async function main() {
   issues.unshift(newEntry);
   writeFileSync(ISSUES_PATH, JSON.stringify(issues, null, 2) + "\n");
   console.log(`Added Issue #${issueNum}: "${headline}"`);
+  writeArchive(xml);
   if (!extractedHeadline) {
     console.log("Note: fell back to a generic headline because no MARKET OVERVIEW text was found.");
   }
