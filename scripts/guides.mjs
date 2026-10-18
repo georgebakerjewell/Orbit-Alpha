@@ -2,7 +2,8 @@
 // same data the dashboard shows. Called by scripts/prerender.mjs, which passes in the data it has
 // already fetched. Each guide still renders (with a short note) if a data source was unavailable.
 // Titles and descriptions live in lib/pagemeta.js (GUIDES) so the app and the static HTML match.
-import { GUIDES } from "../lib/pagemeta.js";
+import { GUIDES, GUIDE_LIST } from "../lib/pagemeta.js";
+import { buildMoreGuides, buildHub } from "./guides-more.mjs";
 import { buildSpaceX } from "./spacex.mjs";
 
 export function buildGuides(ctx) {
@@ -19,7 +20,13 @@ export function buildGuides(ctx) {
     html: `<h2>Frequently asked questions</h2>${pairs.map(([q, a]) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join("")}`,
     ld: { "@type": "FAQPage", mainEntity: pairs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
   });
-  const moreGuides = (path) => `<h2>More space stock guides</h2>${list(Object.entries(GUIDES).filter(([p]) => p !== path).map(([p, g]) => `<a href="${p}">${esc(g.label)}</a>`))}`;
+  // Related guides: the rest of this guide's group first, then the core lists, then a link to all.
+  const moreGuides = (path) => {
+    const group = GUIDES[path].group;
+    const others = GUIDE_LIST.filter(([p]) => p !== path);
+    const picks = [...others.filter(([, g]) => g.group === group), ...others.filter(([, g]) => g.group !== group && g.group === "lists")].slice(0, 7);
+    return `<h2>More space stock guides</h2>${list([...picks.map(([p, g]) => `<a href="${p}">${esc(g.label)}</a>`), `<a href="/guides">All ${GUIDE_LIST.length} space stock guides</a>`])}`;
+  };
   const page = (path, h1, body, extraLd = [], lastmod = asOf, og) => {
     const parent = GUIDES[path].parent;
     return {
@@ -197,5 +204,7 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
     [euroFaq.ld]);
 
   return [listPage, insiderPage, runwayPage, contractsPage, earningsPage, euroPage, etfPage,
-    ...buildSpaceX({ ...ctx, page, table, faq, and, usd, asOfLine })];
+    ...buildSpaceX({ ...ctx, page, table, faq, and, usd, asOfLine }),
+    ...buildMoreGuides({ ...ctx, page, table, faq, and, usd, asOfLine }),
+    buildHub(ctx)];
 }

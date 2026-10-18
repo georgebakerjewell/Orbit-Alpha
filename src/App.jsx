@@ -3,7 +3,7 @@ import issues from "./issues.json";
 import issueArchive from "./issueArchive.json";
 import stories from "./stories.json"; // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
-import { MARKET_PAGES, GUIDES } from "../lib/pagemeta.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
+import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS } from "../lib/pagemeta.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
 /* ════════════════════════════════════════════════════════════════════════════
    DATA  (stocks, ETFs and keywords all come from lib/roster.js)
@@ -406,6 +406,9 @@ const GlobalStyles = () => (
     @media(max-width:700px){.oa-guide-page table{display:block}.oa-guide-page td,.oa-guide-page th{white-space:nowrap}}
     .oa-issue .oa-callout{border:1px solid rgba(0,255,136,0.25);background:rgba(0,255,136,0.04);border-radius:10px;padding:14px 16px 2px;margin:0 0 20px}
     .oa-issue ol li b{color:#fff}
+    .oa-guide-list{list-style:none;padding-left:0!important}
+    .oa-guide-list li{margin-bottom:14px!important;color:${C.muted}}
+    .oa-guide-list li a{font-weight:600}
     .oa-issue .oa-note{font-size:11.5px;color:${C.muted}}
     .oa-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .oa-news-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:28px;align-items:start}
@@ -915,11 +918,16 @@ function Home({ news, prices, launches }) {
         </div>
       </Card>
 
-      {/* Guides */}
-      <Card title="Space stock guides" note="Rankings and lists, updated from live data" style={{ marginBottom: 14 }}>
-        <div style={{ display: "flex", gap: "8px 18px", flexWrap: "wrap", fontSize: 12 }}>
-          {Object.entries(GUIDES).map(([p, g]) => <Link key={p} to={p} className="oa-link" style={{ color: C.blue }}>{g.label}</Link>)}
-        </div>
+      {/* Guides, grouped (lib/pagemeta.js GUIDE_GROUPS); the full list is at /guides */}
+      <Card title="Space stock guides" note={<Link to="/guides" className="oa-link" style={{ color: C.green }}>All {GUIDE_LIST.length} guides</Link>} style={{ marginBottom: 14 }}>
+        {GUIDE_GROUPS.map(([id, name]) => (
+          <div key={id} style={{ marginBottom: 12 }}>
+            <div style={{ fontSize: 10, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{name}</div>
+            <div style={{ display: "flex", gap: "8px 18px", flexWrap: "wrap", fontSize: 12 }}>
+              {GUIDE_LIST.filter(([, g]) => g.group === id).map(([p, g]) => <Link key={p} to={p} className="oa-link" style={{ color: id === "spacex" ? C.green : C.blue }}>{g.label}</Link>)}
+            </div>
+          </div>
+        ))}
       </Card>
 
       {/* Closing CTA */}
@@ -2049,10 +2057,10 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       </Card>
 
       {/* Guides written about this stock (lib/pagemeta.js GUIDES with tickers) */}
-      {Object.entries(GUIDES).some(([, g]) => g.tickers?.includes(ticker)) && (
+      {GUIDE_LIST.some(([, g]) => g.tickers?.includes(ticker)) && (
         <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginBottom: 16, display: "flex", flexWrap: "wrap", gap: "8px 18px", alignItems: "center" }}>
           <span style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>{profile.name} guides</span>
-          {Object.entries(GUIDES).filter(([, g]) => g.tickers?.includes(ticker)).map(([p, g]) => (
+          {GUIDE_LIST.filter(([, g]) => g.tickers?.includes(ticker)).map(([p, g]) => (
             <Link key={p} to={p} className="oa-link" style={{ color: C.green, fontSize: 13 }}>{g.label}</Link>
           ))}
         </div>
@@ -2591,7 +2599,7 @@ function About() {
 /* ════════════════════════════════════════════════════════════════════════════
    APP SHELL
    ════════════════════════════════════════════════════════════════════════════ */
-const NAV = [["/", "home", "Home"], ["/markets", "markets", "Markets"], ["/news", "news", "News"], ["/newsletter", "newsletter", "Newsletter"]];
+const NAV = [["/", "home", "Home"], ["/markets", "markets", "Markets"], ["/news", "news", "News"], ["/guides", "guide", "Guides"], ["/newsletter", "newsletter", "Newsletter"]];
 
 export default function App() {
   const [route, navigate] = useRouter();
