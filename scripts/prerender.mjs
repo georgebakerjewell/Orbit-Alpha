@@ -126,7 +126,7 @@ function stockFacts(t, name) {
   const answer = q?.price != null ? [
     `${name} (${t}) last closed at ${fmtPrice(q.price, q.currency)} on ${fmtDate(quotesDate || today)}${q.changePct != null ? `, ${q.changePct >= 0 ? "up" : "down"} ${Math.abs(q.changePct).toFixed(1)}% on the day` : ""}${q.marketCap ? `, giving it a market value of about ${fmtCap(q.marketCap)}` : ""}.`,
     ytd != null && t !== "SPCX" ? `The shares are ${ytd >= 0 ? "up" : "down"} ${Math.abs(ytd).toFixed(1)}% this year.` : "",
-    t === "SPCX" ? `They are ${q.price >= 135 ? "up" : "down"} ${Math.abs((q.price / 135 - 1) * 100).toFixed(1)}% on the $135 IPO price of June 2026.` : "",
+    t === "SPCX" ? `The shares are ${q.price >= 135 ? "up" : "down"} ${Math.abs((q.price / 135 - 1) * 100).toFixed(1)}% on the $135 IPO price of June 2026.` : "",
     e ? `${name} next reports results on ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}.` : "",
   ].filter(Boolean).join(" ") : "";
   return { html, answer, lastmod: latest(filings[0]?.date, awards[0]?.start, stories.find((x) => x.tickers?.includes(t))?.published?.slice(0, 10)) };
@@ -292,12 +292,15 @@ ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): liv
   }),
 ];
 
+// Pages that also get a plain markdown copy at <path>.md, for AI tools that prefer text.
+const hasMd = (path) => !!GUIDES[path] || path.startsWith("/stocks/");
 function render({ path, title, description, body, ld = [], ogImage }) {
   const url = SITE + path;
   const head = [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}" />`,
     `<link rel="canonical" href="${url}" />`,
+    hasMd(path) ? `<link rel="alternate" type="text/markdown" href="${url}.md" />` : "",
     `<meta property="og:type" content="${path.startsWith("/newsletter/issue-") ? "article" : "website"}" />`,
     `<meta property="og:site_name" content="Orbit Alpha" />`,
     `<meta property="og:title" content="${esc(title)}" />`,
@@ -374,6 +377,12 @@ const md = (html) => html
   .replace(/<\/thead>/g, "|---|\n").replace(/<li[^>]*>/g, "- ").replace(/<\/(p|li|div|ul|ol|table)>/g, "\n").replace(/<br\s*\/?>/g, "\n")
   .replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&ldquo;|&rdquo;/g, '"').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">")
   .replace(/\n{3,}/g, "\n\n").trim();
+// Markdown copies of every guide and stock page (linked from each page's head and from llms.txt).
+for (const r of routes.filter((x) => hasMd(x.path))) {
+  const file = new URL(`.${r.path}.md`, DIST);
+  mkdirSync(dirname(file.pathname), { recursive: true });
+  writeFileSync(file, `---\ntitle: ${JSON.stringify(r.title)}\ndescription: ${JSON.stringify(r.description)}\nurl: ${SITE}${r.path}\nupdated: ${r.lastmod || today}\n---\n\n${md(r.body.replace(/<h2>More space stock guides<\/h2>[\s\S]*$/, ""))}\n`);
+}
 const guideRoutes = GUIDE_LIST.map(([p]) => routes.find((r) => r.path === p)).filter(Boolean);
 writeFileSync(new URL("llms.txt", DIST), `# Orbit Alpha
 
@@ -396,6 +405,7 @@ ${Object.entries(profiles).map(([t, p]) => `- [${t} stock: ${p.name}](${SITE}/st
 
 ## Optional
 - [Full text of every guide](${SITE}/llms-full.txt)
+- Every guide and stock page also has a markdown copy: add .md to its URL (for example ${SITE}/spacex-stock/lockup-calendar.md)
 - [About and methodology](${SITE}/about)
 `);
 writeFileSync(new URL("llms-full.txt", DIST), `# Orbit Alpha guides (full text)\n\nGenerated ${today} from ${SITE}. Figures are as of the date shown in each guide.\n\n${guideRoutes.map((r) => `---\nSource: ${SITE}${r.path}\n\n${md(r.body.replace(/<h2>More space stock guides<\/h2>[\s\S]*$/, ""))}`).join("\n\n")}\n`);
