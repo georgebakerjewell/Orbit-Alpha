@@ -7,6 +7,8 @@ import { GUIDES } from "../lib/pagemeta.js";
 export function buildGuides(ctx) {
   const { SITE, profiles, ETFS, SECTOR_ORDER, quotes, ytdBy, perfBy, earnings, filingsBy, contractsBy, finBy, insidersBy, asOf, count,
     esc, list, crumbs, ORG, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate } = ctx;
+  const and = (xs) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
+  const usd = (n) => (n > 0 && n < 1000 ? "under $1K" : fmtUsd(n));
   const link = (t) => `<a href="/stocks/${t.toLowerCase()}">${esc(profiles[t].name)}</a>`;
   const tick = (t) => `<a href="/stocks/${t.toLowerCase()}">${t}</a>`;
   const table = (head, rows) => `<table><thead><tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${c ?? "-"}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
@@ -42,7 +44,7 @@ export function buildGuides(ctx) {
   const listFaq = faq([
     ["How many space stocks are there?", `Orbit Alpha tracks ${count} listed companies whose business is mainly in space, across the US, Canada and Europe. Large defence and aerospace groups where space is a small share of revenue are left out.`],
     ...(ranked.length ? [["What is the biggest space stock?", `By market capitalisation, the largest space stock Orbit Alpha tracks is ${profiles[ranked[0]].name} (${ranked[0]}) at about ${fmtCap(capOf(ranked[0]))}, followed by ${ranked.slice(1, 3).map((t) => `${profiles[t].name} (${t})`).join(" and ")}.`]] : []),
-    ["Are there space stocks listed in the UK and Europe?", `Yes. Orbit Alpha covers ${foreign.map((t) => `${profiles[t].name} (${profiles[t].listing})`).join(", ")}.`],
+    ["Are there space stocks listed in the UK and Europe?", `Yes. Orbit Alpha covers ${and(foreign.map((t) => `${profiles[t].name} (${profiles[t].listing})`))}.`],
     ["Is there a space ETF instead of picking stocks?", "Several funds hold baskets of space companies, including the Procure Space ETF (UFO) and ARK Space ETF (ARKX). See the space ETFs comparison for their returns."],
   ]);
   const LISTING = { MDA: "Toronto (TSX)" };
@@ -58,22 +60,25 @@ ${listFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from share cou
     [listFaq.ld, { "@type": "ItemList", name: "Space stocks", itemListElement: Object.keys(profiles).map((t, i) => ({ "@type": "ListItem", position: i + 1, url: `${SITE}/stocks/${t.toLowerCase()}`, name: `${profiles[t].name} (${t})` })) }]);
 
   /* ── 2. Insider buying and selling ───────────────────────────────────────── */
-  const ins = Object.entries(insidersBy).filter(([, d]) => d?.m12);
+  const insAll = Object.entries(insidersBy).filter(([, d]) => d?.m12);
+  const ins = insAll.filter(([, d]) => d.m12.bought >= 1000 || d.m12.sold >= 1000);
+  const noTrades = insAll.filter(([, d]) => !(d.m12.bought >= 1000 || d.m12.sold >= 1000)).map(([t]) => t);
   const insRows = ins.sort((a, b) => b[1].m12.net - a[1].m12.net).map(([t, d]) => [
     link(t), tick(t),
-    d.m12.bought ? fmtUsd(d.m12.bought) : "None", d.m12.sold ? fmtUsd(d.m12.sold) : "None",
-    `${d.m12.net >= 0 ? "+" : "-"}${fmtUsd(Math.abs(d.m12.net))}`,
-    d.m3.bought || d.m3.sold ? `${d.m3.net >= 0 ? "+" : "-"}${fmtUsd(Math.abs(d.m3.net))}` : "None",
+    d.m12.bought ? usd(d.m12.bought) : "None", d.m12.sold ? usd(d.m12.sold) : "None",
+    `${d.m12.net >= 0 ? "+" : "-"}${usd(Math.abs(d.m12.net))}`,
+    d.m3.bought || d.m3.sold ? `${d.m3.net >= 0 ? "+" : "-"}${usd(Math.abs(d.m3.net))}` : "None",
     `${d.m12.buyers} / ${d.m12.sellers}${d.complete ? "" : " *"}`,
   ]);
   const largest = ins.flatMap(([t, d]) => (d.largest || []).map((x) => ({ ...x, t }))).sort((a, b) => b.value - a.value).slice(0, 12);
-  const buyers12 = ins.filter(([, d]) => d.m12.bought > 0).map(([t]) => t);
+  const buyers12 = ins.filter(([, d]) => d.m12.bought >= 1000).map(([t]) => t);
   const insiderPage = page("/space-stocks/insider-trading", "Space stocks insider buying and selling",
     `<p>Company insiders (directors, executives and holders of more than 10% of the shares) must report every trade in their own company's stock to the SEC on a Form 4, usually within two business days. This page adds up those filings for every US-listed space stock Orbit Alpha covers, so you can see where insiders have been buying with their own money and where they have been selling.</p>
 <p>Only open-market purchases and sales are counted. Share grants, option exercises and shares withheld to pay tax are left out, because they are part of pay rather than a decision to buy or sell.</p>
 <h2>Insider trading by company, last 12 months</h2>
 ${insRows.length ? table(["Company", "Ticker", "Bought (12m)", "Sold (12m)", "Net (12m)", "Net (3m)", "Buyers / sellers"], insRows) + (ins.some(([, d]) => !d.complete) ? `<p class="oa-note">* Very active filers: only the most recent Form 4s are parsed, so older months may be incomplete.</p>` : "") : `<p>Insider data is temporarily unavailable. The figures are on each company's page.</p>`}
-${buyers12.length ? `<p>In the last 12 months, insiders made open-market purchases at ${buyers12.length} of these companies: ${buyers12.map(link).join(", ")}.</p>` : ""}
+${noTrades.length ? `<p>No open-market insider trades in the last 12 months: ${and(noTrades.map(link))}.</p>` : ""}
+${buyers12.length ? `<p>In the last 12 months, insiders made open-market purchases at ${buyers12.length} of these companies: ${and(buyers12.map(link))}.</p>` : ""}
 ${largest.length ? `<h2>Largest individual insider trades</h2>${table(["Date", "Company", "Insider", "Trade", "Value"], largest.map((x) => [fmtDate(x.date), tick(x.t), `${esc(x.owner || "")}${x.role ? `, ${esc(x.role)}` : ""}`, x.direction === "buy" ? "Buy" : "Sale", x.url ? `<a href="${x.url}" target="_blank" rel="noopener">${fmtUsd(x.value)}</a>` : fmtUsd(x.value)]))}` : ""}
 <h2>How to read insider selling</h2>
 <p>Insider selling is common and usually means less than it looks. Executives at young space companies are paid largely in stock, so they sell to diversify, pay tax on vested shares, or fund personal costs. Many sales are made under Rule 10b5-1 plans, which are set up in advance and run automatically, so the timing of an individual sale says little about what the insider thinks of the stock today.</p>
@@ -93,7 +98,7 @@ ${asOfLine("Source: SEC EDGAR Form 4 filings.")}`);
     `<p>Most space companies still spend more cash than they bring in. Cash runway estimates how long each one could keep going on the cash it has today if it kept burning money at the same rate, before it would need to raise more by selling shares or borrowing. A short runway is one of the clearest signs that a share offering, and dilution for existing holders, may be coming.</p>
 <h2>Runway ranking, shortest first</h2>
 ${burning.length ? table(["Company", "Ticker", "Cash and investments", "Free cash flow (12m)", "Runway", "As of"], burning.map(([t, f]) => finRow(t, f, runwayText(f.runwayMonths)))) : `<p>Financial data is temporarily unavailable. The figures are on each company's page.</p>`}
-${under12.length ? `<p>On these figures, ${under12.map(link).join(", ")} ${under12.length === 1 ? "has" : "have"} less than a year of cash at the current burn rate.</p>` : ""}
+${under12.length ? `<p>On these figures, ${and(under12.map(link))} ${under12.length === 1 ? "has" : "have"} less than a year of cash at the current burn rate.</p>` : ""}
 ${generative.length ? `<h2>Cash generative</h2><p>These companies produced positive free cash flow over the last 12 months, so they are not using up their cash at all.</p>${table(["Company", "Ticker", "Cash and investments", "Free cash flow (12m)", "Runway", "As of"], generative.map(([t, f]) => finRow(t, f, "Cash generative")))}` : ""}
 <h2>How runway is worked out</h2>
 <p>Runway is cash and short-term investments divided by the average monthly free cash outflow over the last 12 months. Free cash flow is operating cash flow minus capital spending, taken from the figures companies tag in their 10-Q and 10-K filings.</p>
@@ -123,7 +128,7 @@ ${asOfLine("Source: USAspending.gov (prime contract awards, matched to each comp
     `<p>When each US-listed space stock reports its next quarterly results, with the reporting time and the consensus earnings-per-share estimate where analysts publish one. Results days are some of the most volatile of the year for these stocks, so it helps to know what is coming.</p>
 <h2>Upcoming earnings dates</h2>
 ${upcoming.length ? table(["Date", "Company", "Ticker", "Timing", "Consensus EPS"], upcoming.map((e) => [fmtDate(e.date), link(e.ticker), tick(e.ticker), esc(e.time || "Time TBC"), e.epsEst ? esc(e.epsEst) : null])) : `<p>No confirmed dates in the next 75 days yet. Companies usually confirm their date two to four weeks ahead.</p>`}
-${notScheduled.length ? `<p>Not yet scheduled in the next 75 days: ${notScheduled.map(tick).join(", ")}. Dates appear here once the company confirms them.</p>` : ""}
+${notScheduled.length ? `<p>Not yet scheduled in the next 75 days: ${and(notScheduled.map(tick))}. Dates appear here once the company confirms them.</p>` : ""}
 <h2>What to watch in a space company's results</h2>
 <p>Earnings per share often matters less than usual, because many space companies are not yet profitable. Investors tend to focus instead on:</p>
 ${list([
