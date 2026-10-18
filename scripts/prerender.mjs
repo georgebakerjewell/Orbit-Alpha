@@ -94,7 +94,17 @@ const contractsBy = Object.fromEntries(Object.entries(contractsFull).map(([t, d]
 const finBy = await pool(secTickers, 4, (t) => api(`/api/filings?ticker=${t}&financials=1`, 30000));
 const insidersBy = await pool(form4Tickers, 4, (t) => api(`/api/filings?ticker=${t}&insiders=1`, 30000));
 const quotes = quotesRes?.quotes || {};
-const quotesDate = quotesRes?.asOf ? quotesRes.asOf.slice(0, 10) : null;
+// The trading day the latest prices belong to: before 8pm UTC (the US close in summer time) or at a weekend,
+// the last close is from the previous weekday.
+const quotesDate = (() => {
+  if (!quotesRes?.asOf) return null;
+  const d = new Date(quotesRes.asOf);
+  if (d.getUTCHours() < 20) d.setUTCDate(d.getUTCDate() - 1);
+  while (d.getUTCDay() === 0 || d.getUTCDay() === 6) d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+})();
+// Nasdaq writes negative EPS estimates in brackets, "($0.60)"; show them as -$0.60.
+const epsText = (v) => String(v).replace(/^\((.*)\)$/, "-$1");
 const ytdBy = Object.fromEntries((perfRes?.series || []).filter((s) => s.kind === "stock").map((s) => [s.id, [...s.values].reverse().find((v) => v != null)]));
 const nextEarnings = {};
 const earningsList = withConfirmed(Array.isArray(earningsRes) ? earningsRes : [], today);
@@ -117,7 +127,7 @@ function stockFacts(t, name) {
   if (q?.price != null) rows.push(`Share price: ${fmtPrice(q.price, q.currency)}${q.changePct != null ? ` (${fmtPct(q.changePct)} on the day)` : ""}`);
   if (q?.marketCap) rows.push(`Market cap: ${fmtCap(q.marketCap)}`);
   if (ytd != null) rows.push(`Year to date: ${fmtPct(ytd)}`);
-  if (e) rows.push(`Next earnings: ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}${e.epsEst ? ` (consensus EPS ${esc(e.epsEst)})` : ""}`);
+  if (e) rows.push(`Next earnings: ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}${e.epsEst ? ` (consensus EPS ${esc(epsText(e.epsEst))})` : ""}`);
   let html = "";
   if (rows.length) html += `<h2>${esc(name)} (${t}) stock at a glance</h2>${list(rows)}<p>Figures as of ${fmtDate(quotesDate || today)}. Prices on the live page update through the trading day.</p>`;
   // Key financials from the latest 10-Q/10-K (US SEC filers), so "<company> revenue" and "<company>

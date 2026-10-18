@@ -139,7 +139,7 @@ ${asOfLine("Source: USAspending.gov (prime contract awards, matched to each comp
   const earningsPage = page("/space-stocks/earnings-calendar", "Space stocks earnings calendar",
     `<p>When each US-listed space stock reports its next quarterly results, with the reporting time and the consensus earnings-per-share estimate where analysts publish one. Results days are some of the most volatile of the year for these stocks, so it helps to know what is coming.</p>
 <h2>Upcoming earnings dates</h2>
-${upcoming.length ? table(["Date", "Company", "Ticker", "Timing", "Consensus EPS"], upcoming.map((e) => [fmtDate(e.date), link(e.ticker), tick(e.ticker), esc(e.time || "Time TBC"), e.epsEst ? esc(e.epsEst) : null])) : `<p>No confirmed dates in the next 75 days yet. Companies usually confirm their date two to four weeks ahead.</p>`}
+${upcoming.length ? table(["Date", "Company", "Ticker", "Timing", "Consensus EPS"], upcoming.map((e) => [fmtDate(e.date), link(e.ticker), tick(e.ticker), esc(e.time || "Time TBC"), e.epsEst ? esc(String(e.epsEst).replace(/^\((.*)\)$/, "-$1")) : null])) : `<p>No confirmed dates in the next 75 days yet. Companies usually confirm their date two to four weeks ahead.</p>`}
 ${notScheduled.length ? `<p>Not yet scheduled in the next 75 days: ${and(notScheduled.map(tick))}. Dates appear here once the company confirms them.</p>` : ""}
 <h2>What to watch in a space company's results</h2>
 <p>Earnings per share often matters less than usual, because many space companies are not yet profitable. Investors tend to focus instead on:</p>
