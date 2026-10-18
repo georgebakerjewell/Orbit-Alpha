@@ -7,6 +7,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { COVERED as profiles, ETFS, SECTOR_ORDER } from "../lib/roster.js";
 import { MARKET_PAGES, GUIDES } from "../lib/pagemeta.js";
+import { withConfirmed } from "../lib/earnings-confirmed.js";
 import { buildGuides } from "./guides.mjs";
 import { stockCard, OG_COLORS } from "./og.mjs";
 
@@ -91,7 +92,8 @@ const quotes = quotesRes?.quotes || {};
 const quotesDate = quotesRes?.asOf ? quotesRes.asOf.slice(0, 10) : null;
 const ytdBy = Object.fromEntries((perfRes?.series || []).filter((s) => s.kind === "stock").map((s) => [s.id, [...s.values].reverse().find((v) => v != null)]));
 const nextEarnings = {};
-(Array.isArray(earningsRes) ? earningsRes : []).forEach((e) => { if (e.date >= today && !nextEarnings[e.ticker]) nextEarnings[e.ticker] = e; });
+const earningsList = withConfirmed(Array.isArray(earningsRes) ? earningsRes : [], today);
+earningsList.forEach((e) => { if (e.date >= today && !nextEarnings[e.ticker]) nextEarnings[e.ticker] = e; });
 console.log(`prerender: ${Object.values(finBy).filter((d) => d?.snapshot).length} financials, ${Object.values(insidersBy).filter((d) => d?.m12).length} insider summaries`);
 console.log(`prerender: facts for ${Object.keys(quotes).length} quotes, ${Object.keys(ytdBy).length} YTD, ${Object.values(filingsBy).filter((f) => f.length).length} filings lists, ${Object.values(contractsBy).filter((c) => c.length).length} contract lists`);
 
@@ -270,7 +272,7 @@ ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): liv
     };
   }),
   ...buildGuides({
-    SITE, profiles, ETFS, SECTOR_ORDER, quotes, ytdBy, perfBy, earnings: Array.isArray(earningsRes) ? earningsRes : [],
+    SITE, profiles, ETFS, SECTOR_ORDER, quotes, ytdBy, perfBy, earnings: earningsList,
     filingsBy, contractsBy: contractsFull, finBy, insidersBy, asOf: tradingDay || today, today, count,
     esc, list, crumbs, ORG, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate,
   }),

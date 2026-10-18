@@ -2,6 +2,7 @@
 // Scans the next 75 days (weekdays only), all in parallel (about 0.2s), cached for 6 hours.
 
 import { US_ROSTER as ROSTER_LIST } from "../lib/roster.js"; // US listings only, so European tickers never match a US symbol
+import { withConfirmed } from "../lib/earnings-confirmed.js"; // company-announced dates win over Nasdaq projections
 
 const ROSTER = new Set(ROSTER_LIST);
 const DAYS_AHEAD = 75;
@@ -54,8 +55,7 @@ export default async function handler(req, res) {
     if (d.getUTCDay() !== 0 && d.getUTCDay() !== 6) dates.push(d.toISOString().slice(0, 10));
   }
 
-  const results = (await Promise.all(dates.map(fetchDay))).flat();
-  results.sort((a, b) => a.date.localeCompare(b.date));
+  const results = withConfirmed((await Promise.all(dates.map(fetchDay))).flat());
 
   // Only cache a non-empty result, so a temporary Nasdaq outage isn't cached for 6 hours.
   if (results.length) {

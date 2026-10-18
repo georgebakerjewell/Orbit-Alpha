@@ -4,6 +4,8 @@
 // come from the build-time data; the IPO and lock-up terms are fixed facts from the June 2026
 // prospectus, so they live here with their sources.
 
+import { CONFIRMED } from "../lib/earnings-confirmed.js";
+
 const IPO_PRICE = 135;
 const PRICING = "2026-06-11"; // lock-up day counts run from the pricing date
 const PROSPECTUS = "https://www.sec.gov/Archives/edgar/data/1181412/000162828026042639/spaceexplorationtechnologi.htm";
@@ -36,7 +38,12 @@ export function buildSpaceX(ctx) {
   const short = (iso) => new Date(iso + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
 
   /* ── The standard 180-day lock-up (employees and most pre-IPO investors) ── */
-  const q3 = e && e.date <= "2026-12-07" ? secondFullTradingDay(e.date, e.time) : null;
+  // The Q3 release is dated from SpaceX's confirmed Q3 results date (kept after it passes), or failing
+  // that from a projected date in the earnings calendar.
+  const q3Src = CONFIRMED.find((c) => c.ticker === "SPCX" && c.date >= "2026-10-01" && c.date <= "2026-12-07")
+    || (e && e.date <= "2026-12-07" ? e : null);
+  const q3Firm = !!q3Src?.confirmed || CONFIRMED.includes(q3Src);
+  const q3 = q3Src ? secondFullTradingDay(q3Src.date, q3Src.time) : null;
   const TRANCHES = [
     { date: "2026-08-06", what: "Second full trading day after Q2 results (4 Aug)", n: 911.5e6, pct: "20%", move: "+6%" },
     { date: dayN(70), what: "Day 70", n: 319.0e6, pct: "7%", move: "About -4%" },
@@ -53,10 +60,10 @@ export function buildSpaceX(ctx) {
   const released = TRANCHES.filter((t) => t.trade && t.trade < today);
   const releasedShares = released.reduce((s, t) => s + t.n, 0) + (today > "2026-09-10" ? 59.1e6 : 0);
   const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const whenText = (t) => `${t.q3 ? "expected " : ""}${DAYS[weekday(t.trade)]} ${fmtDate(t.trade)}${t.trade !== t.date ? ` (day ${daysBetween(PRICING, t.date)} is a ${DAYS[weekday(t.date)]})` : ""}${t.q3 ? ", based on the expected results date" : ""}`;
-  const dateCell = (t) => (t.trade ? `${t.q3 ? "Expected " : ""}${fmtDate(t.date)}${t.trade !== t.date ? ` (trades ${short(t.trade)})` : ""}` : q3Pending);
-  const sortKey = (t) => t.trade || (e ? secondFullTradingDay(e.date, e.time) : "2026-11-15"); // undated Q3 row sorts before 8 Dec
-  const q3Pending = e ? `Expected ${short(secondFullTradingDay(e.date, e.time))}` : "When Q3 results are dated";
+  const whenText = (t) => `${t.q3 && !q3Firm ? "expected " : ""}${DAYS[weekday(t.trade)]} ${fmtDate(t.trade)}${t.trade !== t.date ? ` (day ${daysBetween(PRICING, t.date)} is a ${DAYS[weekday(t.date)]})` : ""}${t.q3 ? (q3Firm ? `, two trading days after SpaceX's Q3 results on ${fmtDate(q3Src.date)}` : ", based on the expected results date") : ""}`;
+  const dateCell = (t) => (t.trade ? `${t.q3 && !q3Firm ? "Expected " : ""}${fmtDate(t.date)}${t.trade !== t.date ? ` (trades ${short(t.trade)})` : ""}` : q3Pending);
+  const sortKey = (t) => t.trade || "2026-11-15"; // an undated Q3 row sorts before 8 Dec // undated Q3 row sorts before 8 Dec
+  const q3Pending = "When Q3 results are dated";
 
   /* ── Extended lock-up (Musk and certain large holders) ── */
   const EXTENDED = [
@@ -97,7 +104,7 @@ export function buildSpaceX(ctx) {
   ]);
   const buyPage = page("/spacex-stock", "How to buy SpaceX stock (SPCX)",
     `<p>SpaceX became a public company on 12 June 2026, when its Class A shares began trading on Nasdaq under the ticker <a href="/stocks/spcx">SPCX</a>. Buying it now works like buying any other US share: open an account with a platform that offers US stocks, fund it, search for SPCX and place an order. This guide covers each step, with the details that matter for UK investors: ISAs, currency fees and the W-8BEN form.</p>
-${price != null || next ? `<div class="oa-callout"><p><b>SpaceX stock today.</b> ${priceLine} ${nextLine}${e ? ` SpaceX is expected to report its next results on ${fmtDate(e.date)}.` : ""}</p><p>Live price and chart, filings and news: <a href="/stocks/spcx">SPCX stock page</a>.</p></div>` : ""}
+${price != null || next ? `<div class="oa-callout"><p><b>SpaceX stock today.</b> ${priceLine} ${nextLine}${e ? ` SpaceX ${CONFIRMED.some((c) => c.ticker === "SPCX" && c.date === e.date) ? "reports" : "is expected to report"} its next results on ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${esc(e.time.toLowerCase())}` : ""}.` : ""}</p><p>Live price and chart, filings and news: <a href="/stocks/spcx">SPCX stock page</a>.</p></div>` : ""}
 <h2>How to buy SpaceX shares, step by step</h2>
 <ol>
 <li><b>Choose a platform and account.</b> Any broker that offers US shares will list SPCX. In the UK, decide first whether to buy inside a Stocks and Shares ISA (no UK tax on gains), a SIPP (pension, with tax relief on contributions) or an ordinary dealing account.</li>
@@ -171,7 +178,7 @@ ${sources([
   /* ═══ Page 2: Lockup calendar ═══════════════════════════════════════════════ */
   const lockFaq = faq([
     ["When does the SpaceX lockup expire?", "The main 180-day lock-up for employees and most pre-IPO investors ends on 8 December 2026. A group of large holders and Elon Musk are under a longer lock-up that runs into mid-2027."],
-    ["How many SpaceX shares unlock after Q3 earnings?", `Up to 1.3 billion shares, 28% of the shares under the main lock-up, become free to sell at the start of the second full trading day after SpaceX reports third-quarter results.${q3Row.trade ? ` On the current earnings date that is ${fmtDate(q3Row.trade)}.` : e ? ` With results expected on ${fmtDate(e.date)}, that would be ${fmtDate(secondFullTradingDay(e.date, e.time))}.` : " SpaceX had not confirmed the results date at the last update."}`],
+    ["How many SpaceX shares unlock after Q3 earnings?", `Up to 1.3 billion shares, 28% of the shares under the main lock-up, become free to sell at the start of the second full trading day after SpaceX reports third-quarter results.${q3Row.trade ? (q3Firm ? ` SpaceX reports Q3 results after the close on ${fmtDate(q3Src.date)}, so the release is on ${fmtDate(q3Row.trade)}.` : ` On the expected results date that would be ${fmtDate(q3Row.trade)}.`) : " SpaceX had not confirmed the results date at the last update."}`],
     ["When can Elon Musk sell SpaceX stock?", `Not before ${fmtDate(musk)}. Musk's lock-up lasts 366 days from the IPO pricing on 11 June 2026, with no early release of any kind. Day 366 is ${fmtDate(dayN(366))}, a ${weekday(dayN(366)) === 6 ? "Saturday" : "weekday"}, so the first trading day he could sell is ${fmtDate(musk)}.`],
     ["Does a lockup expiry mean insiders will sell?", "No. An unlock gives holders permission to sell, not an obligation. Many employees and investors keep their shares, and sales by directors and officers show up afterwards in Form 4 filings, often after a Form 144 notice."],
     ["What happened to SPCX stock on past unlock days?", "Moves were mixed: up about 6% on the first release on 6 August, down about 4% on 20 August and 9 September, roughly flat on 24 September and up about 1% on 9 October. Across the first six releases the stock rose about 50%, from around $108 before the first one."],
@@ -187,7 +194,9 @@ ${table(["Date", "Release", "Shares, up to", "Share of pool", "Status", "SPCX on
 ${list([
       "On 6 August a price-based bonus could have released a further 10%, if SPCX had closed at $175.50 or more (30% above the IPO price) on five of the ten trading days to 4 August. It did not, so those shares stayed locked.",
       "On 10 September, a separate block of up to 59.1 million shares held by affiliates also became free. Affiliates sell under SEC Rule 144 volume limits, so these shares can only reach the market gradually.",
-      `The Q3 release depends on when SpaceX reports. ${e ? `Results are expected on ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? ` (${esc(e.time.toLowerCase())})` : ""}, which would put the release on ${fmtDate(secondFullTradingDay(e.date, e.time))}.` : "SpaceX had not confirmed a date at the last update; analysts expect results in November."} If results came after 8 December, the full expiry would release these shares first.`,
+      q3Firm
+        ? `SpaceX confirmed on 16 October that it will post Q3 results after the market closes on ${DAYS[weekday(q3Src.date)]} ${fmtDate(q3Src.date)}. ${fmtDate(addDays(q3Src.date, 1))} is the first full trading day after the release, so the Q3 shares become free at the start of ${DAYS[weekday(q3Row.trade)]} ${fmtDate(q3Row.trade)}${q3Row.trade < tradingOnOrAfter(dayN(135)) ? ", before the day-135 release" : ""}.`
+        : `The Q3 release depends on when SpaceX reports. ${q3Src ? `Results are expected on ${fmtDate(q3Src.date)}, which would put the release on ${fmtDate(q3Row.trade)}.` : "SpaceX had not confirmed a date at the last update."} If results came after 8 December, the full expiry would release these shares first.`,
       "Shares bought in the IPO through the directed share programme (up to 5% of the offering, reserved for employees and people chosen by SpaceX) were never locked up.",
     ])}
 <h2>Extended lock-up: Musk and the largest holders</h2>
@@ -204,6 +213,7 @@ ${salesHtml}
 ${lockFaq.html}
 ${sources([
       [PROSPECTUS, "SpaceX IPO prospectus (Form 424B4), SEC EDGAR, 12 June 2026"],
+      ["https://ir.spacex.com/updates/releases-details/2026/SpaceX-to-Post-Third-Quarter-2026-Results-and-Host-Webcast-on-October-20-2026-2026-QssQGye3im/default.aspx", "SpaceX: Third quarter 2026 results date (16 October 2026)"],
       ["https://www.cnbc.com/2026/07/21/spacex-spcx-earnings-lock-up-expiration.html", "CNBC: SpaceX sets earnings date, triggering first big share unlock"],
       ["https://financefeeds.com/spacex-lock-up-schedule-pre-ipo-holders/", "FinanceFeeds: SpaceX lock-up schedule, when pre-IPO holders can sell"],
       ["https://www.fool.com/investing/2026/10/13/spacex-stock-has-climbed-about-50-through-6-insider-share-unlocks-the-biggest-is-still-ahead/", "The Motley Fool: SpaceX stock through six insider share unlocks"],
@@ -212,7 +222,7 @@ ${sources([
 <p class="oa-note">Release dates and share counts are from the IPO prospectus as reported by the sources above; share counts are maximums. Live figures and filings as of ${fmtDate(asOf)}, refreshed whenever the site updates. Orbit Alpha is information, not investment advice.</p>`,
     [lockFaq.ld, {
       "@type": "ItemList", name: "SpaceX lock-up release dates",
-      itemListElement: TRANCHES.filter((t) => t.trade).map((t, i) => ({ "@type": "ListItem", position: i + 1, name: `${fmtDate(t.trade)}: ${t.what}, up to ${shares(t.n)} shares` })),
+      itemListElement: [...TRANCHES].filter((t) => t.trade).sort((a, b) => a.trade.localeCompare(b.trade)).map((t, i) => ({ "@type": "ListItem", position: i + 1, name: `${fmtDate(t.trade)}: ${t.what}, up to ${shares(t.n)} shares` })),
     }],
     latest(asOf, sales[0]?.date),
     {
