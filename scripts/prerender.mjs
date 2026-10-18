@@ -8,6 +8,7 @@ import { dirname } from "node:path";
 import { COVERED as profiles, ETFS, SECTOR_ORDER } from "../lib/roster.js";
 import { MARKET_PAGES, GUIDES } from "../lib/pagemeta.js";
 import { buildGuides } from "./guides.mjs";
+import { stockCard, OG_COLORS } from "./og.mjs";
 
 const SITE = "https://www.orbitalpha.cloud";
 const X_HANDLE = "OrbitAlphaApp";
@@ -216,7 +217,18 @@ const routes = [
       [`Where does Orbit Alpha get ${t} data?`, us ? "Prices from Yahoo Finance, filings and insider trades from SEC EDGAR, and contract awards from USAspending.gov." : "Prices from Yahoo Finance, with news and launches from public sources. Non-US listings do not file with the SEC."],
     ]);
     const facts = stockFacts(t, p.name);
+    const quote = quotes[t];
+    const og = {
+      ticker: t, name: p.name, sector: p.sector, path: `/stocks/${t.toLowerCase()}`,
+      asOf: quote?.price != null ? fmtDate(quotesDate || today) : null,
+      stats: [
+        ...(quote?.price != null ? [["Price", fmtPrice(quote.price, quote.currency)]] : []),
+        ...(ytdBy[t] != null ? [["Year to date", fmtPct(ytdBy[t]), ytdBy[t] >= 0 ? OG_COLORS.green : OG_COLORS.red]] : []),
+        ...(quote?.marketCap ? [["Market cap", fmtCap(quote.marketCap)]] : []),
+      ],
+    };
     return {
+      og,
       path: `/stocks/${t.toLowerCase()}`,
       lastmod: facts.lastmod,
       title: `${t} Stock: ${p.name} News, Filings and Contracts | Orbit Alpha`,
@@ -229,7 +241,7 @@ const routes = [
 ${facts.html}
 <h2>${esc(p.name)} key facts</h2>${list([`Ticker: ${t}`, `Listing: ${us ? "US (NYSE or Nasdaq)" : esc(p.listing)}`, `Sector: ${p.sector}`, `Prices shown in: ${p.currency === "GBp" ? "pence" : p.currency || "US dollars"}`, `On this page: ${us ? "live price and chart, SEC filings, insider trades, government contracts, earnings date, launches and news" : "live price and chart, launches and news"}`])}
 ${storiesHtml(stories.filter((x) => x.tickers?.includes(t)).slice(0, 5), `${esc(p.name)} news from Orbit Alpha`)}
-${issueArchive.some((x) => x.tickers.includes(t)) ? `<h2>${esc(p.name)} in the Orbit Alpha newsletter</h2>${list(issueArchive.filter((x) => x.tickers.includes(t)).slice(0, 6).map(issueLink))}` : ""}
+${issueArchive.some((x) => x.tickers.includes(t)) ? `<h2>${esc(p.name)} in the Orbit Alpha newsletter</h2>${list(issueArchive.filter((x) => x.tickers.includes(t)).slice(0, 3).map(issueLink))}` : ""}
 <h2>${esc(p.name)} research links</h2>${list([ext(yahoo(t), `${t} quote and financials on Yahoo Finance`), ...(us ? [ext(edgar(t), `${esc(p.name)} filings on SEC EDGAR`), ext(`https://www.usaspending.gov/search/?hash=&keyword=${encodeURIComponent(p.name)}`, `${esc(p.name)} awards on USAspending.gov`)] : [])])}
 <h2>Other ${p.sector.toLowerCase()} stocks</h2>${list(peers.map(stockLink))}
 ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): live price, filings and contracts`)}`,
@@ -263,7 +275,7 @@ ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): liv
   }),
 ];
 
-function render({ path, title, description, body, ld = [] }) {
+function render({ path, title, description, body, ld = [], ogImage }) {
   const url = SITE + path;
   const head = [
     `<title>${esc(title)}</title>`,
@@ -274,12 +286,12 @@ function render({ path, title, description, body, ld = [] }) {
     `<meta property="og:title" content="${esc(title)}" />`,
     `<meta property="og:description" content="${esc(description)}" />`,
     `<meta property="og:url" content="${url}" />`,
-    `<meta property="og:image" content="${SITE}/og.png" />`,
+    `<meta property="og:image" content="${SITE}${ogImage || "/og.png"}" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:site" content="@${X_HANDLE}" />`,
-    `<meta name="twitter:image" content="${SITE}/og.png" />`,
+    `<meta name="twitter:image" content="${SITE}${ogImage || "/og.png"}" />`,
     ld.length ? `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": ld }).replace(/</g, "\\u003c")}</script>` : "",
   ].filter(Boolean).join("\n    ");
   return template
@@ -287,6 +299,20 @@ function render({ path, title, description, body, ld = [] }) {
     .replace(/<title>[\s\S]*?<\/title>/, head)
     .replace('<div id="root"></div>', `<div id="root"><main class="pre">${body}${footer}</main></div>`);
 }
+
+// Share cards for stock pages. A failure here only means the generic site image is used.
+let cards = 0;
+mkdirSync(new URL("og/stocks/", DIST).pathname, { recursive: true });
+for (const route of routes.filter((r) => r.og)) {
+  try {
+    writeFileSync(new URL(`og/stocks/${route.og.ticker.toLowerCase()}.png`, DIST), await stockCard(route.og));
+    route.ogImage = `/og/stocks/${route.og.ticker.toLowerCase()}.png`;
+    cards++;
+  } catch (e) {
+    console.log(`og: ${route.og.ticker} failed (${e.message})`);
+  }
+}
+console.log(`og: drew ${cards} stock share cards`);
 
 for (const route of routes) {
   // cleanUrls in vercel.json serves /stocks/rklb from stocks/rklb.html
@@ -307,3 +333,26 @@ writeFileSync(
 writeFileSync(new URL("robots.txt", DIST), `User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE}/sitemap.xml\n`);
 
 console.log(`prerender: wrote ${routes.length} pages, sitemap.xml and robots.txt`);
+
+// IndexNow: tell Bing, DuckDuckGo and other IndexNow search engines which pages changed today,
+// so they recrawl without needing a Bing Webmaster account. Production deploys only; the key file
+// public/${INDEXNOW_KEY}.txt proves the site owns the key. INDEXNOW_ALL=1 submits every page.
+const INDEXNOW_KEY = "e4c892f1da1e8baa936548f9dcf68053";
+if (process.env.VERCEL_ENV === "production" && !OFFLINE) {
+  // Every page is submitted for the first few days after IndexNow went live (18 Oct 2026), then only changed ones.
+  const all = process.env.INDEXNOW_ALL === "1" || today <= "2026-10-21";
+  const changed = routes.filter((r) => all || r.lastmod === today || r.lastmod === tradingDay).map((r) => SITE + r.path);
+  if (changed.length) {
+    try {
+      const res = await fetch("https://api.indexnow.org/indexnow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify({ host: "www.orbitalpha.cloud", key: INDEXNOW_KEY, keyLocation: `${SITE}/${INDEXNOW_KEY}.txt`, urlList: changed.slice(0, 10000) }),
+        signal: AbortSignal.timeout(15000),
+      });
+      console.log(`indexnow: submitted ${changed.length} URLs (HTTP ${res.status})`);
+    } catch (e) {
+      console.log(`indexnow: skipped (${e.message})`);
+    }
+  }
+}

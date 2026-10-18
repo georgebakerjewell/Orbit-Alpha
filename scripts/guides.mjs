@@ -166,5 +166,30 @@ ${table(["Fund", "Ticker", ...RANGES.map(([, l]) => l)], [
 <p>A fund spreads risk across many companies, which matters in a sector where a single launch failure, lost contract or share offering can move one stock 20% in a day. The trade-off is that it dilutes the effect of the winners, and the largest holdings drive most of the return. Investors who want exposure to a particular theme, such as launch, satellite broadband or Earth observation, often find the stock-by-stock route more precise. The <a href="/space-stocks">list of space stocks</a> groups every company by sector.</p>
 ${asOfLine("Prices from Yahoo Finance.")}`);
 
-  return [listPage, insiderPage, runwayPage, contractsPage, earningsPage, etfPage];
+  /* ── 7. UK and European space stocks ─────────────────────────────────────── */
+  const euro = Object.keys(profiles).filter((t) => profiles[t].listing).sort((a, b) => capOf(b) - capOf(a));
+  const euroRow = (t) => [link(t), tick(t), esc(profiles[t].listing), quotes[t]?.price != null ? fmtPrice(quotes[t].price, quotes[t].currency) : null, capOf(t) ? fmtCap(capOf(t)) : null, ytdBy[t] != null ? fmtPct(ytdBy[t]) : null];
+  const ssit = ETFS.SSIT;
+  const euroFaq = faq([
+    ["Are there any UK-listed space stocks?", `Yes. Filtronic (FTC) is listed on London's AIM market and makes components used in low Earth orbit satellite networks.${ssit ? " The Seraphim Space Investment Trust (SSIT), listed on the London Stock Exchange, owns stakes in mainly private space companies." : ""}`],
+    ["Can I hold European space stocks in an ISA or SIPP?", "Shares listed on a recognised stock exchange can generally be held in a Stocks and Shares ISA or a SIPP, and AIM shares also qualify for ISAs. Whether a particular share is available depends on your platform, so check with your provider."],
+    ["Do I pay stamp duty on UK space stocks?", "Buying shares in UK companies usually carries 0.5% stamp duty, but shares traded on AIM, such as Filtronic, are exempt. Other European markets have their own rules, which your broker will show at the point of purchase."],
+    ["Which is the largest European space stock?", euro.length && capOf(euro[0]) ? `Of the European space companies Orbit Alpha covers, ${profiles[euro[0]].name} is currently the largest by market capitalisation, at about ${fmtCap(capOf(euro[0]))}.` : "Eutelsat and SES, the two big satellite operators, are the largest by market capitalisation."],
+  ]);
+  const euroPage = page("/space-stocks/uk-europe", "UK and European space stocks",
+    `<p>Most attention goes to US space stocks, but Europe has its own listed space industry: two of the world's biggest satellite operators, a German satellite maker, the company behind Europe's Vega rocket, Scandinavian small-satellite builders and a UK component supplier. This page lists every UK and European space company Orbit Alpha covers.</p>
+<h2>UK and European space stocks</h2>
+${table(["Company", "Ticker", "Listing", "Price", "Market cap", "YTD"], euro.map(euroRow))}
+<p>Prices are in each stock's own currency (euros, Swedish kronor, or pence for London). Market caps are converted to US dollars so they can be compared with the US names on the <a href="/space-stocks">full list of space stocks</a>.</p>
+${ssit ? `<h2>Seraphim Space Investment Trust</h2><p>The Seraphim Space Investment Trust (SSIT) is a London-listed investment trust that mainly holds stakes in private space companies. Its share price can trade at a discount or premium to the value of what it owns. It appears alongside the space ETFs on the <a href="/space-etfs">space ETF comparison</a>.</p>` : ""}
+<h2>How European space stocks differ</h2>
+<p>European space companies depend more on government and institutional customers than most of their US peers. The European Space Agency, the EU's own programmes such as the IRIS² secure-connectivity constellation, and national defence budgets drive much of their order books. That makes contract announcements and European budget decisions as important for these shares as launches or quarterly results.</p>
+<p>The satellite operators, Eutelsat and SES, are mature businesses with large geostationary fleets that are moving into low Earth orbit and multi-orbit services. Eutelsat owns OneWeb's low Earth orbit constellation; SES bought Intelsat. The manufacturers and launch companies are smaller and more exposed to the timing of individual programmes.</p>
+<h2>Buying them from the UK</h2>
+<p>Most UK investment platforms offer the larger European markets, including Paris, Frankfurt, Milan and Stockholm, though fees for foreign shares and currency conversion vary widely between providers. Shares on these markets and on London's AIM can generally be held in a Stocks and Shares ISA or a SIPP; check your platform's list of eligible shares. US-listed space stocks can be held in an ISA too, after completing a W-8BEN form with your provider.</p>
+<p>None of this is tax or investment advice. Rules and platform fees change, so confirm the details with your provider before investing.</p>
+${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the latest reported share counts, converted to US dollars.")}`,
+    [euroFaq.ld]);
+
+  return [listPage, insiderPage, runwayPage, contractsPage, earningsPage, euroPage, etfPage];
 }

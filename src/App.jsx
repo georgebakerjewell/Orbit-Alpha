@@ -2052,7 +2052,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       {issueArchive.some((x) => x.tickers.includes(ticker)) && (
         <div style={{ fontSize: 11, color: C.muted, marginBottom: 12, lineHeight: 1.8 }}>
           <span>{ticker} in the newsletter: </span>
-          {issueArchive.filter((x) => x.tickers.includes(ticker)).slice(0, 6).map((x, i) => (
+          {issueArchive.filter((x) => x.tickers.includes(ticker)).slice(0, 3).map((x, i) => (
             <span key={x.issue}>{i ? " · " : ""}<Link to={`/newsletter/issue-${x.issue}`} className="oa-link" style={{ color: C.blue }}>Issue {x.issue}: {x.title}</Link></span>
           ))}
         </div>
