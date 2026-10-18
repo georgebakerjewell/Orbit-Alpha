@@ -6,6 +6,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { COVERED as profiles, ETFS, SECTOR_ORDER } from "../lib/roster.js";
+import { MARKET_PAGES } from "../lib/pagemeta.js";
 
 const SITE = "https://www.orbitalpha.cloud";
 const X_HANDLE = "OrbitAlphaApp";
@@ -43,6 +44,80 @@ const faq = (pairs) => ({
 const crumbs = (items) => ({ "@type": "BreadcrumbList", itemListElement: items.map(([name, path], i) => ({ "@type": "ListItem", position: i + 1, name, item: SITE + path })) });
 const ORG = { "@type": "Organization", "@id": `${SITE}/#org`, name: "Orbit Alpha", url: SITE, logo: `${SITE}/icon-512.png`, sameAs: [`https://x.com/${X_HANDLE}`, REDDIT] };
 
+// ── Live facts baked into the static HTML ─────────────────────────────────────────────
+// Prices, market caps, YTD returns, earnings dates, filings and contracts are read from the
+// live site's own API (the previous deployment) at build time, so search engines see real
+// numbers on every stock page, not just a template. Every call is optional: if the API is slow
+// or down the page is still written, just without that section. PRERENDER_OFFLINE=1 skips it.
+const today = new Date().toISOString().slice(0, 10);
+const OFFLINE = process.env.PRERENDER_OFFLINE === "1";
+async function api(path, timeoutMs = 25000) {
+  if (OFFLINE) return null;
+  try {
+    const res = await fetch(SITE + path, { signal: AbortSignal.timeout(timeoutMs), headers: { "User-Agent": "orbit-alpha-prerender" } });
+    return res.ok ? await res.json() : null;
+  } catch {
+    return null;
+  }
+}
+// Run fn over items a few at a time, so the build doesn't hammer the API (or SEC behind it).
+async function pool(items, size, fn) {
+  const out = {};
+  for (let i = 0; i < items.length; i += size) {
+    const batch = items.slice(i, i + size);
+    const results = await Promise.all(batch.map(fn));
+    batch.forEach((item, j) => { out[item] = results[j]; });
+  }
+  return out;
+}
+
+const tickers = Object.keys(profiles);
+const usTickers = tickers.filter((t) => !profiles[t].listing);
+const [quotesRes, perfRes, earningsRes] = await Promise.all([api("/api/quotes"), api("/api/performance?range=ytd", 40000), api("/api/earnings")]);
+const filingsBy = await pool(usTickers, 6, (t) => api(`/api/filings?ticker=${t}`).then((d) => d?.filings || []));
+const contractsBy = await pool(usTickers, 6, (t) => api(`/api/contracts?ticker=${t}`).then((d) => d?.awards || []));
+const quotes = quotesRes?.quotes || {};
+const quotesDate = quotesRes?.asOf ? quotesRes.asOf.slice(0, 10) : null;
+const ytdBy = Object.fromEntries((perfRes?.series || []).filter((s) => s.kind === "stock").map((s) => [s.id, [...s.values].reverse().find((v) => v != null)]));
+const nextEarnings = {};
+(Array.isArray(earningsRes) ? earningsRes : []).forEach((e) => { if (e.date >= today && !nextEarnings[e.ticker]) nextEarnings[e.ticker] = e; });
+console.log(`prerender: facts for ${Object.keys(quotes).length} quotes, ${Object.keys(ytdBy).length} YTD, ${Object.values(filingsBy).filter((f) => f.length).length} filings lists, ${Object.values(contractsBy).filter((c) => c.length).length} contract lists`);
+
+const CUR = { USD: "$", EUR: "€", GBP: "£", CAD: "C$", SEK: "SEK ", DKK: "DKK ", NOK: "NOK " };
+const fmtPrice = (p, cur = "USD") => (cur === "GBp" ? `${p.toFixed(1)}p` : `${CUR[cur] ?? cur + " "}${p >= 100 ? p.toFixed(2) : p >= 1 ? p.toFixed(2) : p.toFixed(3)}`);
+const fmtCap = (n) => (n >= 1e12 ? `$${(n / 1e12).toFixed(2)}T` : n >= 1e9 ? `$${(n / 1e9).toFixed(2)}B` : `$${(n / 1e6).toFixed(0)}M`);
+const fmtPct = (n) => `${n >= 0 ? "+" : ""}${n.toFixed(1)}%`;
+const fmtUsd = (n) => (n >= 1e9 ? `$${(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : `$${Math.round(n / 1e3)}K`);
+const fmtDate = (iso) => new Date(iso + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+const latest = (...dates) => dates.filter(Boolean).sort().pop() || null;
+
+function stockFacts(t, name) {
+  const q = quotes[t], ytd = ytdBy[t], e = nextEarnings[t];
+  const filings = (filingsBy[t] || []).slice(0, 5), awards = (contractsBy[t] || []).slice(0, 5);
+  const rows = [];
+  if (q?.price != null) rows.push(`Share price: ${fmtPrice(q.price, q.currency)}${q.changePct != null ? ` (${fmtPct(q.changePct)} on the day)` : ""}`);
+  if (q?.marketCap) rows.push(`Market cap: ${fmtCap(q.marketCap)}`);
+  if (ytd != null) rows.push(`Year to date: ${fmtPct(ytd)}`);
+  if (e) rows.push(`Next earnings: ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}${e.epsEst ? ` (consensus EPS ${esc(e.epsEst)})` : ""}`);
+  let html = "";
+  if (rows.length) html += `<h2>${esc(name)} (${t}) stock at a glance</h2>${list(rows)}<p>Figures as of ${fmtDate(quotesDate || today)}. Prices on the live page update through the trading day.</p>`;
+  if (filings.length) html += `<h2>Latest ${esc(name)} SEC filings</h2>${list(filings.map((f) => `${fmtDate(f.date)}: ${esc(f.label || f.form)}${f.owner ? `, ${esc(f.owner)}${f.role ? ` (${esc(f.role)})` : ""}` : ""}${f.value ? `, ${fmtUsd(f.value)}` : ""} (Form ${esc(f.form)})`))}`;
+  if (awards.length) html += `<h2>Recent ${esc(name)} government contracts</h2>${list(awards.map((a) => `${fmtDate(a.start)}: ${fmtUsd(a.amount)} from ${esc(a.subAgency || a.agency)}${a.description ? `, ${esc(a.description.slice(0, 140))}` : ""}`))}`;
+  return { html, lastmod: latest(filings[0]?.date, awards[0]?.start) };
+}
+const newestFiling = latest(...Object.values(filingsBy).map((f) => f[0]?.date));
+const newestAward = latest(...Object.values(contractsBy).map((a) => a[0]?.start));
+const MONTHS = { January: "01", February: "02", March: "03", April: "04", May: "05", June: "06", July: "07", August: "08", September: "09", October: "10", November: "11", December: "12" };
+const issueDate = (() => {
+  try {
+    const [d, m, y] = JSON.parse(readFileSync(new URL("../src/issues.json", import.meta.url), "utf8"))[0].date.split(" ");
+    return MONTHS[m] ? `${y}-${MONTHS[m]}-${d.padStart(2, "0")}` : null;
+  } catch {
+    return null;
+  }
+})();
+const tradingDay = quotesDate || perfRes?.asOf || null;
+
 const count = Object.keys(profiles).length;
 const homeFaq = faq([
   ["What are space stocks?", "Space stocks are publicly traded companies whose business is mainly in space: rocket launch, satellite communications, Earth observation, spacecraft and component manufacturing, and lunar and human spaceflight."],
@@ -67,39 +142,39 @@ const routes = [
       `<a href="/markets/filings">Read SEC filings and insider trades</a> as they are published.`,
       `<a href="/newsletter">Subscribe to the newsletter</a> for a weekly briefing.`,
     ])}${sectorDirectory}${sources}${homeFaq.html}`,
+    lastmod: tradingDay,
     ld: [ORG, { "@type": "WebSite", "@id": `${SITE}/#site`, name: "Orbit Alpha", url: SITE, publisher: { "@id": `${SITE}/#org` } }, homeFaq.ld],
   },
   {
     path: "/markets/performance",
-    title: "Space Stocks vs the S&P 500: ETF and Stock Performance | Orbit Alpha",
-    description: "Compare space ETFs (UFO, ARKX, ROKT, MARS, NASA) and every space stock we cover against the S&P 500 and Nasdaq 100.",
+    title: MARKET_PAGES.performance.title,
+    description: MARKET_PAGES.performance.description,
+    lastmod: perfRes?.asOf || tradingDay,
     body: `<h1>Space stocks vs the S&amp;P 500</h1>
 <p>This page compares the performance of space stocks and space ETFs against the S&amp;P 500 and Nasdaq 100 over one month, three months, six months, year to date and one year. Every line starts at zero on the first trading day of the period, so you can see at a glance whether space stocks have beaten the wider market.</p>
 <p>The sector summary splits the space stocks we cover into launch, satellite communications, Earth observation, space infrastructure and exploration, and shows each sector's equal-weighted return with its best and worst performer. Tick any stock to add it to the chart.</p>
 <h2>Space ETFs compared</h2>${list(Object.entries(ETFS).map(([t, e]) => `${esc(e.name)} (${t})`))}${sectorDirectory}${sources}`,
     ld: [crumbs([["Home", "/"], ["Markets", "/markets"], ["Performance", "/markets/performance"]])],
   },
-  ...[
-    ["", "Dashboard", "Live space stock prices, market caps and daily moves for every company Orbit Alpha covers, with a watchlist and filters by sector. Click any company for its full page with chart, filings, contracts and news."],
-    ["launches", "Launches", "Upcoming orbital launches, tagged to the listed space companies flying the rocket or building the payload, so you can see which stocks have a launch coming up this week."],
-    ["earnings", "Earnings", "Upcoming earnings dates for US-listed space stocks, with the reporting time and the consensus estimate where one is published."],
-    ["contracts", "Contracts", "US government contract awards to listed space companies from NASA, the Space Force, the Department of Defense and other agencies, taken from USAspending.gov."],
-    ["filings", "Filings", "The latest SEC filings from US-listed space companies: insider buys and sales, share offerings, major shareholder stakes and quarterly and annual reports."],
-  ].map(([tab, label, text]) => ({
-    path: tab ? `/markets/${tab}` : "/markets",
-    title: `Space Stocks ${label} | Orbit Alpha`,
-    description: "Live prices, launches, earnings dates, SEC filings and government contract awards for publicly traded space companies.",
-    body: `<h1>Space stocks ${label.toLowerCase()}</h1><p>${text}</p><p>Orbit Alpha's space stocks ${label.toLowerCase()} page is part of a free dashboard covering ${count} listed space companies and the main space ETFs. Data updates through the trading day.</p>${sectorDirectory}${sources}`,
-    ld: [crumbs([["Home", "/"], ["Markets", "/markets"], ...(tab ? [[label, `/markets/${tab}`]] : [])])],
-  })),
+  ...["", "launches", "earnings", "contracts", "filings"].map((tab) => {
+    const { label, title, description, text } = MARKET_PAGES[tab];
+    return {
+      path: tab ? `/markets/${tab}` : "/markets",
+      title,
+      description,
+      lastmod: { contracts: newestAward, filings: newestFiling }[tab] || tradingDay,
+      body: `<h1>Space stocks ${label.toLowerCase()}</h1><p>${text}</p><p>Orbit Alpha's space stocks ${label.toLowerCase()} page is part of a free dashboard covering ${count} listed space companies and the main space ETFs. Data updates through the trading day.</p>${sectorDirectory}${sources}`,
+      ld: [crumbs([["Home", "/"], ["Markets", "/markets"], ...(tab ? [[label, `/markets/${tab}`]] : [])])],
+    };
+  }),
   {
-    path: "/news", title: "Space Stock News, Filings and Contract Wins | Orbit Alpha",
+    path: "/news", title: "Space Stock News, Filings and Contract Wins | Orbit Alpha", lastmod: latest(newestFiling, newestAward),
     description: "Live space stock news, SEC filings, insider trades and government contract wins in one feed, filterable by company.",
     body: `<h1>Space stock news</h1><p>One feed for everything that moves space stocks: news headlines from financial and industry sources, SEC filings and insider trades, and US government contract wins. Filter by company to follow just the stocks you hold, or by type to see only filings or contracts.</p><p>Key stories, such as large contracts, insider buying and share offerings, are highlighted so they stand out from routine news.</p>${sectorDirectory}${sources}`,
     ld: [crumbs([["Home", "/"], ["News", "/news"]])],
   },
   {
-    path: "/newsletter", title: "The Orbit Alpha Newsletter | Free Weekly Space Stocks Briefing",
+    path: "/newsletter", lastmod: issueDate, title: "The Orbit Alpha Newsletter | Free Weekly Space Stocks Briefing",
     description: "Every Sunday: the week in space stocks, analyst target changes and one stock deep dive. Free.",
     body: `<h1>The Orbit Alpha newsletter</h1><p>Every Sunday the Orbit Alpha newsletter sums up the week in space stocks: the biggest moves and why they happened, analyst rating and price target changes, contract wins, launches and filings worth knowing about, and one deep dive on a single company.</p><p>The newsletter is free, with no paywall. It is written for investors who follow space stocks and want clear, sourced numbers rather than hype. You can unsubscribe at any time.</p><h2>What each issue covers</h2>${list(["The week's biggest space stock moves and what drove them", "Analyst upgrades, downgrades and price target changes", "Government contract wins and notable SEC filings", "Launches and events coming up next week", "A deep dive on one company"])}${sectorDirectory}${sources}`,
     ld: [crumbs([["Home", "/"], ["Newsletter", "/newsletter"]])],
@@ -119,8 +194,10 @@ const routes = [
       [`Which companies are similar to ${p.name}?`, `Other ${p.sector.toLowerCase()} stocks on Orbit Alpha include ${peers.slice(0, 5).map((x) => profiles[x].name).join(", ")}.`],
       [`Where does Orbit Alpha get ${t} data?`, us ? "Prices from Yahoo Finance, filings and insider trades from SEC EDGAR, and contract awards from USAspending.gov." : "Prices from Yahoo Finance, with news and launches from public sources. Non-US listings do not file with the SEC."],
     ]);
+    const facts = stockFacts(t, p.name);
     return {
       path: `/stocks/${t.toLowerCase()}`,
+      lastmod: facts.lastmod,
       title: `${t} Stock: ${p.name} News, Filings and Contracts | Orbit Alpha`,
       description: p.listing
         ? `${p.name} (${t}, ${p.listing}) live price, chart, news and launches. ${p.about}`
@@ -128,6 +205,7 @@ const routes = [
       body: `<h1>${t} stock: ${esc(p.name)}</h1>
 <p>${esc(p.about)}</p>
 <p>This page tracks ${esc(p.name)} (${t}) stock in one place: the live ${t} share price and chart${us ? ", recent SEC filings and insider trades, US government contract awards, the next earnings date" : ` (listed on ${esc(p.listing)})`}, upcoming launches involving the company, and the latest ${esc(p.name)} news. ${esc(p.name)} is one of the ${count} space stocks Orbit Alpha covers, in the ${p.sector.toLowerCase()} sector. ${SECTOR_TEXT[p.sector]}</p>
+${facts.html}
 <h2>${esc(p.name)} key facts</h2>${list([`Ticker: ${t}`, `Listing: ${us ? "US (NYSE or Nasdaq)" : esc(p.listing)}`, `Sector: ${p.sector}`, `Prices shown in: ${p.currency === "GBp" ? "pence" : p.currency || "US dollars"}`, `On this page: ${us ? "live price and chart, SEC filings, insider trades, government contracts, earnings date, launches and news" : "live price and chart, launches and news"}`])}
 <h2>${esc(p.name)} research links</h2>${list([ext(yahoo(t), `${t} quote and financials on Yahoo Finance`), ...(us ? [ext(edgar(t), `${esc(p.name)} filings on SEC EDGAR`), ext(`https://www.usaspending.gov/search/?hash=&keyword=${encodeURIComponent(p.name)}`, `${esc(p.name)} awards on USAspending.gov`)] : [])])}
 <h2>Other ${p.sector.toLowerCase()} stocks</h2>${list(peers.map(stockLink))}
@@ -173,12 +251,13 @@ for (const route of routes) {
   writeFileSync(file, render(route));
 }
 
-const today = new Date().toISOString().slice(0, 10);
 const prio = (p) => (p === "/" ? "1.0" : p.startsWith("/stocks/") ? "0.8" : "0.6");
 writeFileSync(
   new URL("sitemap.xml", DIST),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes
-    .map((r) => `  <url><loc>${SITE}${r.path}</loc><lastmod>${today}</lastmod><changefreq>daily</changefreq><priority>${prio(r.path)}</priority></url>`)
+    // lastmod is the date the page's content last really changed (newest filing, contract, issue or
+    // trading day), and is left out when unknown. A date that is always "today" teaches Google to ignore it.
+    .map((r) => `  <url><loc>${SITE}${r.path}</loc>${r.lastmod ? `<lastmod>${r.lastmod}</lastmod>` : ""}<changefreq>daily</changefreq><priority>${prio(r.path)}</priority></url>`)
     .join("\n")}\n</urlset>\n`
 );
 writeFileSync(new URL("robots.txt", DIST), `User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE}/sitemap.xml\n`);

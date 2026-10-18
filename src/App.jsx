@@ -1,6 +1,7 @@
 import { useState, useEffect, useLayoutEffect, useRef, createContext, useContext } from "react";
 import issues from "./issues.json";
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
+import { MARKET_PAGES } from "../lib/pagemeta.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
 /* ════════════════════════════════════════════════════════════════════════════
    DATA  (stocks, ETFs and keywords all come from lib/roster.js)
@@ -113,7 +114,7 @@ function routeMeta(route) {
   const tab = route.tab && route.tab !== "stocks" ? route.tab : null;
   return {
     home: { title: "Orbit Alpha: Space Stocks Newsletter and Live Dashboard", description: "Free weekly newsletter and live dashboard covering every space stock: prices, launches, earnings, SEC filings and government contracts." },
-    markets: { title: tab === "performance" ? "Space Stocks vs the S&P 500: ETF and Stock Performance | Orbit Alpha" : `Space Stocks ${tab ? tab[0].toUpperCase() + tab.slice(1) : "Dashboard"} | Orbit Alpha`, description: "Live prices, launches, earnings dates, SEC filings and government contract awards for publicly traded space companies." },
+    markets: MARKET_PAGES[tab || ""] || MARKET_PAGES[""],
     news: { title: "Space Stock News, Filings and Contract Wins | Orbit Alpha", description: "Live space stock news, SEC filings, insider trades and government contract wins in one feed, filterable by company." },
     newsletter: { title: "The Orbit Alpha Newsletter | Free Weekly Space Stocks Briefing", description: "Every Sunday: the week in space stocks, analyst target changes and one stock deep dive. Free." },
     about: { title: "About | Orbit Alpha", description: "What Orbit Alpha is, which space stocks it covers and where its data comes from." },
@@ -375,6 +376,7 @@ const GlobalStyles = () => (
     select{background-color:#0d1220!important;color:#e8ecf4!important;border-color:rgba(255,255,255,0.18)!important}
     select option{background-color:#0d1220;color:#e8ecf4}
     .oa-price{text-align:right}
+    .oa-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .oa-news-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:28px;align-items:start}
     @media(max-width:860px){.oa-news-grid{grid-template-columns:1fr}}
     .oa-tile{transition:filter 0.15s}.oa-tile:hover{filter:brightness(1.25);z-index:1}
@@ -1901,8 +1903,11 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       <header style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 16, marginBottom: 14 }}>
         <div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
-            <h1 style={{ fontFamily: SYNE, fontSize: 34, fontWeight: 800, color: C.green, letterSpacing: "-0.01em" }}>{ticker}</h1>
-            <span style={{ fontSize: 16, color: "#fff" }}>{profile.name}</span>
+            {/* The heading carries both ticker and company name ("RKLB Rocket Lab stock"), which is what people search for. Looks the same as before. */}
+            <h1 style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap", margin: 0, fontSize: "inherit", fontWeight: "inherit" }}>
+              <span style={{ fontFamily: SYNE, fontSize: 34, fontWeight: 800, color: C.green, letterSpacing: "-0.01em" }}>{ticker}</span>
+              <span style={{ fontSize: 16, fontWeight: 400, color: "#fff" }}>{profile.name}<span className="oa-sr"> stock</span></span>
+            </h1>
             <span style={{ fontSize: 11, color: C.light, border: "1px solid rgba(255,255,255,0.15)", padding: "2px 8px", borderRadius: 3 }}>{profile.sector}</span>
             {profile.listing && <span style={{ fontSize: 11, color: C.blue, border: "1px solid rgba(126,184,255,0.25)", padding: "2px 8px", borderRadius: 3 }}>{profile.listing}</span>}
           </div>
