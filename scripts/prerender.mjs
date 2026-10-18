@@ -118,6 +118,21 @@ const issueDate = (() => {
 })();
 const tradingDay = quotesDate || perfRes?.asOf || null;
 
+// On-site write-ups of past newsletter issues (src/issueNotes.json, also rendered by the app).
+const issueNotes = JSON.parse(readFileSync(new URL("../src/issueNotes.json", import.meta.url), "utf8"));
+const issuesMeta = JSON.parse(readFileSync(new URL("../src/issues.json", import.meta.url), "utf8"));
+const issueLink = (x) => `<a href="/newsletter/issue-${x.issue}">Issue ${x.issue}: ${esc(x.title)}</a>`;
+const tickerText = (text) => esc(text).replace(/\[\[([A-Z]+)\]\]/g, (m, t) => (profiles[t] ? `<a href="/stocks/${t.toLowerCase()}">${t}</a>` : t));
+function noteHtml(lines) {
+  let html = "", inList = false;
+  for (const line of lines) {
+    if (line.startsWith("- ")) { if (!inList) { html += "<ul>"; inList = true; } html += `<li>${tickerText(line.slice(2))}</li>`; continue; }
+    if (inList) { html += "</ul>"; inList = false; }
+    html += line.startsWith("## ") ? `<h2>${esc(line.slice(3))}</h2>` : `<p>${tickerText(line)}</p>`;
+  }
+  return html + (inList ? "</ul>" : "");
+}
+
 const count = Object.keys(profiles).length;
 const homeFaq = faq([
   ["What are space stocks?", "Space stocks are publicly traded companies whose business is mainly in space: rocket launch, satellite communications, Earth observation, spacecraft and component manufacturing, and lunar and human spaceflight."],
@@ -176,7 +191,7 @@ const routes = [
   {
     path: "/newsletter", lastmod: issueDate, title: "The Orbit Alpha Newsletter | Free Weekly Space Stocks Briefing",
     description: "Every Sunday: the week in space stocks, analyst target changes and one stock deep dive. Free.",
-    body: `<h1>The Orbit Alpha newsletter</h1><p>Every Sunday the Orbit Alpha newsletter sums up the week in space stocks: the biggest moves and why they happened, analyst rating and price target changes, contract wins, launches and filings worth knowing about, and one deep dive on a single company.</p><p>The newsletter is free, with no paywall. It is written for investors who follow space stocks and want clear, sourced numbers rather than hype. You can unsubscribe at any time.</p><h2>What each issue covers</h2>${list(["The week's biggest space stock moves and what drove them", "Analyst upgrades, downgrades and price target changes", "Government contract wins and notable SEC filings", "Launches and events coming up next week", "A deep dive on one company"])}${sectorDirectory}${sources}`,
+    body: `<h1>The Orbit Alpha newsletter</h1><p>Every Sunday the Orbit Alpha newsletter sums up the week in space stocks: the biggest moves and why they happened, analyst rating and price target changes, contract wins, launches and filings worth knowing about, and one deep dive on a single company.</p><p>The newsletter is free, with no paywall. It is written for investors who follow space stocks and want clear, sourced numbers rather than hype. You can unsubscribe at any time.</p><h2>What each issue covers</h2>${list(["The week's biggest space stock moves and what drove them", "Analyst upgrades, downgrades and price target changes", "Government contract wins and notable SEC filings", "Launches and events coming up next week", "A deep dive on one company"])}${issueNotes.length ? `<h2>Past issues</h2>${list(issueNotes.map(issueLink))}` : ""}${sectorDirectory}${sources}`,
     ld: [crumbs([["Home", "/"], ["Newsletter", "/newsletter"]])],
   },
   {
@@ -207,6 +222,7 @@ const routes = [
 <p>This page tracks ${esc(p.name)} (${t}) stock in one place: the live ${t} share price and chart${us ? ", recent SEC filings and insider trades, US government contract awards, the next earnings date" : ` (listed on ${esc(p.listing)})`}, upcoming launches involving the company, and the latest ${esc(p.name)} news. ${esc(p.name)} is one of the ${count} space stocks Orbit Alpha covers, in the ${p.sector.toLowerCase()} sector. ${SECTOR_TEXT[p.sector]}</p>
 ${facts.html}
 <h2>${esc(p.name)} key facts</h2>${list([`Ticker: ${t}`, `Listing: ${us ? "US (NYSE or Nasdaq)" : esc(p.listing)}`, `Sector: ${p.sector}`, `Prices shown in: ${p.currency === "GBp" ? "pence" : p.currency || "US dollars"}`, `On this page: ${us ? "live price and chart, SEC filings, insider trades, government contracts, earnings date, launches and news" : "live price and chart, launches and news"}`])}
+${issueNotes.some((x) => x.tickers.includes(t)) ? `<h2>${esc(p.name)} in the Orbit Alpha newsletter</h2>${list(issueNotes.filter((x) => x.tickers.includes(t)).slice(0, 6).map(issueLink))}` : ""}
 <h2>${esc(p.name)} research links</h2>${list([ext(yahoo(t), `${t} quote and financials on Yahoo Finance`), ...(us ? [ext(edgar(t), `${esc(p.name)} filings on SEC EDGAR`), ext(`https://www.usaspending.gov/search/?hash=&keyword=${encodeURIComponent(p.name)}`, `${esc(p.name)} awards on USAspending.gov`)] : [])])}
 <h2>Other ${p.sector.toLowerCase()} stocks</h2>${list(peers.map(stockLink))}
 ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): live price, filings and contracts`)}`,
@@ -214,6 +230,23 @@ ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): liv
         { "@type": "Corporation", name: p.name, tickerSymbol: t, description: p.about, url: `${SITE}/stocks/${t.toLowerCase()}` },
         crumbs([["Home", "/"], ["Markets", "/markets"], [`${t} stock`, `/stocks/${t.toLowerCase()}`]]),
         q.ld,
+      ],
+    };
+  }),
+  ...issueNotes.map((x, i) => {
+    const meta = issuesMeta.find((m) => m.issue === x.issue);
+    const path = `/newsletter/issue-${x.issue}`;
+    const [newer, older] = [issueNotes[i - 1], issueNotes[i + 1]];
+    return {
+      path,
+      lastmod: x.date,
+      title: `${x.title} | Orbit Alpha Issue ${x.issue}`,
+      description: x.description,
+      body: `<article><p>Orbit Alpha Issue ${x.issue} · ${fmtDate(x.date)}</p><h1>${esc(x.title)}</h1>${noteHtml(x.body)}${meta?.url ? `<p>This is a summary. <a href="${meta.url}">Read the full Issue ${x.issue}</a>, including the analyst price-target table and launch calendar.</p>` : ""}<p>${older ? `Previous: ${issueLink(older)}` : ""}${older && newer ? " · " : ""}${newer ? `Next: ${issueLink(newer)}` : ""}</p><p>Orbit Alpha is information, not investment advice.</p></article>`,
+      ld: [
+        ORG,
+        { "@type": "Article", headline: x.title, description: x.description, datePublished: x.date, url: SITE + path, image: `${SITE}/og.png`, author: { "@id": `${SITE}/#org` }, publisher: { "@id": `${SITE}/#org` }, about: x.tickers.filter((t) => profiles[t]).map((t) => ({ "@type": "Corporation", name: profiles[t].name, tickerSymbol: t })) },
+        crumbs([["Home", "/"], ["Newsletter", "/newsletter"], [`Issue ${x.issue}`, path]]),
       ],
     };
   }),
@@ -225,7 +258,7 @@ function render({ path, title, description, body, ld = [] }) {
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}" />`,
     `<link rel="canonical" href="${url}" />`,
-    `<meta property="og:type" content="website" />`,
+    `<meta property="og:type" content="${path.startsWith("/newsletter/issue-") ? "article" : "website"}" />`,
     `<meta property="og:site_name" content="Orbit Alpha" />`,
     `<meta property="og:title" content="${esc(title)}" />`,
     `<meta property="og:description" content="${esc(description)}" />`,

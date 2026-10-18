@@ -1,5 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useRef, createContext, useContext } from "react";
 import issues from "./issues.json";
+import issueNotes from "./issueNotes.json"; // on-site write-ups of past issues (also rendered by scripts/prerender.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
 import { MARKET_PAGES } from "../lib/pagemeta.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
@@ -41,6 +42,10 @@ function parsePath(pathname) {
   if (first === "markets") return { page: "markets", tab: MARKET_TABS.includes(second) ? second : "stocks" };
   if (first === "stocks" && second) return { page: "stock", ticker: second.toUpperCase() };
   if (first === "feed") return { page: "news" };
+  if (first === "newsletter" && second) {
+    const n = Number((second.match(/^issue-(\d+)$/) || [])[1]);
+    return issueNotes.some((x) => x.issue === n) ? { page: "issue", issue: n } : { page: "notfound" };
+  }
   if (["news", "newsletter", "about"].includes(first)) return { page: first };
   return { page: "notfound" };
 }
@@ -111,6 +116,8 @@ function routeMeta(route) {
       ? `${p.name} (${route.ticker}, ${p.listing}) live price, chart, news and launches. ${p.about}`
       : `${p.name} (${route.ticker}) live price, SEC filings, insider trades, government contracts, earnings date and launches. ${p.about}`,
   };
+  const note = route.page === "issue" && issueNotes.find((x) => x.issue === route.issue);
+  if (note) return { title: `${note.title} | Orbit Alpha Issue ${note.issue}`, description: note.description };
   const tab = route.tab && route.tab !== "stocks" ? route.tab : null;
   return {
     home: { title: "Orbit Alpha: Space Stocks Newsletter and Live Dashboard", description: "Free weekly newsletter and live dashboard covering every space stock: prices, launches, earnings, SEC filings and government contracts." },
@@ -2010,6 +2017,16 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
         ))}
       </Card>
 
+      {/* Newsletter issues that covered this stock (internal links help search engines connect the pages) */}
+      {issueNotes.some((x) => x.tickers.includes(ticker)) && (
+        <div style={{ fontSize: 11, color: C.muted, marginBottom: 12, lineHeight: 1.8 }}>
+          <span>{ticker} in the newsletter: </span>
+          {issueNotes.filter((x) => x.tickers.includes(ticker)).slice(0, 6).map((x, i) => (
+            <span key={x.issue}>{i ? " · " : ""}<Link to={`/newsletter/issue-${x.issue}`} className="oa-link" style={{ color: C.blue }}>Issue {x.issue}: {x.title}</Link></span>
+          ))}
+        </div>
+      )}
+
       {/* Research and share links (real <a> links: useful to readers and to search engines) */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 16px", alignItems: "center", fontSize: 11, color: C.muted, marginBottom: 14 }}>
         <span>Research {ticker}:</span>
@@ -2338,17 +2355,70 @@ function Newsletter() {
       </div>
 
       <h2 style={{ fontSize: 11.5, color: C.muted, marginBottom: 14, fontWeight: 500 }}>Read past issues</h2>
-      {issues.map((issue, i) => (
-        <a key={issue.issue} href={issue.live ? issue.url : undefined} target="_blank" rel="noopener noreferrer" className="hov"
+      {issues.map((issue, i) => {
+        const onSite = issueNotes.some((x) => x.issue === issue.issue);
+        const Wrap = onSite ? Link : "a";
+        const linkProps = onSite ? { to: `/newsletter/issue-${issue.issue}` } : { href: issue.live ? issue.url : undefined, target: "_blank", rel: "noopener noreferrer" };
+        return (
+        <Wrap key={issue.issue} {...linkProps} className="hov"
           style={{ display: "block", textDecoration: "none", border: `1px solid ${i === 0 ? "rgba(0,255,136,0.25)" : "rgba(255,255,255,0.06)"}`, borderRadius: 8, padding: 20, marginBottom: 10, background: "rgba(255,255,255,0.01)", cursor: issue.live ? "pointer" : "default", opacity: issue.live ? 1 : 0.5, position: "relative" }}>
           {!issue.live && <span style={badge(C.yellow, "255,204,0")}>COMING SUNDAY</span>}
           {i === 0 && issue.live && <span style={badge(C.green, "0,255,136")}>LATEST</span>}
           <div style={{ fontSize: 11.5, color: C.orange, marginBottom: 6 }}>Issue #{issue.issue} · {issue.date}</div>
           <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6, lineHeight: 1.4, paddingRight: 90 }}>{issue.headline}</div>
-          {issue.summary && <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.6 }}>{issue.summary}</div>}
-        </a>
-      ))}
+          {issue.summary && issue.summary !== issue.headline && <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.6 }}>{issue.summary}</div>}
+        </Wrap>
+        );
+      })}
     </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   NEWSLETTER ISSUE PAGE (on-site write-up of a past issue, from src/issueNotes.json)
+   ════════════════════════════════════════════════════════════════════════════ */
+// "[[RKLB]]" in a write-up becomes a link to that stock's page.
+function withTickers(text) {
+  return text.split(/(\[\[[A-Z]+\]\])/).map((part, i) => {
+    const t = part.match(/^\[\[([A-Z]+)\]\]$/)?.[1];
+    return t && PROFILES[t] ? <Link key={i} to={`/stocks/${t.toLowerCase()}`} className="oa-link" style={{ color: C.green }}>{t}</Link> : part.replace(/\[\[|\]\]/g, "");
+  });
+}
+
+function IssuePage({ n }) {
+  const note = issueNotes.find((x) => x.issue === n);
+  const meta = issues.find((x) => x.issue === n);
+  const idx = issueNotes.indexOf(note);
+  const [newer, older] = [issueNotes[idx - 1], issueNotes[idx + 1]];
+  const blocks = [];
+  note.body.forEach((line) => {
+    if (line.startsWith("- ")) {
+      const last = blocks[blocks.length - 1];
+      if (last?.type === "ul") last.items.push(line.slice(2)); else blocks.push({ type: "ul", items: [line.slice(2)] });
+    } else blocks.push({ type: line.startsWith("## ") ? "h2" : "p", text: line.replace(/^## /, "") });
+  });
+  const h2 = { fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", margin: "28px 0 10px" };
+  return (
+    <article style={{ animation: "fu 0.3s ease", maxWidth: 680, margin: "0 auto", padding: "32px 20px 60px" }}>
+      <nav style={{ fontSize: 10, color: C.muted, marginBottom: 16, letterSpacing: "0.06em" }}>
+        <Link to="/newsletter" className="oa-link">Newsletter</Link> <span style={{ color: "#445" }}>/</span> <span style={{ color: C.light }}>Issue {n}</span>
+      </nav>
+      <div style={{ fontSize: 11.5, color: C.orange, marginBottom: 8 }}>Issue #{n} · {meta?.date || note.date}</div>
+      <h1 style={{ fontFamily: SYNE, fontSize: "clamp(24px,4.5vw,34px)", fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 20 }}>{note.title}</h1>
+      {blocks.map((b, i) => b.type === "h2" ? <h2 key={i} style={h2}>{b.text}</h2>
+        : b.type === "ul" ? <ul key={i} style={{ paddingLeft: 18, marginBottom: 16 }}>{b.items.map((t, j) => <li key={j} style={{ fontSize: 14, color: C.light, lineHeight: 1.75, marginBottom: 6 }}>{withTickers(t)}</li>)}</ul>
+        : <P key={i}>{withTickers(b.text)}</P>)}
+      {meta?.url && <P>This is a summary. <a href={meta.url} target="_blank" rel="noopener" className="oa-link" style={{ color: C.green }}>Read the full Issue #{n}</a>, including the analyst price-target table and launch calendar.</P>}
+      <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", margin: "28px 0" }}>
+        <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 10 }}>Get the next issue on Sunday</div>
+        <SubscribeForm source="issue-page" sample={false} />
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 16, fontSize: 12 }}>
+        {older ? <Link to={`/newsletter/issue-${older.issue}`} className="oa-link" style={{ color: C.blue }}>← Issue {older.issue}</Link> : <span />}
+        {newer ? <Link to={`/newsletter/issue-${newer.issue}`} className="oa-link" style={{ color: C.blue }}>Issue {newer.issue} →</Link> : <span />}
+      </div>
+      <p style={{ fontSize: 11, color: C.muted, marginTop: 28, lineHeight: 1.6 }}>Orbit Alpha is information, not investment advice.</p>
+    </article>
   );
 }
 
@@ -2496,6 +2566,7 @@ export default function App() {
         {page === "stock" && <StockPage key={route.ticker} ticker={route.ticker} prices={prices} launches={launches} news={news} goSubscribe={goSubscribe} />}
         {page === "news" && <News news={news} prices={prices} />}
         {page === "newsletter" && <Newsletter />}
+        {page === "issue" && <IssuePage n={route.issue} />}
         {page === "about" && <About />}
         {page === "notfound" && <NotFound />}
       </div>

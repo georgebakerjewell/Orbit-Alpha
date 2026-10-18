@@ -1,0 +1,66 @@
+[
+  {
+    "issue": 26,
+    "date": "2026-10-11",
+    "title": "SpaceX Turns Carrier, and the Direct-to-Device Trade Pays the Price",
+    "description": "Orbit Alpha Issue 26: SpaceX's 800 MHz spectrum deal with Grain Management hits AST SpaceMobile, Viasat rallies, Globalstar sits it out, and analysts keep raising SPCX targets.",
+    "tickers": ["SPCX", "ASTS", "VSAT", "GSAT", "RKLB", "RDW", "MDA", "PL", "FLY", "BKSY"],
+    "body": [
+      "## The week in brief",
+      "Rising Treasury yields, with the 10-year touching 5.35% midweek, weighed on growth and small-cap names across the sector. The defining event was specific to space, though: on 8 October [[SPCX]] agreed to buy a nationwide portfolio of low-band 800 MHz spectrum from Grain Management, a step towards running Starlink Mobile as a full US wireless carrier. AT&T, Verizon and T-Mobile each fell more than 6% after hours. Reports on the price conflicted (one outlet said about $8 billion in cash, another said undisclosed), so the issue treats the figure as unconfirmed.",
+      "## Who it hit",
+      "- [[ASTS]] fell as much as 15.4% intraday on 9 October and closed down 10.48% at $50.97, near its 52-week low, ending the week down about 12.8%. As a single-product direct-to-device company, it had the most to lose from a better-funded SpaceX building the same thing.",
+      "- [[VSAT]] rose 6.82% the same day to $72.01. No outlet tied the move to the spectrum news; the issue's read is that the market separated diversified operators from pure plays.",
+      "- [[GSAT]] barely moved, closing at $83.82. It now trades on its pending $90 a share Amazon takeover, not as an independent competitor.",
+      "## Analysts and the rest of the sector",
+      "SpaceX targets kept rising: Morgan Stanley reiterated $300, Goldman Sachs raised to $230 and Susquehanna to $173, while ARK trimmed its position twice. SPCX still eased about 5.4% from Tuesday to Friday. [[RKLB]] fell about 6.6% on the week despite a Barclays initiation at Overweight with an $85 target; TD Cowen cut its target to $90. [[FLY]] fell about 14% with no single cause identified, in a week it added Rick Ambrose, former head of Lockheed Martin's space business, to its board. [[RDW]] won a follow-on solar array order from Axiom Space, [[BKSY]] signed a six-figure Gen-3 pilot with an international customer, [[MDA]]'s CEO made the case for space-based missile defence on CNBC, and [[PL]] finished roughly flat.",
+      "## What to watch",
+      "Whether SpaceX or Grain Management confirms a price for the spectrum deal, whether AST SpaceMobile responds to the competitive threat, and whether analysts start pricing SpaceX as a wireless carrier as well as a launch company."
+    ]
+  },
+  {
+    "issue": 25,
+    "date": "2026-10-04",
+    "title": "Starship Goes Orbital While the Smallsat Field Sells Off",
+    "description": "Orbit Alpha Issue 25: Starship Flight 14 reaches orbit, SpaceX rallies 7% through lockup selling, Rocket Lab passes 100 contracted missions, and the small-cap space names slip.",
+    "tickers": ["SPCX", "RKLB", "ASTS", "SPIR", "RDW", "PL", "GSAT", "FLY", "BKSY"],
+    "body": [
+      "## The week in brief",
+      "Space stocks split in two. [[SPCX]] closed the week at $158.96, up about 6.9%, after Starship Flight 14 reached orbit for the first time on 28 September and deployed 26 Starlink V3 satellites. Most of the smaller names drifted lower on a risk-off tape across aerospace and defence, even in weeks with good company news.",
+      "## SpaceX: catalysts against the lockup",
+      "SpaceX came into the week digesting the 24 September lockup tranche and a $52 million planned sale by President and COO Gwynne Shotwell. JPMorgan data showed a net $570 million of retail selling across three September weeks, its largest on record for the stock. The operational news outran it: CLSA initiated at Outperform with a $250 target, TD Cowen at Buy with $200, and SpaceX flew three orbital missions in about 13 hours on 1 October. SPCX rose 7.35% on 2 October on heavy volume.",
+      "The issue's deep dive argues the lockup calendar is a recurring pressure test rather than a single event: further tranches were due around 9 October, a larger release after Q3 earnings in November, and the final restricted shares in December. Elon Musk's own shares stay locked until June 2027.",
+      "## The rest of the sector",
+      "- [[RKLB]] signed 20 more Electron launches with Synspective, taking its backlog above 100 missions, and finished the week flat at $73.92.",
+      "- [[ASTS]] shipped BlueBirds 14 to 16 to Cape Canaveral, but B. Riley downgraded it to Neutral with a $65 target.",
+      "- [[SPIR]] launched the first three satellites from its new US factory and still fell about 8%.",
+      "- [[RDW]] announced partnerships with Sophia Space and Honda and fell about 6.4%.",
+      "- [[PL]] launched 20 spacecraft on Transporter-18, including Google's Project Suncatcher demonstrator, and ended flat.",
+      "- [[FLY]] partnered with Starcloud on in-orbit AI computing; [[BKSY]] became the first imagery supplier for a Robinhood satellite feature; [[GSAT]] held near $83 ahead of its Amazon deal.",
+      "## What to watch",
+      "Whether the next SpaceX tranche around 9 October lands without a Starship-sized catalyst to absorb it, and whether the late-week rebound in the smaller names holds."
+    ]
+  },
+  {
+    "issue": 24,
+    "date": "2026-09-27",
+    "title": "A Sector Rally Meets a Wall of Unlocking Shares",
+    "description": "Orbit Alpha Issue 24: Google's Project Suncatcher lifts space small caps, Iridium holders approve Rocket Lab's deal, AST SpaceMobile is sued, and SpaceX's lockup calendar explained.",
+    "tickers": ["SPCX", "RKLB", "ASTS", "LUNR", "SPCE", "SPIR", "RDW", "VSAT", "MDA", "PL", "GSAT", "FLY", "BKSY"],
+    "body": [
+      "## The week in brief",
+      "Space small caps rallied on an AI story rather than a rocket: Google confirmed its Project Suncatcher TPU chips would fly on a SpaceX rideshare, lifting [[RKLB]], [[PL]], [[ASTS]] and others together. A Nasdaq-100 rebalance more than doubled [[SPCX]]'s index weight to 2.82%, while another lockup tranche of about 328 million SpaceX shares became tradable on 24 September.",
+      "## Company highlights",
+      "- [[RKLB]] rose about 20% on the week after Iridium shareholders approved its acquisition with about 99.6% of votes cast. It funded the deal with a $1.94 billion at-the-market offering and cancelled a $3.6 billion bridge loan; ARK bought about $25 million of shares.",
+      "- [[ASTS]] was hit with a securities class action alleging it overstated its capital position and competitive moat. The lead-plaintiff deadline is 13 November 2026.",
+      "- [[LUNR]] jumped about 12.5% on 21 September as Cantor reaffirmed its $32 target and the SXM-11 satellite completed commissioning.",
+      "- [[SPIR]] won a $33.2 million NOAA weather data contract, expandable to about $66 million.",
+      "- [[RDW]] was named one of 15 vendors on Space Systems Command's NITE-STAR contract, while an insider-linked holder sold about $10.5 million of stock.",
+      "- [[VSAT]] won a $42 million first task order under a $307 million Space Force IDIQ; [[MDA]] received approval to buy back up to 5% of its shares; [[PL]] opened a satellite factory in Berlin; [[FLY]] rose 16.2% without a clear catalyst.",
+      "## Deep dive: the SpaceX lockup calendar",
+      "SpaceX priced its IPO at $135 in June. Musk and core insiders, about 48.4% of the company, are locked until June 2027; other pre-IPO holders are released in tranches. After August and September releases, further tranches were expected on 9 and 24 October, a larger block of about 1.3 billion shares after Q3 earnings, and a final 2026 tranche around 8 December. The issue's conclusion: index-fund buying and a shrinking short base were cushioning the supply, so near-term SPCX price action was likely to be driven as much by flows as by operating news.",
+      "## What to watch",
+      "Starship's first full orbital attempt on 28 September, the next SpaceX tranche on 9 October, and further filings in the AST SpaceMobile litigation."
+    ]
+  }
+]
