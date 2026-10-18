@@ -1,5 +1,24 @@
 [
   {
+    "issue": 27,
+    "date": "2026-10-18",
+    "title": "A Spectrum Land Grab Rattles the Satellite Complex",
+    "url": "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-27",
+    "description": "This was a risk-off week for space equities more than it was a string of isolated company stories. SpaceX's roughly $8 billion deal to buy nationwide 800...",
+    "tickers": [
+      "SPCX",
+      "RKLB",
+      "ASTS",
+      "LUNR",
+      "SPCE",
+      "RDW",
+      "VSAT",
+      "MDA",
+      "PL",
+      "BKSY"
+    ]
+  },
+  {
     "issue": 26,
     "date": "2026-10-11",
     "title": "SpaceX Turns Carrier, and the Direct-to-Device Trade Pays the Price",
@@ -389,26 +408,6 @@
       "MNTS",
       "GSAT",
       "SPIR"
-    ]
-  },
-  {
-    "issue": 7,
-    "date": "2026-05-31",
-    "title": "The biggest IPO in history drops June 12. SPCX ≠ SPCE.",
-    "url": "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-7",
-    "description": "The week opened with the SpaceX IPO roadshow timeline snapping into focus. Reuters reported the institutional roadshow is targeting a 4 June launch, with...",
-    "tickers": [
-      "RKLB",
-      "ASTS",
-      "LUNR",
-      "PL",
-      "BKSY",
-      "RDW",
-      "MNTS",
-      "SPCE",
-      "MDA",
-      "SPIR",
-      "FLY"
     ]
   }
 ]
