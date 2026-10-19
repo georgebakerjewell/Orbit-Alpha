@@ -6,7 +6,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { COVERED as profiles, ETFS, SECTOR_ORDER } from "../lib/roster.js";
-import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS } from "../lib/pagemeta.js";
+import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, stockTitle } from "../lib/pagemeta.js";
 import { withConfirmed } from "../lib/earnings-confirmed.js";
 import { brokerBoxHtml } from "../lib/affiliates.js";
 import { sheetHtml } from "./sheet.mjs";
@@ -122,6 +122,7 @@ const fmtUsd = (n) => (n >= 1e9 ? `$${(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `$${(
 const fmtDate = (iso) => new Date(iso + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 const latest = (...dates) => dates.filter(Boolean).sort().pop() || null;
 
+const earningsSentence = (name, e) => `${name} ${e.confirmed ? "reports" : "is expected to report"} its next results on ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}${e.confirmed ? " (confirmed by the company)" : ""}${e.epsEst ? `, with consensus earnings per share of ${epsText(e.epsEst)}` : ""}.`;
 function stockFacts(t, name) {
   const q = quotes[t], ytd = ytdBy[t], e = nextEarnings[t];
   const filings = (filingsBy[t] || []).slice(0, 5), awards = (contractsBy[t] || []).slice(0, 5);
@@ -132,6 +133,8 @@ function stockFacts(t, name) {
   if (e) rows.push(`Next earnings: ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}${e.epsEst ? ` (consensus EPS ${esc(epsText(e.epsEst))})` : ""}`);
   let html = "";
   if (rows.length) html += `<h2>${esc(name)} (${t}) stock at a glance</h2>${list(rows)}<p>Figures as of ${fmtDate(quotesDate || today)}. Prices on the live page update through the trading day.</p>`;
+  // "<ticker> earnings date" is searched every quarter: answer it in its own section.
+  if (e) html += `<h2>${esc(name)} (${t}) next earnings date</h2><p>${esc(earningsSentence(name, e))} ${e.confirmed ? `Source: <a href="${esc(e.source)}" rel="noopener" target="_blank">${esc(name)} investor relations</a>.` : "Date from the Nasdaq earnings calendar; companies usually confirm it two to four weeks ahead, and this page updates when they do."} See every company's date on the <a href="/space-stocks/earnings-calendar">space stocks earnings calendar</a>.</p>`;
   html += brokerBoxHtml({ ticker: t, name, placement: "stock-page", esc, tools: !profiles[t]?.listing && t !== "MDA" });
   // Key financials from the latest 10-Q/10-K (US SEC filers), so "<company> revenue" and "<company>
   // cash" searches find a direct answer. 12-month figures where available, else the latest quarter.
@@ -157,7 +160,7 @@ function stockFacts(t, name) {
     `${name} (${t}) last closed at ${fmtPrice(q.price, q.currency)} on ${fmtDate(quotesDate || today)}${q.changePct != null ? `, ${q.changePct >= 0 ? "up" : "down"} ${Math.abs(q.changePct).toFixed(1)}% on the day` : ""}${q.marketCap ? `, giving it a market value of about ${fmtCap(q.marketCap)}` : ""}.`,
     ytd != null && t !== "SPCX" ? `The shares are ${ytd >= 0 ? "up" : "down"} ${Math.abs(ytd).toFixed(1)}% this year.` : "",
     t === "SPCX" ? `The shares are ${q.price >= 135 ? "up" : "down"} ${Math.abs((q.price / 135 - 1) * 100).toFixed(1)}% on the $135 IPO price of June 2026.` : "",
-    e ? `${name} next reports results on ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}.` : "",
+    e ? earningsSentence(name, e).replace(/, with consensus.*\.$/, ".") : "",
   ].filter(Boolean).join(" ") : "";
   return { html, answer, lastmod: latest(filings[0]?.date, awards[0]?.start, stories.find((x) => x.tickers?.includes(t))?.published?.slice(0, 10)) };
 }
@@ -283,10 +286,9 @@ const routes = [
       og,
       path: `/stocks/${t.toLowerCase()}`,
       lastmod: facts.lastmod,
-      title: `${t} Stock: ${p.name} News, Filings and Contracts | Orbit Alpha`,
-      description: p.listing
-        ? `${p.name} (${t}, ${p.listing}) live price, chart, news and launches. ${p.about}`
-        : `${p.name} (${t}) live price, SEC filings, insider trades, government contracts, earnings date and launches. ${p.about}`,
+      title: stockTitle(t, p),
+      description: (nextEarnings[t] ? `${p.name} (${t}) next earnings date: ${fmtDate(nextEarnings[t].date)}${nextEarnings[t].confirmed ? "" : " (expected)"}. ` : "")
+        + (p.listing || t === "MDA" ? `Live price, chart, news and launches. ${p.about}` : `Live price, SEC filings, insider trades and government contracts. ${p.about}`),
       body: `<h1>${t} stock: ${esc(p.name)}</h1>
 <p class="oa-updated">Updated <time datetime="${quotesDate || today}">${fmtDate(quotesDate || today)}</time></p>${facts.answer ? `<div class="oa-answer"><p>${esc(facts.answer)}</p></div>` : ""}
 <p>${esc(p.about)}</p>

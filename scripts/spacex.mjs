@@ -240,6 +240,11 @@ ${sources([
     columns: ["date", "first_trading_day", "release", "shares_up_to", "share_of_pool", "status"],
     rows: [...TRANCHES].sort((x, y) => sortKey(x).localeCompare(sortKey(y))).map((t) => [t.date || "", t.trade || "", t.what, Math.round(t.n), t.pct, status(t)]),
   }];
+  // Lead the title and description with the next unlock, so "SpaceX unlock <date>" searches match.
+  if (next) {
+    lockPage.title = `SpaceX Lockup Expiration: ${shares(next.n)} SPCX Shares Unlock ${next.trade === today ? "Today" : fmtDate(next.trade)} | Orbit Alpha`;
+    lockPage.description = `${next.q3 && !q3Firm ? "Expected: up" : "Up"} to ${shares(next.n)} SpaceX shares are released from lock-up on ${fmtDate(next.trade)}. Every SPCX unlock date and share count from the IPO prospectus, how the stock traded on past release days, and when Elon Musk can sell.`;
+  }
   return [buyPage, lockPage];
 }
 const latest = (...d) => d.filter(Boolean).sort().pop();

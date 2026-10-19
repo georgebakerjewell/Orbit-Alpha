@@ -4,7 +4,7 @@ import issueArchive from "./issueArchive.json";
 import stories from "./stories.json";
 import resultsData from "./results.json"; // results-day pages at /results/<slug> (src/results.json, added by a scheduled task) // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
-import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, GUIDE_CTA, GUIDE_CTA_DEFAULT } from "../lib/pagemeta.js";
+import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, GUIDE_CTA, GUIDE_CTA_DEFAULT, stockTitle } from "../lib/pagemeta.js";
 import { BROKERS, TOOLS, toolHref, brokerHref, anyAffiliate, RISK, DISCLOSURE } from "../lib/affiliates.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -118,7 +118,7 @@ function Link({ to, children, style, ...rest }) {
 function routeMeta(route) {
   const p = PROFILES[route.ticker];
   if (route.page === "stock" && p) return {
-    title: `${route.ticker} Stock: ${p.name} News, Filings and Contracts | Orbit Alpha`,
+    title: stockTitle(route.ticker, p),
     description: p.listing
       ? `${p.name} (${route.ticker}, ${p.listing}) live price, chart, news and launches. ${p.about}`
       : `${p.name} (${route.ticker}) live price, SEC filings, insider trades, government contracts, earnings date and launches. ${p.about}`,
