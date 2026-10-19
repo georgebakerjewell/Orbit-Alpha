@@ -883,8 +883,11 @@ function Home({ news, prices, launches }) {
           <p style={{ fontSize: 13, color: C.light, lineHeight: 1.7, marginBottom: 20, maxWidth: 460 }}>
             What moved, why it moved and what's coming next across {Object.keys(PROFILES).length} space stocks, from SpaceX and Rocket Lab to the small caps. Five minutes every Sunday morning.
           </p>
-          <SubscribeForm source="home-hero" sample={false} style={{ marginBottom: 10 }} reward={SHEET} />
-          <div style={{ fontSize: 12, color: C.light, marginBottom: 6 }}><span style={{ color: C.green, fontWeight: 700 }}>Free when you sign up:</span> Space Stocks 2026, a report with a page on each of the {Object.keys(PROFILES).length} listed space companies. <Link to="/free-pdf" className="oa-link" style={{ color: C.green }}>See what's inside</Link></div>
+          <SubscribeForm source="home-hero" sample={false} label="Subscribe + get the PDF" style={{ marginBottom: 12 }} reward={SHEET} />
+          <Link to="/free-pdf" className="hov" style={{ display: "flex", gap: 12, alignItems: "center", textDecoration: "none", marginBottom: 8, maxWidth: 460 }}>
+            <img src={SHEET.preview} alt="A page from the Space Stocks 2026 report" width="54" height="76" loading="lazy" style={{ width: 54, height: 76, objectFit: "cover", objectPosition: "top", borderRadius: 3, border: "1px solid rgba(255,255,255,0.15)", background: "#fff", flexShrink: 0 }} />
+            <span style={{ fontSize: 12, color: C.light, lineHeight: 1.6 }}><span style={{ color: C.green, fontWeight: 700 }}>Free when you sign up:</span> Space Stocks 2026, a 34-page PDF with a page on each of the {Object.keys(PROFILES).length} listed space companies. <span style={{ color: C.green }}>See what's inside</span></span>
+          </Link>
           <div style={{ fontSize: 11, color: C.muted }}>Read by {subscribers} investors. Unsubscribe in one click.</div>
         </div>
         {latest && (
@@ -897,24 +900,16 @@ function Home({ news, prices, launches }) {
         )}
       </section>
 
-      {/* Free PDF offer */}
-      <ForNonSubscribers><div style={{ marginBottom: 14 }}><LeadMagnet source="home-pdf-card" /></div></ForNonSubscribers>
-
-      {/* Space vs S&P 500 */}
-      <Card title="Space stocks vs the S&P 500" style={{ marginBottom: 14 }}>
-        <PerformanceChart />
-        <MoreLink to="/markets/performance">Compare space ETFs and individual stocks</MoreLink>
-      </Card>
-
+      {/* Live market data first; cards with nothing to show are hidden */}
       <div className="oa-grid" style={{ marginBottom: 14 }}>
         <Card title="Today's moves" note={prices.isLive ? `Live · ${prices.lastUpdated}` : "Loading prices"}>
           <Heatmap stocks={prices.stocks} isLive={prices.isLive} compact />
           <MoreLink to="/markets">All {covered.length} stocks</MoreLink>
         </Card>
 
+        {(signalsLoading || signals.length > 0) && (
         <Card title="Latest signals" note="Insider trades, offerings, contract wins">
           {signalsLoading && <ListSkeleton rows={4} />}
-          {!signalsLoading && signals.length === 0 && <Empty>No new filings or contract wins in the last few weeks.</Empty>}
           {signals.map((i) => (
             <a key={i.type + i.key} href={i.link || undefined} target="_blank" rel="noopener noreferrer" className="hov" style={{ display: "flex", gap: 10, padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none", alignItems: "flex-start" }}>
               <span style={{ fontSize: 10, color: "#667", width: 44, flexShrink: 0, paddingTop: 2 }}>{fmtDay(i.day, { day: "numeric", month: "short" })}</span>
@@ -924,9 +919,17 @@ function Home({ news, prices, launches }) {
           ))}
           <MoreLink to="/news">All news, filings and contracts</MoreLink>
         </Card>
+        )}
       </div>
 
+      {/* Space vs S&P 500 */}
+      <Card title="Space stocks vs the S&P 500" style={{ marginBottom: 14 }}>
+        <PerformanceChart />
+        <MoreLink to="/markets/performance">Compare space ETFs and individual stocks</MoreLink>
+      </Card>
+
       <div className="oa-grid" style={{ marginBottom: 14 }}>
+        {!(earnings.data && launches && !nextEarnings.length && !nextLaunches.length) && !(earnings.error && launches && !nextLaunches.length) && (
         <Card title="Coming up">
           {!earnings.data && !earnings.error && launches === null && <ListSkeleton rows={4} />}
           {nextEarnings.map((e) => (
@@ -944,16 +947,17 @@ function Home({ news, prices, launches }) {
               <span style={{ fontSize: 11, color: C.light }}>{l.date}</span>
             </div>
           ))}
-          {earnings.data && launches && !nextEarnings.length && !nextLaunches.length && <Empty>Nothing scheduled yet.</Empty>}
           <MoreLink to="/markets/earnings">Earnings and launch calendars</MoreLink>
         </Card>
 
+        )}
+        {(news.loading || headlines.length > 0) && (
         <Card title="Top stories" note="Last 3 days">
           {news.loading && <ListSkeleton rows={4} />}
-          {!news.loading && headlines.length === 0 && <Empty>No major stories in the last few days.</Empty>}
           {headlines.map((c) => <StoryCard key={c.lead.link} c={c} moveOf={moveOf} compact />)}
           <MoreLink to="/news">All news</MoreLink>
         </Card>
+        )}
       </div>
 
       {/* Coverage */}
@@ -983,7 +987,7 @@ function Home({ news, prices, launches }) {
       <ForNonSubscribers>
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", textAlign: "center", padding: "32px 20px", marginBottom: 24 }}>
         <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Get the Sunday briefing</div>
-        <p style={{ fontSize: 12, color: C.muted, marginBottom: 18 }}>The week in space stocks, in five minutes. Subscribe free and get Space Stocks 2026, a one-look PDF of all 30 listed space companies.</p>
+        <p style={{ fontSize: 12, color: C.muted, marginBottom: 18 }}>The week in space stocks, in five minutes. Subscribe free and get Space Stocks 2026, a 34-page PDF on all {Object.keys(PROFILES).length} listed space companies.</p>
         <SubscribeForm source="home-bottom" style={{ margin: "0 auto" }} reward={SHEET} />
       </section>
       </ForNonSubscribers>
