@@ -8,6 +8,7 @@ import { dirname } from "node:path";
 import { COVERED as profiles, ETFS, SECTOR_ORDER } from "../lib/roster.js";
 import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS } from "../lib/pagemeta.js";
 import { withConfirmed } from "../lib/earnings-confirmed.js";
+import { brokerBoxHtml } from "../lib/affiliates.js";
 import { buildGuides } from "./guides.mjs";
 import { stockCard, OG_COLORS } from "./og.mjs";
 
@@ -35,7 +36,7 @@ const SECTOR_TEXT = {
 
 const sources = `<h2>Where the data comes from</h2><p>Prices come from ${ext("https://finance.yahoo.com/", "Yahoo Finance")}, company filings and insider trades from the SEC's ${ext("https://www.sec.gov/edgar/search/", "EDGAR")} database, US government contract awards from ${ext("https://www.usaspending.gov/", "USAspending.gov")}, and launch schedules from public launch trackers. Orbit Alpha is information, not investment advice.</p>`;
 const sectorDirectory = `<h2>Space stocks we cover, by sector</h2>${SECTOR_ORDER.map((s) => `<h3>${s}</h3><p>${SECTOR_TEXT[s]}</p>${list(bySector[s].map(stockLink))}`).join("")}<h3>Space ETFs and funds</h3>${list(Object.entries(ETFS).map(([t, e]) => `${esc(e.name)} (${t})`))}`;
-const footer = `<p>Orbit Alpha is a free space stocks dashboard and weekly newsletter covering ${Object.keys(profiles).length} listed space companies, with live prices, launches, earnings dates, SEC filings, insider trades and US government contracts in one place.</p><nav aria-label="Site"><ul><li><a href="/">Home</a></li><li><a href="/markets">Live space stocks dashboard</a></li><li><a href="/markets/performance">Performance vs the S&amp;P 500</a></li><li><a href="/news">News, filings and contracts</a></li><li><a href="/newsletter">Free weekly newsletter</a></li><li><a href="/about">About</a></li><li><a href="/guides">Space stock guides</a></li>${GUIDE_LIST.map(([p, g]) => `<li><a href="${p}">${esc(g.label)}</a></li>`).join("")}<li>${ext(`https://x.com/${X_HANDLE}`, "Orbit Alpha on X")}</li><li>${ext(REDDIT, "r/SpaceCapital on Reddit")}</li></ul></nav>`;
+const footer = `<p>Orbit Alpha is a free space stocks dashboard and weekly newsletter covering ${Object.keys(profiles).length} listed space companies, with live prices, launches, earnings dates, SEC filings, insider trades and US government contracts in one place.</p><nav aria-label="Site"><ul><li><a href="/">Home</a></li><li><a href="/markets">Live space stocks dashboard</a></li><li><a href="/markets/performance">Performance vs the S&amp;P 500</a></li><li><a href="/news">News, filings and contracts</a></li><li><a href="/newsletter">Free weekly newsletter</a></li><li><a href="/about">About</a></li><li><a href="/advertise">Advertise</a></li><li><a href="/guides">Space stock guides</a></li>${GUIDE_LIST.map(([p, g]) => `<li><a href="${p}">${esc(g.label)}</a></li>`).join("")}<li>${ext(`https://x.com/${X_HANDLE}`, "Orbit Alpha on X")}</li><li>${ext(REDDIT, "r/SpaceCapital on Reddit")}</li></ul></nav>`;
 const share = (path, text) => {
   const u = encodeURIComponent(SITE + path), t = encodeURIComponent(text);
   return `<p>Follow Orbit Alpha on ${ext(`https://x.com/${X_HANDLE}`, `X (@${X_HANDLE})`)} and join the discussion on ${ext(REDDIT, "r/SpaceCapital")}.</p><p>Share this page: ${ext(`https://x.com/intent/tweet?url=${u}&text=${t}`, "X")} · ${ext(`https://www.reddit.com/submit?url=${u}&title=${t}`, "Reddit")} · ${ext(`https://www.linkedin.com/sharing/share-offsite/?url=${u}`, "LinkedIn")}</p>`;
@@ -130,6 +131,7 @@ function stockFacts(t, name) {
   if (e) rows.push(`Next earnings: ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}${e.epsEst ? ` (consensus EPS ${esc(epsText(e.epsEst))})` : ""}`);
   let html = "";
   if (rows.length) html += `<h2>${esc(name)} (${t}) stock at a glance</h2>${list(rows)}<p>Figures as of ${fmtDate(quotesDate || today)}. Prices on the live page update through the trading day.</p>`;
+  html += brokerBoxHtml({ ticker: t, name, placement: "stock-page", esc });
   // Key financials from the latest 10-Q/10-K (US SEC filers), so "<company> revenue" and "<company>
   // cash" searches find a direct answer. 12-month figures where available, else the latest quarter.
   const f = finBy[t]?.snapshot;

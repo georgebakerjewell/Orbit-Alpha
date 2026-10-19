@@ -3,8 +3,9 @@
 // already fetched. Each guide still renders (with a short note) if a data source was unavailable.
 // Titles and descriptions live in lib/pagemeta.js (GUIDES) so the app and the static HTML match.
 import { GUIDES, GUIDE_LIST } from "../lib/pagemeta.js";
-import { buildMoreGuides, buildHub } from "./guides-more.mjs";
+import { buildMoreGuides, buildHub, buildAdvertise } from "./guides-more.mjs";
 import { buildSpaceX } from "./spacex.mjs";
+import { brokerBoxHtml } from "../lib/affiliates.js";
 
 export function buildGuides(ctx) {
   const { SITE, profiles, ETFS, SECTOR_ORDER, quotes, ytdBy, perfBy, earnings, filingsBy, contractsBy, finBy, insidersBy, asOf, count,
@@ -234,10 +235,18 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
   const pages = [listPage, insiderPage, runwayPage, contractsPage, earningsPage, euroPage, etfPage,
     ...buildSpaceX({ ...ctx, page, table, faq, and, usd, asOfLine }),
     ...buildMoreGuides({ ...ctx, page, table, faq, and, usd, asOfLine }),
-    buildHub(ctx)];
+    buildHub(ctx),
+    buildAdvertise(ctx)];
   // Finish every guide: the quick answer, a visible "updated" date and WebPage data with dateModified.
+  // "Where to buy" boxes on the guides with buying intent.
+  const BUY = { "/spacex-stock": ["SPCX", "SpaceX"], "/starlink-stock": ["SPCX", "SpaceX"], "/space-stocks/uk-europe": [null, "UK and European space stocks"], "/space-stocks/under-10": [null, "US space stocks"] };
   for (const g of pages) {
-    const updated = `<p class="oa-updated">Updated <time datetime="${g.lastmod || asOf}">${fmtDate(g.lastmod || asOf)}</time> from live prices and SEC filings</p>`;
+    const buy = BUY[g.path] || (GUIDES[g.path]?.compare ? [null, "these stocks"] : null);
+    if (buy) {
+      const box = brokerBoxHtml({ ticker: buy[0], name: buy[1], placement: `guide:${g.path}`, esc });
+      g.body = g.path === "/spacex-stock" && g.body.includes("</ol>") ? g.body.replace("</ol>", `</ol>${box}`) : g.body.replace("<h2>Frequently asked questions</h2>", `${box}<h2>Frequently asked questions</h2>`);
+    }
+    const updated = g.path === "/advertise" ? "" : `<p class="oa-updated">Updated <time datetime="${g.lastmod || asOf}">${fmtDate(g.lastmod || asOf)}</time> from live prices and SEC filings</p>`;
     const answer = g.answer ? `<div class="oa-answer"><p>${g.answer}</p></div>` : "";
     g.body = g.body.includes("<!--oa-answer-->") ? g.body.replace("<!--oa-answer-->", updated + answer) : g.body.replace("</h1>", `</h1>${updated}`);
     for (const d of g.datasets || []) {

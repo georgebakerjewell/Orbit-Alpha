@@ -251,6 +251,33 @@ ${pairFaq.html}${asOfLine("Prices from Yahoo Finance; financials, insider trades
   return [starlinkPage, cheapPage, ...comparePages];
 }
 
+// Media kit at /advertise. Rates are founding rates; update SPONSOR when they change.
+const SPONSOR = {
+  email: "OrbitAlphaApp@proton.me",
+  subscribers: "400+",
+  formats: [
+    ["Newsletter main sponsor", "£75 an issue, or £250 for four", "Your logo, 60 to 80 words and a link near the top of the Sunday issue, marked as sponsored"],
+    ["Newsletter classified", "£30 an issue", "One line and a link at the end of the Sunday issue"],
+    ["Stock pages sponsor", "£100 a month", "A card labelled Sponsored on all 30 company pages at orbitalpha.cloud"],
+  ],
+};
+export function buildAdvertise(ctx) {
+  const { SITE, ORG, crumbs, esc, list, asOf, count } = ctx;
+  const g = GUIDES["/advertise"];
+  const table = `<table><thead><tr><th>Format</th><th>Founding rate</th><th>What you get</th></tr></thead><tbody>${SPONSOR.formats.map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+  return {
+    path: "/advertise", title: g.title, description: g.description, lastmod: asOf, guide: true,
+    body: `<div class="oa-guide"><h1>Advertise with Orbit Alpha</h1><!--oa-answer--><p>Orbit Alpha is a free weekly newsletter and live dashboard for people who invest in space stocks. Readers are individual investors in the UK, US and Europe who hold or follow companies such as SpaceX, Rocket Lab, AST SpaceMobile and the European satellite operators. If your product helps them invest, research or follow the space industry, this is a direct way to reach them.</p>
+<h2>The audience</h2>${list([`${SPONSOR.subscribers} newsletter subscribers, sent every Sunday`, `A website covering ${count} listed space companies, with stock pages, guides and data that are found through Google and AI search`, "Readers who are already investing: the site is built around how-to-buy guides, lock-up calendars, earnings dates and SEC filings", "Distribution on Reddit and X (@OrbitAlphaApp) on top of the newsletter"])}
+<h2>Formats and founding rates</h2>${table}<p>Founding rates are fixed for the first three months for anyone who books now. Sponsored content is always labelled. Orbit Alpha's guides, rankings and stock data are never sponsored, which is why readers trust them.</p>
+<h2>Who it suits</h2>${list(["Investment platforms and ETF issuers with space or thematic funds", "Research, charting and portfolio tools", "Space-industry media, research and events", "Other investing newsletters looking for a swap or a paid recommendation"])}
+<p>Listed companies and their investor relations firms are welcome too. Any payment from a listed company is disclosed in the issue alongside the sponsorship.</p>
+<h2>Book a slot</h2><p>Email <a href="mailto:${SPONSOR.email}?subject=Sponsoring%20Orbit%20Alpha">${SPONSOR.email}</a> with the format, the dates you would like and a link to your product.</p></div>`,
+    answer: `Orbit Alpha sponsorships start at £30 for a classified line and £75 for the main sponsor slot in the Sunday space stocks newsletter, which goes to ${SPONSOR.subscribers} subscribers. Email ${SPONSOR.email} to book.`,
+    ld: [ORG, crumbs([["Home", "/"], ["Advertise", "/advertise"]])],
+  };
+}
+
 // The /guides hub: every guide, grouped. Built last so it can describe the others.
 export function buildHub(ctx) {
   const { SITE, ORG, crumbs, esc, asOf } = ctx;

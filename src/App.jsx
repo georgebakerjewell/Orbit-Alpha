@@ -3,7 +3,8 @@ import issues from "./issues.json";
 import issueArchive from "./issueArchive.json";
 import stories from "./stories.json"; // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
-import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS } from "../lib/pagemeta.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
+import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS } from "../lib/pagemeta.js";
+import { BROKERS, brokerHref, anyAffiliate, RISK, DISCLOSURE } from "../lib/affiliates.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
 /* ════════════════════════════════════════════════════════════════════════════
    DATA  (stocks, ETFs and keywords all come from lib/roster.js)
@@ -409,6 +410,8 @@ const GlobalStyles = () => (
     .oa-issue .oa-updated{font-size:11px;color:${C.muted};margin:-8px 0 14px;letter-spacing:0.03em}
     .oa-issue .oa-answer{border-left:3px solid ${C.green};background:rgba(0,255,136,0.04);padding:12px 16px 1px;margin:0 0 22px;border-radius:0 8px 8px 0}
     .oa-issue .oa-answer p{color:#fff;font-size:14.5px}
+    .oa-issue .oa-brokers{border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px 2px;margin:4px 0 22px;background:rgba(255,255,255,0.02)}
+    .oa-issue .oa-brokers ul{margin-bottom:8px}
     .oa-guide-list{list-style:none;padding-left:0!important}
     .oa-guide-list li{margin-bottom:14px!important;color:${C.muted}}
     .oa-guide-list li a{font-weight:600}
@@ -949,6 +952,7 @@ function Home({ news, prices, launches }) {
           <Link to="/news" className="oa-link">News</Link>
           <Link to="/newsletter" className="oa-link">Newsletter</Link>
           <Link to="/about" className="oa-link">About</Link>
+          <Link to="/advertise" className="oa-link">Advertise</Link>
           <a href="https://x.com/OrbitAlphaApp" target="_blank" rel="noopener me" style={{ color: C.muted, textDecoration: "none" }} className="oa-link">X @OrbitAlphaApp</a>
           <a href="https://www.reddit.com/r/SpaceCapital/" target="_blank" rel="noopener" style={{ color: C.muted, textDecoration: "none" }} className="oa-link">r/SpaceCapital</a>
           <a href="mailto:OrbitAlphaApp@proton.me" style={{ color: C.muted, textDecoration: "none" }} className="oa-link">Contact</a>
@@ -1972,6 +1976,15 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
         )}
       </header>
       <p style={{ fontSize: 13, color: C.light, lineHeight: 1.7, maxWidth: 720, marginBottom: 16 }}>{profile.about}</p>
+
+      {/* Where to buy (lib/affiliates.js); clicks are logged as affiliate_click by the listener in index.html */}
+      <div style={{ ...cardStyle, padding: "12px 16px", marginBottom: 16, display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px 16px" }}>
+        <span style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Where to buy {ticker}</span>
+        {BROKERS.map((b) => (
+          <a key={b.id} href={brokerHref(b)} target="_blank" rel={b.affiliate ? "sponsored noopener" : "noopener"} data-broker={b.id} data-placement="stock-page-app" data-ticker={ticker} className="oa-link" style={{ color: C.green, fontSize: 13 }} title={b.note}>{b.name}</a>
+        ))}
+        <span style={{ fontSize: 10, color: C.muted, flexBasis: "100%" }}>{RISK}{anyAffiliate() ? ` ${DISCLOSURE}` : ""}</span>
+      </div>
 
       {/* Follow bar */}
       <ForNonSubscribers>

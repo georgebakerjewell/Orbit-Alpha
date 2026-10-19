@@ -69,6 +69,11 @@
       window.__oaFirstTouch = ft;
       window.__oaTouchProps = { first_source: (ft && ft.source) || "direct", first_medium: (ft && ft.medium) || "none", first_landing: ft && ft.landing };
     })();
+    // Broker link clicks ("Where to buy" boxes on stock pages and guides) for the revenue dashboard.
+    document.addEventListener("click", function (e) {
+      var a = e.target && e.target.closest && e.target.closest("a[data-broker]");
+      if (a && window.posthog && window.posthog.capture) window.posthog.capture("affiliate_click", { broker: a.getAttribute("data-broker"), placement: a.getAttribute("data-placement"), ticker: a.getAttribute("data-ticker") || null, page: window.location.pathname });
+    }, true);
     if (POSTHOG_KEY) posthog.init(POSTHOG_KEY, {
       api_host: POSTHOG_HOST,
       person_profiles: "identified_only",
