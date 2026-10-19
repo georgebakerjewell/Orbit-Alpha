@@ -27,7 +27,7 @@ jobs:
           mkdir -p public/downloads
           node scripts/print-sheet.mjs https://www.orbitalpha.cloud/downloads/space-stocks-sheet public/downloads/space-stocks-2026.pdf
           sudo apt-get install -y poppler-utils >/dev/null
-          pdftoppm -png -r 110 -f 1 -l 1 -singlefile public/downloads/space-stocks-2026.pdf public/downloads/space-stocks-2026-preview
+          pdftoppm -png -r 110 -f 5 -l 5 -singlefile public/downloads/space-stocks-2026.pdf public/downloads/space-stocks-2026-preview
       - name: Commit if changed
         run: |
           git config user.name "orbit-alpha-bot"

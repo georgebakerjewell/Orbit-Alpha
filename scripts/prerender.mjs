@@ -249,7 +249,7 @@ const routes = [
     path: "/free-pdf", title: "Free PDF: Space Stocks 2026, All 30 Listed Space Companies at a Glance | Orbit Alpha",
     description: "Download Space Stocks 2026 free: every listed space company on one PDF with market cap, revenue, cash runway and next results date. Updated weekly.",
     ogImage: "/downloads/space-stocks-2026-preview.png",
-    body: `<h1>Space Stocks 2026: every listed space company in one PDF</h1><p>A printable guide to all ${count} space stocks Orbit Alpha covers, grouped by sector, with what each company does, share price, market cap, year-to-date return, revenue, cash runway and next results date. Free with the Sunday newsletter and updated every week.</p><p><img src="/downloads/space-stocks-2026-preview.png" alt="Preview of the Space Stocks 2026 PDF" width="900" /></p><p><a href="/newsletter">Subscribe free to get the PDF</a>.</p>${sources}`,
+    body: `<h1>Space Stocks 2026: every listed space company in one PDF</h1><p>A free 34-page report with a page on each of the ${count} space stocks Orbit Alpha covers: key numbers, share price chart, financials, insider trades, government contracts, filings and peers, plus a sector overview. Free with the Sunday newsletter and updated every week.</p><p><img src="/downloads/space-stocks-2026-preview.png" alt="Preview of the Space Stocks 2026 PDF" width="900" /></p><p><a href="/newsletter">Subscribe free to get the PDF</a>.</p>${sources}`,
     ld: [crumbs([["Home", "/"], ["Free PDF", "/free-pdf"]])],
   },
   {

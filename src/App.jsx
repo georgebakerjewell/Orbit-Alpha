@@ -583,12 +583,12 @@ function LeadMagnet({ source, heading = "Free PDF: Space Stocks 2026" }) {
   return (
     <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.35)", background: "rgba(0,255,136,0.04)", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 24, alignItems: "center", padding: 24 }}>
       <a href={SHEET.preview} target="_blank" rel="noopener" style={{ display: "block", borderRadius: 8, overflow: "hidden", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "0 12px 40px rgba(0,0,0,0.5)", background: "#fff" }}>
-        <img src={SHEET.preview} alt="Preview of the Space Stocks 2026 PDF: all 30 listed space companies at a glance" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
+        <img src={SHEET.preview} alt="A company page from the Space Stocks 2026 report" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
       </a>
       <div>
         <div style={{ fontSize: 11.5, color: C.green, marginBottom: 8 }}>Free with the Sunday newsletter</div>
         <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>{heading}</div>
-        <p style={{ fontSize: 12.5, color: C.light, lineHeight: 1.7, marginBottom: 12 }}>All {Object.keys(PROFILES).length} listed space companies at a glance, grouped by sector: what each one does, share price, market cap, year-to-date return, revenue, cash runway and next results date. Updated every week.</p>
+        <p style={{ fontSize: 12.5, color: C.light, lineHeight: 1.7, marginBottom: 12 }}>A 34-page report with a full page on each of the {Object.keys(PROFILES).length} listed space companies: key numbers, this year's share price chart, financials, insider trades, government contracts, latest filings and peers, plus a sector overview and results calendar. Updated every week.</p>
         {subscribed
           ? <a href={SHEET.href} target="_blank" rel="noopener" className="oa-link" onClick={() => window.posthog?.capture?.("lead_magnet_download", { from: `${source}-subscriber` })} style={{ color: C.green, fontWeight: 700, fontSize: 14 }}>{SHEET.label}</a>
           : <><SubscribeForm source={source} reward={SHEET} label="Get the PDF" sample={false} style={{ maxWidth: "none", marginBottom: 8 }} />
@@ -704,7 +704,7 @@ function SubscribePopup({ path }) {
       <div style={{ background: "#0d1220", border: "1px solid rgba(0,255,136,0.25)", borderRadius: 12, padding: 32, maxWidth: 420, width: "100%", position: "relative", animation: "fu 0.3s ease", boxShadow: "0 20px 60px rgba(0,0,0,0.8)" }}>
         <button onClick={() => close(Date.now().toString())} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", color: C.muted, fontSize: 20, cursor: "pointer", lineHeight: 1 }}>×</button>
         <img src={SHEET.preview} alt="Space Stocks 2026 PDF preview" style={{ display: "block", width: "100%", borderRadius: 6, marginBottom: 16, border: "1px solid rgba(255,255,255,0.12)" }} />
-        <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>Free PDF: all {Object.keys(PROFILES).length} space stocks at a glance</div>
+        <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>Free 34-page report on every space stock</div>
         <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>Get Space Stocks 2026 free when you join the Sunday newsletter: what moved across the stocks we track and why, analyst changes and one company in depth.</div>
         <SubscribeForm source="popup" reward={SHEET} label="Get the PDF" sample={false} style={{ maxWidth: "none", marginBottom: 14 }} />
         <div style={{ fontSize: 11, color: C.muted }}>{subscribers} subscribers. Unsubscribe in one click.</div>
@@ -735,7 +735,7 @@ function MobileSubscribeBar({ path }) {
   return (
     <div className="mob-only" style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 9000, background: "rgba(8,12,22,0.97)", borderTop: "1px solid rgba(0,255,136,0.35)", padding: "10px 14px calc(10px + env(safe-area-inset-bottom, 0px))", boxShadow: "0 -10px 30px rgba(0,0,0,0.5)", animation: "fu 0.25s ease" }}>
       <button onClick={close} aria-label="Close" style={{ position: "absolute", top: 4, right: 8, background: "none", border: "none", color: C.muted, fontSize: 18, lineHeight: 1, cursor: "pointer", padding: 4 }}>×</button>
-      <div style={{ fontSize: 11, color: "#fff", fontWeight: 700, marginBottom: 7, paddingRight: 24 }}>Free PDF: all {Object.keys(PROFILES).length} space stocks at a glance, plus the Sunday newsletter</div>
+      <div style={{ fontSize: 11, color: "#fff", fontWeight: 700, marginBottom: 7, paddingRight: 24 }}>Free report: a page on every space stock, plus the Sunday newsletter</div>
       <SubscribeForm source="mobile-bar" sample={false} reward={SHEET} label="Get the PDF" onDone={() => setDone(true)} style={{ maxWidth: "none" }} />
     </div>
   );
@@ -877,7 +877,7 @@ function Home({ news, prices, launches }) {
             What moved, why it moved and what's coming next across {Object.keys(PROFILES).length} space stocks, from SpaceX and Rocket Lab to the small caps. Five minutes every Sunday morning.
           </p>
           <SubscribeForm source="home-hero" sample={false} style={{ marginBottom: 10 }} reward={SHEET} />
-          <div style={{ fontSize: 12, color: C.light, marginBottom: 6 }}><span style={{ color: C.green, fontWeight: 700 }}>Free when you sign up:</span> Space Stocks 2026, a PDF of all {Object.keys(PROFILES).length} companies at a glance. <Link to="/free-pdf" className="oa-link" style={{ color: C.green }}>See what's inside</Link></div>
+          <div style={{ fontSize: 12, color: C.light, marginBottom: 6 }}><span style={{ color: C.green, fontWeight: 700 }}>Free when you sign up:</span> Space Stocks 2026, a report with a page on each of the {Object.keys(PROFILES).length} listed space companies. <Link to="/free-pdf" className="oa-link" style={{ color: C.green }}>See what's inside</Link></div>
           <div style={{ fontSize: 11, color: C.muted }}>Read by {subscribers} investors. Unsubscribe in one click.</div>
         </div>
         {latest && (
@@ -2137,7 +2137,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       <ForNonSubscribers>
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginBottom: 24 }}>
         <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Follow {profile.name}</div>
-        <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>A free email every Sunday covering {profile.name} and the other space stocks we track, plus Space Stocks 2026, a PDF of all 30 companies at a glance.</p>
+        <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>A free email every Sunday covering {profile.name} and the other space stocks we track, plus Space Stocks 2026, a free report with a page on every listed space company.</p>
         <SubscribeForm source="stock-page-bottom" follow={ticker} label={`Follow ${ticker}`} reward={SHEET} />
       </section>
       </ForNonSubscribers>
@@ -2573,7 +2573,7 @@ function GuidePage({ path }) {
         : <ListSkeleton rows={8} />}
       <ForNonSubscribers>
         <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", margin: "32px 0 0" }}>
-          <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Free: all 30 space stocks at a glance</div>
+          <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Free report: a page on every space stock</div>
           <p style={{ fontSize: 12, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>Subscribe to the free Sunday newsletter and get Space Stocks 2026, a printable PDF of every listed space company with market cap, revenue, cash runway and next results date.</p>
           <SubscribeForm source="guide-page" reward={SHEET} label="Get the PDF" />
         </div>
@@ -2708,7 +2708,7 @@ export default function App() {
             {NAV.map(([to, p, l]) => (
               <Link key={p} to={to} style={{ color: page === p ? C.green : C.light, padding: "10px 0", fontSize: 12, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>{l}</Link>
             ))}
-            <Link to="/free-pdf" style={{ color: C.green, padding: "10px 0", fontSize: 12, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>Free PDF: all space stocks at a glance</Link>
+            <Link to="/free-pdf" style={{ color: C.green, padding: "10px 0", fontSize: 12, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>Free report: every space stock</Link>
             <button onClick={goSubscribe} style={{ background: C.green, color: C.bg, border: "none", padding: 11, borderRadius: 4, fontSize: 11, fontWeight: 700, fontFamily: MONO, cursor: "pointer", marginTop: 8 }}>Subscribe</button>
           </div>
         )}
@@ -2737,8 +2737,8 @@ export default function App() {
             <p style={{ fontSize: 13.5, color: C.light, lineHeight: 1.7, maxWidth: 680, marginBottom: 24 }}>A printable guide to all {Object.keys(PROFILES).length} space stocks Orbit Alpha covers, from SpaceX and Rocket Lab to the European satellite operators. Free with the Sunday newsletter.</p>
             <LeadMagnet source="free-pdf-page" heading="Get the free PDF" />
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 14, marginTop: 24 }}>
-              {[["Every company, by sector", "Launch, satellite communications, Earth observation, infrastructure and exploration, with one line on what each company does."],
-                ["The numbers that matter", "Share price, market cap in US dollars, year-to-date return, last 12 months of revenue and cash runway from SEC filings."],
+              {[["A page on every company", "What it does, key numbers, this year's share price chart, financials, insider trades, contracts, filings and peers."],
+                ["The sector at a glance", "Combined market value by sector, the best and worst performers this year, and every company in one table."],
                 ["What is coming next", "Each company's next results date, so you know when the big moves are likely."],
                 ["Updated every week", "Rebuilt from live prices and filings every Monday. Subscribers get the newest version from the same link."]].map(([h, t]) => (
                 <div key={h} style={cardStyle}><div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 6 }}>{h}</div><div style={{ fontSize: 12, color: C.muted, lineHeight: 1.6 }}>{t}</div></div>
