@@ -132,7 +132,7 @@ function stockFacts(t, name) {
   if (e) rows.push(`Next earnings: ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}${e.epsEst ? ` (consensus EPS ${esc(epsText(e.epsEst))})` : ""}`);
   let html = "";
   if (rows.length) html += `<h2>${esc(name)} (${t}) stock at a glance</h2>${list(rows)}<p>Figures as of ${fmtDate(quotesDate || today)}. Prices on the live page update through the trading day.</p>`;
-  html += brokerBoxHtml({ ticker: t, name, placement: "stock-page", esc });
+  html += brokerBoxHtml({ ticker: t, name, placement: "stock-page", esc, tools: !profiles[t]?.listing && t !== "MDA" });
   // Key financials from the latest 10-Q/10-K (US SEC filers), so "<company> revenue" and "<company>
   // cash" searches find a direct answer. 12-month figures where available, else the latest quarter.
   const f = finBy[t]?.snapshot;

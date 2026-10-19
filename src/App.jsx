@@ -5,7 +5,7 @@ import stories from "./stories.json";
 import resultsData from "./results.json"; // results-day pages at /results/<slug> (src/results.json, added by a scheduled task) // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
 import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, GUIDE_CTA, GUIDE_CTA_DEFAULT } from "../lib/pagemeta.js";
-import { BROKERS, brokerHref, anyAffiliate, RISK, DISCLOSURE } from "../lib/affiliates.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
+import { BROKERS, TOOLS, toolHref, brokerHref, anyAffiliate, RISK, DISCLOSURE } from "../lib/affiliates.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
 /* ════════════════════════════════════════════════════════════════════════════
    DATA  (stocks, ETFs and keywords all come from lib/roster.js)
@@ -2030,6 +2030,14 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
         {BROKERS.map((b) => (
           <a key={b.id} href={brokerHref(b)} target="_blank" rel={b.affiliate ? "sponsored noopener" : "noopener"} data-broker={b.id} data-placement="stock-page-app" data-ticker={ticker} className="oa-link" style={{ color: C.green, fontSize: 13 }} title={b.note}>{b.name}</a>
         ))}
+        {!profile.listing && ticker !== "MDA" && (
+          <div style={{ flexBasis: "100%", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 16px" }}>
+            <span style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Research {ticker}</span>
+            {TOOLS.map((x) => (
+              <a key={x.id} href={toolHref(x, ticker)} target="_blank" rel={x.affiliate ? "sponsored noopener" : "noopener"} data-broker={x.id} data-placement="stock-page-app" data-ticker={ticker} className="oa-link" style={{ color: C.blue, fontSize: 12 }}>{x.name}</a>
+            ))}
+          </div>
+        )}
         <span style={{ fontSize: 10, color: C.muted, flexBasis: "100%" }}>{RISK}{anyAffiliate() ? ` ${DISCLOSURE}` : ""}</span>
       </div>
 
