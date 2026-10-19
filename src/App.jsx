@@ -1986,17 +1986,6 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
         <span style={{ fontSize: 10, color: C.muted, flexBasis: "100%" }}>{RISK}{anyAffiliate() ? ` ${DISCLOSURE}` : ""}</span>
       </div>
 
-      {/* Follow bar */}
-      <ForNonSubscribers>
-      <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.04)", borderRadius: 10, padding: "12px 16px", marginBottom: 20 }}>
-        <div style={{ flex: "1 1 240px" }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Follow {ticker}</div>
-          <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{profile.name} news, filings and price moves in a free email every Sunday.</div>
-        </div>
-        <SubscribeForm source="stock-page-top" follow={ticker} label={`Follow ${ticker}`} style={{ flex: "1 1 320px" }} />
-      </div>
-      </ForNonSubscribers>
-
       {/* Chart */}
       <Card style={{ marginBottom: 14 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, flexWrap: "wrap", gap: 8 }}>
