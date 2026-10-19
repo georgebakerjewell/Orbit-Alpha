@@ -23,7 +23,7 @@ export function sheetHtml(d) {
     const dates = perfBy.ytd?.dates || [];
     const pts = s ? s.values.map((v, i) => [i, v]).filter(([, v]) => v != null) : [];
     if (pts.length < 5) return `<div class="nochart">Year-to-date chart not available${t === "SPCX" ? " (listed June 2026)" : ""}.</div>`;
-    const W = 680, H = 150, P = 6;
+    const W = 680, H = 120, P = 6;
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(0, ...ys), y1 = Math.max(0, ...ys);
     const X = (x) => P + ((x - x0) / (x1 - x0 || 1)) * (W - 2 * P), Y = (y) => P + (1 - (y - y0) / (y1 - y0 || 1)) * (H - 2 * P);
@@ -46,10 +46,10 @@ export function sheetHtml(d) {
     const us = !p.listing;
     const ytd = t === "SPCX" ? null : ytdBy[t];
     const r1 = t === "SPCX" ? null : ret1y(t);
-    const peers = order.filter((x) => profiles[x].sector === p.sector && x !== t).slice(0, 6);
-    const filings = (filingsBy[t] || []).slice(0, 5);
-    const awards = (con?.awards || []).slice(0, 3);
-    const issues = issueArchive.filter((x) => x.tickers?.includes(t)).slice(0, 3);
+    const peers = order.filter((x) => profiles[x].sector === p.sector && x !== t).slice(0, 4);
+    const filings = (filingsBy[t] || []).slice(0, 4);
+    const awards = (con?.awards || []).slice(0, 2);
+    const issues = issueArchive.filter((x) => x.tickers?.includes(t)).slice(0, 2);
     const briefs = stories.filter((x) => x.tickers?.includes(t)).slice(0, 2);
     const fin = f && f.currency === "USD" ? `<h3>Financials</h3><table class="kv">${rows([
       ["Revenue, last 12 months", f.revenue?.ttm ? fmtUsd(f.revenue.ttm) : null],
@@ -68,7 +68,7 @@ export function sheetHtml(d) {
       ["Sold (open market)", ins.m12.sold ? fmtUsd(ins.m12.sold) : "None"],
       ["Buyers / sellers", `${ins.m12.buyers} / ${ins.m12.sellers}`],
     ])}</table>${(ins.largest || []).slice(0, 2).map((x) => `<div class="li">${fmtDate(x.date)}: ${esc(x.owner || "Insider")}${x.role ? ` (${esc(x.role)})` : ""} ${x.direction === "buy" ? "bought" : "sold"} ${fmtUsd(x.value)}</div>`).join("")}` : "";
-    const contracts = us && con ? `<h3>US government contracts, 12 months</h3><div class="big">${con.total ? fmtUsd(con.total) : "None recorded"}</div>${awards.map((a) => `<div class="li">${fmtDate(a.start)}: ${fmtUsd(a.amount)}, ${esc(a.subAgency || a.agency || "")}${a.description ? `. ${esc(a.description.slice(0, 80))}` : ""}</div>`).join("")}` : "";
+    const contracts = us && con ? `<h3>US government contracts, 12 months</h3><div class="big">${con.total ? fmtUsd(con.total) : "None recorded"}</div>${awards.map((a) => `<div class="li">${fmtDate(a.start)}: ${fmtUsd(a.amount)}, ${esc(a.subAgency || a.agency || "")}${a.description ? `. ${esc(a.description.slice(0, 60))}` : ""}</div>`).join("")}` : "";
     return `<section class="co">
 <div class="cohead"><div><span class="sector">${esc(p.sector)}</span><span class="pg">Page ${i + 4}</span></div><div class="brand">ORBIT<span>ALPHA.</span></div></div>
 <h2><span class="tk">${t}</span> ${esc(p.name)}</h2>
@@ -135,7 +135,7 @@ td { padding: 3px 4px; border-bottom: 1px solid #eee; vertical-align: top; }
 .n { text-align: right; white-space: nowrap; } .up { color: #00804a; } .down { color: #c22f3f; }
 .sectorrow td { background: #04060e; color: #fff; font-weight: 700; }
 .toc { columns: 2; column-gap: 10mm; } .toc div { break-inside: avoid; padding: 2px 0; border-bottom: 1px dotted #ddd; display: flex; justify-content: space-between; }
-.co { page-break-before: always; min-height: 260mm; position: relative; }
+.co { page-break-before: always; height: 271mm; overflow: hidden; position: relative; padding-bottom: 10mm; }
 .cohead { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #04060e; padding-bottom: 5px; margin-bottom: 8px; font-size: 10px; }
 .sector { background: #04060e; color: #fff; padding: 2px 7px; border-radius: 3px; font-weight: 700; margin-right: 8px; } .pg { color: #777; }
 .co h2 { font-size: 26px; margin: 2px 0 0; letter-spacing: -0.02em; } .tk { color: #00a35a; }
