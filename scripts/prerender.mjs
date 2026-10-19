@@ -10,6 +10,7 @@ import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, stockTitle } from "../l
 import { withConfirmed } from "../lib/earnings-confirmed.js";
 import { brokerBoxHtml } from "../lib/affiliates.js";
 import { sheetHtml } from "./sheet.mjs";
+import { widgetHtml } from "./embed.mjs";
 import { buildGuides } from "./guides.mjs";
 import { stockCard, OG_COLORS } from "./og.mjs";
 
@@ -37,7 +38,7 @@ const SECTOR_TEXT = {
 
 const sources = `<h2>Where the data comes from</h2><p>Prices come from ${ext("https://finance.yahoo.com/", "Yahoo Finance")}, company filings and insider trades from the SEC's ${ext("https://www.sec.gov/edgar/search/", "EDGAR")} database, US government contract awards from ${ext("https://www.usaspending.gov/", "USAspending.gov")}, and launch schedules from public launch trackers. Orbit Alpha is information, not investment advice.</p>`;
 const sectorDirectory = `<h2>Space stocks we cover, by sector</h2>${SECTOR_ORDER.map((s) => `<h3>${s}</h3><p>${SECTOR_TEXT[s]}</p>${list(bySector[s].map(stockLink))}`).join("")}<h3>Space ETFs and funds</h3>${list(Object.entries(ETFS).map(([t, e]) => `${esc(e.name)} (${t})`))}`;
-const footer = `<p>Orbit Alpha is a free space stocks dashboard and weekly newsletter covering ${Object.keys(profiles).length} listed space companies, with live prices, launches, earnings dates, SEC filings, insider trades and US government contracts in one place.</p><nav aria-label="Site"><ul><li><a href="/">Home</a></li><li><a href="/markets">Live space stocks dashboard</a></li><li><a href="/markets/performance">Performance vs the S&amp;P 500</a></li><li><a href="/news">News, filings and contracts</a></li><li><a href="/newsletter">Free weekly newsletter</a></li><li><a href="/about">About</a></li><li><a href="/advertise">Advertise</a></li><li><a href="/guides">Space stock guides</a></li>${GUIDE_LIST.map(([p, g]) => `<li><a href="${p}">${esc(g.label)}</a></li>`).join("")}<li>${ext(`https://x.com/${X_HANDLE}`, "Orbit Alpha on X")}</li><li>${ext(REDDIT, "r/SpaceCapital on Reddit")}</li></ul></nav>`;
+const footer = `<p>Orbit Alpha is a free space stocks dashboard and weekly newsletter covering ${Object.keys(profiles).length} listed space companies, with live prices, launches, earnings dates, SEC filings, insider trades and US government contracts in one place.</p><nav aria-label="Site"><ul><li><a href="/">Home</a></li><li><a href="/markets">Live space stocks dashboard</a></li><li><a href="/markets/performance">Performance vs the S&amp;P 500</a></li><li><a href="/news">News, filings and contracts</a></li><li><a href="/newsletter">Free weekly newsletter</a></li><li><a href="/about">About</a></li><li><a href="/advertise">Advertise</a></li><li><a href="/space-stocks-widget">Free space stocks widget</a></li><li><a href="/guides">Space stock guides</a></li>${GUIDE_LIST.map(([p, g]) => `<li><a href="${p}">${esc(g.label)}</a></li>`).join("")}<li>${ext(`https://x.com/${X_HANDLE}`, "Orbit Alpha on X")}</li><li>${ext(REDDIT, "r/SpaceCapital on Reddit")}</li></ul></nav>`;
 const share = (path, text) => {
   const u = encodeURIComponent(SITE + path), t = encodeURIComponent(text);
   return `<p>Follow Orbit Alpha on ${ext(`https://x.com/${X_HANDLE}`, `X (@${X_HANDLE})`)} and join the discussion on ${ext(REDDIT, "r/SpaceCapital")}.</p><p>Share this page: ${ext(`https://x.com/intent/tweet?url=${u}&text=${t}`, "X")} · ${ext(`https://www.reddit.com/submit?url=${u}&title=${t}`, "Reddit")} · ${ext(`https://www.linkedin.com/sharing/share-offsite/?url=${u}`, "LinkedIn")}</p>`;
@@ -400,6 +401,8 @@ writeFileSync(new URL("robots.txt", DIST), `${AI_BOTS.map((b) => `User-agent: ${
 
 // The printable "all 30 companies at a glance" (printed to PDF by a GitHub Action; free sign-up download).
 mkdirSync(new URL("downloads/", DIST).pathname, { recursive: true });
+mkdirSync(new URL("embed/", DIST), { recursive: true });
+writeFileSync(new URL("embed/space-stocks.html", DIST), widgetHtml({ profiles, SITE }));
 writeFileSync(new URL("downloads/space-stocks-sheet.html", DIST), sheetHtml({ profiles, SECTOR_ORDER, quotes, ytdBy, perfBy, finBy, insidersBy, filingsBy, contractsBy: contractsFull, nextEarnings, issueArchive, stories, asOf: quotesDate || today, esc, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate, SITE }));
 
 // Data downloads behind the "Download this data" links on guides (CSV and JSON).

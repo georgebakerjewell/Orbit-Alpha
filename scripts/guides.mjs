@@ -6,6 +6,7 @@ import { GUIDES, GUIDE_LIST } from "../lib/pagemeta.js";
 import { buildMoreGuides, buildHub, buildAdvertise } from "./guides-more.mjs";
 import { buildSpaceX } from "./spacex.mjs";
 import { buildResults } from "./results.mjs";
+import { buildWidgetGuide } from "./embed.mjs";
 import { readFileSync } from "node:fs";
 import { brokerBoxHtml } from "../lib/affiliates.js";
 
@@ -239,7 +240,8 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
     ...buildMoreGuides({ ...ctx, page, table, faq, and, usd, asOfLine }),
     ...buildResults({ ...ctx, results: JSON.parse(readFileSync(new URL("../src/results.json", import.meta.url), "utf8")) }),
     buildHub(ctx),
-    buildAdvertise(ctx)];
+    buildAdvertise(ctx),
+    buildWidgetGuide(ctx)];
   // Finish every guide: the quick answer, a visible "updated" date and WebPage data with dateModified.
   // "Where to buy" boxes on the guides with buying intent.
   const BUY = { "/spacex-stock": ["SPCX", "SpaceX"], "/starlink-stock": ["SPCX", "SpaceX"], "/space-stocks/uk-europe": [null, "UK and European space stocks"], "/space-stocks/under-10": [null, "US space stocks"] };
