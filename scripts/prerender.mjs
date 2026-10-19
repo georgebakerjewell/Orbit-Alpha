@@ -396,7 +396,7 @@ writeFileSync(new URL("robots.txt", DIST), `${AI_BOTS.map((b) => `User-agent: ${
 
 // The printable "all 30 companies at a glance" (printed to PDF by a GitHub Action; free sign-up download).
 mkdirSync(new URL("downloads/", DIST).pathname, { recursive: true });
-writeFileSync(new URL("downloads/space-stocks-sheet.html", DIST), sheetHtml({ profiles, SECTOR_ORDER, quotes, ytdBy, finBy, nextEarnings, asOf: quotesDate || today, esc, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate, SITE }));
+writeFileSync(new URL("downloads/space-stocks-sheet.html", DIST), sheetHtml({ profiles, SECTOR_ORDER, quotes, ytdBy, perfBy, finBy, insidersBy, filingsBy, contractsBy: contractsFull, nextEarnings, issueArchive, stories, asOf: quotesDate || today, esc, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate, SITE }));
 
 // Data downloads behind the "Download this data" links on guides (CSV and JSON).
 mkdirSync(new URL("data/", DIST).pathname, { recursive: true });

@@ -5,6 +5,6 @@ const [src = "https://www.orbitalpha.cloud/downloads/space-stocks-sheet", out = 
 const browser = await chromium.launch();
 const page = await browser.newPage();
 await page.goto(src.startsWith("http") ? src : `file://${process.cwd()}/${src}`, { waitUntil: "networkidle" });
-await page.pdf({ path: out, format: "A4", landscape: true, printBackground: true, margin: { top: "10mm", bottom: "10mm", left: "10mm", right: "10mm" } });
+await page.pdf({ path: out, printBackground: true, preferCSSPageSize: true });
 await browser.close();
 console.log(`printed ${out}`);
