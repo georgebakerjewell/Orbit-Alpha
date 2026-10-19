@@ -26,9 +26,11 @@ jobs:
         run: |
           mkdir -p public/downloads
           node scripts/print-sheet.mjs https://www.orbitalpha.cloud/downloads/space-stocks-sheet public/downloads/space-stocks-2026.pdf
+          sudo apt-get install -y poppler-utils >/dev/null
+          pdftoppm -png -r 110 -f 1 -l 1 -singlefile public/downloads/space-stocks-2026.pdf public/downloads/space-stocks-2026-preview
       - name: Commit if changed
         run: |
           git config user.name "orbit-alpha-bot"
           git config user.email "actions@github.com"
-          git add public/downloads/space-stocks-2026.pdf
+          git add public/downloads/space-stocks-2026.pdf public/downloads/space-stocks-2026-preview.png
           if git diff --cached --quiet; then echo "No change."; else git commit -m "Update space stocks sheet PDF" && git push; fi

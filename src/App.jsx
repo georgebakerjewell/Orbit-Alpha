@@ -51,6 +51,7 @@ function parsePath(pathname) {
     return issueArchive.some((x) => x.issue === n) ? { page: "issue", issue: n } : { page: "notfound" };
   }
   if (["news", "newsletter", "about"].includes(first)) return { page: first };
+  if (first === "free-pdf") return { page: "freepdf" };
   return { page: "notfound" };
 }
 
@@ -130,6 +131,7 @@ function routeMeta(route) {
     news: { title: "Space Stock News, Filings and Contract Wins | Orbit Alpha", description: "Live space stock news, SEC filings, insider trades and government contract wins in one feed, filterable by company." },
     newsletter: { title: "The Orbit Alpha Newsletter | Free Weekly Space Stocks Briefing", description: "Every Sunday: the week in space stocks, analyst target changes and one stock deep dive. Free." },
     about: { title: "About | Orbit Alpha", description: "What Orbit Alpha is, which space stocks it covers and where its data comes from." },
+    freepdf: { title: "Free PDF: Space Stocks 2026, All 30 Listed Space Companies at a Glance | Orbit Alpha", description: "Download Space Stocks 2026 free: every listed space company on one PDF with market cap, revenue, cash runway and next results date. Updated weekly." },
   }[route.page] || { title: "Page not found | Orbit Alpha", description: "" };
 }
 
@@ -573,7 +575,28 @@ function useSubscriberLabel() {
 }
 
 // The free sign-up download (printed weekly by .github/workflows/space-stocks-sheet.yml).
-const SHEET = { href: "/downloads/space-stocks-2026.pdf", label: "Download Space Stocks 2026 (PDF)" };
+const SHEET = { href: "/downloads/space-stocks-2026.pdf", label: "Download Space Stocks 2026 (PDF)", preview: "/downloads/space-stocks-2026-preview.png" };
+
+// The free PDF offer, as a card: preview, what's inside, email box. Used on /free-pdf and the home page.
+function LeadMagnet({ source, heading = "Free PDF: Space Stocks 2026" }) {
+  const subscribed = useSubscribed();
+  return (
+    <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.35)", background: "rgba(0,255,136,0.04)", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 24, alignItems: "center", padding: 24 }}>
+      <a href={SHEET.preview} target="_blank" rel="noopener" style={{ display: "block", borderRadius: 8, overflow: "hidden", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "0 12px 40px rgba(0,0,0,0.5)", background: "#fff" }}>
+        <img src={SHEET.preview} alt="Preview of the Space Stocks 2026 PDF: all 30 listed space companies at a glance" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
+      </a>
+      <div>
+        <div style={{ fontSize: 11.5, color: C.green, marginBottom: 8 }}>Free with the Sunday newsletter</div>
+        <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>{heading}</div>
+        <p style={{ fontSize: 12.5, color: C.light, lineHeight: 1.7, marginBottom: 12 }}>All {Object.keys(PROFILES).length} listed space companies at a glance, grouped by sector: what each one does, share price, market cap, year-to-date return, revenue, cash runway and next results date. Updated every week.</p>
+        {subscribed
+          ? <a href={SHEET.href} target="_blank" rel="noopener" className="oa-link" onClick={() => window.posthog?.capture?.("lead_magnet_download", { from: `${source}-subscriber` })} style={{ color: C.green, fontWeight: 700, fontSize: 14 }}>{SHEET.label}</a>
+          : <><SubscribeForm source={source} reward={SHEET} label="Get the PDF" sample={false} style={{ maxWidth: "none", marginBottom: 8 }} />
+            <div style={{ fontSize: 11, color: C.muted }}>Enter your email and the download link appears straight away. Unsubscribe in one click.</div></>}
+      </div>
+    </section>
+  );
+}
 
 function SubscribeForm({ color = C.green, label = "Subscribe", onDone, style, source, follow, sample = true, reward }) {
   const [email, setEmail] = useState("");
@@ -680,9 +703,10 @@ function SubscribePopup({ path }) {
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>
       <div style={{ background: "#0d1220", border: "1px solid rgba(0,255,136,0.25)", borderRadius: 12, padding: 32, maxWidth: 420, width: "100%", position: "relative", animation: "fu 0.3s ease", boxShadow: "0 20px 60px rgba(0,0,0,0.8)" }}>
         <button onClick={() => close(Date.now().toString())} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", color: C.muted, fontSize: 20, cursor: "pointer", lineHeight: 1 }}>×</button>
-                <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>The week in space stocks, every Sunday</div>
-        <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>What moved across the {Object.keys(PROFILES).length} stocks we track and why, analyst rating changes, and one company in depth. Free.</div>
-        <SubscribeForm source="popup" onDone={() => setTimeout(() => close("subscribed"), 2000)} style={{ maxWidth: "none", marginBottom: 14 }} />
+        <img src={SHEET.preview} alt="Space Stocks 2026 PDF preview" style={{ display: "block", width: "100%", borderRadius: 6, marginBottom: 16, border: "1px solid rgba(255,255,255,0.12)" }} />
+        <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>Free PDF: all {Object.keys(PROFILES).length} space stocks at a glance</div>
+        <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>Get Space Stocks 2026 free when you join the Sunday newsletter: what moved across the stocks we track and why, analyst changes and one company in depth.</div>
+        <SubscribeForm source="popup" reward={SHEET} label="Get the PDF" sample={false} style={{ maxWidth: "none", marginBottom: 14 }} />
         <div style={{ fontSize: 11, color: C.muted }}>{subscribers} subscribers. Unsubscribe in one click.</div>
       </div>
     </div>
@@ -702,7 +726,7 @@ function MobileSubscribeBar({ path }) {
     on(); window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
   }, []);
-  useEffect(() => { if (done) { const t = setTimeout(() => setClosed(true), 2500); return () => clearTimeout(t); } }, [done]);
+  useEffect(() => { if (done) { const t = setTimeout(() => setClosed(true), 20000); return () => clearTimeout(t); } }, [done]);
   const visible = !(closed || (subscribed && !done) || path === "/newsletter" || !scrolled);
   const logged = useRef(false);
   useEffect(() => { if (visible && !logged.current && window.matchMedia?.("(max-width: 600px)").matches) { logged.current = true; window.posthog?.capture?.("mobile_bar_shown", { page: path }); } }, [visible]);
@@ -711,8 +735,8 @@ function MobileSubscribeBar({ path }) {
   return (
     <div className="mob-only" style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 9000, background: "rgba(8,12,22,0.97)", borderTop: "1px solid rgba(0,255,136,0.35)", padding: "10px 14px calc(10px + env(safe-area-inset-bottom, 0px))", boxShadow: "0 -10px 30px rgba(0,0,0,0.5)", animation: "fu 0.25s ease" }}>
       <button onClick={close} aria-label="Close" style={{ position: "absolute", top: 4, right: 8, background: "none", border: "none", color: C.muted, fontSize: 18, lineHeight: 1, cursor: "pointer", padding: 4 }}>×</button>
-      <div style={{ fontSize: 11, color: "#fff", fontWeight: 700, marginBottom: 7, paddingRight: 24 }}>The week in space stocks, free every Sunday</div>
-      <SubscribeForm source="mobile-bar" sample={false} onDone={() => setDone(true)} style={{ maxWidth: "none" }} />
+      <div style={{ fontSize: 11, color: "#fff", fontWeight: 700, marginBottom: 7, paddingRight: 24 }}>Free PDF: all {Object.keys(PROFILES).length} space stocks at a glance, plus the Sunday newsletter</div>
+      <SubscribeForm source="mobile-bar" sample={false} reward={SHEET} label="Get the PDF" onDone={() => setDone(true)} style={{ maxWidth: "none" }} />
     </div>
   );
 }
@@ -852,7 +876,8 @@ function Home({ news, prices, launches }) {
           <p style={{ fontSize: 13, color: C.light, lineHeight: 1.7, marginBottom: 20, maxWidth: 460 }}>
             What moved, why it moved and what's coming next across {Object.keys(PROFILES).length} space stocks, from SpaceX and Rocket Lab to the small caps. Five minutes every Sunday morning.
           </p>
-          <SubscribeForm source="home-hero" sample={false} style={{ marginBottom: 10 }} />
+          <SubscribeForm source="home-hero" sample={false} style={{ marginBottom: 10 }} reward={SHEET} />
+          <div style={{ fontSize: 12, color: C.light, marginBottom: 6 }}><span style={{ color: C.green, fontWeight: 700 }}>Free when you sign up:</span> Space Stocks 2026, a PDF of all {Object.keys(PROFILES).length} companies at a glance. <Link to="/free-pdf" className="oa-link" style={{ color: C.green }}>See what's inside</Link></div>
           <div style={{ fontSize: 11, color: C.muted }}>Read by {subscribers} investors. Unsubscribe in one click.</div>
         </div>
         {latest && (
@@ -864,6 +889,9 @@ function Home({ news, prices, launches }) {
           </a>
         )}
       </section>
+
+      {/* Free PDF offer */}
+      <ForNonSubscribers><div style={{ marginBottom: 14 }}><LeadMagnet source="home-pdf-card" /></div></ForNonSubscribers>
 
       {/* Space vs S&P 500 */}
       <Card title="Space stocks vs the S&P 500" style={{ marginBottom: 14 }}>
@@ -2668,6 +2696,7 @@ export default function App() {
             ))}
           </div>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <Link to="/free-pdf" className="desk-only oa-link" style={{ fontSize: 11.5, color: C.green, marginRight: 4 }}>Free PDF</Link>
             <button className="desk-only" onClick={goSubscribe} style={{ ...navBtn, background: "rgba(0,255,136,0.07)", border: "1px solid rgba(0,255,136,0.2)", color: C.green }}>Subscribe</button>
             <button className="desk-only" onClick={share} style={navBtn}>Share</button>
             <button className="mob-only" onClick={() => setMenuOpen(!menuOpen)} style={{ ...navBtn, padding: "6px 10px", fontSize: 16 }}>{menuOpen ? "✕" : "☰"}</button>
@@ -2679,6 +2708,7 @@ export default function App() {
             {NAV.map(([to, p, l]) => (
               <Link key={p} to={to} style={{ color: page === p ? C.green : C.light, padding: "10px 0", fontSize: 12, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>{l}</Link>
             ))}
+            <Link to="/free-pdf" style={{ color: C.green, padding: "10px 0", fontSize: 12, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>Free PDF: all space stocks at a glance</Link>
             <button onClick={goSubscribe} style={{ background: C.green, color: C.bg, border: "none", padding: 11, borderRadius: 4, fontSize: 11, fontWeight: 700, fontFamily: MONO, cursor: "pointer", marginTop: 8 }}>Subscribe</button>
           </div>
         )}
@@ -2701,6 +2731,21 @@ export default function App() {
         {page === "issue" && <IssuePage n={route.issue} />}
         {page === "guide" && <GuidePage key={route.path} path={route.path} />}
         {page === "about" && <About />}
+        {page === "freepdf" && (
+          <div style={{ animation: "fu 0.3s ease", maxWidth: 960, margin: "0 auto", padding: "36px 20px 60px" }}>
+            <h1 style={{ fontFamily: SYNE, fontSize: "clamp(26px,4.5vw,38px)", fontWeight: 800, color: "#fff", lineHeight: 1.15, marginBottom: 10 }}>Space Stocks 2026: every listed space company in one PDF</h1>
+            <p style={{ fontSize: 13.5, color: C.light, lineHeight: 1.7, maxWidth: 680, marginBottom: 24 }}>A printable guide to all {Object.keys(PROFILES).length} space stocks Orbit Alpha covers, from SpaceX and Rocket Lab to the European satellite operators. Free with the Sunday newsletter.</p>
+            <LeadMagnet source="free-pdf-page" heading="Get the free PDF" />
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 14, marginTop: 24 }}>
+              {[["Every company, by sector", "Launch, satellite communications, Earth observation, infrastructure and exploration, with one line on what each company does."],
+                ["The numbers that matter", "Share price, market cap in US dollars, year-to-date return, last 12 months of revenue and cash runway from SEC filings."],
+                ["What is coming next", "Each company's next results date, so you know when the big moves are likely."],
+                ["Updated every week", "Rebuilt from live prices and filings every Monday. Subscribers get the newest version from the same link."]].map(([h, t]) => (
+                <div key={h} style={cardStyle}><div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 6 }}>{h}</div><div style={{ fontSize: 12, color: C.muted, lineHeight: 1.6 }}>{t}</div></div>
+              ))}
+            </div>
+          </div>
+        )}
         {page === "notfound" && <NotFound />}
       </div>
     </div>

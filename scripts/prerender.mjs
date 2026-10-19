@@ -246,6 +246,13 @@ const routes = [
     ld: [crumbs([["Home", "/"], ["Newsletter", "/newsletter"]])],
   },
   {
+    path: "/free-pdf", title: "Free PDF: Space Stocks 2026, All 30 Listed Space Companies at a Glance | Orbit Alpha",
+    description: "Download Space Stocks 2026 free: every listed space company on one PDF with market cap, revenue, cash runway and next results date. Updated weekly.",
+    ogImage: "/downloads/space-stocks-2026-preview.png",
+    body: `<h1>Space Stocks 2026: every listed space company in one PDF</h1><p>A printable guide to all ${count} space stocks Orbit Alpha covers, grouped by sector, with what each company does, share price, market cap, year-to-date return, revenue, cash runway and next results date. Free with the Sunday newsletter and updated every week.</p><p><img src="/downloads/space-stocks-2026-preview.png" alt="Preview of the Space Stocks 2026 PDF" width="900" /></p><p><a href="/newsletter">Subscribe free to get the PDF</a>.</p>${sources}`,
+    ld: [crumbs([["Home", "/"], ["Free PDF", "/free-pdf"]])],
+  },
+  {
     path: "/about", title: "About | Orbit Alpha",
     description: "What Orbit Alpha is, which space stocks it covers and where its data comes from.",
     body: `<h1>About Orbit Alpha</h1><p>Orbit Alpha is a free dashboard and weekly newsletter for investors who follow listed space companies. It tracks ${count} stocks in the US and Europe, plus the main space ETFs, with prices, SEC filings, insider trades, financials, US government contracts, earnings dates and launches in one place.</p><p>It does not cover Lockheed Martin, Boeing or Northrop Grumman, where space is a small part of a much larger business.</p><h2>How the figures are worked out</h2>${list(["Year-to-date returns run from the last close of the previous year. Sector figures are the median of the stocks tracked in that sector.", "Financials come from the figures companies tag in their 10-Q and 10-K filings. The last 12 months are the latest full year plus this year to date, minus the same period last year.", "Cash runway is cash and short-term investments divided by the last 12 months of free cash outflow, assuming no new funding.", "Insider trades are open-market buys and sales from Form 4 filings. Grants, option exercises and shares withheld for tax are left out.", "Share counts come from the cover of each 10-Q and 10-K, adjusted for reverse splits."])}<h2>How pages stay current</h2><p>Every stock page and guide is rebuilt from live data each time the site updates and shows the date its figures are from. Fixed facts, such as IPO terms or lock-up dates, are taken from company filings and announcements and cited on the page.</p><h2>Data downloads</h2><p>The tables behind the main guides can be downloaded as CSV or JSON and reused with credit: the <a href="/data/space-stocks.csv">list of space stocks</a>, the <a href="/data/space-stocks-earnings-calendar.csv">earnings calendar</a> and the <a href="/data/spacex-lockup-schedule.csv">SpaceX lock-up schedule</a>. A summary of the site for AI tools is at <a href="/llms.txt">llms.txt</a>.</p><p>Orbit Alpha is information, not investment advice. Check the original filing before acting on any figure.</p>${sectorDirectory}${sources}`,
@@ -385,7 +392,7 @@ writeFileSync(
 // Search and AI crawlers are named explicitly so there is no doubt they are welcome; /api/ stays
 // out of every index. (Google-Extended and Applebot-Extended govern use in AI answers and training.)
 const AI_BOTS = ["Googlebot", "Bingbot", "OAI-SearchBot", "ChatGPT-User", "GPTBot", "PerplexityBot", "Perplexity-User", "ClaudeBot", "Claude-SearchBot", "Claude-User", "Google-Extended", "Applebot", "Applebot-Extended", "DuckAssistBot", "MistralAI-User", "CCBot"];
-writeFileSync(new URL("robots.txt", DIST), `${AI_BOTS.map((b) => `User-agent: ${b}`).join("\n")}\nAllow: /\nDisallow: /api/\nDisallow: /downloads/\n\nUser-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /downloads/\n\nSitemap: ${SITE}/sitemap.xml\n`);
+writeFileSync(new URL("robots.txt", DIST), `${AI_BOTS.map((b) => `User-agent: ${b}`).join("\n")}\nAllow: /\nDisallow: /api/\n\nUser-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE}/sitemap.xml\n`);
 
 // The printable "all 30 companies at a glance" (printed to PDF by a GitHub Action; free sign-up download).
 mkdirSync(new URL("downloads/", DIST).pathname, { recursive: true });
