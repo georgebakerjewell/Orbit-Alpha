@@ -9,6 +9,7 @@ import { COVERED as profiles, ETFS, SECTOR_ORDER } from "../lib/roster.js";
 import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS } from "../lib/pagemeta.js";
 import { withConfirmed } from "../lib/earnings-confirmed.js";
 import { brokerBoxHtml } from "../lib/affiliates.js";
+import { sheetHtml } from "./sheet.mjs";
 import { buildGuides } from "./guides.mjs";
 import { stockCard, OG_COLORS } from "./og.mjs";
 
@@ -384,7 +385,11 @@ writeFileSync(
 // Search and AI crawlers are named explicitly so there is no doubt they are welcome; /api/ stays
 // out of every index. (Google-Extended and Applebot-Extended govern use in AI answers and training.)
 const AI_BOTS = ["Googlebot", "Bingbot", "OAI-SearchBot", "ChatGPT-User", "GPTBot", "PerplexityBot", "Perplexity-User", "ClaudeBot", "Claude-SearchBot", "Claude-User", "Google-Extended", "Applebot", "Applebot-Extended", "DuckAssistBot", "MistralAI-User", "CCBot"];
-writeFileSync(new URL("robots.txt", DIST), `${AI_BOTS.map((b) => `User-agent: ${b}`).join("\n")}\nAllow: /\nDisallow: /api/\n\nUser-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE}/sitemap.xml\n`);
+writeFileSync(new URL("robots.txt", DIST), `${AI_BOTS.map((b) => `User-agent: ${b}`).join("\n")}\nAllow: /\nDisallow: /api/\nDisallow: /downloads/\n\nUser-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /downloads/\n\nSitemap: ${SITE}/sitemap.xml\n`);
+
+// The printable "all 30 companies at a glance" (printed to PDF by a GitHub Action; free sign-up download).
+mkdirSync(new URL("downloads/", DIST).pathname, { recursive: true });
+writeFileSync(new URL("downloads/space-stocks-sheet.html", DIST), sheetHtml({ profiles, SECTOR_ORDER, quotes, ytdBy, finBy, nextEarnings, asOf: quotesDate || today, esc, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate, SITE }));
 
 // Data downloads behind the "Download this data" links on guides (CSV and JSON).
 mkdirSync(new URL("data/", DIST).pathname, { recursive: true });

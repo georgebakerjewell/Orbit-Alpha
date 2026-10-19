@@ -1,0 +1,34 @@
+name: Space stocks sheet PDF
+
+# Prints https://www.orbitalpha.cloud/downloads/space-stocks-sheet (rebuilt with the site) to
+# public/downloads/space-stocks-2026.pdf every Monday, so the free sign-up download stays current.
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "15 6 * * 1" # Mondays 6:15am UTC
+
+permissions:
+  contents: write
+
+jobs:
+  print:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save playwright@1.48.2
+          npx playwright install --with-deps chromium
+      - name: Print the sheet
+        run: |
+          mkdir -p public/downloads
+          node scripts/print-sheet.mjs https://www.orbitalpha.cloud/downloads/space-stocks-sheet public/downloads/space-stocks-2026.pdf
+      - name: Commit if changed
+        run: |
+          git config user.name "orbit-alpha-bot"
+          git config user.email "actions@github.com"
+          git add public/downloads/space-stocks-2026.pdf
+          if git diff --cached --quiet; then echo "No change."; else git commit -m "Update space stocks sheet PDF" && git push; fi

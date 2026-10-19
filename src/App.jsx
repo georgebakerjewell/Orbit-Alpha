@@ -572,7 +572,10 @@ function useSubscriberLabel() {
   return `${SUBSCRIBER_COUNT}+`;
 }
 
-function SubscribeForm({ color = C.green, label = "Subscribe", onDone, style, source, follow, sample = true }) {
+// The free sign-up download (printed weekly by .github/workflows/space-stocks-sheet.yml).
+const SHEET = { href: "/downloads/space-stocks-2026.pdf", label: "Download Space Stocks 2026 (PDF)" };
+
+function SubscribeForm({ color = C.green, label = "Subscribe", onDone, style, source, follow, sample = true, reward }) {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -594,7 +597,12 @@ function SubscribeForm({ color = C.green, label = "Subscribe", onDone, style, so
       Read last Sunday's issue first: <span style={{ color: C.green }}>{LATEST_ISSUE.headline}</span>
     </a>
   );
-  if (done) return <div style={{ fontSize: 13, color: C.green, padding: "10px 0" }}>You're subscribed. The next issue arrives on Sunday.</div>;
+  if (done) return (
+    <div style={{ fontSize: 13, color: C.green, padding: "10px 0", lineHeight: 1.7 }}>
+      You're subscribed. The next issue arrives on Sunday.
+      {reward && <><br /><a href={reward.href} target="_blank" rel="noopener" className="oa-link" onClick={() => window.posthog?.capture?.("lead_magnet_download", { from: source })} style={{ color: "#fff", fontWeight: 700 }}>{reward.label}</a></>}
+    </div>
+  );
   if (already) return (
     <div style={{ fontSize: 12, color: C.green, padding: "8px 0", ...(style?.margin != null && { margin: style.margin }), ...(style?.marginTop != null && { marginTop: style.marginTop }) }}>
       You're subscribed.{LATEST_ISSUE && <> <a href={LATEST_ISSUE.url} target="_blank" rel="noopener" className="oa-link" style={{ color: C.light, textDecoration: "none" }}>Read the latest issue</a></>}
@@ -940,8 +948,8 @@ function Home({ news, prices, launches }) {
       <ForNonSubscribers>
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", textAlign: "center", padding: "32px 20px", marginBottom: 24 }}>
         <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Get the Sunday briefing</div>
-        <p style={{ fontSize: 12, color: C.muted, marginBottom: 18 }}>The week in space stocks, in five minutes. Free, and one click to unsubscribe.</p>
-        <SubscribeForm source="home-bottom" style={{ margin: "0 auto" }} />
+        <p style={{ fontSize: 12, color: C.muted, marginBottom: 18 }}>The week in space stocks, in five minutes. Subscribe free and get Space Stocks 2026, a one-look PDF of all 30 listed space companies.</p>
+        <SubscribeForm source="home-bottom" style={{ margin: "0 auto" }} reward={SHEET} />
       </section>
       </ForNonSubscribers>
 
@@ -2101,8 +2109,8 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       <ForNonSubscribers>
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginBottom: 24 }}>
         <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Follow {profile.name}</div>
-        <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>A free email every Sunday covering {profile.name} and the other space stocks we track.</p>
-        <SubscribeForm source="stock-page-bottom" follow={ticker} label={`Follow ${ticker}`} />
+        <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>A free email every Sunday covering {profile.name} and the other space stocks we track, plus Space Stocks 2026, a PDF of all 30 companies at a glance.</p>
+        <SubscribeForm source="stock-page-bottom" follow={ticker} label={`Follow ${ticker}`} reward={SHEET} />
       </section>
       </ForNonSubscribers>
 
@@ -2537,9 +2545,9 @@ function GuidePage({ path }) {
         : <ListSkeleton rows={8} />}
       <ForNonSubscribers>
         <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", margin: "32px 0 0" }}>
-          <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>The week in space stocks, every Sunday</div>
-          <p style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>Free, five minutes, one click to unsubscribe.</p>
-          <SubscribeForm source="guide-page" />
+          <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Free: all 30 space stocks at a glance</div>
+          <p style={{ fontSize: 12, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>Subscribe to the free Sunday newsletter and get Space Stocks 2026, a printable PDF of every listed space company with market cap, revenue, cash runway and next results date.</p>
+          <SubscribeForm source="guide-page" reward={SHEET} label="Get the PDF" />
         </div>
       </ForNonSubscribers>
     </article>
