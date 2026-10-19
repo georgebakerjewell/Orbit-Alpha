@@ -1,9 +1,9 @@
-import { useState, useEffect, useLayoutEffect, useRef, createContext, useContext } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, createContext, useContext, Fragment } from "react";
 import issues from "./issues.json";
 import issueArchive from "./issueArchive.json";
 import stories from "./stories.json"; // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
-import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS } from "../lib/pagemeta.js";
+import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, GUIDE_CTA, GUIDE_CTA_DEFAULT } from "../lib/pagemeta.js";
 import { BROKERS, brokerHref, anyAffiliate, RISK, DISCLOSURE } from "../lib/affiliates.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -2519,7 +2519,20 @@ function GuidePage({ path }) {
   };
   return (
     <article style={{ animation: "fu 0.3s ease", maxWidth: 860, margin: "0 auto", padding: "32px 20px 60px" }}>
-      {html ? <div className="oa-issue oa-guide-page" onClick={onClick} dangerouslySetInnerHTML={{ __html: html }} />
+      {html ? html.split("<!--oa-cta-->").map((part, i) => (
+        <Fragment key={i}>
+          {i > 0 && (
+            <ForNonSubscribers>
+              <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.3)", background: "rgba(0,255,136,0.04)", margin: "8px 0 26px" }}>
+                <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>{(GUIDE_CTA[path] || GUIDE_CTA_DEFAULT)[0]}</div>
+                <p style={{ fontSize: 12, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>{(GUIDE_CTA[path] || GUIDE_CTA_DEFAULT)[1]}</p>
+                <SubscribeForm source={`guide-inline:${path}`} />
+              </div>
+            </ForNonSubscribers>
+          )}
+          <div className="oa-issue oa-guide-page" onClick={onClick} dangerouslySetInnerHTML={{ __html: part }} />
+        </Fragment>
+      ))
         : failed ? <P>This page could not be loaded. <a href={path} className="oa-link" style={{ color: C.green }}>Try again</a>.</P>
         : <ListSkeleton rows={8} />}
       <ForNonSubscribers>

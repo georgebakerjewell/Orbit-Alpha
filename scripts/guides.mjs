@@ -248,6 +248,11 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
     }
     const updated = g.path === "/advertise" ? "" : `<p class="oa-updated">Updated <time datetime="${g.lastmod || asOf}">${fmtDate(g.lastmod || asOf)}</time> from live prices and SEC filings</p>`;
     const answer = g.answer ? `<div class="oa-answer"><p>${g.answer}</p></div>` : "";
+    // Where the app places its in-guide sign-up box: after the first table, or else after the answer.
+    if (g.path !== "/advertise" && g.path !== "/guides") {
+      const t = g.body.indexOf("</table>");
+      g.body = t > 0 ? g.body.slice(0, t + 8) + "<!--oa-cta-->" + g.body.slice(t + 8) : g.body.replace("<!--oa-answer-->", "<!--oa-answer--><!--oa-cta-->");
+    }
     g.body = g.body.includes("<!--oa-answer-->") ? g.body.replace("<!--oa-answer-->", updated + answer) : g.body.replace("</h1>", `</h1>${updated}`);
     for (const d of g.datasets || []) {
       const block = `<h2>Download this data</h2><p>${esc(d.description)} Free to use with a link back: <a href="/data/${d.slug}.csv">CSV</a> · <a href="/data/${d.slug}.json">JSON</a>. Cite as: Orbit Alpha, &ldquo;${esc(d.name)}&rdquo;, orbitalpha.cloud${g.path}, updated ${fmtDate(g.lastmod || asOf)}.</p>`;
