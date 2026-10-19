@@ -1,7 +1,8 @@
 import { useState, useEffect, useLayoutEffect, useRef, createContext, useContext, Fragment } from "react";
 import issues from "./issues.json";
 import issueArchive from "./issueArchive.json";
-import stories from "./stories.json"; // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
+import stories from "./stories.json";
+import resultsData from "./results.json"; // results-day pages at /results/<slug> (src/results.json, added by a scheduled task) // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
 import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, GUIDE_CTA, GUIDE_CTA_DEFAULT } from "../lib/pagemeta.js";
 import { BROKERS, brokerHref, anyAffiliate, RISK, DISCLOSURE } from "../lib/affiliates.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
@@ -45,6 +46,7 @@ function parsePath(pathname) {
   if (!first) return { page: "home" };
   if (first === "markets") return { page: "markets", tab: MARKET_TABS.includes(second) ? second : "stocks" };
   if (first === "stocks" && second) return { page: "stock", ticker: second.toUpperCase() };
+  if (first === "results" && second) return resultsData.some((r) => r.slug === second) ? { page: "guide", path: `/results/${second}` } : { page: "notfound" };
   if (first === "feed") return { page: "news" };
   if (first === "newsletter" && second) {
     const n = Number((second.match(/^issue-(\d+)$/) || [])[1]);
@@ -121,6 +123,11 @@ function routeMeta(route) {
       ? `${p.name} (${route.ticker}, ${p.listing}) live price, chart, news and launches. ${p.about}`
       : `${p.name} (${route.ticker}) live price, SEC filings, insider trades, government contracts, earnings date and launches. ${p.about}`,
   };
+  if (route.page === "guide" && route.path.startsWith("/results/")) {
+    const r = resultsData.find((x) => `/results/${x.slug}` === route.path);
+    const pr = r && PROFILES[r.ticker];
+    if (r && pr) return { title: `${pr.name} (${r.ticker}) ${r.quarter} Results: ${r.headline} | Orbit Alpha`.slice(0, 120), description: r.summary.slice(0, 158) };
+  }
   if (route.page === "guide") return GUIDES[route.path];
   const archived = route.page === "issue" && issueArchive.find((x) => x.issue === route.issue);
   if (archived) return { title: `${archived.title} | Orbit Alpha Issue ${archived.issue}`, description: archived.description };
@@ -2098,6 +2105,14 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       </Card>
 
       {/* Guides written about this stock (lib/pagemeta.js GUIDES with tickers) */}
+      {resultsData.some((r) => r.ticker === ticker) && (
+        <div style={{ ...cardStyle, padding: "12px 16px", marginBottom: 16, display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px 16px" }}>
+          <span style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Latest results</span>
+          {resultsData.filter((r) => r.ticker === ticker).sort((a, b) => b.reported.localeCompare(a.reported)).slice(0, 3).map((r) => (
+            <Link key={r.slug} to={`/results/${r.slug}`} className="oa-link" style={{ color: C.green, fontSize: 13 }}>{r.quarter}: {r.headline}</Link>
+          ))}
+        </div>
+      )}
       {GUIDE_LIST.some(([, g]) => g.tickers?.includes(ticker)) && (
         <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginBottom: 16, display: "flex", flexWrap: "wrap", gap: "8px 18px", alignItems: "center" }}>
           <span style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>{profile.name} guides</span>

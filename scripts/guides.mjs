@@ -5,6 +5,8 @@
 import { GUIDES, GUIDE_LIST } from "../lib/pagemeta.js";
 import { buildMoreGuides, buildHub, buildAdvertise } from "./guides-more.mjs";
 import { buildSpaceX } from "./spacex.mjs";
+import { buildResults } from "./results.mjs";
+import { readFileSync } from "node:fs";
 import { brokerBoxHtml } from "../lib/affiliates.js";
 
 export function buildGuides(ctx) {
@@ -235,6 +237,7 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
   const pages = [listPage, insiderPage, runwayPage, contractsPage, earningsPage, euroPage, etfPage,
     ...buildSpaceX({ ...ctx, page, table, faq, and, usd, asOfLine }),
     ...buildMoreGuides({ ...ctx, page, table, faq, and, usd, asOfLine }),
+    ...buildResults({ ...ctx, results: JSON.parse(readFileSync(new URL("../src/results.json", import.meta.url), "utf8")) }),
     buildHub(ctx),
     buildAdvertise(ctx)];
   // Finish every guide: the quick answer, a visible "updated" date and WebPage data with dateModified.

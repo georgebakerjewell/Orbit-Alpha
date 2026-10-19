@@ -181,6 +181,7 @@ const issueHtml = (n) => {
 };
 // Orbit Alpha news briefs (src/stories.json), newest first.
 const stories = JSON.parse(readFileSync(new URL("../src/stories.json", import.meta.url), "utf8"));
+const resultsData = JSON.parse(readFileSync(new URL("../src/results.json", import.meta.url), "utf8"));
 const storiesHtml = (items, heading) => items.length ? `<h2>${heading}</h2>${items.map((x) => `<article><p>${fmtDate(x.published.slice(0, 10))}${x.tickers?.length ? ` · ${x.tickers.map((t) => (profiles[t] ? `<a href="/stocks/${t.toLowerCase()}">${t}</a>` : esc(t))).join(", ")}` : ""}</p><h3>${esc(x.title)}</h3>${String(x.body || "").split(/\n\n+/).map((p) => `<p>${esc(p)}</p>`).join("")}${x.source?.url ? `<p>Source: <a href="${esc(x.source.url)}" rel="noopener" target="_blank">${esc(x.source.name || "original report")}</a></p>` : ""}</article>`).join("")}` : "";
 const issueLink = (x) => `<a href="/newsletter/issue-${x.issue}">Issue ${x.issue}: ${esc(x.title)}</a>`;
 
@@ -293,6 +294,7 @@ const routes = [
 ${facts.html}
 <h2>${esc(p.name)} key facts</h2>${list([`Ticker: ${t}`, `Listing: ${us ? "US (NYSE or Nasdaq)" : esc(p.listing)}`, `Sector: ${p.sector}`, `Prices shown in: ${p.currency === "GBp" ? "pence" : p.currency || "US dollars"}`, `On this page: ${us ? "live price and chart, SEC filings, insider trades, government contracts, earnings date, launches and news" : "live price and chart, launches and news"}`])}
 ${GUIDE_LIST.some(([, g]) => g.tickers?.includes(t)) ? `<h2>${esc(p.name)} guides</h2>${list(GUIDE_LIST.filter(([, g]) => g.tickers?.includes(t)).map(([gp, g]) => `<a href="${gp}">${esc(g.label)}</a>`))}` : ""}
+${resultsData.some((r) => r.ticker === t) ? `<h2>${esc(p.name)} results</h2>${list(resultsData.filter((r) => r.ticker === t).sort((a, b) => b.reported.localeCompare(a.reported)).slice(0, 4).map((r) => `<a href="/results/${r.slug}">${esc(r.quarter)} results: ${esc(r.headline)}</a>`))}` : ""}
 ${storiesHtml(stories.filter((x) => x.tickers?.includes(t)).slice(0, 5), `${esc(p.name)} news from Orbit Alpha`)}
 ${issueArchive.some((x) => x.tickers.includes(t)) ? `<h2>${esc(p.name)} in the Orbit Alpha newsletter</h2>${list(issueArchive.filter((x) => x.tickers.includes(t)).slice(0, 3).map(issueLink))}` : ""}
 <h2>${esc(p.name)} research links</h2>${list([ext(yahoo(t), `${t} quote and financials on Yahoo Finance`), ...(us ? [ext(edgar(t), `${esc(p.name)} filings on SEC EDGAR`), ext(`https://www.usaspending.gov/search/?hash=&keyword=${encodeURIComponent(p.name)}`, `${esc(p.name)} awards on USAspending.gov`)] : [])])}
