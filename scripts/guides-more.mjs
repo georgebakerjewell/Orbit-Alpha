@@ -200,13 +200,13 @@ ${cheapFaq.html}${asOfLine("Prices from Yahoo Finance; cash and share counts fro
   const wkMedian = median(weekRows.map(([, v]) => v));
   const wkUp = weekRows.filter(([, v]) => v > 0).length;
   const ufoWk = wk("UFO"), spyWk = wk("SPY");
+  const gainers = weekRows.filter(([, v]) => v > 0).slice(0, 3);
+  const fallers = weekRows.filter(([, v]) => v < 0).slice(-3).reverse();
+  const mv = ([t, v]) => `${link(t)} (${tick(t)}): ${fmtPct(v)}`;
   const from = wkStart >= 0 ? wkDates[wkStart] : null, to = wkDates[wkEnd] || null;
   const weekPage = page("/space-stocks/this-week", "Space stocks this week",
     `<p>How every listed space stock Orbit Alpha covers has moved over the last five trading days, from the biggest gainer to the biggest faller, with the space ETF and the S&amp;P 500 for comparison. The page rebuilds every trading day.</p>
-${weekRows.length ? `<h2>Biggest movers</h2>${list([
-      ...weekRows.slice(0, 3).map(([t, v]) => `${link(t)} (${tick(t)}): ${fmtPct(v)}`),
-      ...weekRows.slice(-3).reverse().map(([t, v]) => `${link(t)} (${tick(t)}): ${fmtPct(v)}`),
-    ])}
+${weekRows.length ? `${gainers.length ? `<h2>Biggest gainers</h2>${list(gainers.map(mv))}` : ""}${fallers.length ? `<h2>Biggest fallers</h2>${list(fallers.map(mv))}` : ""}
 <h2>Every space stock, last five trading days</h2>
 ${table(["Company", "Ticker", "Sector", "5 days", "1 month", "Year to date"], weekRows.map(([t, v]) => [link(t), tick(t), esc(profiles[t].sector), fmtPct(v), ret("1mo", t) != null ? fmtPct(ret("1mo", t)) : null, ytdBy[t] != null ? fmtPct(ytdBy[t]) : null]))}
 <p>${wkUp} of ${weekRows.length} space stocks rose${wkMedian != null ? `, and the median move was ${fmtPct(wkMedian)}` : ""}.${ufoWk != null ? ` The Procure Space ETF (UFO) moved ${fmtPct(ufoWk)}` : ""}${spyWk != null ? `${ufoWk != null ? " and" : ""} the S&amp;P 500 (SPY) ${fmtPct(spyWk)}` : ""}${ufoWk != null || spyWk != null ? "." : ""}</p>` : "<p>Weekly figures are not available right now.</p>"}
