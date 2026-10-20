@@ -6,20 +6,20 @@ import { GUIDES, GUIDE_GROUPS, GUIDE_LIST } from "../lib/pagemeta.js";
 
 const ext = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${text}</a>`;
 
-// Starlink figures from SpaceX's Q2 2026 results (4 Aug 2026). Update after each quarterly report.
+// Starlink figures from SpaceX's Q3 2026 results (20 Oct 2026). Update after each quarterly report.
 const STARLINK = {
-  quarter: "Q2 2026",
-  reported: "2026-08-04",
-  subscribers: "12.0 million",
-  subscribersPrior: "6.0 million a year earlier and 10.3 million at the end of March",
-  connectivityRevenue: "$4.3 billion",
-  totalRevenue: "$7.8 billion",
-  arpu: "$66 a month, down from $85 a year earlier as cheaper plans and new countries were added",
-  next: "2026-10-20", // Q3 results
+  quarter: "Q3 2026",
+  reported: "2026-10-20",
+  subscribers: "13.6 million",
+  subscribersPrior: "7.2 million a year earlier and 12.0 million at the end of June",
+  connectivityRevenue: "$5.2 billion",
+  totalRevenue: "$14.6 billion",
+  arpu: "$69 a month, up from $66 in Q2 2026 but down from $83 a year earlier as cheaper plans and new countries were added",
+  next: null, // Q4 results date: set once SpaceX announces it
   sources: [
-    ["https://s21.q4cdn.com/184289198/files/doc_financials/2026/q2/SpaceX-Reports-Second-Quarter-2026-Results.pdf", "SpaceX: Second quarter 2026 results"],
-    ["https://www.cnbc.com/2026/08/04/spacex-spcx-earnings-live-updates-q2-2026.html", "CNBC: SpaceX Q2 2026 earnings"],
-    ["https://www.cbsnews.com/news/spacex-earnings-elon-musk-ipo/", "CBS News: SpaceX's first earnings report since going public"],
+    ["https://s21.q4cdn.com/184289198/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf", "SpaceX: Third quarter 2026 results"],
+    ["https://www.cnbc.com/2026/10/20/spacex-spcx-earnings-live-updates-q3-2026html.html", "CNBC: SpaceX Q3 2026 earnings"],
+    ["https://www.reuters.com/business/media-telecom/spacex-quarterly-revenue-jumps-beats-estimates-ai-business-surges-2026-10-20/", "Reuters: SpaceX quarterly revenue jumps as AI business surges"],
   ],
 };
 
@@ -29,7 +29,7 @@ const PAIRS = {
     intro: "SpaceX and Rocket Lab are the two listed launch companies with rockets flying regularly. SpaceX's Falcon 9 carries most of the world's orbital launches and the company runs Starlink, the largest satellite broadband network. Rocket Lab flies the small Electron rocket and makes most of its money building spacecraft and satellite components, while it develops the larger Neutron rocket to compete for constellation launches.",
     differences: [
       "Scale: SpaceX is one of the most valuable companies in the world; Rocket Lab is a fraction of its size, so the same contract win moves Rocket Lab's shares far more.",
-      "Revenue mix: most SpaceX revenue comes from Starlink subscriptions, with a fast-growing AI business alongside. Rocket Lab's comes mainly from its space systems business (satellites, solar arrays, reaction wheels and other parts), with launch the smaller share.",
+      "Revenue mix: SpaceX revenue now comes mainly from its AI business and Starlink, with launch a smaller share. Rocket Lab's comes mainly from its space systems business (satellites, solar arrays, reaction wheels and other parts), with launch the smaller share.",
       "The Neutron question: Rocket Lab's next leg of growth depends on Neutron reaching orbit and winning medium-lift launches that Falcon 9 dominates today.",
       "Ownership: SpaceX's public shareholders hold one-vote Class A shares while Elon Musk controls the vote. Rocket Lab has a single share class.",
       "Supply of shares: SpaceX has large lock-up releases through mid-2027; Rocket Lab has funded itself partly by selling new shares, which shows in its share count.",
@@ -100,11 +100,11 @@ export function buildMoreGuides(ctx) {
   /* ═══ Starlink stock ════════════════════════════════════════════════════════ */
   const sq = quotes.SPCX;
   const rivals = ["ASTS", "GSAT", "ETL", "SESG", "VSAT", "ECHO"].filter((t) => profiles[t]);
-  const after = today > STARLINK.next;
+  const after = STARLINK.next ? today > STARLINK.next : true;
   const starFaq = faq([
     ["Is there a Starlink stock?", "No. Starlink is not listed on its own. It is part of SpaceX, which has been listed on Nasdaq under the ticker SPCX since 12 June 2026, so buying SpaceX shares is the way to own Starlink."],
     ["What is the Starlink stock ticker?", "There is no Starlink ticker. Starlink sits inside SpaceX, ticker SPCX on Nasdaq. Searches for a Starlink ticker sometimes turn up unrelated companies with similar names, so check you are buying Space Exploration Technologies Corp."],
-    ["How much of SpaceX is Starlink?", `Starlink is SpaceX's largest business. In ${STARLINK.quarter} SpaceX's connectivity segment, which is mainly Starlink, brought in ${STARLINK.connectivityRevenue} of ${STARLINK.totalRevenue} total revenue, and it is the segment that makes SpaceX its profits.`],
+    ["How much of SpaceX is Starlink?", `Starlink is SpaceX's most profitable business. In ${STARLINK.quarter} SpaceX's connectivity segment, which is mainly Starlink, brought in ${STARLINK.connectivityRevenue} of ${STARLINK.totalRevenue} total revenue, and it earned the most income from operations of any segment.`],
     ["How many Starlink subscribers are there?", `${STARLINK.subscribers} at the end of ${STARLINK.quarter}, up from ${STARLINK.subscribersPrior}, according to SpaceX's results.`],
     ["Can I buy Starlink shares in the UK?", "Yes, by buying SpaceX (SPCX) through a UK platform that offers US shares. It can be held in a Stocks and Shares ISA or SIPP. The how to buy SpaceX stock guide covers the steps and costs."],
   ]);
@@ -112,14 +112,14 @@ export function buildMoreGuides(ctx) {
     `<p>There is no separate Starlink stock. Starlink, the satellite internet service, is owned by SpaceX, and SpaceX has been a public company since June 2026, trading on Nasdaq as <a href="/stocks/spcx">SPCX</a>. Buying SpaceX shares is how to invest in Starlink, though it also buys you SpaceX's rocket and AI businesses.</p>
 ${sq?.price != null ? `<div class="oa-callout"><p><b>SPCX today.</b> SpaceX shares last traded at ${fmtPrice(sq.price)}${sq.marketCap ? `, valuing the whole company, Starlink included, at about ${fmtCap(sq.marketCap)}` : ""}. <a href="/stocks/spcx">Live SPCX price and chart</a>.</p></div>` : ""}
 <h2>How big is Starlink inside SpaceX?</h2>
-<p>Starlink is the largest and most profitable part of SpaceX. In ${STARLINK.quarter}, SpaceX's first results as a listed company:</p>
+<p>Starlink is the most profitable part of SpaceX, though the AI business overtook it on revenue in Q3 2026. In ${STARLINK.quarter}, according to SpaceX's results:</p>
 ${list([
       `Connectivity revenue, mostly Starlink: ${STARLINK.connectivityRevenue}, out of ${STARLINK.totalRevenue} for the whole company.`,
       `Starlink subscribers: ${STARLINK.subscribers}, up from ${STARLINK.subscribersPrior}.`,
       `Average revenue per subscriber: ${STARLINK.arpu}.`,
-      "Connectivity is the segment that earns SpaceX's profits; the AI business and Starship development lose money.",
+      "Connectivity earned $2.4 billion of income from operations in Q3 2026, the most of any segment; the AI business made $431 million and the space segment lost $7 million.",
     ])}
-<p>${after ? `SpaceX reported Q3 2026 results on ${fmtDate(STARLINK.next)}; the figures above are from the ${STARLINK.quarter} report.` : `SpaceX reports Q3 2026 results after the US market closes on ${fmtDate(STARLINK.next)}, which will update these figures.`}</p>
+<p>${STARLINK.next && !after ? `SpaceX reports Q4 2026 results after the US market closes on ${fmtDate(STARLINK.next)}, which will update these figures.` : `These figures are from the ${STARLINK.quarter} report, published on ${fmtDate(STARLINK.reported)}. Full details are on the <a href="/results/spcx-q3-2026">SpaceX Q3 2026 results page</a>.`}</p>
 <h2>What you get when you buy SPCX for Starlink</h2>
 <p>A SpaceX share is a bet on three businesses at once: Starlink broadband and direct-to-cell service, launches with Falcon 9 and Starship, and the xAI artificial intelligence business, which includes X. If you want Starlink alone, there is no way to buy it separately. Many investors look at SPCX as a Starlink holding with the rest attached; others see the rocket business, which keeps Starlink's launch costs low, as part of the same advantage.</p>
 <h2>How to buy</h2>
@@ -146,7 +146,7 @@ ${asOfLine(`Starlink figures from SpaceX's ${STARLINK.quarter} results.`)}`,
       stats: [["SPCX", fmtPrice(sq.price)], ["Subscribers", STARLINK.subscribers.replace(" million", "M")], ...(sq.marketCap ? [["SpaceX value", fmtCap(sq.marketCap)]] : [])],
     } : undefined);
 
-  starlinkPage.answer = `There is no separate Starlink stock. Starlink is owned by SpaceX, which trades on Nasdaq as SPCX, so buying SpaceX shares is the only way to own it. Starlink had ${STARLINK.subscribers} subscribers at the end of ${STARLINK.quarter} and is SpaceX's largest and only profitable business.`;
+  starlinkPage.answer = `There is no separate Starlink stock. Starlink is owned by SpaceX, which trades on Nasdaq as SPCX, so buying SpaceX shares is the only way to own it. Starlink had ${STARLINK.subscribers} subscribers at the end of ${STARLINK.quarter} and was SpaceX's most profitable business in that quarter.`;
 
   /* ═══ Space stocks under $10 ═════════════════════════════════════════════════ */
   const cheap = Object.keys(profiles).filter((t) => !profiles[t].listing && quotes[t]?.price != null && quotes[t].price < 10 && (quotes[t].currency || "USD") === "USD")

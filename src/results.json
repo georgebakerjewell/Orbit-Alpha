@@ -5,8 +5,8 @@
     "quarter": "Q3 2026",
     "period": "the three months to 30 September 2026",
     "reported": "2026-10-20",
-    "headline": "Revenue up 161% to $14.6B, net income of $4.4B",
-    "summary": "SpaceX revenue rose 161% to $14.6B in Q3 2026 and net income was $4.4B, against a $1.1B loss a year earlier, while adjusted EBITDA rose 306% to $8.8B. The Super Intelligence (AI) segment brought in $7.6B and Starlink consumer subscribers reached 13.6 million.",
+    "headline": "Revenue up 161% to $14.6B, first profit as a listed company",
+    "summary": "SpaceX revenue rose 161% to $14.6B and net income was $4.4B, against a $1.1B loss a year earlier, as AI revenue reached $7.6B. Up to 1.3 billion locked-up shares become free to sell at the start of Thursday 22 October 2026, two trading days after these results.",
     "metrics": [
       [
         "Revenue",
@@ -39,14 +39,39 @@
         "+830% (from $813M)"
       ],
       [
+        "Super Intelligence (AI) income from operations",
+        "$431M",
+        "vs loss of $1.72B"
+      ],
+      [
         "Connectivity revenue",
         "$5.25B",
         "+69% (from $3.10B)"
       ],
       [
+        "Connectivity income from operations",
+        "$2.37B",
+        "+99% (from $1.19B)"
+      ],
+      [
+        "Starlink consumer revenue",
+        "$3.12B",
+        "+57% (from $1.99B)"
+      ],
+      [
+        "Starlink enterprise and government revenue",
+        "$2.13B",
+        "+91% (from $1.11B)"
+      ],
+      [
         "Space revenue",
         "$1.77B",
         "+6% (from $1.67B)"
+      ],
+      [
+        "Space loss from operations",
+        "$7M",
+        "vs income of $259M"
       ],
       [
         "Starlink consumer subscribers",
@@ -75,14 +100,14 @@
       ]
     ],
     "points": [
+      "AI became the largest segment: revenue rose 830% to $7.56B on new cloud services agreements, the Cursor acquisition (completed 14 August, adding $608M of revenue) and wider Grok adoption.",
+      "Starlink consumer subscribers rose by 1.6 million in the quarter to 13.6 million, and monthly ARPU rose 5% from Q2 to $69, though it was $83 a year earlier.",
       "Starship Flight 14, its first orbital flight and first revenue-generating mission, delivered 26 Starlink V3 satellites, about 10 times the downlink capacity added by a Falcon 9 Starlink launch.",
-      "AI revenue growth came from new cloud services agreements, the Cursor acquisition (completed 14 August, adding $608M of revenue) and wider Grok adoption.",
-      "Of the $19.6B capital spending, $16.4B went to the AI segment as the COLOSSUS II compute buildout continued.",
-      "Completed 35 launches in the quarter, 12 for customers, and signed three more NASA ISS crew missions and 18 National Security Space Launch missions.",
-      "Agreed on 8 October to buy 800 MHz spectrum licences for Starlink Mobile, expected to close in the first half of 2027."
+      "Of the $19.6B capital spending, $16.4B went to the AI segment as the COLOSSUS II compute buildout continued; SpaceX also agreed on 8 October to buy 800 MHz spectrum licences for Starlink Mobile.",
+      "On the results call, according to Reuters and CNBC, SpaceX said Tesla and SpaceX had formed special board committees to discuss a possible merger."
     ],
-    "guidance": "The results release gave no numerical outlook. Reuters reported that SpaceX expects capital spending to stay near the third-quarter level of $19.6B in the near future.",
-    "reaction": "Shares were up 2.5% in extended trading on 20 October, according to Reuters at about 17:40 ET (22:40 UK time); CNBC reported a gain of about 5% in extended trading.",
+    "guidance": "The results release gave no numerical outlook. On the call, according to Reuters, the finance chief said SpaceX expects fourth-quarter capital spending of $35B to $40B and reiterated an annual recurring revenue target of about $100B by the end of 2026. CNBC reported first-quarter 2027 revenue guidance of $33B to $37B, against an analyst average of $22.2B (LSEG).",
+    "reaction": "SPCX traded at about $147.50 on 20 October before the results, according to CNBC. Shares were up 4.9% in extended trading after the call, according to Reuters at 18:25 ET (23:25 UK time); CNBC reported a gain of about 5%. Revenue of $14.58B beat the $12.72B analyst average and adjusted EPS of 45 cents beat 13 cents (LSEG, via CNBC).",
     "sources": [
       [
         "SpaceX Reports Third Quarter 2026 Results (SpaceX investor relations)",
@@ -99,6 +124,10 @@
       [
         "SpaceX Q3 2026 earnings report: live updates (CNBC)",
         "https://www.cnbc.com/2026/10/20/spacex-spcx-earnings-live-updates-q3-2026html.html"
+      ],
+      [
+        "SpaceX Q3 2026 earnings call transcript (Benzinga)",
+        "https://www.benzinga.com/news/26/10/62484605/spacex-q3-2026-earnings-call-transcript"
       ]
     ]
   }

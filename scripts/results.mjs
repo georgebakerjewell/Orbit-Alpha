@@ -19,7 +19,7 @@ ${r.metrics?.length ? `<h2>The numbers</h2><table><thead><tr><th>Measure</th><th
 ${r.points?.length ? `<h2>What stood out</h2>${list(r.points.map(esc))}` : ""}
 ${r.guidance ? `<h2>Outlook</h2><p>${esc(r.guidance)}</p>` : ""}
 ${r.reaction ? `<h2>How the shares reacted</h2><p>${esc(r.reaction)}</p>` : ""}
-<h2>More on ${esc(p.name)}</h2>${list([`<a href="/stocks/${r.ticker.toLowerCase()}">${r.ticker} stock: live price, filings, insider trades and contracts</a>`, ...others.map((x) => `<a href="/results/${x.slug}">${esc(p.name)} ${esc(x.quarter)} results</a>`), `<a href="/results">All space stock results</a>`, `<a href="/space-stocks/earnings-calendar">Space stocks earnings calendar</a>`])}
+<h2>More on ${esc(p.name)}</h2>${list([`<a href="/stocks/${r.ticker.toLowerCase()}">${r.ticker} stock: live price, filings, insider trades and contracts</a>`, ...others.map((x) => `<a href="/results/${x.slug}">${esc(p.name)} ${esc(x.quarter)} results</a>`), ...(r.ticker === "SPCX" ? [`<a href="/spacex-stock/lockup-calendar">SpaceX lockup calendar</a>`] : []), `<a href="/results">All space stock results</a>`, `<a href="/space-stocks/earnings-calendar">Space stocks earnings calendar</a>`])}
 ${r.sources?.length ? `<h2>Sources</h2>${list(r.sources.map(([t, u]) => ext(u, t)))}` : ""}
 <p class="oa-note">Figures as reported by the company; changes are against the same quarter a year earlier unless stated. Orbit Alpha is information, not investment advice.</p></div>`,
       answer: esc(r.summary),
