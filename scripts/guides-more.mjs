@@ -183,6 +183,46 @@ ${cheapFaq.html}${asOfLine("Prices from Yahoo Finance; cash and share counts fro
 
   cheapPage.answer = cheap.length ? `As of ${fmtDate(asOf)}, ${cheap.length} US-listed space ${cheap.length === 1 ? "stock trades" : "stocks trade"} below $10 a share: ${and(cheap.map((t) => `${profiles[t].name} (${t})`))}. ${short.length ? `${and(short.map((t) => profiles[t].name))} ${short.length === 1 ? "has" : "have"} less than a year of cash at the current burn rate.` : ""}`.trim() : "";
 
+  /* ═══ Space stocks this week ═════════════════════════════════════════════════ */
+  // Five trading days, from the 1-month performance series (each stock rebased to its own first close).
+  const m = perfBy["1mo"];
+  const wkDates = m?.dates || [];
+  const wkEnd = wkDates.length - 1, wkStart = wkEnd - 5;
+  const at = (sr, i) => { for (let k = i; k >= 0 && k > i - 3; k--) if (sr.values[k] != null) return sr.values[k]; return null; };
+  const wk = (id) => {
+    const sr = (m?.series || []).find((x) => x.id === id);
+    if (!sr || wkStart < 0) return null;
+    const a = at(sr, wkStart), b = at(sr, wkEnd);
+    return a == null || b == null ? null : ((1 + b / 100) / (1 + a / 100) - 1) * 100;
+  };
+  const weekRows = Object.keys(profiles).map((t) => [t, wk(t)]).filter(([, v]) => v != null).sort((x, y) => y[1] - x[1]);
+  const median = (xs) => { const v = [...xs].sort((a, b) => a - b); const n = v.length; return n ? (n % 2 ? v[(n - 1) / 2] : (v[n / 2 - 1] + v[n / 2]) / 2) : null; };
+  const wkMedian = median(weekRows.map(([, v]) => v));
+  const wkUp = weekRows.filter(([, v]) => v > 0).length;
+  const ufoWk = wk("UFO"), spyWk = wk("SPY");
+  const from = wkStart >= 0 ? wkDates[wkStart] : null, to = wkDates[wkEnd] || null;
+  const weekPage = page("/space-stocks/this-week", "Space stocks this week",
+    `<p>How every listed space stock Orbit Alpha covers has moved over the last five trading days, from the biggest gainer to the biggest faller, with the space ETF and the S&amp;P 500 for comparison. The page rebuilds every trading day.</p>
+${weekRows.length ? `<h2>Biggest movers</h2>${list([
+      ...weekRows.slice(0, 3).map(([t, v]) => `${link(t)} (${tick(t)}): ${fmtPct(v)}`),
+      ...weekRows.slice(-3).reverse().map(([t, v]) => `${link(t)} (${tick(t)}): ${fmtPct(v)}`),
+    ])}
+<h2>Every space stock, last five trading days</h2>
+${table(["Company", "Ticker", "Sector", "5 days", "1 month", "Year to date"], weekRows.map(([t, v]) => [link(t), tick(t), esc(profiles[t].sector), fmtPct(v), ret("1mo", t) != null ? fmtPct(ret("1mo", t)) : null, ytdBy[t] != null ? fmtPct(ytdBy[t]) : null]))}
+<p>${wkUp} of ${weekRows.length} space stocks rose${wkMedian != null ? `, and the median move was ${fmtPct(wkMedian)}` : ""}.${ufoWk != null ? ` The Procure Space ETF (UFO) moved ${fmtPct(ufoWk)}` : ""}${spyWk != null ? `${ufoWk != null ? " and" : ""} the S&amp;P 500 (SPY) ${fmtPct(spyWk)}` : ""}${ufoWk != null || spyWk != null ? "." : ""}</p>` : "<p>Weekly figures are not available right now.</p>"}
+<p>Why a stock moved is usually in the news: see <a href="/news">space stock news, filings and contracts</a>, the <a href="/space-stocks/earnings-calendar">earnings calendar</a> and the <a href="/results">latest results</a>. The <a href="/newsletter">Sunday newsletter</a> explains the week's biggest moves.</p>
+${asOfLine(`Closing prices from Yahoo Finance${from && to ? `, ${fmtDate(from)} to ${fmtDate(to)}` : ""}. Returns are price only, in each stock's trading currency.`)}`,
+    [{ "@type": "ItemList", name: "Space stocks this week", itemListElement: weekRows.map(([t], i) => ({ "@type": "ListItem", position: i + 1, url: `${SITE}/stocks/${t.toLowerCase()}`, name: `${profiles[t].name} (${t})` })) }]);
+  if (weekRows.length >= 2 && to) {
+    const [bt, bv] = weekRows[0], [wt, wv] = weekRows[weekRows.length - 1];
+    weekPage.answer = `Over the five trading days to ${fmtDate(to)}, the best performing space stock was ${profiles[bt].name} (${bt}), ${fmtPct(bv)}, and the weakest was ${profiles[wt].name} (${wt}), ${fmtPct(wv)}. ${wkUp} of ${weekRows.length} space stocks rose${wkMedian != null ? `, with a median move of ${fmtPct(wkMedian)}` : ""}.`;
+    weekPage.datasets = [{
+      slug: "space-stocks-this-week", name: "Space stocks: five-day returns", description: `Price return over the five trading days to ${to} for every listed space stock Orbit Alpha covers, with 1-month and year-to-date returns.`,
+      columns: ["ticker", "name", "sector", "return_5d_pct", "return_1mo_pct", "ytd_return_pct"],
+      rows: weekRows.map(([t, v]) => [t, profiles[t].name, profiles[t].sector, +v.toFixed(2), ret("1mo", t) != null ? +ret("1mo", t).toFixed(2) : "", ytdBy[t] != null ? +ytdBy[t].toFixed(2) : ""]),
+    }];
+  }
+
   /* ═══ Comparisons ════════════════════════════════════════════════════════════ */
   const comparePages = Object.entries(GUIDES).filter(([, g]) => g.compare).map(([path, g]) => {
     const [A, B] = g.compare;
@@ -248,7 +288,7 @@ ${pairFaq.html}${asOfLine("Prices from Yahoo Finance; financials, insider trades
     return cmpPage;
   });
 
-  return [starlinkPage, cheapPage, ...comparePages];
+  return [starlinkPage, cheapPage, weekPage, ...comparePages];
 }
 
 // Media kit at /advertise. Update SPONSOR when rates change.
