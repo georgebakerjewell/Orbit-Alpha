@@ -12,7 +12,9 @@
     <meta name="theme-color" content="#04060e" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <!-- Loaded without blocking the first paint; text shows in the system font until Inter arrives. -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" /></noscript>
     <!-- Paint the dark background immediately, and keep the search-engine copy of the page
          (written into #root by scripts/prerender.mjs) invisible until the app replaces it. -->
     <style>
