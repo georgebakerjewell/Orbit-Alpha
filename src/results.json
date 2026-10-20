@@ -106,8 +106,8 @@
       "Of the $19.6B capital spending, $16.4B went to the AI segment as the COLOSSUS II compute buildout continued; SpaceX also agreed on 8 October to buy 800 MHz spectrum licences for Starlink Mobile.",
       "On the results call, according to Reuters and CNBC, SpaceX said Tesla and SpaceX had formed special board committees to discuss a possible merger."
     ],
-    "guidance": "The results release gave no numerical outlook. On the call, according to Reuters, the finance chief said SpaceX expects fourth-quarter capital spending of $35B to $40B and reiterated an annual recurring revenue target of about $100B by the end of 2026. CNBC reported first-quarter 2027 revenue guidance of $33B to $37B, against an analyst average of $22.2B (LSEG).",
-    "reaction": "SPCX traded at about $147.50 on 20 October before the results, according to CNBC. Shares were up 4.9% in extended trading after the call, according to Reuters at 18:25 ET (23:25 UK time); CNBC reported a gain of about 5%. Revenue of $14.58B beat the $12.72B analyst average and adjusted EPS of 45 cents beat 13 cents (LSEG, via CNBC).",
+    "guidance": "The results release gave no numerical outlook. On the call SpaceX guided to Q1 2027 revenue of $33B to $37B, against an analyst average of $22.2B (LSEG, via CNBC), and Q4 2026 capital spending of $35B to $40B, according to Reuters. The finance chief reiterated a target of about $100B of annual recurring revenue by the end of 2026, and management expects Q4 gross margins to normalise after one-time benefits in Q3 and nameplate compute of 2.5 to 3 GW by the end of the year, according to Investing.com.",
+    "reaction": "SPCX closed the regular session at $147.79 on 20 October, according to Investing.com. Shares were up 4.9% in extended trading after the call, according to Reuters at 18:25 ET (23:25 UK time); CNBC reported a gain of about 5% and Investing.com a later after-hours price of $157.59, up 6.6%. Revenue of $14.58B beat the $12.72B analyst average and adjusted EPS of 45 cents beat 13 cents (LSEG, via CNBC). Reuters attributed the rise to comments on the call about a possible merger with Tesla.",
     "sources": [
       [
         "SpaceX Reports Third Quarter 2026 Results (SpaceX investor relations)",
@@ -128,6 +128,165 @@
       [
         "SpaceX Q3 2026 earnings call transcript (Benzinga)",
         "https://www.benzinga.com/news/26/10/62484605/spacex-q3-2026-earnings-call-transcript"
+      ],
+      [
+        "Earnings call transcript: SpaceX tops Q3 2026 estimates (Investing.com)",
+        "https://ca.investing.com/news/stock-market-news/earnings-call-transcript-spacex-tops-q3-2026-estimates-shares-jump-after-hours-93CH-4891973"
+      ]
+    ],
+    "updated": "2026-10-20",
+    "tables": [
+      {
+        "title": "Revenue by segment over the last year",
+        "head": [
+          "Segment",
+          "Q3 2025",
+          "Q2 2026",
+          "Q3 2026"
+        ],
+        "rows": [
+          [
+            "Super Intelligence (AI)",
+            "$813M",
+            "$2,561M",
+            "$7,560M"
+          ],
+          [
+            "Connectivity (Starlink)",
+            "$3,097M",
+            "$4,291M",
+            "$5,248M"
+          ],
+          [
+            "Space (launch)",
+            "$1,666M",
+            "$962M",
+            "$1,767M"
+          ],
+          [
+            "Total",
+            "$5,576M",
+            "$7,814M",
+            "$14,575M"
+          ]
+        ],
+        "note": "Source: SpaceX Q3 2026 results release."
+      },
+      {
+        "title": "Profit by segment",
+        "head": [
+          "Segment",
+          "Income from operations",
+          "Operating margin",
+          "Adjusted EBITDA",
+          "Capital spending"
+        ],
+        "rows": [
+          [
+            "Super Intelligence (AI)",
+            "$431M",
+            "5.7%",
+            "$4,953M",
+            "$16,444M"
+          ],
+          [
+            "Connectivity (Starlink)",
+            "$2,367M",
+            "45.1%",
+            "$3,499M",
+            "$1,543M"
+          ],
+          [
+            "Space (launch)",
+            "-$7M",
+            "-0.4%",
+            "$357M",
+            "$1,606M"
+          ],
+          [
+            "Total",
+            "$2,791M",
+            "19.1%",
+            "$8,809M",
+            "$19,593M"
+          ]
+        ],
+        "note": "Source: SpaceX Q3 2026 results release. Margins calculated by Orbit Alpha from the reported figures."
+      }
+    ],
+    "analysis": [
+      [
+        "AI is now SpaceX's biggest business",
+        [
+          "For the first time the Super Intelligence segment brought in more revenue than Starlink: $7.56B against $5.25B, or 52% of the group total. Almost all of that growth came from SI solutions and infrastructure, which rose from $359M a year earlier and $2.19B in Q2 to $7.02B, mostly from renting data-centre capacity to other AI developers, according to Reuters. Cursor added $608M. Advertising revenue grew 18% to $538M.",
+          "On the call, according to transcripts published by Investing.com and Benzinga, the finance chief said compute pricing was tracking slightly above the top of the $30 to $50 per watt range given last quarter, and that new deployments were paying back in less than a year at current prices. Those are management claims and cannot be checked from the accounts yet."
+        ]
+      ],
+      [
+        "Starlink is still where the reliable profit is",
+        [
+          "Connectivity earned $2.37B of operating income at a 45.1% margin, up from 38.4% a year earlier, and spent only $1.54B on capital projects. The AI segment made $431M at a 5.7% margin while spending $16.44B. That gap is the main tension in the story: the business that is growing fastest is also the one consuming nearly all the cash.",
+          "Starlink grew revenue by volume rather than price. Consumer subscribers rose 89% in a year to 13.6 million while consumer ARPU fell 17% to $69, so consumer revenue rose 57%. Enterprise and government revenue grew faster, up 91% to $2.13B, and Connectivity selling and administrative costs roughly tripled to $325M as marketing increased."
+        ]
+      ],
+      [
+        "The headline profit flatters the underlying result",
+        [
+          "Net income of $4.40B was well above operating income of $2.79B. About $1.61B came from below the operating line: other income of $1.03B (of which $561M was from related parties), net interest income of $198M and a tax benefit of $390M. Over the first nine months of 2026 SpaceX still made a net loss of $413M.",
+          "Management also said, according to Investing.com, that Q4 gross margins should normalise after one-time benefits in Q3. Against that, operating income was held back by $1.22B of share-based pay from the Cursor deal. SpaceX says $23.4B of Cursor-related equity awards is attributable to future service, so that charge will recur for some time."
+        ]
+      ],
+      [
+        "The cash bill is getting bigger, not smaller",
+        [
+          "In the first nine months SpaceX generated $13.10B of operating cash flow and spent $48.07B on property and equipment, a gap of about $35B covered mostly by $85.7B of net IPO proceeds and about $12.0B of net new borrowing. It ended September with $89.9B of cash and marketable securities against $38.8B of debt and finance leases, up from $22.9B at the end of 2025.",
+          "Guidance points to spending accelerating: $35B to $40B of capital spending in Q4 alone, which would take the 2026 total to roughly $83B to $88B. The cash pile can carry that for now, but the return on this spending is the question the next few quarters have to answer."
+        ]
+      ],
+      [
+        "Guidance and backlog are the reason the shares rose",
+        [
+          "Q1 2027 revenue guidance of $33B to $37B is 2.3 to 2.5 times Q3 revenue and well above the $22.2B analyst average reported by CNBC. SpaceX reported a $63B backlog at 30 September, with about $42B expected to be recognised within 12 months, according to the call transcripts, and $17.5B already received as deferred revenue on the balance sheet. That backlog gives the near-term forecast some contracted support.",
+          "The space segment was the weak spot. Revenue rose 6% to $1.77B even though launches fell to 35 from 44 a year earlier, but research and development rose 44% to $1.23B as Starship spending increased, leaving a $7M operating loss."
+        ]
+      ],
+      [
+        "What analysts said",
+        [
+          "\"SpaceX delivered the quarter the bulls wanted, at least on the top line. The story now is all about AI,\" Will Rhind, chief executive of GraniteShares, told Reuters. Daniel Newman, chief executive of the Futurum Group, told Reuters that AI revenue was \"quickly providing operating strength and leverage\" for the satellite and launch businesses.",
+          "Investing.com listed the main risks raised around the results as heavy capital spending, execution risk from building Starship, satellites and compute at the same time, regulatory approvals and margins that may not repeat."
+        ]
+      ]
+    ],
+    "analysisNote": "Analysis by Orbit Alpha from the SpaceX results release and the sources below. Percentages and totals not stated by SpaceX are Orbit Alpha calculations from reported figures.",
+    "watch": [
+      "Thursday 22 October 2026: up to 1.3 billion locked-up shares become free to sell at the start of trading. Before the first release of more than 911 million shares on 6 August, the stock hit a low of $104.83 on 3 August and then rallied once the shares were released, according to CNBC. Dates are on the SpaceX lockup calendar.",
+      "Q4 capital spending against the $35B to $40B guidance, and whether nameplate compute reaches the 2.5 to 3 GW management targeted by the end of the year (1.7 GW at 30 September).",
+      "Whether gross margins fall back in Q4, as management indicated after one-time benefits in Q3.",
+      "Starlink kit deliveries and activations in Q4. Management said it prioritised retail stock ahead of the holiday season, according to the Investing.com transcript.",
+      "Progress of the Tesla merger talks, which would need shareholder approval on both sides, according to Reuters and CNBC.",
+      "SpaceX has not yet announced its Q4 2026 results date."
+    ],
+    "faq": [
+      [
+        "Did SpaceX make a profit in Q3 2026?",
+        "Yes. SpaceX reported net income of $4.40B for the three months to 30 September 2026, against a net loss of $1.05B a year earlier, and income from operations of $2.79B. About $1.61B of the net income came from other income, net interest income and a tax benefit rather than operations."
+      ],
+      [
+        "How much revenue did Starlink make in Q3 2026?",
+        "SpaceX's Connectivity segment, which is mainly Starlink, had revenue of $5.25B, up 69%: $3.12B from consumers and $2.13B from enterprise and government customers."
+      ],
+      [
+        "How many Starlink subscribers are there?",
+        "13.6 million Starlink consumer subscribers at 30 September 2026, up from 12.0 million at the end of June and 7.2 million a year earlier, plus hundreds of thousands of enterprise subscribers, according to SpaceX."
+      ],
+      [
+        "What is SpaceX's guidance?",
+        "The results release gave no numerical outlook. On the call SpaceX guided to Q1 2027 revenue of $33B to $37B and Q4 2026 capital spending of $35B to $40B, and said it expects about $100B of annual recurring revenue by the end of 2026, according to Reuters, CNBC and Investing.com."
+      ],
+      [
+        "When do more SpaceX shares unlock?",
+        "Up to 1.3 billion locked-up shares become free to sell at the start of Thursday 22 October 2026, two trading days after the Q3 results. The full schedule is on the SpaceX lockup calendar."
       ]
     ]
   }
