@@ -1,1 +1,357 @@
-[]
+[
+  {
+    "slug": "spacex-starship-flight-15",
+    "title": "SpaceX Starship Flight 15",
+    "tickers": [
+      "SPCX"
+    ],
+    "vehicle": "Starship (Super Heavy Booster 22, Ship 42)",
+    "status": "upcoming",
+    "date": null,
+    "dateText": "Targeting November 2026 (no earlier than 8 November in planning documents)",
+    "summary": "SpaceX's Starship Flight 15 is targeting November 2026 from Starbase, Texas, with the first attempt to catch both the Super Heavy booster and the Starship upper stage. A double catch would open the way to the first reflight of a recovered ship, a key step towards full reuse.",
+    "stakes": [
+      "SpaceX plans to catch both stages with the launch tower's arms; a success would be the first full recovery of a Starship vehicle and would allow the first reflight of a properly recovered ship (NASASpaceflight).",
+      "Elon Musk put the chance of a successful ship catch on the first attempt at about 50 to 60 percent (Space Launch Schedule, Wikipedia).",
+      "Flight 14 on 28 September 2026 was the first Starship flight to reach orbit and deployed 26 Starlink V3 satellites, though the booster and the ship each lost an engine during ascent.",
+      "Flight 16, targeted for December, could be the first Starship launch from Launch Complex 39A in Florida; NASASpaceflight notes those plans depend on how Flight 15 goes."
+    ],
+    "facts": [
+      [
+        "Vehicle",
+        "Starship Block 3"
+      ],
+      [
+        "Booster",
+        "Super Heavy Booster 22"
+      ],
+      [
+        "Ship",
+        "Ship 42"
+      ],
+      [
+        "Launch site",
+        "Orbital Launch Pad 2, Starbase, Texas"
+      ],
+      [
+        "Mission",
+        "15th Starship flight test"
+      ],
+      [
+        "Main objective",
+        "Tower catch of both the booster and the ship"
+      ],
+      [
+        "Next flight",
+        "Flight 16, targeted for December 2026, possibly from LC-39A, Florida"
+      ]
+    ],
+    "history": [
+      [
+        "Starship Flight 14 (first orbital flight)",
+        "28 September 2026",
+        "Reached orbit and deployed 26 Starlink V3 satellites; one engine lost on each stage; both stages made controlled splashdowns",
+        "SPCX closed down 2.16% at $145.47 in the session that opened after the 8:49 a.m. EDT liftoff"
+      ]
+    ],
+    "sources": [
+      [
+        "NASASpaceflight: SpaceX working through Starship Flight 15 and 16 milestones (18 October 2026)",
+        "https://www.nasaspaceflight.com/2026/10/spacex-flight-15-16-milestones/"
+      ],
+      [
+        "Wikipedia: Starship flight 15",
+        "https://en.wikipedia.org/wiki/Starship_flight_15"
+      ],
+      [
+        "Space Launch Schedule: Starship Flight 15 launch date",
+        "https://www.spacelaunchschedule.com/news/starship-flight-15-launch-date-how-to-watch/"
+      ],
+      [
+        "Yahoo Finance: SpaceX launches Starship Flight 14",
+        "https://finance.yahoo.com/markets/stocks/articles/spacex-successfully-launches-most-powerful-142301045.html"
+      ],
+      [
+        "24/7 Wall St.: SpaceX flew the most powerful rocket ever built and the stock fell anyway",
+        "https://247wallst.com/investing/2026/09/29/spacex-flew-the-most-powerful-rocket-ever-built-and-the-stock-fell-anyway/"
+      ]
+    ],
+    "updated": "2026-10-22"
+  },
+  {
+    "slug": "ast-spacemobile-bluebirds-14-16-launch",
+    "title": "AST SpaceMobile BlueBirds 14, 15 and 16 Launch",
+    "tickers": [
+      "ASTS"
+    ],
+    "vehicle": "Falcon 9 (listed by launch trackers; AST has not announced the launch)",
+    "status": "upcoming",
+    "date": null,
+    "dateText": "Fourth quarter 2026 (no date announced)",
+    "summary": "AST SpaceMobile's BlueBirds 14, 15 and 16 reached Cape Canaveral in October 2026 and await a launch date, listed for the fourth quarter. The launch would take the constellation to 16 satellites as AST works towards about 45 in orbit by early 2027.",
+    "stakes": [
+      "AST is aiming for about 45 satellites in orbit by early 2027 and about 90 for continuous global coverage; BlueBirds 11 to 13 took the count to 13 in August 2026.",
+      "After the August launch, AST said it was preparing for beta services later in 2026 and working towards service activation in the US, Canada, Europe, Saudi Arabia and Japan, and for the US Government.",
+      "AST's full year 2026 revenue guidance is $150 million to $200 million, with about half expected to come from contracted backlog.",
+      "Advanced Television reports this batch is about a month behind the schedule shown in August, and that later launches depend partly on the availability of Blue Origin's New Glenn."
+    ],
+    "facts": [
+      [
+        "Satellites",
+        "BlueBirds 14, 15 and 16 (next-generation BlueBird)"
+      ],
+      [
+        "Launch vehicle",
+        "Falcon 9 (listed, not confirmed by AST)"
+      ],
+      [
+        "Launch site",
+        "SLC-40, Cape Canaveral Space Force Station (listed)"
+      ],
+      [
+        "Status",
+        "Arrived at Cape Canaveral, October 2026"
+      ],
+      [
+        "Satellites in orbit before launch",
+        "13"
+      ],
+      [
+        "Production",
+        "Under way through BlueBird 50"
+      ]
+    ],
+    "sources": [
+      [
+        "Stocktwits: BlueBirds 14-16 reach Florida (11 October 2026)",
+        "https://stocktwits.com/news-articles/markets/equity/asts-stock-bluebirds-14-16-florida-fcc-sda-backed-900-mhz-test/cZx4DUVRBFg"
+      ],
+      [
+        "Advanced Television: AST SpaceMobile launch schedule updated (19 October 2026)",
+        "https://www.advanced-television.com/2026/10/19/ast-spacemobile-launch-schedule-updated/"
+      ],
+      [
+        "Advanced Television: BlueBirds 11, 12, 13 OK; 14, 15, 16 en route",
+        "https://www.advanced-television.com/2026/10/03/bluebirds-111213-ok-141516-en-route/"
+      ],
+      [
+        "AST SpaceMobile: Successful orbital launch of BlueBirds 11, 12 and 13",
+        "https://www.businesswire.com/news/home/20260805761351/en/AST-SpaceMobile-Announces-Successful-Orbital-Launch-of-BlueBirds-11-12-and-13"
+      ],
+      [
+        "AST SpaceMobile first quarter 2026 results (SEC 8-K)",
+        "https://www.sec.gov/Archives/edgar/data/0001780312/000119312526216946/asts-ex99_1.htm"
+      ],
+      [
+        "Yahoo Finance: AST SpaceMobile announces launch date for its next 3 BlueBird satellites",
+        "https://finance.yahoo.com/markets/stocks/articles/ast-spacemobile-announces-launch-date-161500077.html"
+      ],
+      [
+        "Next Spaceflight: BlueBird 14 to 16",
+        "https://nextspaceflight.com/launches/details/8242/"
+      ]
+    ],
+    "updated": "2026-10-22"
+  },
+  {
+    "slug": "firefly-alpha-block-2-first-launch",
+    "title": "Firefly Alpha Block 2 First Launch (Flight 8)",
+    "tickers": [
+      "FLY"
+    ],
+    "vehicle": "Alpha Block 2",
+    "status": "upcoming",
+    "date": null,
+    "dateText": "Fourth quarter 2026",
+    "summary": "Firefly Aerospace is targeting the fourth quarter of 2026 for Alpha Flight 8 from Vandenberg, the first flight of the upgraded Alpha Block 2. It is one of two more Alpha launches Firefly plans this year and the first test of the reliability upgrades in flight.",
+    "stakes": [
+      "Firefly said on its second quarter 2026 call that it is targeting Flights 8 and 9 this year, for three Alpha launches in 2026.",
+      "Block 2 is an upgrade intended to improve Alpha's reliability; Block 2 avionics flew in shadow mode on Flight 7 in March 2026.",
+      "Before launch the rocket still needs acceptance testing, delivery to Vandenberg, a static fire and payload integration.",
+      "Firefly says most of its 2027 Alpha manifest is already sold."
+    ],
+    "facts": [
+      [
+        "Vehicle",
+        "Alpha Block 2"
+      ],
+      [
+        "Mission",
+        "Alpha Flight 8"
+      ],
+      [
+        "Launch site",
+        "SLC-2W, Vandenberg Space Force Base, California"
+      ],
+      [
+        "Next mission",
+        "Alpha Flight 9, also targeted for the fourth quarter of 2026"
+      ],
+      [
+        "Previous flight",
+        "Flight 7, 11 March 2026 (Pacific time), reached orbit"
+      ]
+    ],
+    "history": [
+      [
+        "Alpha Flight 7 (return to flight)",
+        "11 March 2026 (12 March UTC)",
+        "Reached orbit with a demonstrator payload",
+        "FLY up 16.7% intraday on 12 March (as of 2:10 p.m. ET), per Nasdaq"
+      ]
+    ],
+    "sources": [
+      [
+        "Spaceflight Now: Firefly pushes debut of Alpha Block 2 to the fourth quarter of 2026",
+        "https://spaceflightnow.com/2026/08/11/firefly-aerospace-pushes-debut-of-alpha-block-2-rocket-to-the-fourth-quarter-of-2026/"
+      ],
+      [
+        "Firefly Aerospace Q2 2026 earnings call transcript",
+        "https://equibles.com/stocks/fly/calls/2026-q2"
+      ],
+      [
+        "SpaceNews: Firefly to upgrade Alpha rocket to improve reliability",
+        "https://spacenews.com/firefly-to-upgrade-alpha-rocket-to-improve-reliability/"
+      ],
+      [
+        "NASASpaceflight: Firefly FLTA007 launch",
+        "https://www.nasaspaceflight.com/2026/03/firefly-flta007-launch/"
+      ],
+      [
+        "Nasdaq: Why Fly Aerospace stock popped today (12 March 2026)",
+        "https://www.nasdaq.com/articles/why-fly-aerospace-stock-popped-today"
+      ]
+    ],
+    "updated": "2026-10-22"
+  },
+  {
+    "slug": "intuitive-machines-im-3",
+    "title": "Intuitive Machines IM-3 Moon Landing Mission",
+    "tickers": [
+      "LUNR"
+    ],
+    "vehicle": "Falcon 9",
+    "status": "upcoming",
+    "date": null,
+    "dateText": "First quarter of 2027 (launch window January to March)",
+    "summary": "Intuitive Machines' IM-3 lunar lander is scheduled to launch on a Falcon 9 in a January to March 2027 window, aiming for the Reiner Gamma region of the Moon. It is the company's third landing attempt, after IM-2 ended with its lander on its side in March 2025.",
+    "stakes": [
+      "On the second quarter 2026 call, management said IM-3 was in assembly, integration and test, with an engine test still to come before a final green light to fly in the first quarter of 2027.",
+      "IM-3 flies under a NASA Commercial Lunar Payload Services task order (CP-11) and carries Lunar Vertex, NASA's CADRE rovers and instruments from ESA and Korea's KASI.",
+      "Intuitive Machines reported record second quarter 2026 revenue of $206 million and backlog of $1.8 billion, and kept its full-year revenue outlook of $900 million to $1 billion.",
+      "The company said IM-4 remains planned for late 2027."
+    ],
+    "facts": [
+      [
+        "Lander",
+        "Nova-C"
+      ],
+      [
+        "Launch vehicle",
+        "Falcon 9 Block 5"
+      ],
+      [
+        "Launch site",
+        "LC-39A, Kennedy Space Center (planned)"
+      ],
+      [
+        "Landing site",
+        "Reiner Gamma"
+      ],
+      [
+        "Customer",
+        "NASA CLPS (task order CP-11)"
+      ],
+      [
+        "Mission number",
+        "Third Intuitive Machines lunar mission"
+      ]
+    ],
+    "history": [
+      [
+        "IM-2 (Athena lander)",
+        "6 March 2025",
+        "Touched down but ended on its side",
+        "LUNR fell more than 20% in the regular session on landing day, per Benzinga"
+      ]
+    ],
+    "sources": [
+      [
+        "Intuitive Machines Q2 2026 earnings call transcript",
+        "https://finance.yahoo.com/markets/stocks/articles/intuitive-machines-lunr-q2-2026-134458777.html"
+      ],
+      [
+        "Intuitive Machines reports second quarter 2026 financial results",
+        "https://investors.intuitivemachines.com/news-releases/news-release-details/intuitive-machines-reports-second-quarter-2026-financial-results"
+      ],
+      [
+        "Wikipedia: IM-3",
+        "https://en.wikipedia.org/wiki/IM-3"
+      ],
+      [
+        "Spaceflight Now: IM-2 mission ends with lander on its side",
+        "https://spaceflightnow.com/2025/03/07/intuitive-machines-im-2-mission-ends-with-lander-on-its-side-on-the-moon/"
+      ],
+      [
+        "Benzinga: Intuitive Machines stock is in free fall Thursday",
+        "https://www.benzinga.com/general/space/25/03/44181829/intuitive-machines-stock-is-in-free-fall-thursday-whats-going-on"
+      ]
+    ],
+    "updated": "2026-10-22"
+  },
+  {
+    "slug": "virgin-galactic-delta-flight-tests",
+    "title": "Virgin Galactic Delta Spaceship Flight Tests",
+    "tickers": [
+      "SPCE"
+    ],
+    "vehicle": "Delta-class spaceship, carried by VMS Eve",
+    "status": "upcoming",
+    "date": null,
+    "dateText": "Flight test phase from October 2026; commercial service expected February 2027",
+    "summary": "Virgin Galactic expected its first Delta-class spaceship to start flight testing in October 2026, moving through captive carry, glide and powered flights before commercial service now expected in February 2027. Delta is the ship meant to return the company to revenue flights.",
+    "stakes": [
+      "In August 2026 Virgin Galactic moved first commercial service from the fourth quarter of 2026 to February 2027, with a second ship due to join in March 2027.",
+      "The shares fell about 13% after hours, to roughly $2.89, after the delay was announced with second quarter results (TechTimes).",
+      "Cash, cash equivalents and marketable securities were $286 million at 30 June 2026.",
+      "A tranche of spaceflights priced at $750,000 was oversubscribed and booked out ahead of schedule, according to the company."
+    ],
+    "facts": [
+      [
+        "Spaceship",
+        "Delta 1 (first Delta-class ship)"
+      ],
+      [
+        "Carrier aircraft",
+        "VMS Eve"
+      ],
+      [
+        "Base",
+        "Spaceport America, New Mexico"
+      ],
+      [
+        "Test sequence",
+        "Captive carry, then glide flights, then powered flights"
+      ],
+      [
+        "Commercial service",
+        "Expected February 2027"
+      ],
+      [
+        "Second ship",
+        "Planned to join the fleet in March 2027"
+      ]
+    ],
+    "sources": [
+      [
+        "Virgin Galactic: Second quarter 2026 results and business update",
+        "https://www.virgingalactic.com/news/virgin-galactic-announces-second-quarter-2026-financial-results-and-provides-business-update"
+      ],
+      [
+        "TechTimes: Delta delay pushes launch to February",
+        "https://www.techtimes.com/articles/324278/20260813/virgin-galactic-hits-80m-cash-floor-delta-avionics-delay-pushes-launch-february.htm"
+      ]
+    ],
+    "updated": "2026-10-22"
+  }
+]
