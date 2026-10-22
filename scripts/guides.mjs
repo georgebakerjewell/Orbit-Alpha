@@ -8,6 +8,7 @@ import { buildSpaceX } from "./spacex.mjs";
 import { buildResults } from "./results.mjs";
 import { buildWidgetGuide } from "./embed.mjs";
 import { buildPreviews } from "./previews.mjs";
+import { buildEvents } from "./events.mjs";
 import { readFileSync } from "node:fs";
 import { brokerBoxHtml } from "../lib/affiliates.js";
 
@@ -242,6 +243,7 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
     ...buildMoreGuides({ ...ctx, page, table, faq, and, usd, asOfLine }),
     ...buildResults({ ...ctx, results: RESULTS }),
     ...buildPreviews({ ...ctx, results: RESULTS }),
+    ...buildEvents({ ...ctx, events: JSON.parse(readFileSync(new URL("../src/events.json", import.meta.url), "utf8")) }),
     buildHub(ctx),
     buildAdvertise(ctx),
     buildWidgetGuide(ctx)];
