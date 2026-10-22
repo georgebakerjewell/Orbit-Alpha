@@ -51,7 +51,7 @@ export function buildSpaceX(ctx) {
     { date: dayN(105), what: "Day 105", n: 328.4e6, pct: "7%", move: "-0.2%" },
     { date: dayN(120), what: "Day 120", n: 328.4e6, pct: "7%", move: "+1%" },
     { date: dayN(135), what: "Day 135", n: 328.4e6, pct: "7%" },
-    { date: q3, what: "Second full trading day after Q3 results", n: 1.3e9, pct: "28%", q3: true },
+    { date: q3, what: "Second full trading day after Q3 results", n: 1.3e9, pct: "28%", q3: true, move: "-9%" },
     { date: dayN(180), what: "Day 180: lock-up expires", n: 798e6, pct: "Remaining 17%", approx: true },
   ].map((t) => ({ ...t, trade: t.date ? tradingOnOrAfter(t.date) : null }));
   const status = (t) => (!t.trade ? "Date not yet set" : t.trade < today ? "Released" : t.trade === today ? "Today" : "Upcoming");
@@ -181,7 +181,7 @@ ${sources([
     ["How many SpaceX shares unlock after Q3 earnings?", `Up to 1.3 billion shares, 28% of the shares under the main lock-up, become free to sell at the start of the second full trading day after SpaceX reports third-quarter results.${q3Row.trade ? (q3Firm ? ` SpaceX reports Q3 results after the close on ${fmtDate(q3Src.date)}, so the release is on ${fmtDate(q3Row.trade)}.` : ` On the expected results date that would be ${fmtDate(q3Row.trade)}.`) : " SpaceX had not confirmed the results date at the last update."}`],
     ["When can Elon Musk sell SpaceX stock?", `Not before ${fmtDate(musk)}. Musk's lock-up lasts 366 days from the IPO pricing on 11 June 2026, with no early release of any kind. Day 366 is ${fmtDate(dayN(366))}, a ${weekday(dayN(366)) === 6 ? "Saturday" : "weekday"}, so the first trading day he could sell is ${fmtDate(musk)}.`],
     ["Does a lockup expiry mean insiders will sell?", "No. An unlock gives holders permission to sell, not an obligation. Many employees and investors keep their shares, and sales by directors and officers show up afterwards in Form 4 filings, often after a Form 144 notice."],
-    ["What happened to SPCX stock on past unlock days?", "Moves were mixed: up about 6% on the first release on 6 August, down about 4% on 20 August and 9 September, roughly flat on 24 September and up about 1% on 9 October. Across the first six releases the stock rose about 50%, from around $108 before the first one."],
+    ["What happened to SPCX stock on past unlock days?", "Moves were mixed: up about 6% on the first release on 6 August, down about 4% on 20 August and 9 September, roughly flat on 24 September, up about 1% on 9 October and down about 9% on 22 October, the largest release, a day after shares rose about 8% on Q3 results. Across the first five releases the stock rose about 50%, from around $108 before the first one to about $163. After the 22 October release it closed at about $145, about 34% above that starting level."],
   ]);
   const lockPage = page("/spacex-stock/lockup-calendar", "SpaceX lockup calendar",
     `<p>Most SpaceX shares were not sold in the IPO. They belong to employees, early investors and Elon Musk, who agreed not to sell for a set period. Instead of releasing everything on one date, SpaceX's lock-up frees the shares in stages, some on fixed days counted from the IPO pricing on 11 June 2026 and some two trading days after quarterly results. This page lists every release with its date and share count, taken from the IPO prospectus.</p>
