@@ -7,6 +7,7 @@ import { buildMoreGuides, buildHub, buildAdvertise } from "./guides-more.mjs";
 import { buildSpaceX } from "./spacex.mjs";
 import { buildResults } from "./results.mjs";
 import { buildWidgetGuide } from "./embed.mjs";
+import { buildPreviews } from "./previews.mjs";
 import { readFileSync } from "node:fs";
 import { brokerBoxHtml } from "../lib/affiliates.js";
 
@@ -235,10 +236,12 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
     rows: upcoming.map((e) => [e.date, e.ticker, profiles[e.ticker].name, e.time || "", e.epsEst || ""]),
   }];
 
+  const RESULTS = JSON.parse(readFileSync(new URL("../src/results.json", import.meta.url), "utf8"));
   const pages = [listPage, insiderPage, runwayPage, contractsPage, earningsPage, euroPage, etfPage,
     ...buildSpaceX({ ...ctx, page, table, faq, and, usd, asOfLine }),
     ...buildMoreGuides({ ...ctx, page, table, faq, and, usd, asOfLine }),
-    ...buildResults({ ...ctx, results: JSON.parse(readFileSync(new URL("../src/results.json", import.meta.url), "utf8")) }),
+    ...buildResults({ ...ctx, results: RESULTS }),
+    ...buildPreviews({ ...ctx, results: RESULTS }),
     buildHub(ctx),
     buildAdvertise(ctx),
     buildWidgetGuide(ctx)];

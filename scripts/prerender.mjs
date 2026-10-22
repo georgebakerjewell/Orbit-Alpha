@@ -11,6 +11,7 @@ import { withConfirmed } from "../lib/earnings-confirmed.js";
 import { brokerBoxHtml } from "../lib/affiliates.js";
 import { sheetHtml } from "./sheet.mjs";
 import { widgetHtml } from "./embed.mjs";
+import { previewTargets, quarterFor } from "./previews.mjs";
 import { buildGuides } from "./guides.mjs";
 import { stockCard, OG_COLORS } from "./og.mjs";
 
@@ -123,6 +124,7 @@ const fmtUsd = (n) => (n >= 1e9 ? `$${(n / 1e9).toFixed(2)}B` : n >= 1e6 ? `$${(
 const fmtDate = (iso) => new Date(iso + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 const latest = (...dates) => dates.filter(Boolean).sort().pop() || null;
 
+const previewFor = previewTargets({ earnings: earningsList, results: JSON.parse(readFileSync(new URL("../src/results.json", import.meta.url), "utf8")), profiles, today });
 const earningsSentence = (name, e) => `${name} ${e.confirmed ? "reports" : "is expected to report"} its next results on ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}${e.confirmed ? " (confirmed by the company)" : ""}${e.epsEst ? `, with consensus earnings per share of ${epsText(e.epsEst)}` : ""}.`;
 function stockFacts(t, name) {
   const q = quotes[t], ytd = ytdBy[t], e = nextEarnings[t];
@@ -135,7 +137,7 @@ function stockFacts(t, name) {
   let html = "";
   if (rows.length) html += `<h2>${esc(name)} (${t}) stock at a glance</h2>${list(rows)}<p>Figures as of ${fmtDate(quotesDate || today)}. Prices on the live page update through the trading day.</p>`;
   // "<ticker> earnings date" is searched every quarter: answer it in its own section.
-  if (e) html += `<h2>${esc(name)} (${t}) next earnings date</h2><p>${esc(earningsSentence(name, e))} ${e.confirmed ? `Source: <a href="${esc(e.source)}" rel="noopener" target="_blank">${esc(name)} investor relations</a>.` : "Date from the Nasdaq earnings calendar; companies usually confirm it two to four weeks ahead, and this page updates when they do."} See every company's date on the <a href="/space-stocks/earnings-calendar">space stocks earnings calendar</a>.</p>`;
+  if (e) html += `<h2>${esc(name)} (${t}) next earnings date</h2><p>${esc(earningsSentence(name, e))} ${e.confirmed ? `Source: <a href="${esc(e.source)}" rel="noopener" target="_blank">${esc(name)} investor relations</a>.` : "Date from the Nasdaq earnings calendar; companies usually confirm it two to four weeks ahead, and this page updates when they do."} ${previewFor[t]?.mode === "ahead" ? `Read the <a href="/earnings-preview/${t.toLowerCase()}">${esc(name)} ${quarterFor(e.date)} earnings preview</a>, or see` : "See"} every company's date on the <a href="/space-stocks/earnings-calendar">space stocks earnings calendar</a>.</p>`;
   html += brokerBoxHtml({ ticker: t, name, placement: "stock-page", esc, tools: !profiles[t]?.listing && t !== "MDA" });
   // Key financials from the latest 10-Q/10-K (US SEC filers), so "<company> revenue" and "<company>
   // cash" searches find a direct answer. 12-month figures where available, else the latest quarter.

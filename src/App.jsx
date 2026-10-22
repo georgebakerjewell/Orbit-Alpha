@@ -46,6 +46,7 @@ function parsePath(pathname) {
   if (!first) return { page: "home" };
   if (first === "markets") return { page: "markets", tab: MARKET_TABS.includes(second) ? second : "stocks" };
   if (first === "stocks" && second) return { page: "stock", ticker: second.toUpperCase() };
+  if (first === "earnings-preview" && second) return PROFILES[second.toUpperCase()] ? { page: "guide", path: `/earnings-preview/${second}` } : { page: "notfound" };
   if (first === "results" && second) return resultsData.some((r) => r.slug === second) ? { page: "guide", path: `/results/${second}` } : { page: "notfound" };
   if (first === "feed") return { page: "news" };
   if (first === "newsletter" && second) {
@@ -127,6 +128,10 @@ function routeMeta(route) {
     const r = resultsData.find((x) => `/results/${x.slug}` === route.path);
     const pr = r && PROFILES[r.ticker];
     if (r && pr) return { title: `${pr.name} (${r.ticker}) ${r.quarter} Results: ${r.headline} | Orbit Alpha`.slice(0, 120), description: r.summary.slice(0, 158) };
+  }
+  if (route.page === "guide" && route.path.startsWith("/earnings-preview/")) {
+    const t = route.path.split("/")[2].toUpperCase();
+    return { title: `${PROFILES[t]?.name || t} (${t}) Earnings Preview: Date and What to Watch | Orbit Alpha`, description: `${PROFILES[t]?.name || t} results date, consensus estimate, last quarter's numbers and what to watch.` };
   }
   if (route.page === "guide") return GUIDES[route.path];
   const archived = route.page === "issue" && issueArchive.find((x) => x.issue === route.issue);
@@ -2578,7 +2583,7 @@ function GuidePage({ path }) {
     }).catch(() => alive && setFailed(true));
     return () => { alive = false; };
   }, [path]);
-  const cta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })));
+  const cta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES);
   const onClick = (e) => {
     const href = e.target.closest("a")?.getAttribute("href");
     if (!href || !href.startsWith("/") || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
