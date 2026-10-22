@@ -336,8 +336,25 @@ ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): liv
 
 // Pages that also get a plain markdown copy at <path>.md, for AI tools that prefer text.
 const hasMd = (path) => !!GUIDES[path] || path.startsWith("/stocks/");
-function render({ path, title, description, body, ld = [], ogImage }) {
+// Search engines cut titles at about 70 characters and descriptions at about 160 (Bing flags both
+// as errors). Long titles lose the brand suffix first; long descriptions end at the last full
+// sentence that fits, or the last word, with an ellipsis.
+function fitTitle(t) {
+  if (t.length <= 70) return t;
+  const bare = t.replace(/ \| Orbit Alpha( Issue \d+)?$/, "");
+  if (bare.length <= 70) return bare;
+  const cut = bare.slice(0, 69);
+  return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:.\-]$/, "")}…`;
+}
+function fitDescription(d) {
+  if (d.length <= 160) return d;
+  const cut = d.slice(0, 160);
+  const stop = cut.lastIndexOf(". ");
+  return stop >= 90 ? cut.slice(0, stop + 1) : `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:]$/, "")}…`;
+}
+function render({ path, title: rawTitle, description: rawDescription, body, ld = [], ogImage }) {
   const url = SITE + path;
+  const title = fitTitle(rawTitle), description = fitDescription(rawDescription || "");
   const head = [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}" />`,
