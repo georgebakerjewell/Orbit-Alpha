@@ -4,7 +4,7 @@ import issueArchive from "./issueArchive.json";
 import stories from "./stories.json";
 import resultsData from "./results.json"; // results-day pages at /results/<slug> (src/results.json, added by a scheduled task) // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
-import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, GUIDE_CTA, GUIDE_CTA_DEFAULT, stockTitle } from "../lib/pagemeta.js";
+import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, GUIDE_CTA, GUIDE_CTA_DEFAULT, guideCta, stockTitle } from "../lib/pagemeta.js";
 import { BROKERS, TOOLS, toolHref, brokerHref, anyAffiliate, RISK, DISCLOSURE } from "../lib/affiliates.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -1666,12 +1666,15 @@ function PerformanceChart({ full = false, prices }) {
                 {full && <span style={{ fontSize: 11, color: "#667", width: 90 }}>{title}</span>}
                 {items.map((s) => {
                   const on = selected.includes(s.id);
+                  // Series with no prices in this range (e.g. a London listing on a data gap) can't be drawn.
+                  const empty = lastValue(s) == null;
                   return (
-                    <label key={s.id} title={s.label} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, cursor: "pointer", userSelect: "none", border: `1px solid ${on ? colorOf(s.id) + "66" : "rgba(255,255,255,0.1)"}`, borderRadius: 4, padding: "4px 8px", color: on ? "#fff" : C.muted }}>
-                      <input type="checkbox" checked={on} onChange={() => toggle(s.id)} style={{ accentColor: colorOf(s.id), margin: 0 }} />
+                    <label key={s.id} title={empty ? `${s.label}: no data for this period` : s.label} style={{ display: "flex", alignItems: "center", gap: 7, minHeight: 34, fontSize: 12, cursor: empty ? "default" : "pointer", userSelect: "none", WebkitTapHighlightColor: "transparent", border: `1px solid ${on && !empty ? colorOf(s.id) + "88" : "rgba(255,255,255,0.1)"}`, background: on && !empty ? colorOf(s.id) + "14" : "transparent", borderRadius: 6, padding: "6px 11px", color: on && !empty ? "#fff" : C.muted, opacity: empty ? 0.45 : 1 }}>
+                      <input type="checkbox" checked={on && !empty} disabled={empty} onChange={() => toggle(s.id)} style={{ accentColor: colorOf(s.id), margin: 0, width: 15, height: 15 }} />
                       <span style={{ width: 10, height: 2, background: colorOf(s.id), display: "inline-block" }} />
                       {full ? (s.kind === "etf" ? s.id : s.label) : s.kind === "etf" ? s.id : s.label}
-                      {on && <span style={{ color: signColor(lastValue(s)), fontWeight: 600 }}>{pct(lastValue(s))}</span>}
+                      {on && !empty && <span style={{ color: signColor(lastValue(s)), fontWeight: 600 }}>{pct(lastValue(s))}</span>}
+                      {empty && <span style={{ fontSize: 10 }}>no data</span>}
                     </label>
                   );
                 })}
@@ -2575,6 +2578,7 @@ function GuidePage({ path }) {
     }).catch(() => alive && setFailed(true));
     return () => { alive = false; };
   }, [path]);
+  const cta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })));
   const onClick = (e) => {
     const href = e.target.closest("a")?.getAttribute("href");
     if (!href || !href.startsWith("/") || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
@@ -2588,9 +2592,9 @@ function GuidePage({ path }) {
           {i > 0 && (
             <ForNonSubscribers>
               <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.3)", background: "rgba(0,255,136,0.04)", margin: "8px 0 26px" }}>
-                <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>{(GUIDE_CTA[path] || GUIDE_CTA_DEFAULT)[0]}</div>
-                <p style={{ fontSize: 12, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>{(GUIDE_CTA[path] || GUIDE_CTA_DEFAULT)[1]}</p>
-                <SubscribeForm source={`guide-inline:${path}`} />
+                <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>{cta[0]}</div>
+                <p style={{ fontSize: 12, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>{cta[1]}</p>
+                <SubscribeForm source={`guide-inline:${path}`} follow={cta[2]} label={cta[3] || "Subscribe"} />
               </div>
             </ForNonSubscribers>
           )}

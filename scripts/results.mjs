@@ -32,13 +32,27 @@ ${r.sources?.length ? `<h2>Sources</h2>${list(r.sources.map(([t, u]) => ext(u, t
       ld: [ORG, { "@type": "NewsArticle", headline: `${p.name} ${r.quarter} results: ${r.headline}`.slice(0, 110), datePublished: r.reported, dateModified: r.updated || r.reported, description: r.summary, url: SITE + path, author: { "@id": `${SITE}/#org` }, publisher: { "@id": `${SITE}/#org` }, about: { "@type": "Corporation", name: p.name, tickerSymbol: r.ticker } }, ...(r.faq?.length ? [{ "@type": "FAQPage", mainEntity: r.faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) }] : []), crumbs([["Home", "/"], ["Results", "/results"], [`${r.ticker} ${r.quarter}`, path]])],
     };
   });
+  // The index doubles as the reporting-season scoreboard: who has reported this quarter, with the
+  // headline numbers, and who is still to come (from the earnings calendar).
+  const { earnings = [], today = new Date().toISOString().slice(0, 10) } = ctx;
+  const season = sorted[0]?.quarter || null;
+  const inSeason = season ? sorted.filter((r) => r.quarter === season) : [];
+  const done = new Set(inSeason.map((r) => r.ticker));
+  const horizon = new Date(Date.parse(today) + 60 * 86_400_000).toISOString().slice(0, 10);
+  const upcoming = (earnings || []).filter((e) => profiles[e.ticker] && !done.has(e.ticker) && e.date >= today && e.date <= horizon)
+    .filter((e, i, a) => a.findIndex((x) => x.ticker === e.ticker) === i).sort((a, b) => a.date.localeCompare(b.date));
+  const rev = (r) => (r.metrics || []).find(([l]) => /^revenue$/i.test(l)) || (r.metrics || []).find(([l]) => /^(total )?revenue/i.test(l)) || null;
+  const coLink = (t) => `<a href="/stocks/${t.toLowerCase()}">${esc(profiles[t].name)}</a>`;
   const index = {
     path: "/results", guide: true, lastmod: sorted[0]?.reported,
-    title: "Space Stock Earnings Results: Latest Quarterly Results by Company | Orbit Alpha",
-    description: "The latest quarterly results from listed space companies, published on results day: revenue, profit, guidance, key points and how the shares reacted.",
-    body: `<div class="oa-guide"><h1>Space stock results</h1><!--oa-answer--><p>Quarterly results from the listed space companies Orbit Alpha covers, written up on the day each company reports, with the headline numbers, what stood out, the outlook and the share price reaction. Upcoming dates are on the <a href="/space-stocks/earnings-calendar">earnings calendar</a>.</p>
-${sorted.length ? `<h2>Latest results</h2>${list(sorted.slice(0, 60).map((r) => `<a href="/results/${r.slug}">${esc(profiles[r.ticker].name)} (${r.ticker}) ${esc(r.quarter)}</a>: ${esc(r.headline)} (${fmtDate(r.reported)})`))}` : "<p>Results pages appear here from the start of the third-quarter reporting season.</p>"}</div>`,
-    answer: sorted.length ? `The latest space stock results on Orbit Alpha: ${sorted.slice(0, 3).map((r) => `${profiles[r.ticker].name} ${r.quarter} (${fmtDate(r.reported)})`).join("; ")}.` : "",
+    title: season ? `${season} Space Stock Earnings: Results Scoreboard | Orbit Alpha` : "Space Stock Earnings Results: Latest Quarterly Results by Company | Orbit Alpha",
+    description: season ? `Every listed space company's ${season} results as they report: revenue, profit, guidance and the share reaction, plus who reports next.` : "The latest quarterly results from listed space companies, published on results day: revenue, profit, guidance, key points and how the shares reacted.",
+    body: `<div class="oa-guide"><h1>${season ? `${esc(season)} space stock results` : "Space stock results"}</h1><!--oa-answer--><p>Quarterly results from the listed space companies Orbit Alpha covers, written up on the day each company reports, with the headline numbers, what stood out, the outlook and the share price reaction. This page updates as each company reports.</p>
+${inSeason.length ? `<h2>Reported so far</h2><table><thead><tr><th>Company</th><th>Reported</th><th>Revenue</th><th>Change</th><th>Headline</th></tr></thead><tbody>${inSeason.map((r) => { const m = rev(r); return `<tr><td>${coLink(r.ticker)} (${r.ticker})</td><td>${fmtDate(r.reported)}</td><td>${m ? esc(m[1]) : ""}</td><td>${m ? esc(m[2] || "") : ""}</td><td><a href="/results/${r.slug}">${esc(r.headline)}</a></td></tr>`; }).join("")}</tbody></table>` : "<p>Results pages appear here from the start of the reporting season.</p>"}
+${upcoming.length ? `<h2>Still to report</h2><table><thead><tr><th>Date</th><th>Company</th><th>Timing</th><th>Consensus EPS</th></tr></thead><tbody>${upcoming.map((e) => `<tr><td>${fmtDate(e.date)}${e.confirmed ? "" : " (expected)"}</td><td>${coLink(e.ticker)} (${e.ticker})</td><td>${esc(e.time || "")}</td><td>${esc(e.epsEst || "")}</td></tr>`).join("")}</tbody></table><p>Dates from the Nasdaq earnings calendar unless confirmed by the company. Full list on the <a href="/space-stocks/earnings-calendar">earnings calendar</a>.</p>` : `<p>Upcoming dates are on the <a href="/space-stocks/earnings-calendar">earnings calendar</a>.</p>`}
+${sorted.length > inSeason.length ? `<h2>Earlier results</h2>${list(sorted.filter((r) => r.quarter !== season).slice(0, 40).map((r) => `<a href="/results/${r.slug}">${esc(profiles[r.ticker].name)} (${r.ticker}) ${esc(r.quarter)}</a>: ${esc(r.headline)} (${fmtDate(r.reported)})`))}` : ""}
+<p class="oa-note">Figures as reported by each company. Orbit Alpha is information, not investment advice.</p></div>`,
+    answer: inSeason.length ? `${inSeason.length === 1 ? "One listed space company has" : `${inSeason.length} listed space companies have`} reported ${season} results so far: ${inSeason.slice(0, 4).map((r) => `${profiles[r.ticker].name} (${r.headline})`).join("; ")}.${upcoming.length ? ` Next to report: ${upcoming.slice(0, 3).map((e) => `${profiles[e.ticker].name} on ${fmtDate(e.date)}`).join(", ")}.` : ""}` : "",
     ld: [ORG, crumbs([["Home", "/"], ["Results", "/results"]])],
   };
   return [...pages, index];
