@@ -183,6 +183,17 @@ ${cheapFaq.html}${asOfLine("Prices from Yahoo Finance; cash and share counts fro
 
   cheapPage.answer = cheap.length ? `As of ${fmtDate(asOf)}, ${cheap.length} US-listed space ${cheap.length === 1 ? "stock trades" : "stocks trade"} below $10 a share: ${and(cheap.map((t) => `${profiles[t].name} (${t})`))}. ${short.length ? `${and(short.map((t) => profiles[t].name))} ${short.length === 1 ? "has" : "have"} less than a year of cash at the current burn rate.` : ""}`.trim() : "";
 
+  /* ═══ Largest space companies by market cap ════════════════════════════════════ */
+  const bySize = Object.keys(profiles).filter((t) => quotes[t]?.marketCap).sort((a, b) => quotes[b].marketCap - quotes[a].marketCap);
+  const sizePage = page("/space-stocks/largest", "Largest space companies by market cap",
+    `<p>Every listed space company Orbit Alpha covers, ranked by market value in US dollars, from the largest to the smallest. Market values move with the share price every trading day; this page rebuilds daily.</p>
+${bySize.length ? table(["Rank", "Company", "Ticker", "Sector", "Market cap", "Share price", "Year to date"], bySize.map((t, i) => [String(i + 1), link(t), tick(t), esc(profiles[t].sector), fmtCap(quotes[t].marketCap), fmtPrice(quotes[t].price, quotes[t].currency), ytdBy[t] != null && t !== "SPCX" ? fmtPct(ytdBy[t]) : null])) : "<p>Market values are not available right now.</p>"}
+${bySize.length >= 2 && quotes[bySize[0]].marketCap > bySize.slice(1).reduce((sum, t) => sum + quotes[t].marketCap, 0) ? `<p>${link(bySize[0])} is worth more than the other ${bySize.length - 1} companies on the list combined.</p>` : ""}
+<p>Non-US market values are converted to US dollars at the latest exchange rate. For prices and sectors, see the <a href="/space-stocks">full list of space stocks</a>; for this week's moves, <a href="/space-stocks/this-week">space stocks this week</a>.</p>
+${asOfLine("Prices from Yahoo Finance; share counts from company filings.")}`,
+    [{ "@type": "ItemList", name: "Largest space companies by market cap", itemListElement: bySize.map((t, i) => ({ "@type": "ListItem", position: i + 1, url: `${SITE}/stocks/${t.toLowerCase()}`, name: `${profiles[t].name} (${t})` })) }]);
+  if (bySize.length >= 3) sizePage.answer = `As of ${fmtDate(asOf)}, the largest listed space company is ${profiles[bySize[0]].name} (${bySize[0]}), worth about ${fmtCap(quotes[bySize[0]].marketCap)}, followed by ${profiles[bySize[1]].name} (${fmtCap(quotes[bySize[1]].marketCap)}) and ${profiles[bySize[2]].name} (${fmtCap(quotes[bySize[2]].marketCap)}).`;
+
   /* ═══ Space stocks this week ═════════════════════════════════════════════════ */
   // Five trading days, from the 1-month performance series (each stock rebased to its own first close).
   const m = perfBy["1mo"];
@@ -288,7 +299,7 @@ ${pairFaq.html}${asOfLine("Prices from Yahoo Finance; financials, insider trades
     return cmpPage;
   });
 
-  return [starlinkPage, cheapPage, weekPage, ...comparePages];
+  return [starlinkPage, cheapPage, weekPage, sizePage, ...comparePages];
 }
 
 // Media kit at /advertise. Update SPONSOR when rates change.

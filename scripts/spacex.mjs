@@ -29,7 +29,7 @@ const shares = (n) => (n >= 1e9 ? `${(n / 1e9).toFixed(2).replace(/\.?0+$/, "")}
 const ext = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${text}</a>`;
 
 export function buildSpaceX(ctx) {
-  const { quotes, earnings, filingsBy, asOf, esc, list, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate, page, table, faq } = ctx;
+  const { quotes, earnings, filingsBy, asOf, esc, list, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate, page, table, faq, asOfLine } = ctx;
   const today = ctx.today || asOf;
   const q = quotes.SPCX;
   const price = q?.price;
@@ -245,6 +245,44 @@ ${sources([
     lockPage.title = `SpaceX Lockup Expiration: ${shares(next.n)} SPCX Shares Unlock ${next.trade === today ? "Today" : fmtDate(next.trade)} | Orbit Alpha`;
     lockPage.description = `${next.q3 && !q3Firm ? "Expected: up" : "Up"} to ${shares(next.n)} SpaceX shares are released from lock-up on ${fmtDate(next.trade)}. Every SPCX unlock date and share count from the IPO prospectus, how the stock traded on past release days, and when Elon Musk can sell.`;
   }
-  return [buyPage, lockPage];
+  /* ═══ Page 3: SpaceX IPO ════════════════════════════════════════════════════ */
+  // "SpaceX IPO" is still one of the most searched SpaceX queries. Facts are the same sourced
+  // IPO terms as the buy guide; the live price comparison updates every build.
+  const ipoFaq = faq([
+    ["When did SpaceX go public?", "SpaceX priced its IPO on 11 June 2026 and its shares started trading on Nasdaq on 12 June 2026 under the ticker SPCX."],
+    ["What was the SpaceX IPO price?", "$135 a share. The shares closed their first day of trading at $161, up 19%."],
+    ["How much did SpaceX raise in its IPO?", "$75 billion in the base offering, from 555.6 million Class A shares, the largest IPO ever. The over-allotment option covered a further 83.3 million shares."],
+    ["What was SpaceX valued at in the IPO?", "About $1.77 trillion at the $135 IPO price."],
+    ["Can I still buy SpaceX shares after the IPO?", "Yes. SPCX trades on Nasdaq like any other listed stock, so it can be bought through most platforms that offer US shares, including in a UK Stocks and Shares ISA."],
+    ...(price != null ? [["Is SpaceX stock above its IPO price?", `As of ${fmtDate(asOf)}, SPCX was ${fmtPrice(price)}, ${vsIpo >= 0 ? "up" : "down"} ${Math.abs(vsIpo).toFixed(1)}% on the $135 IPO price.`]] : []),
+  ]);
+  const ipoPage = page("/spacex-ipo", "SpaceX IPO",
+    `<p>SpaceX became a public company in June 2026 in the largest stock market listing ever. This page sets out the IPO terms from the prospectus, how the shares have traded since, and what comes next for holders, including the lock-up releases.</p>
+<h2>SpaceX IPO at a glance</h2>
+${table(["", ""], [
+      ["Priced", "11 June 2026 at $135 a share"],
+      ["First day of trading", "12 June 2026 on Nasdaq; closed at $161, up 19%"],
+      ["Ticker", "SPCX (Nasdaq)"],
+      ["Shares sold", "555.6 million Class A shares, plus an over-allotment option of 83.3 million"],
+      ["Money raised", "$75 billion in the base offering, the largest IPO ever"],
+      ["Valuation at the IPO price", "About $1.77 trillion"],
+      ["Lead banks", "Goldman Sachs and Morgan Stanley"],
+      ...(price != null ? [["Latest close", `${fmtPrice(price)} (${fmtDate(asOf)}), ${fmtPct(vsIpo)} on the IPO price${q.marketCap ? `; market value about ${fmtCap(q.marketCap)}` : ""}`]] : []),
+    ])}
+<h2>How SpaceX shares have traded since the IPO</h2>
+<p>The shares rose above $200 in the week after listing, then fell below the IPO price and traded around $108 in early August, before the first lock-up release. SpaceX joined the Nasdaq-100 in July 2026. ${price != null ? `SPCX last closed at ${fmtPrice(price)}. <a href="/stocks/spcx">Live SPCX price and chart</a>.` : ""}</p>
+<p>SpaceX reported its first results as a listed company in August and its third-quarter results on 20 October 2026: <a href="/results/spcx-q3-2026">SpaceX Q3 2026 results</a>.</p>
+<h2>What comes next: lock-ups</h2>
+<p>Most SpaceX shares are held by employees, early investors and Elon Musk, and become free to sell in stages under the IPO lock-up. ${next ? `The next release is ${fmtDate(next.trade)}, of up to ${shares(next.n)} shares. ` : ""}The main lock-up ${today > dayN(180) ? "ended" : "ends"} on 8 December 2026, and Musk cannot sell before ${fmtDate(musk)}. Every date is on the <a href="/spacex-stock/lockup-calendar">SpaceX lockup calendar</a>.</p>
+<h2>How to buy SpaceX shares now</h2>
+<p>SPCX can be bought through most platforms that offer US shares, in the US, the UK and elsewhere, including inside a UK Stocks and Shares ISA. The step-by-step guide is <a href="/spacex-stock">how to buy SpaceX stock</a>.</p>
+${ipoFaq.html}
+${sources([
+      [PROSPECTUS, "SpaceX IPO prospectus (Form 424B4), SEC EDGAR"],
+      ["https://www.cnbc.com/2026/06/11/spacex-raises-75-billion-in-record-setting-ipo-ahead-of-nasdaq-debut.html", "CNBC: SpaceX raises $75 billion in record-setting IPO"],
+    ])}${asOfLine("Price from Yahoo Finance; IPO terms from the prospectus.")}`,
+    [ipoFaq.ld], asOf);
+  ipoPage.answer = `SpaceX priced its IPO at $135 a share on 11 June 2026 and began trading on Nasdaq as SPCX on 12 June, raising $75 billion, the largest IPO ever, at a valuation of about $1.77 trillion.${price != null ? ` As of ${fmtDate(asOf)}, SPCX was ${fmtPrice(price)}, ${vsIpo >= 0 ? "up" : "down"} ${Math.abs(vsIpo).toFixed(1)}% on the IPO price.` : ""}`;
+  return [buyPage, lockPage, ipoPage];
 }
 const latest = (...d) => d.filter(Boolean).sort().pop();

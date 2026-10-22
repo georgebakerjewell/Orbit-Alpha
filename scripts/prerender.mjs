@@ -268,8 +268,20 @@ const routes = [
   ...Object.entries(profiles).map(([t, p]) => {
     const peers = bySector[p.sector].filter((x) => x !== t);
     const us = !p.listing;
+    // Data answers to the questions people ask search engines and AI assistants about a stock.
+    const qq = quotes[t], ne = nextEarnings[t], fs = finBy[t]?.snapshot?.currency === "USD" ? finBy[t].snapshot : null, ins = insidersBy[t]?.m12;
+    const asof = fmtDate(quotesDate || today);
+    const dataQs = [
+      ne ? [`When does ${p.name} report earnings?`, `${earningsSentence(p.name, ne)}${ne.confirmed ? "" : " The date is from the Nasdaq earnings calendar until the company confirms it."}`] : null,
+      qq?.marketCap ? [`How much is ${p.name} worth?`, `About ${fmtCap(qq.marketCap)} in market value as of ${asof}, at a share price of ${fmtPrice(qq.price, qq.currency)}.`] : null,
+      ytdBy[t] != null && t !== "SPCX" ? [`How has ${t} stock done this year?`, `${t} is ${ytdBy[t] >= 0 ? "up" : "down"} ${Math.abs(ytdBy[t]).toFixed(1)}% this year as of ${asof}.`] : null,
+      fs?.netIncome?.ttm != null ? [`Is ${p.name} profitable?`, fs.netIncome.ttm >= 0 ? `Yes. ${p.name} made net income of ${fmtUsd(fs.netIncome.ttm)} over the 12 months to ${fmtDate(fs.periodEnd)}, from its SEC filings.` : `Not yet. ${p.name} made a net loss of ${fmtUsd(Math.abs(fs.netIncome.ttm))} over the 12 months to ${fmtDate(fs.periodEnd)}, from its SEC filings.`] : null,
+      fs?.liquidity != null ? [`How much cash does ${p.name} have?`, `${fmtUsd(fs.liquidity)} in cash and short-term investments at ${fmtDate(fs.periodEnd)}${fs.cashGenerative || (fs.freeCashFlow != null && fs.freeCashFlow >= 0) ? ", and it generated cash over the last 12 months" : fs.runwayMonths != null ? `, enough for about ${fs.runwayMonths >= 36 ? `${(fs.runwayMonths / 12).toFixed(1)} years` : `${Math.round(fs.runwayMonths)} months`} at the last 12 months' cash burn` : ""}.`] : null,
+      ins ? [`Are insiders buying or selling ${t} stock?`, ins.bought >= 1000 || ins.sold >= 1000 ? `Over the last 12 months, ${p.name} insiders ${ins.bought ? `bought ${fmtUsd(ins.bought)}` : "made no purchases"} and ${ins.sold ? `sold ${fmtUsd(ins.sold)}` : "made no sales"} of stock on the open market, from Form 4 filings.` : `No open-market insider buying or selling over the last 12 months, from Form 4 filings.`] : null,
+    ].filter(Boolean);
     const q = faq([
       [`What does ${p.name} do?`, p.about],
+      ...dataQs,
       [`Where is ${p.name} stock listed?`, us ? `${p.name} trades in the US under the ticker ${t}.` : `${p.name} is listed on ${p.listing} under the ticker ${t}, and Orbit Alpha shows its price in its trading currency.`],
       [`Which companies are similar to ${p.name}?`, `Other ${p.sector.toLowerCase()} stocks on Orbit Alpha include ${peers.slice(0, 5).map((x) => profiles[x].name).join(", ")}.`],
       [`Where does Orbit Alpha get ${t} data?`, us ? "Prices from Yahoo Finance, filings and insider trades from SEC EDGAR, and contract awards from USAspending.gov." : "Prices from Yahoo Finance, with news and launches from public sources. Non-US listings do not file with the SEC."],
