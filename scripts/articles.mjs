@@ -6,6 +6,7 @@
 //     sections: [[heading, [block, ...]]], faq?: [[question, answer]], sources: [[title, url]] }
 // A block is a paragraph string, { list: [..] } or { table: { head: [..], rows: [[..]] } }.
 // Text is escaped; [link text](/internal/path) becomes a link (internal paths only).
+import { chartLinkHtml } from "../lib/affiliates.js";
 export function buildArticles(ctx) {
   const { SITE, ORG, crumbs, esc, list, fmtDate, profiles, articles = [], asOf } = ctx;
   const ext = (u, t) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>`;
@@ -27,7 +28,7 @@ export function buildArticles(ctx) {
       body: `<div class="oa-guide"><h1>${esc(a.h1 || a.title)}</h1><!--oa-answer-->
 ${(a.sections || []).map(([h, blocks]) => `<h2>${esc(h)}</h2>${[].concat(blocks).map(block).join("")}`).join("\n")}
 ${a.faq?.length ? `<h2>Questions and answers</h2>${a.faq.map(([q, ans]) => `<h3>${esc(q)}</h3><p>${md(ans)}</p>`).join("")}` : ""}
-<h2>More</h2>${list([...(a.tickers || []).map((t) => `<a href="/stocks/${t.toLowerCase()}">${t} stock: live price, filings and contracts</a>`), ...related.map((x) => `<a href="/articles/${x.slug}">${esc(x.title)}</a>`), `<a href="/articles">All articles</a>`])}
+<h2>More</h2>${list([...(a.tickers || []).flatMap((t) => [`<a href="/stocks/${t.toLowerCase()}">${t} stock: live price, filings and contracts</a>`, ...(profiles[t].listing ? [] : [chartLinkHtml(t, `article:${a.slug}`, esc)])]), ...related.map((x) => `<a href="/articles/${x.slug}">${esc(x.title)}</a>`), `<a href="/articles">All articles</a>`])}
 ${a.sources?.length ? `<h2>Sources</h2>${list(a.sources.map(([t, u]) => ext(u, t)))}` : ""}
 <p class="oa-note">Published ${fmtDate(a.published)}${a.updated && a.updated !== a.published ? `, updated ${fmtDate(a.updated)}` : ""}. Orbit Alpha is information, not investment advice.</p></div>`,
       answer: esc(a.summary),

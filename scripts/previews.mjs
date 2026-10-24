@@ -3,6 +3,7 @@
 // with a link to its results page. Everything on the page comes from data the site already holds:
 // the calendar (date, timing, consensus EPS), the company's latest 10-Q/10-K figures, prices,
 // Form 4 insider trades and USAspending contract awards. Nothing is estimated.
+import { chartLinkHtml } from "../lib/affiliates.js";
 const AHEAD = 21, AFTER = 30;
 
 // The quarter a results date reports on: October to December reports cover Q3, and so on.
@@ -101,7 +102,7 @@ ${ahead && lastQ.length ? `<h2>What the last report showed</h2>${list(lastQ.map(
 ${ahead && since.length ? `<h2>Since then</h2>${list(since.map(esc))}` : ""}
 ${ahead ? `<h2>What to watch</h2>${list(watch.map(esc))}` : ""}
 ${priorResults.length ? `<h2>Earlier results</h2>${list(priorResults.slice(0, 4).map((x) => `<a href="/results/${x.slug}">${esc(name)} ${esc(x.quarter)} results: ${esc(x.headline)}</a>`))}` : ""}
-<h2>More on ${esc(name)}</h2>${list([`<a href="/stocks/${t.toLowerCase()}">${t} stock: live price, filings, insider trades and contracts</a>`, `<a href="/results">${esc(quarter)} space stock results scoreboard</a>`, `<a href="/space-stocks/earnings-calendar">Space stocks earnings calendar</a>`])}
+<h2>More on ${esc(name)}</h2>${list([`<a href="/stocks/${t.toLowerCase()}">${t} stock: live price, filings, insider trades and contracts</a>`, chartLinkHtml(t, `preview:${t}`, esc), `<a href="/results">${esc(quarter)} space stock results scoreboard</a>`, `<a href="/space-stocks/earnings-calendar">Space stocks earnings calendar</a>`])}
 <p class="oa-note">Consensus estimates and dates from the Nasdaq earnings calendar; financials from SEC filings; insider trades from Form 4; contracts from USAspending.gov. Orbit Alpha is information, not investment advice.</p></div>`,
       answer: esc(answer),
       ld: [ORG, crumbs([["Home", "/"], ["Results", "/results"], [`${t} ${quarter} preview`, path]])],

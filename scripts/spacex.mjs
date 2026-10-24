@@ -26,6 +26,7 @@ function secondFullTradingDay(date, time = "") {
 const daysBetween = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
 const dayN = (n) => addDays(PRICING, n);
 const shares = (n) => (n >= 1e9 ? `${(n / 1e9).toFixed(2).replace(/\.?0+$/, "")} billion` : `${(n / 1e6).toFixed(1).replace(/\.0$/, n % 1e6 ? ".0" : "")} million`);
+import { chartLinkHtml } from "../lib/affiliates.js";
 const ext = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${text}</a>`;
 
 export function buildSpaceX(ctx) {
@@ -185,7 +186,7 @@ ${sources([
   ]);
   const lockPage = page("/spacex-stock/lockup-calendar", "SpaceX lockup calendar",
     `<p>Most SpaceX shares were not sold in the IPO. They belong to employees, early investors and Elon Musk, who agreed not to sell for a set period. Instead of releasing everything on one date, SpaceX's lock-up frees the shares in stages, some on fixed days counted from the IPO pricing on 11 June 2026 and some two trading days after quarterly results. This page lists every release with its date and share count, taken from the IPO prospectus.</p>
-${next && (next.trade !== today || priceLine) ? `<div class="oa-callout"><p>${next.trade !== today ? `<b>${daysBetween(today, next.trade)} days</b> to the next release. ` : "<b>The next release is today.</b> "}${priceLine ? `${priceLine} <a href="/stocks/spcx">Live SPCX price</a>.` : ""}</p></div>` : ""}
+${next && (next.trade !== today || priceLine) ? `<div class="oa-callout"><p>${next.trade !== today ? `<b>${daysBetween(today, next.trade)} days</b> to the next release. ` : "<b>The next release is today.</b> "}${priceLine ? `${priceLine} <a href="/stocks/spcx">Live SPCX price</a> · ${chartLinkHtml("SPCX", "lockup-calendar", esc)}.` : ""}</p></div>` : ""}
 <h2>Main lock-up: employees and pre-IPO investors</h2>
 <p>This 180-day lock-up covers most employees and early investors. Each release lets holders sell up to the stated share of what they held; percentages are of each holder's locked shares, so the share counts are maximums.</p>
 ${table(["Date", "Release", "Shares, up to", "Share of pool", "Status", "SPCX on the day"], [...TRANCHES].sort((a, b) => sortKey(a).localeCompare(sortKey(b))).map((t) => [

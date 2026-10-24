@@ -255,8 +255,13 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
   for (const g of pages) {
     const buy = BUY[g.path] || (GUIDES[g.path]?.compare ? [null, "these stocks"] : null);
     if (buy) {
-      const box = brokerBoxHtml({ ticker: buy[0], name: buy[1], placement: `guide:${g.path}`, esc });
+      const box = brokerBoxHtml({ ticker: buy[0], name: buy[1], placement: `guide:${g.path}`, esc, tools: !!buy[0] });
       g.body = g.path === "/spacex-stock" && g.body.includes("</ol>") ? g.body.replace("</ol>", `</ol>${box}`) : g.body.replace("<h2>Frequently asked questions</h2>", `${box}<h2>Frequently asked questions</h2>`);
+    }
+    // Pages with an affiliate link but no broker box still say so.
+    if (g.body.includes('rel="sponsored') && !g.body.includes("may earn a commission")) {
+      const i = g.body.lastIndexOf("</div>");
+      g.body = g.body.slice(0, i) + `<p class="oa-note">Orbit Alpha may earn a commission from some links on this page, at no extra cost to you.</p>` + g.body.slice(i);
     }
     const updated = g.path === "/advertise" ? "" : `<p class="oa-updated">Updated <time datetime="${g.lastmod || asOf}">${fmtDate(g.lastmod || asOf)}</time> from live prices and SEC filings</p>`;
     const answer = g.answer ? `<div class="oa-answer"><p>${g.answer}</p></div>` : "";

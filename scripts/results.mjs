@@ -1,4 +1,5 @@
 import { previewTargets } from "./previews.mjs";
+import { chartLinkHtml } from "../lib/affiliates.js";
 // Results-day pages (/results/<ticker>-<quarter>) and the /results index, built from src/results.json.
 // Entries are added by the "Space stock results pages" scheduled task on the evening a company reports.
 // Entry shape: { slug, ticker, quarter, period, reported (YYYY-MM-DD), headline, summary, metrics: [[label, value, change]],
@@ -26,7 +27,7 @@ ${r.guidance ? `<h2>Outlook</h2><p>${esc(r.guidance)}</p>` : ""}
 ${r.reaction ? `<h2>How the shares reacted</h2><p>${esc(r.reaction)}</p>` : ""}
 ${r.watch?.length ? `<h2>What to watch next</h2>${list(r.watch.map(esc))}` : ""}
 ${r.faq?.length ? `<h2>Questions and answers</h2>${r.faq.map(([q, a]) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join("")}` : ""}
-<h2>More on ${esc(p.name)}</h2>${list([`<a href="/stocks/${r.ticker.toLowerCase()}">${r.ticker} stock: live price, filings, insider trades and contracts</a>`, ...others.map((x) => `<a href="/results/${x.slug}">${esc(p.name)} ${esc(x.quarter)} results</a>`), ...(r.ticker === "SPCX" ? [`<a href="/spacex-stock/lockup-calendar">SpaceX lockup calendar</a>`] : []), `<a href="/results">All space stock results</a>`, `<a href="/space-stocks/earnings-calendar">Space stocks earnings calendar</a>`])}
+<h2>More on ${esc(p.name)}</h2>${list([`<a href="/stocks/${r.ticker.toLowerCase()}">${r.ticker} stock: live price, filings, insider trades and contracts</a>`, chartLinkHtml(r.ticker, `results:${r.slug}`, esc), ...others.map((x) => `<a href="/results/${x.slug}">${esc(p.name)} ${esc(x.quarter)} results</a>`), ...(r.ticker === "SPCX" ? [`<a href="/spacex-stock/lockup-calendar">SpaceX lockup calendar</a>`] : []), `<a href="/results">All space stock results</a>`, `<a href="/space-stocks/earnings-calendar">Space stocks earnings calendar</a>`])}
 ${r.sources?.length ? `<h2>Sources</h2>${list(r.sources.map(([t, u]) => ext(u, t)))}` : ""}
 <p class="oa-note">Figures as reported by the company; changes are against the same quarter a year earlier unless stated. Orbit Alpha is information, not investment advice.</p></div>`,
       answer: esc(r.summary),
