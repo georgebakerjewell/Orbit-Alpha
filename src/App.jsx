@@ -432,6 +432,15 @@ const GlobalStyles = () => (
     .oa-issue .oa-answer p{color:#fff;font-size:14.5px}
     .oa-issue .oa-brokers{border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px 2px;margin:4px 0 22px;background:rgba(255,255,255,0.02)}
     .oa-issue .oa-brokers ul{margin-bottom:8px}
+    .oa-hub-lead{font-size:14px!important;max-width:680px}
+    .oa-hub-sub{color:${C.muted}!important;margin-top:-4px!important;font-size:12.5px!important}
+    .oa-hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:12px 0 30px}
+    .oa-issue a.oa-card{display:block;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;background:rgba(255,255,255,0.02);text-decoration:none;color:${C.light};transition:border-color .15s,background .15s}
+    .oa-issue a.oa-card:hover{border-color:rgba(0,255,136,0.4);background:rgba(0,255,136,0.04)}
+    .oa-issue a.oa-card.feat{border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.05)}
+    .oa-card b{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:#fff;font-size:14px;font-weight:600;margin-bottom:6px;line-height:1.35}
+    .oa-card b i{font-style:normal;font-size:10px;font-weight:600;color:${C.green};border:1px solid rgba(0,255,136,0.35);border-radius:20px;padding:1px 8px;letter-spacing:.02em}
+    .oa-card span{display:block;font-size:12.5px;line-height:1.5;color:${C.muted}}
     .oa-guide-list{list-style:none;padding-left:0!important}
     .oa-guide-list li{margin-bottom:14px!important;color:${C.muted}}
     .oa-guide-list li a{font-weight:600}

@@ -330,20 +330,47 @@ export function buildAdvertise(ctx) {
 }
 
 // The /guides hub: every guide, grouped. Built last so it can describe the others.
+// One-line card text for the hub (the full descriptions are written for search results and run long).
+const HUB_TEXT = {
+  "/spacex-stock": ["Platforms, ISA, W-8BEN and costs, step by step.", ""],
+  "/spacex-ipo": ["The $135 price, the $75bn raise and how SPCX has traded since.", "New"],
+  "/spacex-stock/lockup-calendar": ["Every unlock date, share count and how SPCX moved on each.", "Most read"],
+  "/starlink-stock": ["How to invest in Starlink, with subscriber and revenue figures.", ""],
+  "/space-stocks": ["Every listed space company by sector, with price and returns.", "Daily"],
+  "/space-stocks/this-week": ["The week's biggest gainers and fallers.", "Daily"],
+  "/space-stocks/largest": ["All 30 companies ranked by market value.", "Daily"],
+  "/space-stocks/launch-events": ["The launches that move space stocks, and when.", "New"],
+  "/space-stocks/insider-trading": ["Who is buying and selling their own shares.", ""],
+  "/space-stocks/cash-runway": ["Who needs to raise money, ranked by months of cash.", ""],
+  "/space-stocks/government-contracts": ["NASA, Space Force and DoD awards, ranked by value.", ""],
+  "/space-stocks/earnings-calendar": ["When each company reports next, with estimates.", ""],
+  "/space-stocks/under-10": ["The cheaper names, with cash runway and dilution.", ""],
+  "/results": ["Every company's results this quarter, as they report.", "Live"],
+  "/space-stocks/uk-europe": ["European listings and how UK investors buy them.", ""],
+  "/space-etfs": ["UFO, ARKX and the rest against the S&P 500.", ""],
+};
+const FEATURED = ["/spacex-stock/lockup-calendar", "/results", "/space-stocks/this-week"];
+
 export function buildHub(ctx) {
   const { SITE, ORG, crumbs, esc, asOf } = ctx;
   const g = GUIDES["/guides"];
+  const card = (p, x, feat = false) => {
+    const [text, tag] = HUB_TEXT[p] || [x.compare ? "Market cap, returns, revenue, cash and dilution side by side." : "", ""];
+    return `<a class="oa-card${feat ? " feat" : ""}" href="${p}"><b>${esc(x.label)}${tag ? ` <i>${esc(tag)}</i>` : ""}</b>${text ? `<span>${esc(text)}</span>` : ""}</a>`;
+  };
+  const featured = `<h2>Start here</h2><div class="oa-hub-grid">${FEATURED.filter((p) => GUIDES[p]).map((p) => card(p, GUIDES[p], true)).join("")}</div>`;
   const sections = GUIDE_GROUPS.map(([id, name, blurb]) => {
-    const items = GUIDE_LIST.filter(([, x]) => x.group === id);
-    return items.length ? `<h2>${esc(name)}</h2><p>${esc(blurb)}</p><ul class="oa-guide-list">${items.map(([p, x]) => `<li><a href="${p}">${esc(x.label)}</a><br />${esc(x.description)}</li>`).join("")}</ul>` : "";
+    const items = GUIDE_LIST.filter(([p, x]) => x.group === id && !FEATURED.includes(p));
+    return items.length ? `<h2>${esc(name)}</h2><p class="oa-hub-sub">${esc(blurb)}</p><div class="oa-hub-grid">${items.map(([p, x]) => card(p, x)).join("")}</div>` : "";
   }).join("");
+  const live = `<h2>Live data</h2><div class="oa-hub-grid">${[["/markets", "Live dashboard", "Prices for every space stock and ETF."], ["/markets/performance", "Space vs the S&P 500", "Sector returns against the market."], ["/news", "News, filings and contracts", "What is moving the stocks today."]].map(([p, l, t]) => `<a class="oa-card" href="${p}"><b>${esc(l)}</b><span>${esc(t)}</span></a>`).join("")}</div>`;
   return {
     path: "/guides",
     title: g.title,
     description: g.description,
     lastmod: asOf,
     guide: true,
-    body: `<div class="oa-guide"><h1>Space stock guides</h1><p>Guides to the questions investors ask most about space stocks, built from the same live prices, SEC filings and contract data as the Orbit Alpha dashboard and refreshed every time the site updates.</p>${sections}<h2>Live data</h2><ul><li><a href="/markets">Live space stocks dashboard</a></li><li><a href="/markets/performance">Space stocks vs the S&amp;P 500</a></li><li><a href="/news">Space stock news, filings and contracts</a></li></ul></div>`,
+    body: `<div class="oa-guide oa-hub"><h1>Space stock guides</h1><p class="oa-hub-lead">Answers to the questions investors ask most about space stocks, built from live prices, SEC filings and contract data, and refreshed every time the site updates.</p>${featured}${sections}${live}</div>`,
     ld: [ORG, { "@type": "CollectionPage", name: "Space stock guides", url: `${SITE}/guides`, hasPart: GUIDE_LIST.map(([p, x]) => ({ "@type": "WebPage", name: x.label, url: SITE + p })) }, crumbs([["Home", "/"], ["Guides", "/guides"]])],
   };
 }
