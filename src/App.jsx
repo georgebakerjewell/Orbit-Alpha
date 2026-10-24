@@ -709,13 +709,56 @@ function markPopupSeen(value) {
 // Shown at most once per browser, never to subscribers, and only once the visitor has shown interest:
 // a second page view, reading half of a stock or news page, or moving to leave on desktop. Never in the first 10s.
 const POPUP_MIN_MS = 10000;
+// Visitors who arrived from an AI assistant this session (set in index.html from the referrer or utm_source).
+const AI_NAMES = { chatgpt: "ChatGPT", perplexity: "Perplexity", gemini: "Gemini", claude: "Claude", copilot: "Copilot" };
+const aiVisit = () => { const v = typeof window !== "undefined" ? window.__oaVisit : null; return v && v.medium === "ai" ? v : null; };
+
+// The sign-up offer that fits a page: an unlock reminder, a company's results, or null for the PDF default.
+function pageOffer(path) {
+  const stockT = path.startsWith("/stocks/") ? path.split("/")[2]?.toUpperCase() : null;
+  const pageCta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES);
+  return stockT && PROFILES[stockT]
+    ? [`Follow ${PROFILES[stockT].name}`, `${PROFILES[stockT].name}'s results, contracts and big moves in the Sunday briefing, plus the free 34-page PDF on every listed space company.`, stockT, `Follow ${stockT}`]
+    : pageCta[2] ? [pageCta[0], `${pageCta[1]} You also get the free 34-page PDF on every listed space company.`, pageCta[2], pageCta[3]] : null;
+}
+
+// A slim bar under the header for AI-assistant visitors, shown straight away: they read the answer
+// they came to check and leave within about 20 seconds, so a timed pop-up reaches them too late.
+function AiWelcomeBar({ path }) {
+  const subscribed = useSubscribed();
+  const v = aiVisit();
+  const [closed, setClosed] = useState(() => { try { return sessionStorage.getItem("oa_aibar") === "x"; } catch { return false; } });
+  const [done, setDone] = useState(false);
+  const offer = pageOffer(path);
+  const logged = useRef("");
+  // Event pages already put their sign-up box straight under the answer (and greet AI visitors there).
+  const earlyBox = path === "/spacex-stock/lockup-calendar" || /^\/(results|earnings-preview|articles)\/./.test(path);
+  const show = v && !closed && !(subscribed && !done) && path !== "/newsletter" && !earlyBox;
+  useEffect(() => { if (show && logged.current !== path) { logged.current = path; window.posthog?.capture?.("ai_bar_shown", { page: path, assistant: v.source }); } }, [show, path]);
+  if (!show) return null;
+  const close = () => { setClosed(true); try { sessionStorage.setItem("oa_aibar", "x"); } catch {} };
+  const who = AI_NAMES[v.source] || "your AI assistant";
+  return (
+    <div style={{ borderBottom: "1px solid rgba(0,255,136,0.3)", background: "rgba(0,255,136,0.06)", padding: "10px 20px", position: "relative" }}>
+      <div style={{ maxWidth: 1040, margin: "0 auto", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px 16px" }}>
+        <div style={{ flex: "1 1 280px", fontSize: 12.5, color: C.light, lineHeight: 1.5, paddingRight: 20 }}>
+          <span style={{ color: C.green, fontWeight: 700 }}>Welcome from {who}.</span>{" "}
+          {offer ? `${offer[0]}: results and big moves, free by email.` : "This page updates every day. Get the week in space stocks free every Sunday, plus a 34-page PDF on every listed space company."}
+        </div>
+        <SubscribeForm source="ai-bar" follow={offer?.[2]} reward={SHEET} label={offer ? offer[3] : "Get the PDF"} sample={false} onDone={() => setDone(true)} style={{ flex: "1 1 300px", maxWidth: 420 }} />
+      </div>
+      <button onClick={close} aria-label="Close" style={{ position: "absolute", top: 6, right: 10, background: "none", border: "none", color: C.muted, fontSize: 18, lineHeight: 1, cursor: "pointer", padding: 4 }}>×</button>
+    </div>
+  );
+}
+
 function SubscribePopup({ path }) {
   const [show, setShow] = useState(false);
   const subscribed = useSubscribed();
   const subscribers = useSubscriberLabel();
   const startedAt = useRef(Date.now());
   const open = useCallbackRef((trigger) => {
-    if (show || subscribed || popupSeen() || path === "/newsletter") return;
+    if (show || subscribed || popupSeen() || path === "/newsletter" || aiVisit()) return; // AI visitors get the welcome bar instead
     const wait = POPUP_MIN_MS - (Date.now() - startedAt.current);
     if (wait > 0) { setTimeout(() => open(trigger), wait); return; } // too early: try again once the 10s have passed
     markPopupSeen("shown"); // recorded the moment it appears, so it never shows again even if they just close the tab
@@ -729,7 +772,7 @@ function SubscribePopup({ path }) {
     if (n >= 2) { const t = setTimeout(() => open("second_page"), 1500); return () => clearTimeout(t); }
   }, [path]);
   // Time on site: most visitors read one page for a while and never scroll far or move to leave.
-  useEffect(() => { const t = setTimeout(() => { if (document.activeElement?.tagName !== "INPUT") open("time_20s"); }, 20000); return () => clearTimeout(t); }, []); // not while they are typing
+  useEffect(() => { const t = setTimeout(() => { if (document.activeElement?.tagName !== "INPUT") open("time_15s"); }, 15000); return () => clearTimeout(t); }, []); // not while they are typing
   // Reading depth on stock and news pages, and exit intent on desktop.
   useEffect(() => {
     const deep = path.startsWith("/stocks/") || path === "/news";
@@ -745,11 +788,7 @@ function SubscribePopup({ path }) {
   const close = (value) => { setShow(false); markPopupSeen(value); };
   // On pages about one company or event, the pop-up leads with that (an unlock reminder, a company's
   // results) and keeps the PDF as the bonus; elsewhere it leads with the PDF.
-  const stockT = path.startsWith("/stocks/") ? path.split("/")[2]?.toUpperCase() : null;
-  const pageCta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES);
-  const special = stockT && PROFILES[stockT]
-    ? [`Follow ${PROFILES[stockT].name}`, `${PROFILES[stockT].name}'s results, contracts and big moves in the Sunday briefing, plus the free 34-page PDF on every listed space company.`, stockT, `Follow ${stockT}`]
-    : pageCta[2] ? [pageCta[0], `${pageCta[1]} You also get the free 34-page PDF on every listed space company.`, pageCta[2], pageCta[3]] : null;
+  const special = pageOffer(path);
   useEffect(() => { if (show) window.posthog?.capture?.("popup_variant", { variant: special ? "contextual" : "pdf", page: path }); }, [show]);
   if (!show) return null;
   return (
@@ -780,7 +819,7 @@ function MobileSubscribeBar({ path }) {
     return () => window.removeEventListener("scroll", on);
   }, []);
   useEffect(() => { if (done) { const t = setTimeout(() => setClosed(true), 20000); return () => clearTimeout(t); } }, [done]);
-  const visible = !(closed || (subscribed && !done) || path === "/newsletter" || !scrolled);
+  const visible = !(closed || (subscribed && !done) || path === "/newsletter" || !scrolled || aiVisit());
   const logged = useRef(false);
   useEffect(() => { if (visible && !logged.current && window.matchMedia?.("(max-width: 600px)").matches) { logged.current = true; window.posthog?.capture?.("mobile_bar_shown", { page: path }); } }, [visible]);
   if (!visible) return null;
@@ -2662,6 +2701,7 @@ function GuidePage({ path }) {
           {i > 0 && (
             <ForNonSubscribers>
               <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.3)", background: "rgba(0,255,136,0.04)", margin: "8px 0 26px" }}>
+                {aiVisit() && <div style={{ fontSize: 11, color: C.green, fontWeight: 700, marginBottom: 4 }}>Welcome from {AI_NAMES[aiVisit().source] || "your AI assistant"}</div>}
                 <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>{cta[0]}</div>
                 <p style={{ fontSize: 12, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>{cta[1]}</p>
                 <SubscribeForm source={`guide-inline:${path}`} follow={cta[2]} label={cta[3] || "Subscribe"} />
@@ -2804,6 +2844,7 @@ export default function App() {
             <button className="mob-only" onClick={() => setMenuOpen(!menuOpen)} style={{ ...navBtn, padding: "6px 10px", fontSize: 16 }}>{menuOpen ? "✕" : "☰"}</button>
           </div>
         </nav>
+        <AiWelcomeBar path={path} />
 
         {menuOpen && (
           <div style={{ background: "#070a14", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 4 }}>

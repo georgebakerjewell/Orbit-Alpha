@@ -67,6 +67,9 @@
         if (url.searchParams.has("ref")) { url.searchParams.delete("ref"); window.history.replaceState(null, "", url.pathname + url.search + url.hash); }
         if (hit && !localStorage.getItem("oa_src")) localStorage.setItem("oa_src", JSON.stringify(Object.assign(hit, { landing: window.location.pathname, at: new Date().toISOString().slice(0, 10) })));
         ft = JSON.parse(localStorage.getItem("oa_src") || "null");
+        // This visit's source (kept for the session), so the app can greet AI-assistant visitors.
+        if (hit) sessionStorage.setItem("oa_visit", JSON.stringify(hit));
+        window.__oaVisit = hit || JSON.parse(sessionStorage.getItem("oa_visit") || "null");
       } catch (e) {}
       window.__oaFirstTouch = ft;
       window.__oaTouchProps = { first_source: (ft && ft.source) || "direct", first_medium: (ft && ft.medium) || "none", first_landing: ft && ft.landing };

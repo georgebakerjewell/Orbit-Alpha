@@ -267,7 +267,10 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
     const answer = g.answer ? `<div class="oa-answer"><p>${g.answer}</p></div>` : "";
     // Where the app places its in-guide sign-up box: after the first table, or else after the answer.
     if (g.path !== "/advertise" && g.path !== "/guides") {
-      const t = g.body.indexOf("</table>");
+      // Event pages (lockup, results, previews, articles): visitors read the answer and leave, so the
+      // sign-up goes straight under it rather than after the first table.
+      const early = g.path === "/spacex-stock/lockup-calendar" || /^\/(results|earnings-preview|articles)\/./.test(g.path);
+      const t = early ? -1 : g.body.indexOf("</table>");
       g.body = t > 0 ? g.body.slice(0, t + 8) + "<!--oa-cta-->" + g.body.slice(t + 8) : g.body.replace("<!--oa-answer-->", "<!--oa-answer--><!--oa-cta-->");
     }
     g.body = g.body.includes("<!--oa-answer-->") ? g.body.replace("<!--oa-answer-->", updated + answer) : g.body.replace("</h1>", `</h1>${updated}`);
