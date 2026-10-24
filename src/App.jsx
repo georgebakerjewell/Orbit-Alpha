@@ -438,6 +438,8 @@ const GlobalStyles = () => (
     .oa-issue .oa-answer p{color:#fff;font-size:14.5px}
     .oa-issue .oa-brokers{border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px 2px;margin:4px 0 22px;background:rgba(255,255,255,0.02)}
     .oa-issue .oa-brokers ul{margin-bottom:8px}
+    .oa-next{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+    @media (max-width:640px){.oa-next{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.oa-next>a{flex:0 0 72%;scroll-snap-align:start}}
     .oa-hub-lead{font-size:14px!important;max-width:680px}
     .oa-hub-sub{color:${C.muted}!important;margin-top:-4px!important;font-size:12.5px!important}
     .oa-hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:12px 0 30px}
@@ -897,6 +899,26 @@ const MoreLink = ({ to, children }) => (
   <Link to={to} className="oa-link" style={{ fontSize: 11, color: C.green, display: "inline-block", marginTop: 12 }}>{children}</Link>
 );
 
+function WhatsNext() {
+  const [items, setItems] = useState([]);
+  useEffect(() => { fetch("/data/whats-next.json").then((r) => (r.ok ? r.json() : null)).then((d) => setItems(d?.items || [])).catch(() => {}); }, []);
+  if (!items.length) return null;
+  const when = (x) => x.date ? new Date(x.date + "T12:00:00Z").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }) : x.when;
+  return (
+    <section style={{ marginBottom: 14 }}>
+      <div style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>What's next</div>
+      <div className="oa-next">
+        {items.map((x) => (
+          <Link key={x.href} to={x.href} className="hov" style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0, border: "1px solid rgba(0,255,136,0.2)", background: "rgba(0,255,136,0.03)", borderRadius: 10, padding: "10px 14px" }}>
+            <span style={{ fontSize: 10.5, color: C.green, fontWeight: 600 }}>{when(x)}</span>
+            <span style={{ fontSize: 12.5, color: "#fff", lineHeight: 1.35 }}>{x.label} <span style={{ color: C.muted }}>›</span></span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Home({ news, prices, launches }) {
   const latest = issues[0];
   const subscribers = useSubscriberLabel();
@@ -943,6 +965,9 @@ function Home({ news, prices, launches }) {
           </a>
         )}
       </section>
+
+      {/* What's next: the dated events with their own pages and sign-up offers (dist/data/whats-next.json, written by the prerender) */}
+      <WhatsNext />
 
       {/* Live market data first; cards with nothing to show are hidden */}
       <div className="oa-grid" style={{ marginBottom: 14 }}>

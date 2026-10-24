@@ -285,6 +285,7 @@ ${sources([
     ])}${asOfLine("Price from Yahoo Finance; IPO terms from the prospectus.")}`,
     [ipoFaq.ld], asOf);
   ipoPage.answer = `SpaceX priced its IPO at $135 a share on 11 June 2026 and began trading on Nasdaq as SPCX on 12 June, raising $75 billion, the largest IPO ever, at a valuation of about $1.77 trillion.${price != null ? ` As of ${fmtDate(asOf)}, SPCX was ${fmtPrice(price)}, ${vsIpo >= 0 ? "up" : "down"} ${Math.abs(vsIpo).toFixed(1)}% on the IPO price.` : ""}`;
+  lockPage.next = next ? { date: next.trade, n: next.n, label: shares(next.n) } : null; // read by prerender for the homepage "What's next" strip
   return [buyPage, lockPage, ipoPage];
 }
 const latest = (...d) => d.filter(Boolean).sort().pop();

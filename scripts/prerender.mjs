@@ -432,6 +432,22 @@ writeFileSync(new URL("robots.txt", DIST), `${AI_BOTS.map((b) => `User-agent: ${
 
 // The printable "all 30 companies at a glance" (printed to PDF by a GitHub Action; free sign-up download).
 mkdirSync(new URL("downloads/", DIST).pathname, { recursive: true });
+// The homepage "What's next" strip: the next SpaceX unlock, results coming up (with previews) and
+// dated launch events, soonest first. The app fetches this file; it changes with every build.
+{
+  const items = [];
+  const lock = routes.find((r) => r.path === "/spacex-stock/lockup-calendar")?.next;
+  if (lock) items.push({ date: lock.date, label: `SpaceX unlock: up to ${lock.label} shares`, href: "/spacex-stock/lockup-calendar" });
+  for (const [t, v] of Object.entries(previewFor)) if (v.mode === "ahead") items.push({ date: v.e.date, label: `${profiles[t].name} results`, href: `/earnings-preview/${t.toLowerCase()}` });
+  const evs = JSON.parse(readFileSync(new URL("../src/events.json", import.meta.url), "utf8"));
+  const soon = new Date(Date.parse(today) + 60 * 86_400_000).toISOString().slice(0, 10);
+  for (const e of evs) if (e.status === "upcoming" && e.date && e.date >= today && e.date <= soon) items.push({ date: e.date, label: e.title, href: `/launches/${e.slug}` });
+  items.sort((a, b) => a.date.localeCompare(b.date));
+  // Launches without a fixed day yet go last, with the timing as the company states it.
+  const undated = evs.filter((e) => e.status === "upcoming" && !e.date && e.dateText).slice(0, 2).map((e) => ({ date: null, when: e.dateText.split("(")[0].trim(), label: e.title, href: `/launches/${e.slug}` }));
+  mkdirSync(new URL("data/", DIST), { recursive: true });
+  writeFileSync(new URL("data/whats-next.json", DIST), JSON.stringify({ updated: today, items: [...items.filter((x) => x.date >= today), ...undated].slice(0, 5) }));
+}
 mkdirSync(new URL("embed/", DIST), { recursive: true });
 writeFileSync(new URL("embed/space-stocks.html", DIST), widgetHtml({ profiles, SITE }));
 writeFileSync(new URL("downloads/space-stocks-sheet.html", DIST), sheetHtml({ profiles, SECTOR_ORDER, quotes, ytdBy, perfBy, finBy, insidersBy, filingsBy, contractsBy: contractsFull, nextEarnings, issueArchive, stories, asOf: quotesDate || today, esc, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate, SITE }));
