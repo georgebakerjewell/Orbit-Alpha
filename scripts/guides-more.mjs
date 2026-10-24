@@ -256,7 +256,7 @@ ${asOfLine(`Closing prices from Yahoo Finance${from && to ? `, ${fmtDate(from)} 
       ["1 year", (x) => (ret("1y", x.t) != null ? fmtPct(ret("1y", x.t)) : null)],
       ["Revenue", (x) => rev(x.f)],
       ["Revenue growth", (x) => growth(x.f)],
-      ["Gross margin", (x) => (x.f?.grossMargin != null ? `${x.f.grossMargin.toFixed(1)}%` : null)],
+      ["Gross margin (12 months)", (x) => (x.f?.grossMargin != null ? `${x.f.grossMargin.toFixed(1)}%` : null)],
       ["Net income", (x) => income(x.f)],
       ["Cash and investments", (x) => (x.f?.liquidity != null ? fmtUsd(x.f.liquidity) : null)],
       ["Debt", (x) => (x.f?.debt != null ? fmtUsd(x.f.debt) : null)],

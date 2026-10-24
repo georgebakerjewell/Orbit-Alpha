@@ -146,7 +146,7 @@ function stockFacts(t, name) {
     const sgn = (n) => `${n < 0 ? "-" : ""}${fmtUsd(Math.abs(n))}`;
     const fr = [
       f.revenue?.ttm ? `Revenue, last 12 months: ${fmtUsd(f.revenue.ttm)}${f.revenue.ttmGrowth != null ? ` (${fmtPct(f.revenue.ttmGrowth)} on the year before)` : ""}` : f.revenue?.quarter ? `Revenue, latest quarter: ${fmtUsd(f.revenue.quarter)}${f.revenue.quarterGrowth != null ? ` (${fmtPct(f.revenue.quarterGrowth)} on a year earlier)` : ""}` : null,
-      f.grossMargin != null ? `Gross margin: ${f.grossMargin.toFixed(1)}%` : null,
+      f.grossMargin != null ? `Gross margin, last 12 months: ${f.grossMargin.toFixed(1)}%` : null,
       f.netIncome?.ttm != null ? `Net income, last 12 months: ${sgn(f.netIncome.ttm)}` : f.netIncome?.quarter != null ? `Net income, latest quarter: ${sgn(f.netIncome.quarter)}` : null,
       f.liquidity != null ? `Cash and short-term investments: ${fmtUsd(f.liquidity)}` : null,
       f.debt != null ? `Long-term debt: ${fmtUsd(f.debt)}` : null,

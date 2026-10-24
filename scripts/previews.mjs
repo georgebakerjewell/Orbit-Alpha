@@ -54,7 +54,7 @@ export function buildPreviews(ctx) {
     const lastQ = f ? [
       f.revenue?.quarter != null ? `Revenue: ${fmtUsd(f.revenue.quarter)}${f.revenue.quarterGrowth != null ? `, ${fmtPct(f.revenue.quarterGrowth)} on a year earlier` : ""}` : null,
       f.revenue?.ttm != null ? `Revenue over the last 12 months: ${fmtUsd(f.revenue.ttm)}${f.revenue.ttmGrowth != null ? ` (${fmtPct(f.revenue.ttmGrowth)})` : ""}` : null,
-      f.grossMargin != null ? `Gross margin: ${f.grossMargin.toFixed(1)}%` : null,
+      f.grossMargin != null ? `Gross margin over the last 12 months: ${f.grossMargin.toFixed(1)}%` : null,
       f.netIncome?.quarter != null ? `Net ${f.netIncome.quarter < 0 ? "loss" : "income"}: ${fmtUsd(Math.abs(f.netIncome.quarter))}` : null,
       f.liquidity != null ? `Cash and short-term investments: ${fmtUsd(f.liquidity)}` : null,
       f.cashGenerative || (f.freeCashFlow != null && f.freeCashFlow >= 0) ? "Free cash flow: positive over the last 12 months" : f.runwayMonths != null ? `Cash runway: about ${f.runwayMonths >= 36 ? `${(f.runwayMonths / 12).toFixed(1)} years` : `${Math.round(f.runwayMonths)} months`} at the last 12 months' burn` : null,
@@ -69,7 +69,7 @@ export function buildPreviews(ctx) {
     const watch = [
       f?.revenue?.quarterGrowth != null ? `Whether revenue growth holds up against last quarter's ${fmtPct(f.revenue.quarterGrowth)} year on year.` : null,
       f?.netIncome?.quarter != null && f.netIncome.quarter < 0 ? `Progress on losses, after a net loss of ${fmtUsd(Math.abs(f.netIncome.quarter))} last quarter.` : null,
-      f?.grossMargin != null ? `Gross margin, which was ${f.grossMargin.toFixed(1)}% last quarter.` : null,
+      f?.grossMargin != null ? `Gross margin, which was ${f.grossMargin.toFixed(1)}% over the last 12 months.` : null,
       f?.runwayMonths != null && f.runwayMonths < 24 && !f.cashGenerative ? `Cash: about ${Math.round(f.runwayMonths)} months of runway at the current burn, so any comment on funding.` : null,
       dil != null && dil >= 15 ? `Share count, up ${dil.toFixed(1)}% over the past year.` : null,
       "Guidance for the next quarter and the full year, if the company gives it.",

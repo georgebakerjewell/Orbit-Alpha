@@ -55,7 +55,7 @@ export function sheetHtml(d) {
       ["Revenue, last 12 months", f.revenue?.ttm ? fmtUsd(f.revenue.ttm) : null],
       ["Revenue, latest quarter", f.revenue?.quarter ? fmtUsd(f.revenue.quarter) : null],
       ["Revenue growth", f.revenue?.ttmGrowth != null ? `${fmtPct(f.revenue.ttmGrowth)} (12m)` : f.revenue?.quarterGrowth != null ? `${fmtPct(f.revenue.quarterGrowth)} (qtr)` : null],
-      ["Gross margin", f.grossMargin != null ? `${f.grossMargin.toFixed(1)}%` : null],
+      ["Gross margin, last 12 months", f.grossMargin != null ? `${f.grossMargin.toFixed(1)}%` : null],
       ["Net income", f.netIncome?.ttm != null ? `${signed(f.netIncome.ttm)} (12m)` : f.netIncome?.quarter != null ? `${signed(f.netIncome.quarter)} (qtr)` : null],
       ["Cash and short-term investments", f.liquidity != null ? fmtUsd(f.liquidity) : null],
       ["Long-term debt", f.debt != null ? fmtUsd(f.debt) : null],
