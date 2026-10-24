@@ -9,6 +9,7 @@ import { COVERED as profiles, ETFS, SECTOR_ORDER } from "../lib/roster.js";
 import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, stockTitle } from "../lib/pagemeta.js";
 import { withConfirmed } from "../lib/earnings-confirmed.js";
 import { brokerBoxHtml } from "../lib/affiliates.js";
+import { RUNWAY_NOTES } from "../lib/runway-notes.js";
 import { sheetHtml } from "./sheet.mjs";
 import { widgetHtml } from "./embed.mjs";
 import { previewTargets, quarterFor } from "./previews.mjs";
@@ -154,6 +155,7 @@ function stockFacts(t, name) {
       f.cashGenerative || (f.freeCashFlow != null && f.freeCashFlow >= 0) ? "Cash runway: cash generative" : f.runwayMonths != null ? `Cash runway: about ${f.runwayMonths >= 36 ? `${(f.runwayMonths / 12).toFixed(1)} years` : `${Math.round(f.runwayMonths)} months`} at the current burn rate` : null,
       f.shares?.kind === "outstanding" && f.shares.y1?.pct != null ? `Shares outstanding: ${fmtPct(f.shares.y1.pct)} over the past year` : null,
     ].filter(Boolean);
+    if (RUNWAY_NOTES[t]) fr.push(esc(RUNWAY_NOTES[t]));
     if (fr.length) html += `<h2>${esc(name)} financials</h2>${list(fr)}<p>From ${esc(name)}'s filings for the period to ${fmtDate(f.periodEnd)}. See the <a href="/space-stocks/cash-runway">cash runway ranking</a> to compare.</p>`;
   }
   if (filings.length) html += `<h2>Latest ${esc(name)} SEC filings</h2>${list(filings.map((f) => `${fmtDate(f.date)}: ${esc(f.label || f.form)}${f.owner ? `, ${esc(f.owner)}${f.role ? ` (${esc(f.role)})` : ""}` : ""}${f.value ? `, ${fmtUsd(f.value)}` : ""} (Form ${esc(f.form)})`))}`;
@@ -276,7 +278,7 @@ const routes = [
       qq?.marketCap ? [`How much is ${p.name} worth?`, `About ${fmtCap(qq.marketCap)} in market value as of ${asof}, at a share price of ${fmtPrice(qq.price, qq.currency)}.`] : null,
       ytdBy[t] != null && t !== "SPCX" ? [`How has ${t} stock done this year?`, `${t} is ${ytdBy[t] >= 0 ? "up" : "down"} ${Math.abs(ytdBy[t]).toFixed(1)}% this year as of ${asof}.`] : null,
       fs?.netIncome?.ttm != null ? [`Is ${p.name} profitable?`, fs.netIncome.ttm >= 0 ? `Yes. ${p.name} made net income of ${fmtUsd(fs.netIncome.ttm)} over the 12 months to ${fmtDate(fs.periodEnd)}, from its SEC filings.` : `Not yet. ${p.name} made a net loss of ${fmtUsd(Math.abs(fs.netIncome.ttm))} over the 12 months to ${fmtDate(fs.periodEnd)}, from its SEC filings.`] : null,
-      fs?.liquidity != null ? [`How much cash does ${p.name} have?`, `${fmtUsd(fs.liquidity)} in cash and short-term investments at ${fmtDate(fs.periodEnd)}${fs.cashGenerative || (fs.freeCashFlow != null && fs.freeCashFlow >= 0) ? ", and it generated cash over the last 12 months" : fs.runwayMonths != null ? `, enough for about ${fs.runwayMonths >= 36 ? `${(fs.runwayMonths / 12).toFixed(1)} years` : `${Math.round(fs.runwayMonths)} months`} at the last 12 months' cash burn` : ""}.`] : null,
+      fs?.liquidity != null ? [`How much cash does ${p.name} have?`, `${fmtUsd(fs.liquidity)} in cash and short-term investments at ${fmtDate(fs.periodEnd)}${fs.cashGenerative || (fs.freeCashFlow != null && fs.freeCashFlow >= 0) ? ", and it generated cash over the last 12 months" : fs.runwayMonths != null ? `, enough for about ${fs.runwayMonths >= 36 ? `${(fs.runwayMonths / 12).toFixed(1)} years` : `${Math.round(fs.runwayMonths)} months`} at the last 12 months' cash burn` : ""}.${RUNWAY_NOTES[t] ? ` ${RUNWAY_NOTES[t]}` : ""}`] : null,
       ins ? [`Are insiders buying or selling ${t} stock?`, ins.bought >= 1000 || ins.sold >= 1000 ? `Over the last 12 months, ${p.name} insiders ${ins.bought ? `bought ${fmtUsd(ins.bought)}` : "made no purchases"} and ${ins.sold ? `sold ${fmtUsd(ins.sold)}` : "made no sales"} of stock on the open market, from Form 4 filings.` : `No open-market insider buying or selling over the last 12 months, from Form 4 filings.`] : null,
     ].filter(Boolean);
     const q = faq([

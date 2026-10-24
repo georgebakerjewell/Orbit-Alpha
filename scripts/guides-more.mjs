@@ -2,6 +2,7 @@
 // /guides hub. Called from scripts/guides.mjs with the same data and helpers as the other guides.
 // Live figures come from the build-time data; anything fixed (company facts, Starlink results) is
 // written here with its source and date so it is easy to update.
+import { RUNWAY_NOTES } from "../lib/runway-notes.js";
 import { GUIDES, GUIDE_GROUPS, GUIDE_LIST } from "../lib/pagemeta.js";
 
 const ext = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${text}</a>`;
@@ -201,7 +202,7 @@ ${cheapFaq.html}${asOfLine("Prices from Yahoo Finance; cash and share counts fro
   const fin12 = fin.filter((f) => f.revenue?.ttm != null && f.liquidity != null); // same companies for both figures
   const cashTotal = fin12.reduce((a, f) => a + f.liquidity, 0);
   const revTotal = fin12.reduce((a, f) => a + f.revenue.ttm, 0);
-  const shortRunway = allT.filter((t) => { const f = snap(t); return f && !f.cashGenerative && f.runwayMonths != null && f.runwayMonths < 12 && !(f.freeCashFlow != null && f.freeCashFlow >= 0); });
+  const shortRunway = allT.filter((t) => { const f = snap(t); return f && !RUNWAY_NOTES[t] && !f.cashGenerative && f.runwayMonths != null && f.runwayMonths < 12 && !(f.freeCashFlow != null && f.freeCashFlow >= 0); });
   const ins = allT.map((t) => insidersBy[t]?.m12).filter(Boolean);
   const insBought = ins.reduce((a, d) => a + (d.bought || 0), 0), insSold = ins.reduce((a, d) => a + (d.sold || 0), 0);
   const conTotal = allT.reduce((a, t) => a + (contractsBy[t]?.total || 0), 0);

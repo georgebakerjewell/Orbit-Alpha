@@ -12,6 +12,7 @@ import { buildEvents } from "./events.mjs";
 import { buildArticles } from "./articles.mjs";
 import { readFileSync } from "node:fs";
 import { brokerBoxHtml } from "../lib/affiliates.js";
+import { RUNWAY_NOTES, RUNWAY_NOTE_SOURCE } from "../lib/runway-notes.js";
 
 export function buildGuides(ctx) {
   const { SITE, profiles, ETFS, SECTOR_ORDER, quotes, ytdBy, perfBy, earnings, filingsBy, contractsBy, finBy, insidersBy, asOf, count,
@@ -112,11 +113,13 @@ ${asOfLine("Source: SEC EDGAR Form 4 filings.")}`);
   const generative = fin.filter(([, f]) => f.cashGenerative || (f.freeCashFlow != null && f.freeCashFlow >= 0));
   const runwayText = (m) => (m >= 120 ? "10+ years" : m >= 36 ? `${(m / 12).toFixed(1)} years` : `${Math.round(m)} months`);
   const finRow = (t, f, runway) => [link(t), tick(t), fmtUsd(f.liquidity), f.freeCashFlow != null ? `${f.freeCashFlow < 0 ? "-" : ""}${fmtUsd(Math.abs(f.freeCashFlow))}` : null, runway, f.periodEnd ? fmtDate(f.periodEnd) : null];
-  const under12 = burning.filter(([, f]) => f.runwayMonths < 12).map(([t]) => t);
+  const under12 = burning.filter(([t, f]) => f.runwayMonths < 12 && !RUNWAY_NOTES[t]).map(([t]) => t);
+  const noted = burning.filter(([t]) => RUNWAY_NOTES[t]);
   const runwayPage = page("/space-stocks/cash-runway", "Space stocks cash runway ranking",
     `<p>Most space companies still spend more cash than they bring in. Cash runway estimates how long each one could keep going on the cash it has today if it kept burning money at the same rate, before it would need to raise more by selling shares or borrowing. A short runway is one of the clearest signs that a share offering, and dilution for existing holders, may be coming.</p>
 <h2>Runway ranking, shortest first</h2>
-${burning.length ? table(["Company", "Ticker", "Cash and investments", "Free cash flow (12m)", "Runway", "As of"], burning.map(([t, f]) => finRow(t, f, runwayText(f.runwayMonths)))) : `<p>Financial data is temporarily unavailable. The figures are on each company's page.</p>`}
+${burning.length ? table(["Company", "Ticker", "Cash and investments", "Free cash flow (12m)", "Runway", "As of"], burning.map(([t, f]) => finRow(t, f, `${runwayText(f.runwayMonths)}${RUNWAY_NOTES[t] ? "*" : ""}`))) : `<p>Financial data is temporarily unavailable. The figures are on each company's page.</p>`}
+${noted.map(([t]) => `<p class="oa-note">* ${esc(RUNWAY_NOTES[t])} Source: <a href="${RUNWAY_NOTE_SOURCE[1]}" target="_blank" rel="noopener">${esc(RUNWAY_NOTE_SOURCE[0])}</a>.</p>`).join("")}
 ${under12.length ? `<p>On these figures, ${and(under12.map(link))} ${under12.length === 1 ? "has" : "have"} less than a year of cash at the current burn rate.</p>` : ""}
 ${generative.length ? `<h2>Cash generative</h2><p>These companies produced positive free cash flow over the last 12 months, so they are not using up their cash at all.</p>${table(["Company", "Ticker", "Cash and investments", "Free cash flow (12m)", "Runway", "As of"], generative.map(([t, f]) => finRow(t, f, "Cash generative")))}` : ""}
 <h2>How runway is worked out</h2>
