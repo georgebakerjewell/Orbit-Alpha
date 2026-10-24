@@ -72,7 +72,7 @@ export function buildGuides(ctx) {
     `<p>These are the ${count} publicly traded companies Orbit Alpha follows whose business is mainly in space. They are grouped by what they do and sorted by market capitalisation within each group. Click any company for its live price, SEC filings, insider trades, government contracts and news.</p>
 <p>Market caps are in US dollars for every company, so European listings can be compared directly. Prices are shown in the currency each stock trades in.</p>
 ${SECTOR_ORDER.map((s) => `<h2>${s} stocks</h2><p>${SECTOR_TEXT[s] || ""}</p>${table(["Company", "Ticker", "Listing", "Price", "Market cap", "YTD"], bySector[s].map(listRows))}`).join("")}
-<h2>What counts as a space stock</h2>
+<h2>What counts as a space stock?</h2>
 <p>A company makes the list when space is the core of its business: building or launching rockets, operating satellites, selling data from orbit, or making the hardware those businesses rely on. Lockheed Martin, Boeing and Northrop Grumman all have large space divisions, but space is a small part of much bigger defence businesses, so their shares mostly move on other things. They are not included.</p>
 <p>Several space companies, including Blue Origin, are still private. They appear in Orbit Alpha's news and newsletter coverage but not in this list, because there is no share price to track.</p>
 ${listFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from share counts in company filings.")}`,
@@ -145,7 +145,7 @@ ${asOfLine("Source: USAspending.gov (prime contract awards, matched to each comp
   const notScheduled = usTickers.filter((t) => !upcoming.some((e) => e.ticker === t));
   const earningsPage = page("/space-stocks/earnings-calendar", "Space stocks earnings calendar",
     `<p>When each US-listed space stock reports its next quarterly results, with the reporting time and the consensus earnings-per-share estimate where analysts publish one. Results days are some of the most volatile of the year for these stocks, so it helps to know what is coming.</p>
-<h2>Upcoming earnings dates</h2>
+<h2>When do space stocks report earnings next?</h2>
 ${upcoming.length ? table(["Date", "Company", "Ticker", "Timing", "Consensus EPS"], upcoming.map((e) => [fmtDate(e.date), link(e.ticker), tick(e.ticker), esc(e.time || "Time TBC"), e.epsEst ? esc(String(e.epsEst).replace(/^\((.*)\)$/, "-$1")) : null])) : `<p>No confirmed dates in the next 75 days yet. Companies usually confirm their date two to four weeks ahead.</p>`}
 ${notScheduled.length ? `<p>Not yet scheduled in the next 75 days: ${and(notScheduled.map(tick))}. Dates appear here once the company confirms them.</p>` : ""}
 <h2>What to watch in a space company's results</h2>

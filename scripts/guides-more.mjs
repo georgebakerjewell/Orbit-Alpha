@@ -122,9 +122,9 @@ ${list([
 <p>${STARLINK.next && !after ? `SpaceX reports Q4 2026 results after the US market closes on ${fmtDate(STARLINK.next)}, which will update these figures.` : `These figures are from the ${STARLINK.quarter} report, published on ${fmtDate(STARLINK.reported)}. Full details are on the <a href="/results/spcx-q3-2026">SpaceX Q3 2026 results page</a>.`}</p>
 <h2>What you get when you buy SPCX for Starlink</h2>
 <p>A SpaceX share is a bet on three businesses at once: Starlink broadband and direct-to-cell service, launches with Falcon 9 and Starship, and the xAI artificial intelligence business, which includes X. If you want Starlink alone, there is no way to buy it separately. Many investors look at SPCX as a Starlink holding with the rest attached; others see the rocket business, which keeps Starlink's launch costs low, as part of the same advantage.</p>
-<h2>How to buy</h2>
+<h2>How do you buy Starlink exposure?</h2>
 <p>Search for SPCX on any platform that offers US shares, in the US, the UK or elsewhere. The step-by-step guide, including ISAs, currency fees and the W-8BEN form, is <a href="/spacex-stock">how to buy SpaceX stock</a>. Large blocks of SpaceX shares held by insiders are being released from lock-up in stages; the dates are on the <a href="/spacex-stock/lockup-calendar">SpaceX lockup calendar</a>.</p>
-<h2>Listed Starlink rivals</h2>
+<h2>Which listed companies compete with Starlink?</h2>
 <p>If you want satellite connectivity exposure outside SpaceX, these listed companies compete with parts of Starlink's business:</p>
 ${table(["Company", "Ticker", "Price", "Market cap", "YTD", "Competes on"], rivals.map((t) => [link(t), tick(t), quotes[t]?.price != null ? fmtPrice(quotes[t].price, quotes[t].currency) : null, quotes[t]?.marketCap ? fmtCap(quotes[t].marketCap) : null, ytdBy[t] != null ? fmtPct(ytdBy[t]) : null, esc({
       ASTS: "Satellite service to ordinary phones",
@@ -183,6 +183,66 @@ ${cheapFaq.html}${asOfLine("Prices from Yahoo Finance; cash and share counts fro
 
   cheapPage.title = `Space Stocks Under $10 (${new Date(asOf + "T12:00:00Z").toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" })}): Price, Cash Runway and Dilution`;
   cheapPage.answer = cheap.length ? `As of ${fmtDate(asOf)}, ${cheap.length} US-listed space ${cheap.length === 1 ? "stock trades" : "stocks trade"} below $10 a share: ${and(cheap.map((t) => `${profiles[t].name} (${t})`))}. ${short.length ? `${and(short.map((t) => profiles[t].name))} ${short.length === 1 ? "has" : "have"} less than a year of cash at the current burn rate.` : ""}`.trim() : "";
+
+  /* ═══ Space stocks by the numbers ═══════════════════════════════════════════════ */
+  // One dated, quotable sentence per figure: the page AI assistants can cite for sector-level questions.
+  const allT = Object.keys(profiles);
+  const capOf = (t) => quotes[t]?.marketCap || 0;
+  const capped = allT.filter((t) => capOf(t));
+  const totalCap = capped.reduce((a, t) => a + capOf(t), 0);
+  const spcxCap = capOf("SPCX");
+  const ytdList = allT.filter((t) => ytdBy[t] != null && t !== "SPCX").map((t) => ytdBy[t]);
+  const med = (xs) => { const v = [...xs].sort((a, b) => a - b), n = v.length; return n ? (n % 2 ? v[(n - 1) / 2] : (v[n / 2 - 1] + v[n / 2]) / 2) : null; };
+  const ytdMedian = med(ytdList), ytdUp = ytdList.filter((v) => v > 0).length;
+  const spyYtd = ret("ytd", "SPY"), ufoYtd = ret("ytd", "UFO");
+  const fin = allT.map((t) => snap(t)).filter((f) => f && f.currency === "USD");
+  const profitable = fin.filter((f) => f.netIncome?.ttm != null && f.netIncome.ttm > 0).length;
+  const withNI = fin.filter((f) => f.netIncome?.ttm != null).length;
+  const fin12 = fin.filter((f) => f.revenue?.ttm != null && f.liquidity != null); // same companies for both figures
+  const cashTotal = fin12.reduce((a, f) => a + f.liquidity, 0);
+  const revTotal = fin12.reduce((a, f) => a + f.revenue.ttm, 0);
+  const shortRunway = allT.filter((t) => { const f = snap(t); return f && !f.cashGenerative && f.runwayMonths != null && f.runwayMonths < 12 && !(f.freeCashFlow != null && f.freeCashFlow >= 0); });
+  const ins = allT.map((t) => insidersBy[t]?.m12).filter(Boolean);
+  const insBought = ins.reduce((a, d) => a + (d.bought || 0), 0), insSold = ins.reduce((a, d) => a + (d.sold || 0), 0);
+  const conTotal = allT.reduce((a, t) => a + (contractsBy[t]?.total || 0), 0);
+  const upcomingE = (earnings || []).filter((e, i, a) => profiles[e.ticker] && e.date >= today && a.findIndex((x) => x.ticker === e.ticker) === i);
+  const sectors = [...new Set(allT.map((t) => profiles[t].sector))];
+  const sectorRows = sectors.map((sec) => {
+    const ts = allT.filter((t) => profiles[t].sector === sec);
+    const ys = ts.filter((t) => ytdBy[t] != null && t !== "SPCX").map((t) => ytdBy[t]);
+    const c = ts.reduce((a, t) => a + capOf(t), 0);
+    return [esc(sec), String(ts.length), c ? fmtCap(c) : null, med(ys) != null ? fmtPct(med(ys)) : null];
+  });
+  const on = `As of ${fmtDate(asOf)}`;
+  const facts = [
+    totalCap ? `${on}, the ${capped.length} listed space companies Orbit Alpha tracks were worth about ${fmtCap(totalCap)} combined${spcxCap ? `, of which SpaceX was ${fmtCap(spcxCap)} (${Math.round((spcxCap / totalCap) * 100)}%). Without SpaceX, the other ${capped.length - 1} were worth ${fmtCap(totalCap - spcxCap)}` : ""}.` : null,
+    ytdMedian != null ? `The median space stock was ${ytdMedian >= 0 ? "up" : "down"} ${Math.abs(ytdMedian).toFixed(1)}% this year, and ${ytdUp} of ${ytdList.length} were higher than at the start of the year${spyYtd != null ? `, against ${fmtPct(spyYtd)} for the S&P 500 (SPY)` : ""}${ufoYtd != null ? ` and ${fmtPct(ufoYtd)} for the Procure Space ETF (UFO)` : ""}. SpaceX, which listed in June, is left out of the year-to-date figures.` : null,
+    withNI ? `${profitable} of the ${withNI} US-listed space companies with SEC financials made a net profit over their last 12 reported months.` : null,
+    fin12.length ? `The ${fin12.length} US-listed companies with 12 months of SEC figures reported revenue of ${fmtUsd(revTotal)} over that period and held ${fmtUsd(cashTotal)} in cash and short-term investments.` : null,
+    shortRunway.length ? `${shortRunway.length === 1 ? "One company had" : `${shortRunway.length} companies had`} less than a year of cash at the recent burn rate: ${and(shortRunway.map(link))}.` : null,
+    ins.length ? `Over the last 12 months, insiders at these companies bought ${fmtUsd(insBought)} and sold ${fmtUsd(insSold)} of their own shares on the open market, from Form 4 filings.` : null,
+    conTotal ? `The US-listed space companies won ${fmtUsd(conTotal)} of US government contract awards over the last 12 months, from USAspending.gov.` : null,
+    upcomingE.length ? `${upcomingE.length === 1 ? "One company has" : `${upcomingE.length} companies have`} quarterly results dated in the coming weeks; the next is ${profiles[upcomingE[0].ticker].name} on ${fmtDate(upcomingE[0].date)}.` : null,
+  ].filter(Boolean);
+  const statsPage = page("/space-stocks/statistics", "Space stocks by the numbers",
+    `<p>The listed space sector in figures: size, returns, profits, cash, insider trading and government contracts, across the ${allT.length} companies Orbit Alpha tracks. Every figure is recalculated each trading day from prices, SEC filings and USAspending.gov.</p>
+<h2>Key figures</h2>${list(facts.map((f) => f.includes("<a ") ? f : esc(f)))}
+<h2>How big is each part of the space sector?</h2>${table(["Sector", "Companies", "Combined market cap", "Median year to date"], sectorRows)}
+<p>Year-to-date medians leave out SpaceX, which listed in June 2026. Company-level figures are on the <a href="/space-stocks">list of space stocks</a>, the <a href="/space-stocks/cash-runway">cash runway ranking</a>, <a href="/space-stocks/insider-trading">insider trading</a> and <a href="/space-stocks/government-contracts">government contracts</a> pages.</p>
+<h2>How these figures are worked out</h2>${list([
+      "Market values are share price times shares outstanding, converted to US dollars for non-US listings.",
+      "Profits, revenue and cash come from the latest 10-Q and 10-K filings of US-listed companies; 12-month figures add the last four reported quarters.",
+      "Cash runway is cash and short-term investments divided by the last 12 months of free cash outflow.",
+      "Insider figures are open-market purchases and sales on Form 4; grants and option exercises are left out.",
+    ])}
+${asOfLine("Prices from Yahoo Finance; financials and insider trades from SEC filings; contracts from USAspending.gov.")}`,
+    [{ "@type": "ItemList", name: "Space stocks by the numbers", itemListElement: facts.map((f, i) => ({ "@type": "ListItem", position: i + 1, name: f.replace(/<[^>]+>/g, "") })) }]);
+  statsPage.answer = facts.slice(0, 2).map((f) => f.replace(/<[^>]+>/g, "")).join(" ");
+  statsPage.datasets = [{
+    slug: "space-stocks-statistics", name: "Space stocks by sector", description: `Number of companies, combined market value and median year-to-date return by sector, as of ${asOf}.`,
+    columns: ["sector", "companies", "market_cap_usd", "median_ytd_pct"],
+    rows: sectors.map((sec) => { const ts = allT.filter((t) => profiles[t].sector === sec); const ys = ts.filter((t) => ytdBy[t] != null && t !== "SPCX").map((t) => ytdBy[t]); return [sec, ts.length, Math.round(ts.reduce((a, t) => a + capOf(t), 0)), med(ys) != null ? +med(ys).toFixed(2) : ""]; }),
+  }];
 
   /* ═══ Largest space companies by market cap ════════════════════════════════════ */
   const bySize = Object.keys(profiles).filter((t) => quotes[t]?.marketCap).sort((a, b) => quotes[b].marketCap - quotes[a].marketCap);
@@ -302,7 +362,7 @@ ${pairFaq.html}${asOfLine("Prices from Yahoo Finance; financials, insider trades
     return cmpPage;
   });
 
-  return [starlinkPage, cheapPage, weekPage, sizePage, ...comparePages];
+  return [starlinkPage, cheapPage, weekPage, sizePage, statsPage, ...comparePages];
 }
 
 // Media kit at /advertise. Update SPONSOR when rates change.
@@ -342,6 +402,7 @@ const HUB_TEXT = {
   "/space-stocks": ["Every listed space company by sector, with price and returns.", "Daily"],
   "/space-stocks/this-week": ["The week's biggest gainers and fallers.", "Daily"],
   "/space-stocks/largest": ["All 30 companies ranked by market value.", "Daily"],
+  "/space-stocks/statistics": ["The sector in figures: size, returns, profits, cash.", "New"],
   "/space-stocks/launch-events": ["The launches that move space stocks, and when.", "New"],
   "/articles": ["Short, sourced answers to this week's questions.", "New"],
   "/space-stocks/insider-trading": ["Who is buying and selling their own shares.", ""],
