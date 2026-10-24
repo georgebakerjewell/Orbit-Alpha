@@ -2072,7 +2072,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
           <div style={{ flexBasis: "100%", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 16px" }}>
             <span style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Research {ticker}</span>
             {TOOLS.map((x) => (
-              <a key={x.id} href={toolHref(x, ticker)} target="_blank" rel={x.affiliate ? "sponsored noopener" : "noopener"} data-broker={x.id} data-placement="stock-page-app" data-ticker={ticker} className="oa-link" style={{ color: C.blue, fontSize: 12 }}>{x.name}</a>
+              <a key={x.id} href={toolHref(x, ticker)} target="_blank" rel={x.affiliate ? "sponsored noopener" : "noopener"} data-broker={x.id} data-placement="stock-page-app" data-ticker={ticker} className="oa-link" style={{ color: C.blue, fontSize: 12 }}>{x.name}{x.affiliate && x.note ? <span style={{ color: C.muted }}> ({x.note})</span> : null}</a>
             ))}
           </div>
         )}
