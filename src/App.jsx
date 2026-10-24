@@ -7,7 +7,7 @@ import eventsData from "./events.json"; // launch-event pages at /launches/<slug
 import resultsData from "./results.json"; // results-day pages at /results/<slug> (src/results.json, added by a scheduled task) // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
 import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, GUIDE_CTA, GUIDE_CTA_DEFAULT, guideCta, stockTitle } from "../lib/pagemeta.js";
-import { BROKERS, TOOLS, toolHref, brokerHref, anyAffiliate, RISK, DISCLOSURE } from "../lib/affiliates.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
+import { brokersFor, TOOLS, toolHref, brokerHref, anyAffiliate, RISK, DISCLOSURE } from "../lib/affiliates.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
 /* ════════════════════════════════════════════════════════════════════════════
    DATA  (stocks, ETFs and keywords all come from lib/roster.js)
@@ -629,6 +629,16 @@ function LeadMagnet({ source, heading = "Free PDF: Space Stocks 2026" }) {
       </div>
     </section>
   );
+}
+
+// Visitor's country for the broker list (one request per session; null until known or if blocked).
+function useCountry() {
+  const [country, setCountry] = useState(() => { try { return sessionStorage.getItem("oa_cc") || null; } catch { return null; } });
+  useEffect(() => {
+    if (country) return;
+    fetch("/api/geo").then((r) => r.json()).then((d) => { if (d?.country) { setCountry(d.country); try { sessionStorage.setItem("oa_cc", d.country); } catch {} } }).catch(() => {});
+  }, []);
+  return country;
 }
 
 function SubscribeForm({ color = C.green, label = "Subscribe", onDone, style, source, follow, sample = true, reward }) {
@@ -2009,6 +2019,7 @@ function DilutionTracker({ data, error }) {
 
 function StockPage({ ticker, prices, launches, news, goSubscribe }) {
   const profile = PROFILES[ticker];
+  const country = useCountry();
   const [range, setRange] = useState("6mo");
   const chart = useApi(profile ? `/api/quote?ticker=${ticker}&range=${range}` : null);
   const filings = useApi(profile ? `/api/filings?ticker=${ticker}` : null);
@@ -2065,7 +2076,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       {/* Where to buy (lib/affiliates.js); clicks are logged as affiliate_click by the listener in index.html */}
       <div style={{ ...cardStyle, padding: "12px 16px", marginBottom: 16, display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px 16px" }}>
         <span style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Where to buy {ticker}</span>
-        {BROKERS.map((b) => (
+        {brokersFor(country).map((b) => (
           <a key={b.id} href={brokerHref(b)} target="_blank" rel={b.affiliate ? "sponsored noopener" : "noopener"} data-broker={b.id} data-placement="stock-page-app" data-ticker={ticker} className="oa-link" style={{ color: C.green, fontSize: 13 }} title={b.note}>{b.name}</a>
         ))}
         {!profile.listing && ticker !== "MDA" && (
