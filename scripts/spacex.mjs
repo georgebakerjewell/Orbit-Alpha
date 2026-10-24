@@ -242,8 +242,10 @@ ${sources([
   }];
   // Lead the title and description with the next unlock, so "SpaceX unlock <date>" searches match.
   if (next) {
-    lockPage.title = `SpaceX Lockup Expiration: ${shares(next.n)} SPCX Shares Unlock ${next.trade === today ? "Today" : fmtDate(next.trade)} | Orbit Alpha`;
-    lockPage.description = `${next.q3 && !q3Firm ? "Expected: up" : "Up"} to ${shares(next.n)} SpaceX shares are released from lock-up on ${fmtDate(next.trade)}. Every SPCX unlock date and share count from the IPO prospectus, how the stock traded on past release days, and when Elon Musk can sell.`;
+    // Matches what people search: "spacex lockup expiration dates", "when is the next spacex lockup".
+    const shortN = next.n >= 1e9 ? `${(next.n / 1e9).toFixed(1).replace(/\.0$/, "")}bn` : `${Math.round(next.n / 1e6)}M`;
+    lockPage.title = `SpaceX Lockup Expiration Dates: Next Unlock ${next.trade === today ? "Today" : short(next.trade)} (${shortN} Shares)`;
+    lockPage.description = `When is the next SpaceX lockup expiration? ${next.q3 && !q3Firm ? "Expected: up" : "Up"} to ${shares(next.n)} SPCX shares unlock ${next.trade === today ? "today" : `on ${DAYS[weekday(next.trade)]} ${short(next.trade)}`}. Every date, share count and stock move.`;
   }
   /* ═══ Page 3: SpaceX IPO ════════════════════════════════════════════════════ */
   // "SpaceX IPO" is still one of the most searched SpaceX queries. Facts are the same sourced
