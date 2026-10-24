@@ -731,15 +731,23 @@ function SubscribePopup({ path }) {
     return () => { window.removeEventListener("scroll", onScroll); document.removeEventListener("mouseout", onLeave); };
   }, [path]);
   const close = (value) => { setShow(false); markPopupSeen(value); };
+  // On pages about one company or event, the pop-up leads with that (an unlock reminder, a company's
+  // results) and keeps the PDF as the bonus; elsewhere it leads with the PDF.
+  const stockT = path.startsWith("/stocks/") ? path.split("/")[2]?.toUpperCase() : null;
+  const pageCta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES);
+  const special = stockT && PROFILES[stockT]
+    ? [`Follow ${PROFILES[stockT].name}`, `${PROFILES[stockT].name}'s results, contracts and big moves in the Sunday briefing, plus the free 34-page PDF on every listed space company.`, stockT, `Follow ${stockT}`]
+    : pageCta[2] ? [pageCta[0], `${pageCta[1]} You also get the free 34-page PDF on every listed space company.`, pageCta[2], pageCta[3]] : null;
+  useEffect(() => { if (show) window.posthog?.capture?.("popup_variant", { variant: special ? "contextual" : "pdf", page: path }); }, [show]);
   if (!show) return null;
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>
       <div style={{ background: "#0d1220", border: "1px solid rgba(0,255,136,0.25)", borderRadius: 12, padding: 32, maxWidth: 420, width: "100%", position: "relative", animation: "fu 0.3s ease", boxShadow: "0 20px 60px rgba(0,0,0,0.8)" }}>
         <button onClick={() => close(Date.now().toString())} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", color: C.muted, fontSize: 20, cursor: "pointer", lineHeight: 1 }}>×</button>
-        <img src={SHEET.preview} alt="Space Stocks 2026 PDF preview" style={{ display: "block", width: "100%", borderRadius: 6, marginBottom: 16, border: "1px solid rgba(255,255,255,0.12)" }} />
-        <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10 }}>Free 34-page report on every space stock</div>
-        <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>Get Space Stocks 2026 free when you join the Sunday newsletter: what moved across the stocks we track and why, analyst changes and one company in depth.</div>
-        <SubscribeForm source="popup" reward={SHEET} label="Get the PDF" sample={false} style={{ maxWidth: "none", marginBottom: 14 }} />
+        {!special && <img src={SHEET.preview} alt="Space Stocks 2026 PDF preview" style={{ display: "block", width: "100%", borderRadius: 6, marginBottom: 16, border: "1px solid rgba(255,255,255,0.12)" }} />}
+        <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10, paddingRight: 18 }}>{special ? special[0] : "Free 34-page report on every space stock"}</div>
+        <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>{special ? special[1] : "Get Space Stocks 2026 free when you join the Sunday newsletter: what moved across the stocks we track and why, analyst changes and one company in depth."}</div>
+        <SubscribeForm source="popup" follow={special?.[2]} reward={SHEET} label={special ? special[3] : "Get the PDF"} sample={false} style={{ maxWidth: "none", marginBottom: 14 }} />
         <div style={{ fontSize: 11, color: C.muted }}>{subscribers} subscribers. Unsubscribe in one click.</div>
       </div>
     </div>
@@ -1003,7 +1011,7 @@ function Home({ news, prices, launches }) {
           <div key={id} style={{ marginBottom: 12 }}>
             <div style={{ fontSize: 10, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{name}</div>
             <div style={{ display: "flex", gap: "8px 18px", flexWrap: "wrap", fontSize: 12 }}>
-              {GUIDE_LIST.filter(([, g]) => g.group === id).map(([p, g]) => <Link key={p} to={p} className="oa-link" style={{ color: id === "spacex" ? C.green : C.blue }}>{g.label}</Link>)}
+              {GUIDE_LIST.filter(([, g]) => g.group === id && !g.hubHide).map(([p, g]) => <Link key={p} to={p} className="oa-link" style={{ color: id === "spacex" ? C.green : C.blue }}>{g.label}</Link>)}
             </div>
           </div>
         ))}

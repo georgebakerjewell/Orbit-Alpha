@@ -361,7 +361,12 @@ export function buildHub(ctx) {
   };
   const featured = `<h2>Start here</h2><div class="oa-hub-grid">${FEATURED.filter((p) => GUIDES[p]).map((p) => card(p, GUIDES[p], true)).join("")}</div>`;
   const sections = GUIDE_GROUPS.map(([id, name, blurb]) => {
-    const items = GUIDE_LIST.filter(([p, x]) => x.group === id && !FEATURED.includes(p));
+    const items = GUIDE_LIST.filter(([p, x]) => x.group === id && !FEATURED.includes(p) && !x.hubHide && !x.compare);
+    // The head-to-head pages become one compact row of links instead of four cards.
+    if (id === "compare") {
+      const pairs = GUIDE_LIST.filter(([, x]) => x.compare);
+      return pairs.length ? `<h2>${esc(name)}</h2><p class="oa-hub-sub">${pairs.map(([p, x]) => `<a href="${p}">${esc(x.label.replace(/ stock$/, ""))}</a>`).join(" · ")}</p>` : "";
+    }
     return items.length ? `<h2>${esc(name)}</h2><p class="oa-hub-sub">${esc(blurb)}</p><div class="oa-hub-grid">${items.map(([p, x]) => card(p, x)).join("")}</div>` : "";
   }).join("");
   const live = `<h2>Live data</h2><div class="oa-hub-grid">${[["/markets", "Live dashboard", "Prices for every space stock and ETF."], ["/markets/performance", "Space vs the S&P 500", "Sector returns against the market."], ["/news", "News, filings and contracts", "What is moving the stocks today."]].map(([p, l, t]) => `<a class="oa-card" href="${p}"><b>${esc(l)}</b><span>${esc(t)}</span></a>`).join("")}</div>`;
