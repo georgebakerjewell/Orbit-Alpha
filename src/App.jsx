@@ -2,6 +2,7 @@ import { useState, useEffect, useLayoutEffect, useRef, createContext, useContext
 import issues from "./issues.json";
 import issueArchive from "./issueArchive.json";
 import stories from "./stories.json";
+import articlesData from "./articles.json"; // question articles at /articles/<slug> (weekly scheduled task)
 import eventsData from "./events.json"; // launch-event pages at /launches/<slug> (maintained by a scheduled task)
 import resultsData from "./results.json"; // results-day pages at /results/<slug> (src/results.json, added by a scheduled task) // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
@@ -47,6 +48,7 @@ function parsePath(pathname) {
   if (!first) return { page: "home" };
   if (first === "markets") return { page: "markets", tab: MARKET_TABS.includes(second) ? second : "stocks" };
   if (first === "stocks" && second) return { page: "stock", ticker: second.toUpperCase() };
+  if (first === "articles" && second) return articlesData.some((a) => a.slug === second) ? { page: "guide", path: `/articles/${second}` } : { page: "notfound" };
   if (first === "launches" && second) return eventsData.some((e) => e.slug === second) ? { page: "guide", path: `/launches/${second}` } : { page: "notfound" };
   if (first === "earnings-preview" && second) return PROFILES[second.toUpperCase()] ? { page: "guide", path: `/earnings-preview/${second}` } : { page: "notfound" };
   if (first === "results" && second) return resultsData.some((r) => r.slug === second) ? { page: "guide", path: `/results/${second}` } : { page: "notfound" };
@@ -130,6 +132,10 @@ function routeMeta(route) {
     const r = resultsData.find((x) => `/results/${x.slug}` === route.path);
     const pr = r && PROFILES[r.ticker];
     if (r && pr) return { title: `${pr.name} (${r.ticker}) ${r.quarter} Results: ${r.headline} | Orbit Alpha`.slice(0, 120), description: r.summary.slice(0, 158) };
+  }
+  if (route.page === "guide" && route.path.startsWith("/articles/")) {
+    const ar = articlesData.find((x) => `/articles/${x.slug}` === route.path);
+    if (ar) return { title: `${ar.title} | Orbit Alpha`, description: ar.summary };
   }
   if (route.page === "guide" && route.path.startsWith("/launches/")) {
     const ev = eventsData.find((x) => `/launches/${x.slug}` === route.path);

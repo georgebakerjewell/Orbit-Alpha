@@ -1,0 +1,266 @@
+[
+ {
+  "slug": "will-spacex-join-the-sp-500",
+  "title": "Will SpaceX join the S&P 500?",
+  "summary": "Not before June 2027. The S&P 500 requires 12 months of trading after an IPO, and SpaceX listed on 12 June 2026. It must also show positive GAAP earnings in its latest quarter and over its last four quarters combined, and S&P decided in June 2026 not to fast-track very large IPOs.",
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "tickers": [
+   "SPCX"
+  ],
+  "sections": [
+   [
+    "The short answer",
+    [
+     "SpaceX is not in the S&P 500 and cannot join before June 2027. The index only considers companies that have traded for at least 12 months after their IPO, and SpaceX started trading on Nasdaq on 12 June 2026. Even then, it has to pass the index's profitability and float tests, and the final decision rests with S&P's Index Committee.",
+     "SpaceX is already in the Nasdaq-100, which it joined in July 2026 under a fast-entry rule Nasdaq added in May 2026."
+    ]
+   ],
+   [
+    "The S&P 500 rules, and where SpaceX stands",
+    [
+     {
+      "table": {
+       "head": [
+        "Rule",
+        "Requirement",
+        "SpaceX"
+       ],
+       "rows": [
+        [
+         "Trading history",
+         "At least 12 months on an eligible exchange after the IPO",
+         "Listed 12 June 2026, so eligible from June 2027"
+        ],
+        [
+         "Market value",
+         "US$22.7 billion or more (the level set in July 2025; S&P reviews it regularly)",
+         "About $2 trillion, far above it ([live SPCX price](/stocks/spcx))"
+        ],
+        [
+         "Profitability",
+         "Positive GAAP net income in the latest quarter and over the last four quarters combined",
+         "Net income of $4.40B in Q3 2026, its first profit as a listed company, but a net loss of $413M over the first nine months of 2026"
+        ],
+        [
+         "Float",
+         "Investable weight factor of at least 0.1, roughly 10% of shares freely tradable",
+         "The IPO sold 555.6 million shares, about 4% of roughly 13.6 billion shares; more become tradable as lock-ups end"
+        ],
+        [
+         "Selection",
+         "At the Index Committee's discretion, even when every rule is met",
+         "Not yet considered"
+        ]
+       ]
+      }
+     }
+    ]
+   ],
+   [
+    "Profitability is the open question",
+    [
+     "Q3 2026 was SpaceX's first profitable quarter as a listed company: net income of $4.40B on revenue of $14.58B. About $1.61B of that came from below the operating line (other income, net interest income and a tax benefit), and management said fourth-quarter gross margins should normalise after one-time benefits in Q3.",
+     "For a review in mid-2027, the four quarters that count would most likely run from Q2 2026 to Q1 2027. The two reported so far add up to a profit of about $3.86B: a net loss of $541M in Q2 2026, from SpaceX's 10-Q, and net income of $4.40B in Q3. SpaceX would then need Q1 2027 itself to be profitable and the four-quarter total to stay positive.",
+     "See the [SpaceX Q3 2026 results](/results/spcx-q3-2026) for the full numbers."
+    ]
+   ],
+   [
+    "S&P decided not to change the rules",
+    [
+     "S&P Dow Jones Indices consulted in 2026 on whether to change how very large new listings enter its US indices. On 4 June 2026 it announced no changes to the S&P 500 methodology, so there is no fast-entry route for mega-cap IPOs.",
+     "The Nasdaq-100 took the opposite approach. Since May 2026, a new listing whose full market value would rank in the index's top 40 can skip the usual three-month wait, which is how SpaceX joined it within weeks of its IPO."
+    ]
+   ],
+   [
+    "What inclusion would mean",
+    [
+     "When a company joins the S&P 500, funds that track the index have to buy its shares in proportion to its float-adjusted market value. That buying is why index additions are closely watched. For SpaceX, the float adjustment matters: only freely tradable shares count, so the weight would be well below its full market value while Elon Musk and other insiders hold most of the stock.",
+     "Until then, the main dates for SPCX holders are the remaining lock-up releases: see the [SpaceX lockup calendar](/spacex-stock/lockup-calendar)."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Is SpaceX in the S&P 500?",
+    "No. SpaceX is not in the S&P 500. It is in the Nasdaq-100, which it joined in July 2026."
+   ],
+   [
+    "When could SpaceX be added to the S&P 500?",
+    "June 2027 at the earliest, once it has traded for 12 months, and only if it also passes the profitability and float tests and the Index Committee selects it."
+   ],
+   [
+    "Why didn't SpaceX join the S&P 500 straight away?",
+    "The S&P 500 has no fast-entry rule for new listings. S&P consulted on adding one and announced on 4 June 2026 that it would not change the S&P 500 methodology."
+   ],
+   [
+    "Is SpaceX profitable?",
+    "It made net income of $4.40B in Q3 2026, its first profit as a listed company, but a net loss of $413M over the first nine months of 2026."
+   ]
+  ],
+  "sources": [
+   [
+    "Invesco: Major US equity indexes, IPO treatments (June 2026)",
+    "https://www.invesco.com/apac/en/institutional/insights/etf/major-us-equity-indexes-ipo-treatments.html"
+   ],
+   [
+    "S&P Dow Jones Indices, Indexology: Seasoning to taste (March 2026)",
+    "https://www.indexologyblog.com/2026/03/03/seasoning-to-taste/"
+   ],
+   [
+    "S&P Dow Jones Indices: update to S&P Composite 1500 market cap guidelines (July 2025)",
+    "https://press.spglobal.com/2025-07-01-S-P-Dow-Jones-Indices-Announces-Update-to-S-P-Composite-1500-Market-Cap-Guidelines"
+   ],
+   [
+    "Bloomberg: SpaceX, mega IPOs denied fast S&P 500 index entry (4 June 2026)",
+    "https://www.bloomberg.com/news/articles/2026-06-04/s-p-dow-jones-keeps-megacap-ipo-rules-as-is-after-consultation"
+   ],
+   [
+    "Yahoo Finance: SpaceX faces delay to S&P 500 inclusion",
+    "https://finance.yahoo.com/markets/stocks/articles/spacex-faces-delay-p-500-100109864.html"
+   ],
+   [
+    "SpaceX Reports Third Quarter 2026 Results",
+    "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ],
+   [
+    "Earnings call transcript: SpaceX tops Q3 2026 estimates (Investing.com)",
+    "https://ca.investing.com/news/stock-market-news/earnings-call-transcript-spacex-tops-q3-2026-estimates-shares-jump-after-hours-93CH-4891973"
+   ],
+   [
+    "SpaceX Form 10-Q filings, SEC EDGAR",
+    "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1181412&type=10-Q"
+   ],
+   [
+    "SpaceX IPO prospectus (Form 424B4), SEC EDGAR",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000162828026042639/spaceexplorationtechnologi.htm"
+   ]
+  ]
+ },
+ {
+  "slug": "spacex-lock-up-ends-8-december",
+  "title": "What happens when SpaceX's lock-up ends on 8 December?",
+  "summary": "On Tuesday 8 December 2026 SpaceX's main 180-day lock-up ends, freeing about 798 million remaining shares held by employees and early investors. Before that, up to 328.4 million shares unlock on Monday 26 October. Elon Musk's own lock-up runs until June 2027.",
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "tickers": [
+   "SPCX"
+  ],
+  "sections": [
+   [
+    "What unlocks on 8 December",
+    [
+     "8 December 2026 is day 180 after SpaceX priced its IPO on 11 June, when the main lock-up covering employees and most pre-IPO investors expires. About 798 million shares, the remaining 17% of that pool, become free to sell. The figure is approximate because each holder's release depends on what they held.",
+     "Musk and the largest holders are not part of this release. They agreed to a separate, longer lock-up."
+    ]
+   ],
+   [
+    "One more release comes first",
+    [
+     "Day 135 falls on Saturday 24 October, so up to 328.4 million shares become free from the start of trading on Monday 26 October. That is the last release before 8 December."
+    ]
+   ],
+   [
+    "How SPCX traded on earlier release days",
+    [
+     {
+      "table": {
+       "head": [
+        "Release day",
+        "Release",
+        "Shares, up to",
+        "SPCX on the day"
+       ],
+       "rows": [
+        [
+         "6 Aug",
+         "Second trading day after Q2 results",
+         "911.5 million",
+         "+6%"
+        ],
+        [
+         "20 Aug",
+         "Day 70",
+         "319.0 million",
+         "About -4%"
+        ],
+        [
+         "9 Sep",
+         "Day 90",
+         "319.0 million",
+         "About -4%"
+        ],
+        [
+         "24 Sep",
+         "Day 105",
+         "328.4 million",
+         "-0.2%"
+        ],
+        [
+         "9 Oct",
+         "Day 120",
+         "328.4 million",
+         "+1%"
+        ],
+        [
+         "22 Oct",
+         "Second trading day after Q3 results",
+         "1.3 billion",
+         "-9%"
+        ]
+       ]
+      }
+     },
+     "The reaction has been mixed. The largest release so far, on 22 October, brought the biggest fall, a day after the shares rose about 8% on Q3 results. Across the releases the stock has still risen: from around $108 before the first one to about $145 after the 22 October release.",
+     "Every date, share count and daily move is on the [SpaceX lockup calendar](/spacex-stock/lockup-calendar)."
+    ]
+   ],
+   [
+    "Why lock-up releases can move the price",
+    [
+     {
+      "list": [
+       "Supply: a release adds shares that can be sold, and traders often position for that in the days before a large one.",
+       "Choice: how much is actually sold depends on holders. Employees may sell to diversify; long-term investors may hold.",
+       "Visibility: directors and officers report sales on Form 4 within two business days, but most employees and smaller investors do not file, so trading volume on the day is the better guide."
+      ]
+     }
+    ]
+   ],
+   [
+    "What comes after 8 December",
+    [
+     "Musk and a group of large shareholders, together holding about 7.8 billion shares, are under an extended lock-up that releases in stages tied to SpaceX's results from Q4 2026 to Q2 2027. Musk himself cannot sell before June 2027. The full schedule is on the [lockup calendar](/spacex-stock/lockup-calendar)."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How many SpaceX shares unlock on 8 December?",
+    "About 798 million, the remaining 17% of the main lock-up pool held by employees and early investors."
+   ],
+   [
+    "When is the next SpaceX unlock?",
+    "Monday 26 October 2026, when up to 328.4 million shares become free to sell (day 135). The main lock-up then ends on 8 December."
+   ],
+   [
+    "Can Elon Musk sell SpaceX shares after 8 December?",
+    "No. Musk is under a separate 366-day lock-up and cannot sell before June 2027."
+   ],
+   [
+    "What happened to SPCX on the last big unlock?",
+    "On 22 October 2026, when up to 1.3 billion shares were released, SPCX fell about 9%, a day after rising about 8% on Q3 results."
+   ]
+  ],
+  "sources": [
+   [
+    "SpaceX IPO prospectus (Form 424B4), SEC EDGAR",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000162828026042639/spaceexplorationtechnologi.htm"
+   ],
+   [
+    "SpaceX Reports Third Quarter 2026 Results",
+    "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ]
+  ]
+ }
+]

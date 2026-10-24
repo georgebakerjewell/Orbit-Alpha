@@ -340,6 +340,7 @@ const HUB_TEXT = {
   "/space-stocks/this-week": ["The week's biggest gainers and fallers.", "Daily"],
   "/space-stocks/largest": ["All 30 companies ranked by market value.", "Daily"],
   "/space-stocks/launch-events": ["The launches that move space stocks, and when.", "New"],
+  "/articles": ["Short, sourced answers to this week's questions.", "New"],
   "/space-stocks/insider-trading": ["Who is buying and selling their own shares.", ""],
   "/space-stocks/cash-runway": ["Who needs to raise money, ranked by months of cash.", ""],
   "/space-stocks/government-contracts": ["NASA, Space Force and DoD awards, ranked by value.", ""],
