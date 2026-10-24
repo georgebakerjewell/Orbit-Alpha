@@ -349,7 +349,8 @@ ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): liv
 ];
 
 // Pages that also get a plain markdown copy at <path>.md, for AI tools that prefer text.
-const hasMd = (path) => !!GUIDES[path] || path.startsWith("/stocks/");
+const DYNAMIC = /^\/(articles|results|earnings-preview|launches)\/./; // pages built from data files, not listed in GUIDES
+const hasMd = (path) => !!GUIDES[path] || path.startsWith("/stocks/") || DYNAMIC.test(path);
 // Search engines cut titles at about 70 characters and descriptions at about 160 (Bing flags both
 // as errors). Long titles lose the brand suffix first; long descriptions end at the last full
 // sentence that fits, or the last word, with an ellipsis.
@@ -479,6 +480,9 @@ for (const r of routes.filter((x) => hasMd(x.path))) {
   writeFileSync(file, `---\ntitle: ${JSON.stringify(r.title)}\ndescription: ${JSON.stringify(r.description)}\nurl: ${SITE}${r.path}\nupdated: ${r.lastmod || today}\n---\n\n${md(r.body.replace(/<h2>More space stock guides<\/h2>[\s\S]*$/, ""))}\n`);
 }
 const guideRoutes = GUIDE_LIST.map(([p]) => routes.find((r) => r.path === p)).filter(Boolean);
+const dynRoutes = (prefix) => routes.filter((r) => r.path.startsWith(prefix)).sort((a, b) => String(b.lastmod || "").localeCompare(String(a.lastmod || "")));
+const llmsLine = (r) => `- [${r.title.replace(/ \| Orbit Alpha.*$/, "")}](${SITE}${r.path}): ${r.description}`;
+const llmsSection = (heading, prefix) => { const rs = dynRoutes(prefix); return rs.length ? `\n## ${heading}\n${rs.map(llmsLine).join("\n")}\n` : ""; };
 writeFileSync(new URL("llms.txt", DIST), `# Orbit Alpha
 
 > Orbit Alpha (orbitalpha.cloud) is a free space stocks dashboard and weekly newsletter. It covers ${count} listed space companies (including SpaceX, Rocket Lab and AST SpaceMobile) with live prices, SEC filings, insider trades, US government contracts, earnings dates, launches and lock-up schedules. Pages are rebuilt from live data and each shows the date it was updated. Information only, not investment advice.
@@ -486,6 +490,7 @@ writeFileSync(new URL("llms.txt", DIST), `# Orbit Alpha
 ## Guides
 ${guideRoutes.map((r) => `- [${GUIDES[r.path].label}](${SITE}${r.path}): ${GUIDES[r.path].description}`).join("\n")}
 
+${llmsSection("Questions answered (articles)", "/articles/")}${llmsSection("Quarterly results, written up on results day", "/results/")}${llmsSection("Earnings previews (upcoming results)", "/earnings-preview/")}${llmsSection("Launch events that matter for space stocks", "/launches/")}
 ## Data downloads (CSV and JSON, free to use with credit)
 ${routes.flatMap((r) => (r.datasets || []).map((d) => `- [${d.name}](${SITE}/data/${d.slug}.csv): ${d.description} JSON: ${SITE}/data/${d.slug}.json`)).join("\n")}
 
@@ -503,7 +508,7 @@ ${Object.entries(profiles).map(([t, p]) => `- [${t} stock: ${p.name}](${SITE}/st
 - Every guide and stock page also has a markdown copy: add .md to its URL (for example ${SITE}/spacex-stock/lockup-calendar.md)
 - [About and methodology](${SITE}/about)
 `);
-writeFileSync(new URL("llms-full.txt", DIST), `# Orbit Alpha guides (full text)\n\nGenerated ${today} from ${SITE}. Figures are as of the date shown in each guide.\n\n${guideRoutes.map((r) => `---\nSource: ${SITE}${r.path}\n\n${md(r.body.replace(/<h2>More space stock guides<\/h2>[\s\S]*$/, ""))}`).join("\n\n")}\n`);
+writeFileSync(new URL("llms-full.txt", DIST), `# Orbit Alpha guides (full text)\n\nGenerated ${today} from ${SITE}. Figures are as of the date shown in each guide.\n\n${[...guideRoutes, ...routes.filter((r) => DYNAMIC.test(r.path))].map((r) => `---\nSource: ${SITE}${r.path}\n\n${md(r.body.replace(/<h2>More space stock guides<\/h2>[\s\S]*$/, ""))}`).join("\n\n")}\n`);
 
 console.log(`prerender: wrote ${routes.length} pages, sitemap.xml and robots.txt`);
 
