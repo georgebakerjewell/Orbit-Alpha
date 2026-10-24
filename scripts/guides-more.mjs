@@ -181,6 +181,7 @@ ${list([
 ${cheapFaq.html}${asOfLine("Prices from Yahoo Finance; cash and share counts from SEC filings.")}`,
     [cheapFaq.ld, { "@type": "ItemList", name: "Space stocks under $10", itemListElement: cheap.map((t, i) => ({ "@type": "ListItem", position: i + 1, url: `${SITE}/stocks/${t.toLowerCase()}`, name: `${profiles[t].name} (${t})` })) }]);
 
+  cheapPage.title = `Space Stocks Under $10 (${new Date(asOf + "T12:00:00Z").toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" })}): Price, Cash Runway and Dilution`;
   cheapPage.answer = cheap.length ? `As of ${fmtDate(asOf)}, ${cheap.length} US-listed space ${cheap.length === 1 ? "stock trades" : "stocks trade"} below $10 a share: ${and(cheap.map((t) => `${profiles[t].name} (${t})`))}. ${short.length ? `${and(short.map((t) => profiles[t].name))} ${short.length === 1 ? "has" : "have"} less than a year of cash at the current burn rate.` : ""}`.trim() : "";
 
   /* ═══ Largest space companies by market cap ════════════════════════════════════ */
@@ -224,6 +225,8 @@ ${table(["Company", "Ticker", "Sector", "5 days", "1 month", "Year to date"], we
 <p>Why a stock moved is usually in the news: see <a href="/news">space stock news, filings and contracts</a>, the <a href="/space-stocks/earnings-calendar">earnings calendar</a> and the <a href="/results">latest results</a>. The <a href="/newsletter">Sunday newsletter</a> explains the week's biggest moves.</p>
 ${asOfLine(`Closing prices from Yahoo Finance${from && to ? `, ${fmtDate(from)} to ${fmtDate(to)}` : ""}. Returns are price only, in each stock's trading currency.`)}`,
     [{ "@type": "ItemList", name: "Space stocks this week", itemListElement: weekRows.map(([t], i) => ({ "@type": "ListItem", position: i + 1, url: `${SITE}/stocks/${t.toLowerCase()}`, name: `${profiles[t].name} (${t})` })) }]);
+  // A dated title shows searchers the table is current.
+  if (to) weekPage.title = `Space Stocks This Week (to ${new Date(to + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" })}): Biggest Gainers and Losers`;
   if (weekRows.length >= 2 && to) {
     const [bt, bv] = weekRows[0], [wt, wv] = weekRows[weekRows.length - 1];
     weekPage.answer = `Over the five trading days to ${fmtDate(to)}, the best performing space stock was ${profiles[bt].name} (${bt}), ${fmtPct(bv)}, and the weakest was ${profiles[wt].name} (${wt}), ${fmtPct(wv)}. ${wkUp} of ${weekRows.length} space stocks rose${wkMedian != null ? `, with a median move of ${fmtPct(wkMedian)}` : ""}.`;

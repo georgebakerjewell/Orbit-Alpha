@@ -262,5 +262,112 @@
     "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
    ]
   ]
+ },
+ {
+  "slug": "rocket-lab-q3-2026-earnings-date",
+  "title": "When does Rocket Lab report Q3 2026 earnings?",
+  "summary": "Rocket Lab reports Q3 2026 results after the US market close on Monday 9 November 2026, with a call at 5pm Eastern (10pm UK). It has guided to revenue of $250M to $265M, after a record $234M in Q2, and an adjusted EBITDA loss of $17M to $23M.",
+  "published": "2026-10-24",
+  "updated": "2026-10-24",
+  "tickers": [
+   "RKLB"
+  ],
+  "sections": [
+   [
+    "The date",
+    [
+     "Rocket Lab announced on 20 October 2026 that it will publish third-quarter 2026 results after the US market close on Monday 9 November 2026. The conference call starts at 2pm Pacific, 5pm Eastern and 10pm UK time, with a webcast on Rocket Lab's investor relations website.",
+     "Some earnings calendars showed an earlier projected date of 6 November; the company's own announcement is the one to go by."
+    ]
+   ],
+   [
+    "What Rocket Lab has guided",
+    [
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Q3 2026 guidance",
+        "Q2 2026 actual"
+       ],
+       "rows": [
+        [
+         "Revenue",
+         "$250M to $265M",
+         "$234M, up 62% on a year earlier"
+        ],
+        [
+         "GAAP gross margin",
+         "29% to 31%",
+         "36.1% (from $84.6M gross profit)"
+        ],
+        [
+         "Non-GAAP gross margin",
+         "35% to 37%",
+         "41.5%"
+        ],
+        [
+         "Adjusted EBITDA",
+         "Loss of $17M to $23M",
+         "Loss of $8.8M"
+        ]
+       ]
+      }
+     },
+     "Q2 revenue was a record, and the guidance points to another record quarter. Margins and adjusted EBITDA were guided lower than in Q2."
+    ]
+   ],
+   [
+    "What to watch",
+    [
+     {
+      "list": [
+       "Revenue against the $250M to $265M range.",
+       "Backlog, which was a record $2.36B at the end of Q2, up 137% on a year earlier.",
+       "Neutron: in August Rocket Lab said Stage 1 tank production was aligned with delivering Neutron to the launch pad in Q4 2026. Any update on the first launch date.",
+       "Iridium: Rocket Lab agreed on 29 June 2026 to buy Iridium in a deal valued at about $8 billion, paying $27 a share in cash plus Rocket Lab shares, and has said it is targeting completion in mid-2027.",
+       "Losses: the Q2 net loss was $49.3M, or $0.08 a share."
+      ]
+     },
+     "The [Rocket Lab earnings preview](/earnings-preview/rklb) has the consensus estimate, the latest filing figures and insider trades, and the [results page](/results) will have the numbers on the night."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "When is Rocket Lab's Q3 2026 earnings call?",
+    "Monday 9 November 2026 at 2pm Pacific, 5pm Eastern and 10pm UK time, after results are published following the US market close."
+   ],
+   [
+    "What revenue does Rocket Lab expect for Q3 2026?",
+    "Between $250M and $265M, according to its Q2 results release."
+   ],
+   [
+    "What was Rocket Lab's revenue last quarter?",
+    "$234M in Q2 2026, a record and up 62% on a year earlier."
+   ],
+   [
+    "Is Rocket Lab profitable?",
+    "Not yet. It reported a net loss of $49.3M in Q2 2026 and guided to an adjusted EBITDA loss of $17M to $23M for Q3."
+   ]
+  ],
+  "sources": [
+   [
+    "Rocket Lab Announces Date of Third Quarter 2026 Financial Results (GlobeNewswire, 20 October 2026)",
+    "https://www.globenewswire.com/news-release/2026/10/20/3385004/0/en/rocket-lab-announces-date-of-third-quarter-2026-financial-results.html"
+   ],
+   [
+    "Rocket Lab Announces Second Quarter 2026 Financial Results (10 August 2026)",
+    "https://investors.rocketlabcorp.com/news-releases/news-release-details/rocket-lab-announces-second-quarter-2026-financial-results-posts"
+   ],
+   [
+    "Hargreaves Lansdown: Rocket Lab to buy Iridium in $8bn deal",
+    "https://www.hl.co.uk/shares/stock-market-news/company--news/rocket-lab-to-buy-iridium-in-$8bn-deal"
+   ],
+   [
+    "Seeking Alpha: Rocket Lab projects $250M-$265M Q3 2026 revenue as it targets mid-2027 Iridium close",
+    "https://seekingalpha.com/news/4630457-rocket-lab-projects-250m-265m-q3-2026-revenue-as-it-targets-midminus-2027-iridium-close"
+   ]
+  ]
  }
 ]

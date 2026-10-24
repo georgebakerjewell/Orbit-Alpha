@@ -15,7 +15,7 @@ export function buildResults(ctx) {
     const others = sorted.filter((x) => x.ticker === r.ticker && x.slug !== r.slug).slice(0, 4);
     return {
       path, guide: true, lastmod: r.updated || r.reported,
-      title: `${p.name} (${r.ticker}) ${r.quarter} Results: ${r.headline} | Orbit Alpha`.slice(0, 120),
+      title: ((t) => (t.length > 70 ? t.split(",")[0] : t))(`${p.name} ${r.quarter} Earnings: ${r.headline}`), // "earnings" is the word people search; a long headline keeps its first clause
       description: r.summary.slice(0, 158),
       body: `<div class="oa-guide"><h1>${esc(p.name)} ${esc(r.quarter)} results</h1><!--oa-answer--><p>${esc(p.name)} (<a href="/stocks/${r.ticker.toLowerCase()}">${r.ticker}</a>) reported results for ${esc(r.period || r.quarter)} on ${fmtDate(r.reported)}. ${esc(r.headline)}.</p>
 ${r.metrics?.length ? `<h2>The numbers</h2><table><thead><tr><th>Measure</th><th>${esc(r.quarter)}</th><th>Change</th></tr></thead><tbody>${r.metrics.map(([l, v, c]) => `<tr><td>${esc(l)}</td><td>${esc(v)}</td><td>${esc(c || "")}</td></tr>`).join("")}</tbody></table>` : ""}
