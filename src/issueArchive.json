@@ -1,5 +1,23 @@
 [
   {
+    "issue": 28,
+    "date": "2026-10-25",
+    "title": "SpaceX Turns Its First Profit, Then Meets Its Biggest Lockup Test Yet",
+    "url": "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-28",
+    "description": "This was a week where the sector's biggest name dominated the tape and almost everyone else fought for a sliver of attention. SpaceX posted its first...",
+    "tickers": [
+      "SPCX",
+      "RKLB",
+      "ASTS",
+      "LUNR",
+      "RDW",
+      "VSAT",
+      "PL",
+      "GSAT",
+      "FLY"
+    ]
+  },
+  {
     "issue": 27,
     "date": "2026-10-18",
     "title": "A Spectrum Land Grab Rattles the Satellite Complex",
@@ -386,28 +404,6 @@
       "GSAT",
       "FLY",
       "SPCE"
-    ]
-  },
-  {
-    "issue": 8,
-    "date": "2026-06-07",
-    "title": "Caught between last week's explosion and next week's IPO.",
-    "url": "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-8",
-    "description": "The week opened with the Blue Origin explosion still echoing through the tape. The hotfire test failure on 28 May had sent shockwaves, literally...",
-    "tickers": [
-      "RKLB",
-      "ASTS",
-      "PL",
-      "LUNR",
-      "SPCE",
-      "RDW",
-      "FLY",
-      "BKSY",
-      "MDA",
-      "VSAT",
-      "MNTS",
-      "GSAT",
-      "SPIR"
     ]
   }
 ]
