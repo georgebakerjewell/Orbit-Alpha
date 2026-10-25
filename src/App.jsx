@@ -2781,6 +2781,17 @@ function About() {
       <h2 style={h2}>Not investment advice</h2>
       <P>Orbit Alpha is information only. It is not a recommendation to buy or sell anything. Data can be late or wrong, so check the original filing before acting on it. Every filing on the site links to its source.</P>
 
+      <h2 style={h2}>More from Orbit Alpha</h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 10, marginBottom: 8 }}>
+        {[["/advertise", "Advertise", "One sponsored feature per Sunday issue."], ["/free-pdf", "Free report", "A 34-page PDF on every listed space company."], ["/space-stocks-widget", "Free widget", "Live space stock prices for your site."], ["/guides", "Guides", "Answers and rankings built from live data."]].map(([to, l, t]) => (
+          <Link key={to} to={to} className="hov" style={{ display: "block", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "12px 14px", background: "rgba(255,255,255,0.02)" }}>
+            <div style={{ color: "#fff", fontSize: 13, fontWeight: 600, marginBottom: 4 }}>{l}</div>
+            <div style={{ color: C.muted, fontSize: 11.5, lineHeight: 1.5 }}>{t}</div>
+          </Link>
+        ))}
+      </div>
+      <P>Follow along on <a href="https://x.com/OrbitAlphaApp" target="_blank" rel="noopener me" style={{ color: C.green }}>X (@OrbitAlphaApp)</a> and in the <a href="https://www.reddit.com/r/SpaceCapital/" target="_blank" rel="noopener" style={{ color: C.green }}>r/SpaceCapital</a> community.</P>
+
       <h2 style={h2}>Contact</h2>
       <P mb={8}>Spotted a wrong number or a company we should cover? Email <a href="mailto:OrbitAlphaApp@proton.me" style={{ color: C.green }}>OrbitAlphaApp@proton.me</a>.</P>
       <ForNonSubscribers>
@@ -2795,7 +2806,9 @@ function About() {
 /* ════════════════════════════════════════════════════════════════════════════
    APP SHELL
    ════════════════════════════════════════════════════════════════════════════ */
-const NAV = [["/", "home", "Home"], ["/markets", "markets", "Markets"], ["/news", "news", "News"], ["/guides", "guide", "Guides"], ["/newsletter", "newsletter", "Newsletter"]];
+const NAV = [["/", "home", "Home"], ["/markets", "markets", "Markets"], ["/news", "news", "News"], ["/guides", "guide", "Guides"], ["/newsletter", "newsletter", "Newsletter"], ["/about", "about", "About"]];
+// Shown under "About" in the mobile menu (the same links as the footer).
+const ABOUT_LINKS = [["/advertise", "Advertise"], ["/space-stocks-widget", "Free widget"], ["mailto:OrbitAlphaApp@proton.me", "Contact"], ["https://x.com/OrbitAlphaApp", "X"], ["https://www.reddit.com/r/SpaceCapital/", "r/SpaceCapital"]];
 
 export default function App() {
   const [route, navigate] = useRouter();
@@ -2849,9 +2862,13 @@ export default function App() {
         {menuOpen && (
           <div style={{ background: "#070a14", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
             {NAV.map(([to, p, l]) => (
-              <Link key={p} to={to} style={{ color: page === p ? C.green : C.light, padding: "10px 0", fontSize: 12, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>{l}</Link>
+              <Link key={p} to={to} style={{ color: page === p ? C.green : C.light, padding: "10px 0", fontSize: 12, borderBottom: p === "about" ? "none" : "1px solid rgba(255,255,255,0.04)" }}>{l}</Link>
             ))}
-            <Link to="/free-pdf" style={{ color: C.green, padding: "10px 0", fontSize: 12, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>Free report: every space stock</Link>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 16px", padding: "0 0 12px 12px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+              {ABOUT_LINKS.map(([to, l]) => to.startsWith("/")
+                ? <Link key={to} to={to} style={{ color: C.muted, fontSize: 11.5 }}>{l}</Link>
+                : <a key={to} href={to} target={to.startsWith("http") ? "_blank" : undefined} rel="noopener" style={{ color: C.muted, fontSize: 11.5, textDecoration: "none" }}>{l}</a>)}
+            </div>
             <button onClick={goSubscribe} style={{ background: C.green, color: C.bg, border: "none", padding: 11, borderRadius: 4, fontSize: 11, fontWeight: 700, fontFamily: MONO, cursor: "pointer", marginTop: 8 }}>Subscribe</button>
           </div>
         )}
