@@ -140,9 +140,9 @@
  {
   "slug": "spacex-lock-up-ends-8-december",
   "title": "What happens when SpaceX's lock-up ends on 8 December?",
-  "summary": "On Tuesday 8 December 2026 SpaceX's main 180-day lock-up ends, freeing about 798 million remaining shares held by employees and early investors. Before that, up to 328.4 million shares unlock on Monday 26 October. Elon Musk's own lock-up runs until June 2027.",
+  "summary": "On Tuesday 8 December 2026 SpaceX's main 180-day lock-up ends, freeing about 798 million remaining shares held by employees and early investors. The last release before that, of up to 328.4 million shares on Monday 26 October, saw SPCX close 0.4% lower. Elon Musk's own lock-up runs until June 2027.",
   "published": "2026-10-24",
-  "updated": "2026-10-24",
+  "updated": "2026-10-26",
   "tickers": [
    "SPCX"
   ],
@@ -155,9 +155,9 @@
     ]
    ],
    [
-    "One more release comes first",
+    "The last release before 8 December",
     [
-     "Day 135 falls on Saturday 24 October, so up to 328.4 million shares become free from the start of trading on Monday 26 October. That is the last release before 8 December."
+     "Day 135 fell on Saturday 24 October, so up to 328.4 million shares became free from the start of trading on Monday 26 October. SPCX closed at $146.90 that day, down 0.4% from $147.49 on Friday 23 October. That was the last release before 8 December."
     ]
    ],
    [
@@ -207,11 +207,17 @@
          "Second trading day after Q3 results",
          "1.3 billion",
          "-9%"
+        ],
+        [
+         "26 Oct",
+         "Day 135",
+         "328.4 million",
+         "-0.4%"
         ]
        ]
       }
      },
-     "The reaction has been mixed. The largest release so far, on 22 October, brought the biggest fall, a day after the shares rose about 8% on Q3 results. Across the releases the stock has still risen: from around $108 before the first one to about $145 after the 22 October release.",
+     "The reaction has been mixed. The largest release so far, on 22 October, brought the biggest fall, a day after the shares rose about 8% on Q3 results. The 26 October release brought a small fall of 0.4%. Across the releases the stock has still risen: from around $108 before the first one to about $145 after the 22 October release and $146.90 after the 26 October one.",
      "Every date, share count and daily move is on the [SpaceX lockup calendar](/spacex-stock/lockup-calendar)."
     ]
    ],
@@ -241,7 +247,7 @@
    ],
    [
     "When is the next SpaceX unlock?",
-    "Monday 26 October 2026, when up to 328.4 million shares become free to sell (day 135). The main lock-up then ends on 8 December."
+    "Tuesday 8 December 2026, when the main lock-up ends and about 798 million remaining shares become free to sell. The previous release, of up to 328.4 million shares on 26 October (day 135), saw SPCX close 0.4% lower."
    ],
    [
     "Can Elon Musk sell SpaceX shares after 8 December?",
@@ -260,6 +266,10 @@
    [
     "SpaceX Reports Third Quarter 2026 Results",
     "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ],
+   [
+    "StockAnalysis: SPCX daily price history",
+    "https://stockanalysis.com/stocks/spcx/history/"
    ]
   ]
  },
