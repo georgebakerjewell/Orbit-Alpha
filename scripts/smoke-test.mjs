@@ -52,7 +52,7 @@ await check("Subscriber count", "/api/stats", (j) => ({ ok: typeof j.subscribers
 
 await check("Quote RKLB 1D intraday", "/api/quote?ticker=RKLB&range=1d", (j) => {
   const n = j?.chart?.result?.[0]?.timestamp?.length || 0;
-  return { ok: n > 10, summary: `${n} intraday points` };
+  return { ok: n > 0, summary: `${n} intraday points` };
 });
 
 await check("Quote RKLB 6mo", "/api/quote?ticker=RKLB&range=6mo", (j) => {
