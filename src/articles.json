@@ -1,5 +1,141 @@
 [
  {
+  "slug": "are-spacex-and-tesla-merging",
+  "title": "Are SpaceX and Tesla merging?",
+  "summary": "Not yet. On 20 October 2026 Elon Musk said SpaceX and Tesla had each formed a special committee of independent directors to consider a merger, but no terms have been agreed. A deal would need approval from both committees and boards, Musk as SpaceX's controlling shareholder, and 50% of all Tesla shares.",
+  "published": "2026-10-27",
+  "updated": "2026-10-27",
+  "tickers": [
+   "SPCX"
+  ],
+  "sections": [
+   [
+    "The short answer",
+    [
+     "There is no merger agreement. On SpaceX's Q3 2026 results call on Tuesday 20 October, Musk said the boards of SpaceX and Tesla had each set up a special committee of independent directors to look at combining the two companies. He said the committees were formed at shareholders' request and had not agreed any terms.",
+     "Musk said he thought a merger would be \"a good idea\" but that calling it a certainty would be \"overstating it\", and that \"the shareholders have to be supportive of this\". Because he runs and is the largest individual shareholder of both companies, he said he is a conflicted party and cannot take part in the committees' discussions.",
+     "In its quarterly filing on Thursday 22 October, SpaceX said: \"No determination by our special committee has been made regarding any potential combination.\""
+    ]
+   ],
+   [
+    "What a deal would need",
+    [
+     {
+      "table": {
+       "head": [
+        "Approval",
+        "What has been said",
+        "Source"
+       ],
+       "rows": [
+        [
+         "SpaceX special committee",
+         "No determination made on any potential combination",
+         "SpaceX quarterly filing, 22 October"
+        ],
+        [
+         "SpaceX board",
+         "Would have to approve any potential combination",
+         "SpaceX quarterly filing, 22 October"
+        ],
+        [
+         "SpaceX controlling shareholder",
+         "Musk's approval required, even though he has stepped back from the talks",
+         "SpaceX quarterly filing, 22 October"
+        ],
+        [
+         "Tesla shareholders",
+         "A vote of 50% of all shares, not just those that vote, which Musk called \"quite a high hurdle\"",
+         "Musk on the SpaceX Q3 call, 20 October"
+        ],
+        [
+         "Regulators",
+         "Reviews likely in the US and abroad, including China, where Tesla builds cars",
+         "Reuters and CNBC reporting"
+        ]
+       ]
+      }
+     },
+     "The voting maths differs sharply between the two companies. Musk controls SpaceX through 10-vote shares, with almost 80% of the voting power according to CNBC, and SpaceX is a \"controlled company\" under Nasdaq rules, as its IPO prospectus explains. At Tesla, he beneficially owns 19.8% of the shares according to its latest proxy filing."
+    ]
+   ],
+   [
+    "How a deal could be structured",
+    [
+     "Neither company has announced a structure. According to Reuters, citing people familiar with the talks, both sides have hired advisers but discussions are at an early stage. The options include SpaceX buying Tesla or the two combining under a new holding company, and an all-stock deal is among the ways of paying being considered.",
+     "SpaceX is valued at around $2 trillion and Tesla at around $1.5 trillion, so a combination would be the largest merger on record. Reuters described it as a potential $3.5 trillion deal.",
+     "The companies already work together. They are building the Terafab chip plant in Texas with Intel, and Tesla's new Roadster was developed with SpaceX technology. Musk has combined his companies before: SpaceX acquired xAI in February 2026, in a deal that valued the combined group at $1.25 trillion."
+    ]
+   ],
+   [
+    "Timing",
+    [
+     "No timetable has been announced. Bloomberg reported, citing people familiar with the matter, that there is a push to announce a deal in the first half of 2027. Reuters reported on 22 October that some insiders worried Musk's public comments could invite shareholder scrutiny and delay the process by several weeks.",
+     "Tesla did not add anything on its own Q3 call on 21 October. Musk said: \"I think I said everything that should be said yesterday.\""
+    ]
+   ],
+   [
+    "How SPCX has traded",
+    [
+     "SPCX rose on Wednesday 21 October after Q3 results and the merger comments, then fell 9% on Thursday 22 October, according to CNBC. That was also the day up to 1.3 billion locked-up shares became free to sell; the [SpaceX lockup calendar](/spacex-stock/lockup-calendar) has every release and the move on each day.",
+     "For the quarter itself, see the [SpaceX Q3 2026 results](/results/spcx-q3-2026), and for the next big unlock, [when the SpaceX lock-up ends on 8 December](/articles/spacex-lock-up-ends-8-december). The [SPCX stock page](/stocks/spcx) has the live price and filings."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Has a SpaceX and Tesla merger been agreed?",
+    "No. Both companies have formed special committees of independent directors to consider a merger, but no terms have been agreed and SpaceX said on 22 October that its committee had made no determination."
+   ],
+   [
+    "Does Elon Musk get a vote on a SpaceX and Tesla merger?",
+    "Yes, at SpaceX. Musk says he is staying out of the committee talks, but SpaceX's filing says any combination would need the approval of its controlling shareholder, which is Musk."
+   ],
+   [
+    "What would Tesla shareholders need to approve?",
+    "Musk said a deal would need a vote of 50% of all Tesla shares, not just those that vote. He beneficially owns 19.8% of Tesla."
+   ],
+   [
+    "When could a SpaceX and Tesla merger be announced?",
+    "There is no official timetable. Bloomberg reported a push to announce a deal in the first half of 2027."
+   ]
+  ],
+  "sources": [
+   [
+    "Reuters via U.S. News: SpaceX says potential Tesla merger would need Elon Musk's approval (22 October 2026)",
+    "https://money.usnews.com/investing/news/articles/2026-10-22/spacex-says-tesla-merger-would-need-musks-approval"
+   ],
+   [
+    "TechCrunch: SpaceX and Tesla boards form special committees to review merger (20 October 2026)",
+    "https://techcrunch.com/2026/10/20/spacex-and-tesla-boards-form-special-committees-to-review-merger/"
+   ],
+   [
+    "Axios: SpaceX, Tesla explore merger, Elon Musk confirms (20 October 2026)",
+    "https://www.axios.com/2026/10/20/spacex-tesla-merger-talks"
+   ],
+   [
+    "CNBC: With earnings in rearview mirror, SpaceX-Tesla merger chatter takes center stage (23 October 2026)",
+    "https://www.cnbc.com/2026/10/23/spacex-tesla-merger-chatter-takes-center-stage-after-earnings.html"
+   ],
+   [
+    "CNBC: Tesla beats on earnings and sales even as auto revenue declines (21 October 2026)",
+    "https://www.cnbc.com/2026/10/21/tesla-tsla-q3-2026-earnings-report.html"
+   ],
+   [
+    "The Next Web: Musk's backing for a SpaceX-Tesla merger rattled insiders, Reuters reports (22 October 2026)",
+    "https://thenextweb.com/news/spacex-tesla-merger-musk-insiders-reuters"
+   ],
+   [
+    "SpaceX IPO prospectus (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000162828026042639/spaceexplorationtechnologi.htm"
+   ],
+   [
+    "Tesla 2026 proxy statement (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1318605/000110465926116700/tm267596-1_def14a.htm"
+   ]
+  ]
+ },
+ {
   "slug": "will-spacex-join-the-sp-500",
   "title": "Will SpaceX join the S&P 500?",
   "summary": "Not before June 2027. The S&P 500 requires 12 months of trading after an IPO, and SpaceX listed on 12 June 2026. It must also show positive GAAP earnings in its latest quarter and over its last four quarters combined, and S&P decided in June 2026 not to fast-track very large IPOs.",
