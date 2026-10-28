@@ -23,6 +23,8 @@ export function buildArticles(ctx) {
     const related = valid.filter((x) => x.slug !== a.slug && (x.tickers || []).some((t) => (a.tickers || []).includes(t))).slice(0, 4);
     return {
       path, guide: true, lastmod: a.updated || a.published,
+      ...(a.tickers?.length ? { og: { file: `og/articles/${a.slug}.png`, ticker: a.tickers[0], name: profiles[a.tickers[0]].name, sector: "Question answered", path,
+        headline: a.title, asOf: fmtDate(a.updated || a.published), stats: [], tagline: "A short, sourced answer, updated as news lands" } } : {}),
       title: `${a.title} | Orbit Alpha`,
       description: a.summary,
       body: `<div class="oa-guide"><h1>${esc(a.h1 || a.title)}</h1><!--oa-answer-->

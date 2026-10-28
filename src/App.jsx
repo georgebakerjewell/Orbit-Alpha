@@ -714,9 +714,22 @@ const AI_NAMES = { chatgpt: "ChatGPT", perplexity: "Perplexity", gemini: "Gemini
 const aiVisit = () => { const v = typeof window !== "undefined" ? window.__oaVisit : null; return v && v.medium === "ai" ? v : null; };
 
 // The sign-up offer that fits a page: an unlock reminder, a company's results, or null for the PDF default.
-function pageOffer(path) {
+// The next results date for a ticker if it falls within the next 45 days (from /api/earnings).
+function upcomingResults(earnings, ticker) {
+  const e = Array.isArray(earnings) ? earnings.find((x) => x.ticker === ticker) : null;
+  if (!e?.date) return null;
+  const days = (Date.parse(e.date + "T12:00:00Z") - Date.now()) / 86_400_000;
+  return days >= -0.5 && days <= 45 ? e : null;
+}
+
+function pageOffer(path, earnings) {
   const stockT = path.startsWith("/stocks/") ? path.split("/")[2]?.toUpperCase() : null;
   const pageCta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES);
+  const next = stockT && upcomingResults(earnings, stockT);
+  if (next && PROFILES[stockT]) {
+    const name = PROFILES[stockT].name;
+    return [`${name} results: ${fmtDay(next.date, { weekday: "short", day: "numeric", month: "short" })}`, `${next.confirmed ? "Date confirmed by the company." : "Expected date (Nasdaq calendar)."} Get the results, and how the shares reacted, in the Sunday briefing after ${name} reports. Plus the free 34-page PDF on every listed space company.`, stockT, `Follow ${stockT}`];
+  }
   return stockT && PROFILES[stockT]
     ? [`Follow ${PROFILES[stockT].name}`, `${PROFILES[stockT].name}'s results, contracts and big moves in the Sunday briefing, plus the free 34-page PDF on every listed space company.`, stockT, `Follow ${stockT}`]
     : pageCta[2] ? [pageCta[0], `${pageCta[1]} You also get the free 34-page PDF on every listed space company.`, pageCta[2], pageCta[3]] : null;
@@ -729,7 +742,8 @@ function AiWelcomeBar({ path }) {
   const v = aiVisit();
   const [closed, setClosed] = useState(() => { try { return sessionStorage.getItem("oa_aibar") === "x"; } catch { return false; } });
   const [done, setDone] = useState(false);
-  const offer = pageOffer(path);
+  const barEarnings = useApi(path.startsWith("/stocks/") ? "/api/earnings" : null);
+  const offer = pageOffer(path, barEarnings.data);
   const logged = useRef("");
   // Event pages already put their sign-up box straight under the answer (and greet AI visitors there).
   const earlyBox = path === "/spacex-stock/lockup-calendar" || /^\/(results|earnings-preview|articles)\/./.test(path);
@@ -788,7 +802,8 @@ function SubscribePopup({ path }) {
   const close = (value) => { setShow(false); markPopupSeen(value); };
   // On pages about one company or event, the pop-up leads with that (an unlock reminder, a company's
   // results) and keeps the PDF as the bonus; elsewhere it leads with the PDF.
-  const special = pageOffer(path);
+  const popEarnings = useApi(path.startsWith("/stocks/") ? "/api/earnings" : null);
+  const special = pageOffer(path, popEarnings.data);
   useEffect(() => { if (show) window.posthog?.capture?.("popup_variant", { variant: special ? "contextual" : "pdf", page: path }); }, [show]);
   if (!show) return null;
   return (
@@ -2276,8 +2291,13 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       {/* Newsletter */}
       <ForNonSubscribers>
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", marginBottom: 24 }}>
-        <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Follow {profile.name}</div>
-        <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>A free email every Sunday covering {profile.name} and the other space stocks we track, plus Space Stocks 2026, a free report with a page on every listed space company.</p>
+        {(() => { const nx = upcomingResults(earnings.data, ticker); return nx ? <>
+          <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>{profile.name} results: {fmtDay(nx.date, { weekday: "short", day: "numeric", month: "short" })}</div>
+          <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>{nx.confirmed ? "Date confirmed by the company." : "Expected date (Nasdaq calendar)."} Get the results, and how the shares reacted, in the free Sunday briefing after {profile.name} reports. Plus Space Stocks 2026, a free report with a page on every listed space company.</p>
+        </> : <>
+          <div style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>Follow {profile.name}</div>
+          <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>A free email every Sunday covering {profile.name} and the other space stocks we track, plus Space Stocks 2026, a free report with a page on every listed space company.</p>
+        </>; })()}
         <SubscribeForm source="stock-page-bottom" follow={ticker} label={`Follow ${ticker}`} reward={SHEET} />
       </section>
       </ForNonSubscribers>

@@ -92,6 +92,14 @@ export function buildPreviews(ctx) {
 
     return {
       path, guide: true, lastmod: ahead ? today : r.reported,
+      og: { file: `og/previews/${t.toLowerCase()}.png`, ticker: t, name, sector: "Earnings preview", path,
+        headline: ahead ? `${quarter} results: ${day(e.date).slice(0, 3)} ${fmtDate(e.date).replace(/ \d{4}$/, "")}` : `${quarter} results are out`,
+        asOf: fmtDate(today),
+        stats: ahead ? [
+          ...(e.epsEst ? [["Consensus EPS", e.epsEst.replace(/^\(\$?([\d.]+)\)$/, "-$$$1")]] : []),
+          ...(f?.revenue?.quarter != null ? [["Last quarter revenue", fmtUsd(f.revenue.quarter)]] : []),
+          ...(q?.price != null ? [["Share price", fmtPrice(q.price, q.currency)]] : []),
+        ] : [], tagline: ahead ? undefined : r.headline },
       title: `${name} (${t}) ${quarter} Earnings Preview: Date and What to Watch | Orbit Alpha`,
       description: ahead ? `${name} ${quarter} results: ${fmtDate(e.date)}${timing ? `, ${timing}` : ""}. The consensus estimate, last quarter's numbers and what to watch, from the company's filings.` : `${name} reported ${quarter} results on ${fmtDate(r.reported)}. The headline numbers and what the preview set out to watch.`,
       body: `<div class="oa-guide"><h1>${esc(name)} (${t}) ${esc(quarter)} earnings preview</h1><!--oa-answer-->

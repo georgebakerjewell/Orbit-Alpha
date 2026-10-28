@@ -16,6 +16,9 @@ export function buildResults(ctx) {
     const others = sorted.filter((x) => x.ticker === r.ticker && x.slug !== r.slug).slice(0, 4);
     return {
       path, guide: true, lastmod: r.updated || r.reported,
+      og: { file: `og/results/${r.slug}.png`, ticker: r.ticker, name: profiles[r.ticker]?.name, sector: "Results", path,
+        headline: `${profiles[r.ticker]?.name || r.ticker} ${r.quarter} results`, asOf: fmtDate(r.reported),
+        stats: (r.metrics || []).slice(0, 3).map(([label, value]) => [label, value]) },
       title: ((t) => (t.length > 70 ? t.split(",")[0] : t))(`${p.name} ${r.quarter} Earnings: ${r.headline}`), // "earnings" is the word people search; a long headline keeps its first clause
       description: r.summary.slice(0, 158),
       body: `<div class="oa-guide"><h1>${esc(p.name)} ${esc(r.quarter)} results</h1><!--oa-answer--><p>${esc(p.name)} (<a href="/stocks/${r.ticker.toLowerCase()}">${r.ticker}</a>) reported results for ${esc(r.period || r.quarter)} on ${fmtDate(r.reported)}. ${esc(r.headline)}.</p>

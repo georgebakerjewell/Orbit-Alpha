@@ -24,6 +24,9 @@ export function buildEvents(ctx) {
     const table = (head, rows) => `<table><thead><tr>${head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${esc(c ?? "")}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
     return {
       path, guide: true, lastmod: e.updated || asOf,
+      ...(e.tickers?.length ? { og: { file: `og/launches/${e.slug}.png`, ticker: e.tickers[0], name: profiles[e.tickers[0]].name, sector: "Launch event", path,
+        headline: e.title, asOf: e.updated ? fmtDate(e.updated) : null,
+        stats: [["Status", e.status === "upcoming" ? "Scheduled" : e.status === "scrubbed" ? "Postponed" : "Flew"], ["Date", e.date ? fmtDate(e.date) : (e.dateText || "Not yet set").replace(/\s*\(.*$/, "")]] } } : {}),
       title: `${e.title}: Date and What It Means for ${(e.tickers || []).join(", ")} Stock | Orbit Alpha`,
       description: e.summary,
       body: `<div class="oa-guide"><h1>${esc(e.title)}</h1><!--oa-answer--><p>${e.status === "upcoming" ? "Scheduled" : e.status === "scrubbed" ? "Scrubbed or postponed" : "Flew"}: ${when(e)}${e.vehicle ? ` · ${esc(e.vehicle)}` : ""}. Companies involved: ${coLinks(e)}.</p>
