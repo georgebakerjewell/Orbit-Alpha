@@ -829,21 +829,39 @@ function MobileSubscribeBar({ path }) {
   const [scrolled, setScrolled] = useState(false);
   const [done, setDone] = useState(false);
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 500);
+    // Most phone visitors read one page for under half a minute, so the bar also appears after 10 seconds.
+    const on = () => { if (window.scrollY > 300) setScrolled(true); };
     on(); window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
+    const t = setTimeout(() => setScrolled(true), 10000);
+    return () => { window.removeEventListener("scroll", on); clearTimeout(t); };
   }, []);
   useEffect(() => { if (done) { const t = setTimeout(() => setClosed(true), 20000); return () => clearTimeout(t); } }, [done]);
-  const visible = !(closed || (subscribed && !done) || path === "/newsletter" || !scrolled || aiVisit());
+  // Hidden while the page's own sign-up box is on screen, so the same offer is never shown twice at once.
+  const [boxInView, setBoxInView] = useState(false);
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    let io, t;
+    const watch = () => {
+      const el = document.querySelector(".oa-inline-signup");
+      if (!el) { t = setTimeout(watch, 1000); return; }
+      io = new IntersectionObserver(([e]) => setBoxInView(e.isIntersecting));
+      io.observe(el);
+    };
+    watch();
+    return () => { clearTimeout(t); io?.disconnect(); };
+  }, [path]);
+  const visible = !(closed || (subscribed && !done) || path === "/newsletter" || !scrolled || aiVisit() || boxInView);
+  const barEarnings = useApi(path.startsWith("/stocks/") ? "/api/earnings" : null);
+  const offer = pageOffer(path, barEarnings.data); // the page's own offer (unlock reminder, results date, follow a company)
   const logged = useRef(false);
-  useEffect(() => { if (visible && !logged.current && window.matchMedia?.("(max-width: 600px)").matches) { logged.current = true; window.posthog?.capture?.("mobile_bar_shown", { page: path }); } }, [visible]);
+  useEffect(() => { if (visible && !logged.current && window.matchMedia?.("(max-width: 600px)").matches) { logged.current = true; window.posthog?.capture?.("mobile_bar_shown", { page: path, variant: offer ? "contextual" : "pdf" }); } }, [visible]);
   if (!visible) return null;
   const close = () => { setClosed(true); try { localStorage.setItem(BAR_KEY, String(Date.now())); } catch {} };
   return (
     <div className="mob-only" style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 9000, background: "rgba(8,12,22,0.97)", borderTop: "1px solid rgba(0,255,136,0.35)", padding: "10px 14px calc(10px + env(safe-area-inset-bottom, 0px))", boxShadow: "0 -10px 30px rgba(0,0,0,0.5)", animation: "fu 0.25s ease" }}>
       <button onClick={close} aria-label="Close" style={{ position: "absolute", top: 4, right: 8, background: "none", border: "none", color: C.muted, fontSize: 18, lineHeight: 1, cursor: "pointer", padding: 4 }}>×</button>
-      <div style={{ fontSize: 11, color: "#fff", fontWeight: 700, marginBottom: 7, paddingRight: 24 }}>Free report: a page on every space stock, plus the Sunday newsletter</div>
-      <SubscribeForm source="mobile-bar" sample={false} reward={SHEET} label="Get the PDF" onDone={() => setDone(true)} style={{ maxWidth: "none" }} />
+      <div style={{ fontSize: 11, color: "#fff", fontWeight: 700, marginBottom: 7, paddingRight: 24 }}>{offer ? offer[0] : "Free report: a page on every space stock, plus the Sunday newsletter"}</div>
+      <SubscribeForm source="mobile-bar" follow={offer?.[2]} sample={false} reward={SHEET} label={offer ? offer[3] : "Get the PDF"} onDone={() => setDone(true)} style={{ maxWidth: "none" }} />
     </div>
   );
 }
@@ -2720,7 +2738,7 @@ function GuidePage({ path }) {
         <Fragment key={i}>
           {i > 0 && (
             <ForNonSubscribers>
-              <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.3)", background: "rgba(0,255,136,0.04)", margin: "8px 0 26px" }}>
+              <div className="oa-inline-signup" style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.3)", background: "rgba(0,255,136,0.04)", margin: "8px 0 26px" }}>
                 {aiVisit() && <div style={{ fontSize: 11, color: C.green, fontWeight: 700, marginBottom: 4 }}>Welcome from {AI_NAMES[aiVisit().source] || "your AI assistant"}</div>}
                 <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>{cta[0]}</div>
                 <p style={{ fontSize: 12, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>{cta[1]}</p>
