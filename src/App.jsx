@@ -699,14 +699,33 @@ function useCallbackRef(fn) {
 // Subscribe popup: shown ONCE per browser. Remembered in localStorage (works like a cookie).
 const POPUP_KEY = "oa_popup_seen";
 
-function popupSeen() {
-  try { return !!localStorage.getItem(POPUP_KEY); } catch { return true; } // storage blocked: don't nag
+// Remembered per browser as { t: when it last appeared, offers: the offers already shown }. It comes back
+// after 7 days, or sooner when the page has an offer this visitor has not seen (an unlock reminder, say),
+// and never more than once per visit.
+const POPUP_REPEAT_MS = 7 * 864e5;
+function popupRecord() {
+  const v = localStorage.getItem(POPUP_KEY);
+  if (!v) return null;
+  try { const r = JSON.parse(v); if (r && typeof r === "object") return { t: Number(r.t) || 0, offers: r.offers || [] }; } catch {}
+  return { t: Number(v) || 0, offers: ["pdf"] }; // older format: a timestamp or "shown"
 }
-function markPopupSeen(value) {
-  try { localStorage.setItem(POPUP_KEY, value); } catch {}
+function popupSeen(offerKey) {
+  try {
+    if (sessionStorage.getItem("oa_popup_session")) return true;
+    const r = popupRecord();
+    if (!r) return false;
+    return Date.now() - r.t < POPUP_REPEAT_MS && r.offers.includes(offerKey);
+  } catch { return true; } // storage blocked: don't nag
+}
+function markPopupSeen(offerKey) {
+  try {
+    sessionStorage.setItem("oa_popup_session", "1");
+    const r = popupRecord() || { offers: [] };
+    localStorage.setItem(POPUP_KEY, JSON.stringify({ t: Date.now(), offers: [...new Set([...r.offers, offerKey])].slice(-20) }));
+  } catch {}
 }
 
-// Shown at most once per browser, never to subscribers, and only once the visitor has shown interest:
+// Shown at most once a visit and again after 7 days (see popupSeen), never to subscribers, and only once the visitor has shown interest:
 // a second page view, reading half of a stock or news page, or moving to leave on desktop. Never in the first 10s.
 const POPUP_MIN_MS = 10000;
 // Visitors who arrived from an AI assistant this session (set in index.html from the referrer or utm_source).
@@ -771,11 +790,16 @@ function SubscribePopup({ path }) {
   const subscribed = useSubscribed();
   const subscribers = useSubscriberLabel();
   const startedAt = useRef(Date.now());
+  // On pages about one company or event, the pop-up leads with that (an unlock reminder, a company's
+  // results) and keeps the PDF as the bonus; elsewhere it leads with the PDF.
+  const popEarnings = useApi(path.startsWith("/stocks/") ? "/api/earnings" : null);
+  const special = pageOffer(path, popEarnings.data);
+  const offerKey = special ? special[0] : "pdf";
   const open = useCallbackRef((trigger) => {
-    if (show || subscribed || popupSeen() || path === "/newsletter" || aiVisit()) return; // AI visitors get the welcome bar instead
+    if (show || subscribed || popupSeen(offerKey) || path === "/newsletter" || aiVisit()) return; // AI visitors get the welcome bar instead
     const wait = POPUP_MIN_MS - (Date.now() - startedAt.current);
     if (wait > 0) { setTimeout(() => open(trigger), wait); return; } // too early: try again once the 10s have passed
-    markPopupSeen("shown"); // recorded the moment it appears, so it never shows again even if they just close the tab
+    markPopupSeen(offerKey); // recorded the moment it appears, so closing the tab counts as seen
     setShow(true);
     window.posthog?.capture?.("popup_shown", { trigger, page: path });
   });
@@ -799,11 +823,7 @@ function SubscribePopup({ path }) {
     document.addEventListener("mouseout", onLeave);
     return () => { window.removeEventListener("scroll", onScroll); document.removeEventListener("mouseout", onLeave); };
   }, [path]);
-  const close = (value) => { setShow(false); markPopupSeen(value); };
-  // On pages about one company or event, the pop-up leads with that (an unlock reminder, a company's
-  // results) and keeps the PDF as the bonus; elsewhere it leads with the PDF.
-  const popEarnings = useApi(path.startsWith("/stocks/") ? "/api/earnings" : null);
-  const special = pageOffer(path, popEarnings.data);
+  const close = () => setShow(false);
   useEffect(() => { if (show) window.posthog?.capture?.("popup_variant", { variant: special ? "contextual" : "pdf", page: path }); }, [show]);
   if (!show) return null;
   return (
