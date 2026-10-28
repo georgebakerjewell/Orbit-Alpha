@@ -401,6 +401,8 @@ const HUB_TEXT = {
   "/space-stocks": ["Every listed space company by sector, with price and returns.", "Daily"],
   "/space-stocks/this-week": ["The week's biggest gainers and fallers.", "Daily"],
   "/space-stocks/largest": ["All 30 companies ranked by market value.", "Daily"],
+  "/space-stocks/ipos": ["Every space IPO since 2025 and how it has traded.", "New"],
+  "/space-stocks/lockup-expirations": ["When insiders could first sell, and what the stock did.", "New"],
   "/space-stocks/statistics": ["The sector in figures: size, returns, profits, cash.", "New"],
   "/space-stocks/launch-events": ["The launches that move space stocks, and when.", "New"],
   "/articles": ["Short, sourced answers to this week's questions.", "New"],

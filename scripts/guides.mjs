@@ -5,6 +5,7 @@
 import { GUIDES, GUIDE_LIST } from "../lib/pagemeta.js";
 import { buildMoreGuides, buildHub, buildAdvertise } from "./guides-more.mjs";
 import { buildSpaceX } from "./spacex.mjs";
+import { buildIpos } from "./ipos.mjs";
 import { buildResults } from "./results.mjs";
 import { buildWidgetGuide } from "./embed.mjs";
 import { buildPreviews } from "./previews.mjs";
@@ -244,6 +245,7 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
   const RESULTS = JSON.parse(readFileSync(new URL("../src/results.json", import.meta.url), "utf8"));
   const pages = [listPage, insiderPage, runwayPage, contractsPage, earningsPage, euroPage, etfPage,
     ...buildSpaceX({ ...ctx, page, table, faq, and, usd, asOfLine }),
+    ...buildIpos({ ...ctx, page, table, faq, and, usd, asOfLine }),
     ...buildMoreGuides({ ...ctx, page, table, faq, and, usd, asOfLine }),
     ...buildResults({ ...ctx, results: RESULTS }),
     ...buildPreviews({ ...ctx, results: RESULTS }),

@@ -211,6 +211,7 @@ ${salesHtml}
 <h2>Why do lock-up releases matter for SPCX stock?</h2>
 <p>A release adds shares that can be sold, and the stock often drifts lower in the days before a large one as traders position for extra supply. What actually happens depends on how many holders choose to sell, which is why SPCX has risen on some release days and fallen on others. The Q3 tranche is the largest of 2026, more than four times the size of the day-90 release, and the 8 December expiry frees the rest of the main pool.</p>
 <p>For context: SpaceX has about 13.6 billion shares outstanding, so the main lock-up pool is roughly a third of the company, while the extended group, led by Musk, holds most of the rest.</p>
+<p>How other recent space IPOs traded when their lock-ups ended, including HawkEye 360, York Space Systems and Firefly, is on the <a href="/space-stocks/lockup-expirations">space stock lock-up expirations</a> page. Every space listing since 2025 and its return since IPO: <a href="/space-stocks/ipos">space IPOs</a>.</p>
 ${lockFaq.html}
 ${sources([
       [PROSPECTUS, "SpaceX IPO prospectus (Form 424B4), SEC EDGAR, 12 June 2026"],
