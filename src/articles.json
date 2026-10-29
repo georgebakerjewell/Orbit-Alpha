@@ -1,6 +1,168 @@
 [
  {
   "kind": "news",
+  "slug": "fcc-direct-to-device-spectrum-482-mhz",
+  "title": "FCC proposes 482 MHz more for satellite-to-phone: why SpaceX gains most",
+  "summary": "On 29 October the FCC voted 3-0 to propose adding 482 MHz across eight bands to its satellite-to-phone rules, a 140% rise on today's 344 MHz. The bigger change is letting operators that own spectrum skip carrier leases, which suits SpaceX's spectrum buying more than AST SpaceMobile's partner model.",
+  "published": "2026-10-29",
+  "updated": "2026-10-29",
+  "tickers": [
+   "SPCX",
+   "ASTS",
+   "GSAT"
+  ],
+  "match": [
+   "fcc",
+   "vote"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "At its open meeting on 29 October 2026 the FCC adopted, by 3 votes to 0, a Notice of Proposed Rulemaking to overhaul its Supplemental Coverage from Space (SCS) rules, the framework that lets satellite operators use mobile carriers' licensed spectrum to reach ordinary phones. It proposes raising the number of SCS bands from five to 13, adding 482 MHz, and replacing the rule that a satellite operator must lease spectrum from carriers holding every co-channel licence across an area such as the contiguous US. In a companion item the FCC also proposed auctioning 25 MHz at 1675 to 1695 MHz and 2020 to 2025 MHz for 5G, satellite-to-phone or hybrid use.",
+     "This is a proposal, not a final rule: nothing is granted until a second vote. AT&T, Verizon, T-Mobile and their trade body CTIA had asked for the 2.5 GHz and 3.45 GHz bands to be dropped before the vote; the adopted item still counts all 482 MHz. By midday in New York, [SpaceX](/stocks/spcx) was down 0.8% at $144.06, while [AST SpaceMobile](/stocks/asts) was up 5.2% at $44.51."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the lease rule matters more than the megahertz",
+    [
+     "The 482 MHz headline is large: on the FCC's own figures, the SCS pool would rise from 344 MHz to 826 MHz, up 140%. But adding up the eight proposed bands from the draft shows that 290 MHz of the 482 MHz (60%) is the 2.5 GHz band (190 MHz) and the 3.45 GHz band (100 MHz), the two mid-band blocks the carriers want removed and which carry their 5G networks. If those go in the final rules, the gain shrinks to 192 MHz, a 56% rise. Our calculation from the band list in the FCC draft.",
+     {
+      "table": {
+       "head": [
+        "Proposed new SCS band",
+        "MHz"
+       ],
+       "rows": [
+        [
+         "2.5 GHz (2500 to 2690 MHz)",
+         "190"
+        ],
+        [
+         "3.45 GHz (3450 to 3550 MHz)",
+         "100"
+        ],
+        [
+         "AWS-1 (1710 to 1755 and 2110 to 2155 MHz)",
+         "90"
+        ],
+        [
+         "AWS-3 (1695 to 1710, 1755 to 1780 and 2155 to 2180 MHz)",
+         "65"
+        ],
+        [
+         "800 MHz ESMR (817 to 824 and 862 to 869 MHz)",
+         "14"
+        ],
+        [
+         "900 MHz (896 to 901 and 935 to 940 MHz)",
+         "10"
+        ],
+        [
+         "1.4 GHz (1390 to 1395 and 1432 to 1435 MHz)",
+         "8"
+        ],
+        [
+         "1670 to 1675 MHz",
+         "5"
+        ],
+        [
+         "Total proposed",
+         "482"
+        ],
+        [
+         "Contested by carriers (2.5 GHz plus 3.45 GHz)",
+         "290 (60%)"
+        ]
+       ]
+      }
+     },
+     "Whatever happens to the bands, the more important proposal is who has to agree. Today a satellite operator can offer SCS only through a lease with the carrier. The FCC proposes instead a certification that the operator either has coexistence agreements with the terrestrial licence holders in the area it serves, or holds the terrestrial licences itself. The second route needs no carrier at all.",
+     "That route fits SpaceX almost exactly. The FCC has already approved the transfer of EchoStar's AWS-4, AWS-H block and unpaired AWS-3 licences to SpaceX. The H block (1915 to 1920 and 1995 to 2000 MHz) is already an SCS band and AWS-3 is one of the eight proposed. On 8 October SpaceX also agreed to buy Grain Management's nationwide 800 MHz portfolio, 14 MHz of paired spectrum, still awaiting FCC approval. Under the proposed rules, those purchases would become spectrum SpaceX can serve phones on from space by itself, with custom licence areas rather than a nationwide lease.",
+     "[AST SpaceMobile](/stocks/asts) works the other way: its SCS authorisation is held jointly with Verizon, AT&T and FirstNet, so it gains from more eligible bands and fewer waivers, but it still depends on the same carriers that lobbied to cut 60% of the new spectrum. Today's share moves (SPCX down 0.8%, ASTS up 5.2%) suggest the market is reading the vote as more spectrum for everyone; the structural change in who needs a carrier is the part we think it is underweighting, though it is still only a proposal."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     {
+      "list": [
+       "[Globalstar](/stocks/gsat), being bought by Amazon Leo, holds mobile-satellite (MSS) spectrum rather than carrier spectrum. The FCC asked whether to confirm that MSS bands are exclusive, which would protect that spectrum's value, but it also wants to set D2D performance requirements and said its MSS rules for the Big LEO, L-band and 2 GHz bands have not been updated in decades. Spectrum owners that do not use their bands may face tougher expectations. See our piece on [the FCC's approval of the Amazon-Globalstar deal](/articles/fcc-approves-amazon-globalstar-deal).",
+       "The proposed 25 MHz auction at 1675 to 1695 MHz and 2020 to 2025 MHz would carry a secondary SCS allocation, giving SpaceX, Amazon and AST SpaceMobile a chance to buy licences outright rather than lease them. The FCC said more than $45 billion of satellite-to-phone deals were approved by or submitted to it in the past year, a sign of how much these licences now cost.",
+       "Lynk, with Docomo, is the only other SCS authorisation holder named by the FCC; it is not a listed company covered here."
+      ]
+     }
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "Publication in the Federal Register. The draft sets comments 60 days and reply comments 90 days after publication, so even if it were published today the record could not close before about 27 January 2027 (our calculation); final rules need another vote after that.",
+       "Whether the 2.5 GHz and 3.45 GHz bands survive into the final order: that is the difference between a 140% and a 56% increase in SCS spectrum.",
+       "FCC approval of SpaceX's Grain 800 MHz purchase, and whether SpaceX files for SCS on its own licences once the rules allow.",
+       "The level of the proposed power limits at licence boundaries, which decides how usable the shared bands are next to carriers' 5G networks."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Did the FCC give SpaceX more spectrum on 29 October?",
+    "No. It adopted a proposal that seeks comment on adding 482 MHz to the satellite-to-phone (SCS) framework. Nothing is granted until a final order, and the record cannot close before late January 2027 at the earliest on the FCC's 60 and 90 day comment timetable."
+   ],
+   [
+    "Why do AT&T, Verizon and T-Mobile oppose it?",
+    "They say satellite signals in the 2.5 GHz and 3.45 GHz bands could interfere with 5G networks serving more than 300 million people. Those two bands are 290 MHz, or 60%, of the 482 MHz proposed, by our addition of the FCC's band list."
+   ],
+   [
+    "Is this better for SpaceX or AST SpaceMobile?",
+    "Both get more eligible bands. The proposal to let an operator that holds the terrestrial licences itself skip the carrier lease helps SpaceX more, because it has bought H block, AWS-3 and (pending) 800 MHz licences. AST SpaceMobile's authorisation is shared with Verizon, AT&T and FirstNet, so it still relies on carrier agreement."
+   ]
+  ],
+  "sources": [
+   [
+    "FCC news release: FCC Proposes to Modernize Leasing Rules for D2D Services (29 October 2026)",
+    "https://docs.fcc.gov/public/attachments/DOC-426297A1.txt"
+   ],
+   [
+    "FCC news release: FCC Aims to Auction 25 Megahertz of Prime, Mid-Band Spectrum (29 October 2026)",
+    "https://docs.fcc.gov/public/attachments/DOC-426294A1.txt"
+   ],
+   [
+    "FCC fact sheet and draft Notice of Proposed Rulemaking, GN Docket Nos. 26-281, 23-65",
+    "https://docs.fcc.gov/public/attachments/DOC-425711A1.pdf"
+   ],
+   [
+    "FCC: October 2026 Open Commission Meeting",
+    "https://www.fcc.gov/October2026"
+   ],
+   [
+    "FCC: Order granting SpaceX-EchoStar applications",
+    "https://www.fcc.gov/document/order-granting-spacex-echostar-applications"
+   ],
+   [
+    "Grain Management: agreement to sell nationwide 800 MHz portfolio to SpaceX (8 October 2026)",
+    "https://www.prnewswire.com/news-releases/grain-management-announces-definitive-agreement-to-sell-nationwide-800-mhz-spectrum-portfolio-to-spacex-302902974.html"
+   ],
+   [
+    "Via Satellite: SpaceX moves to acquire nationwide low-band spectrum for Starlink Mobile",
+    "https://www.satellitetoday.com/connectivity/2026/10/08/spacex-moves-to-acquire-nationwide-low-band-spectrum-for-starlink-mobile/"
+   ],
+   [
+    "SatNews: AT&T, T-Mobile and Verizon petition FCC to exclude mid-band spectrum",
+    "https://satnews.com/2026/10/26/att-t-mobile-and-verizon-petition-fcc-to-exclude-mid-band-spectrum-from-satellite-coverage-framework/"
+   ],
+   [
+    "Stocktwits via Yahoo Finance: SPCX ahead of key FCC vote",
+    "https://finance.yahoo.com/markets/stocks/articles/spcx-stock-edges-lower-ahead-140132610.html"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "spacex-40-billion-apollo-gpu-lease",
   "title": "SpaceX's $40B Apollo GPU lease: debt doubles, $2B a quarter from 2027",
   "summary": "SpaceX has committed to a $40 billion, five-year finance lease of Nvidia GPUs from an Apollo-managed lessor. Our calculation: debt and leases roughly double to $79 billion, and principal alone runs at about $2 billion a quarter once the chips arrive, nearly five times the AI unit's Q3 operating profit.",
