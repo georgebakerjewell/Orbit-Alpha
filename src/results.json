@@ -289,5 +289,99 @@
         "Up to 1.3 billion locked-up shares become free to sell at the start of Thursday 22 October 2026, two trading days after the Q3 results. The full schedule is on the SpaceX lockup calendar."
       ]
     ]
+  },
+  {
+    "slug": "tsat-q3-2026",
+    "ticker": "TSAT",
+    "quarter": "Q3 2026",
+    "period": "the three months to 30 September 2026",
+    "reported": "2026-10-29",
+    "headline": "Revenue down 20% to C$81M, net loss widens to C$157M",
+    "summary": "Telesat revenue fell 20% to C$81M and adjusted EBITDA fell 74% to C$12M, including C$25M of debt refinancing costs, while the net loss widened to C$157M. LEO backlog stood at about C$5.6B after a C$2.7B Canadian military Lightspeed deal.",
+    "metrics": [
+      [
+        "Revenue",
+        "C$80.6M",
+        "-20% (from C$101.1M)"
+      ],
+      [
+        "Adjusted EBITDA",
+        "C$12.1M",
+        "-74% (from C$46.8M)"
+      ],
+      [
+        "Adjusted EBITDA margin",
+        "15.0%",
+        "vs 46.3%"
+      ],
+      [
+        "Net loss",
+        "C$157.2M",
+        "vs loss of C$121.1M"
+      ],
+      [
+        "Loss per share",
+        "C$3.09",
+        "vs C$2.38"
+      ],
+      [
+        "GEO revenue",
+        "C$79M",
+        "-21%"
+      ],
+      [
+        "GEO adjusted EBITDA",
+        "C$36M",
+        "-43%"
+      ],
+      [
+        "Lightspeed investment in the quarter",
+        "C$368M",
+        "C$344M capex, C$24M opex"
+      ],
+      [
+        "Cash and equivalents",
+        "C$813.8M",
+        "vs C$509.8M at 31 December 2025"
+      ],
+      [
+        "LEO backlog",
+        "about C$5.6B",
+        "as at 30 September 2026"
+      ],
+      [
+        "GEO backlog",
+        "about C$779M",
+        "as at 30 September 2026"
+      ],
+      [
+        "GEO satellite utilisation",
+        "about 59%",
+        "as at 30 September 2026"
+      ]
+    ],
+    "points": [
+      "Signed a C$2.7B agreement, including options, with Canada's Defence Investment Agency to supply Lightspeed military Ka-band services under the ESCP-P programme, with C$2.0B of milestone payments expected between Q3 2026 and Q4 2028.",
+      "The initial Lightspeed constellation has grown to a planned 225 satellites from 156, with high latitude commercial service expected around the end of Q1 2028.",
+      "Excluding C$25M of debt refinancing costs, GEO adjusted EBITDA fell 23% and the GEO margin was 78%, against 79% a year earlier.",
+      "Customer prepayments of C$510M in the first nine months lifted operating cash flow to C$405M, from C$97M.",
+      "The company said it remains focused on refinancing the Telesat GEO debt, which begins to mature later this year."
+    ],
+    "guidance": "Telesat reiterated 2026 GEO revenue of C$300M to C$320M and GEO adjusted EBITDA of C$210M to C$230M, excluding refinancing costs. It lowered expected 2026 Lightspeed spending to C$1.1B to C$1.3B, from C$1.3B to C$1.5B, to reflect the timing of satellite and launch payments.",
+    "reaction": "Shares were down 1.9% at $44.69 on Nasdaq at 10:26 a.m. New York time (14:26 UK) on 29 October, against a previous close of $45.55.",
+    "sources": [
+      [
+        "Telesat: results for the three and nine months ended September 30, 2026 (GlobeNewswire)",
+        "https://www.morningstar.com/news/globe-newswire/9855867/telesat-reports-results-for-the-three-and-nine-months-ended-september-30-2026"
+      ],
+      [
+        "Telesat press release (company site)",
+        "https://www.telesat.com/press/press-releases/telesat-reports-results-for-the-three-and-nine-months-ended-september-30-2026/"
+      ],
+      [
+        "Telesat: Q3 Earnings Snapshot (Associated Press via Yahoo Finance)",
+        "https://finance.yahoo.com/markets/stocks/articles/telesat-q3-earnings-snapshot-120621330.html"
+      ]
+    ]
   }
 ]
