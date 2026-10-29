@@ -1,11 +1,11 @@
 import { useState, useEffect, useLayoutEffect, useRef, createContext, useContext, Fragment } from "react";
 import issues from "./issues.json";
 import issueArchive from "./issueArchive.json";
-import stories from "./stories.json";
 import articlesData from "./articles.json"; // question articles at /articles/<slug> (weekly scheduled task)
 import eventsData from "./events.json"; // launch-event pages at /launches/<slug> (maintained by a scheduled task)
 import resultsData from "./results.json"; // results-day pages at /results/<slug> (src/results.json, added by a scheduled task) // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
-import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js"; // the single list of covered stocks
+import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js";
+import { isNewsworthy } from "../lib/newsfilter.js"; // which headlines count as news (filters opinion, ads and noise) // the single list of covered stocks
 import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, GUIDE_CTA, GUIDE_CTA_DEFAULT, guideCta, stockTitle } from "../lib/pagemeta.js";
 import { brokersFor, TOOLS, toolHref, brokerHref, anyAffiliate, RISK, DISCLOSURE } from "../lib/affiliates.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
@@ -2156,7 +2156,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
   const rangeChange = points.length > 1 && base ? (points[points.length - 1].c / base - 1) * 100 : null;
   const nextEarnings = earnings.data?.find?.((e) => e.ticker === ticker);
   const upcoming = launches?.filter((l) => l.tickers.includes(ticker)).slice(0, 4);
-  const stories = news.items.filter((item) => matches(item, ticker)).slice(0, 6);
+  const stories = news.items.filter((item) => matches(item, ticker) && isQuality(item)).slice(0, 6);
   const others = Object.keys(PROFILES).filter((t) => t !== ticker);
 
   return (
@@ -2370,11 +2370,9 @@ const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const KEYWORD_RE = Object.fromEntries(
   Object.entries(COMPANY_KEYWORDS).map(([co, kws]) => [co, new RegExp(`\\b(${kws.map(escape).join("|")})\\b`, "i")])
 );
-// Yahoo returns news per ticker search; for short or common-word tickers that search is unreliable,
-// so those stories are only tagged when the text actually names the company.
-const AMBIGUOUS_TICKERS = new Set(["PL", "FLY", "MDA", "ECHO", "YSS"]);
-const matches = (item, co) =>
-  (item.ticker === co && !AMBIGUOUS_TICKERS.has(co)) || !!KEYWORD_RE[co]?.test(`${item.title} ${item.description || ""}`);
+// A story is tagged to a company only when the headline names it. (Yahoo's per-ticker search also
+// returns loosely related articles, such as other companies' earnings, so its ticker is not trusted.)
+const matches = (item, co) => !!KEYWORD_RE[co]?.test(`${item.title} ${item.description || ""}`);
 
 // Covered tickers mentioned in a news item (shown as tags linking to stock pages).
 const tagTickers = (item) => Object.keys(PROFILES).filter((t) => matches(item, t));
@@ -2404,15 +2402,14 @@ function buildFeed(newsItems, filings, awards) {
 }
 
 /* ── News quality, de-duplication and ranking ──────────────────────────────── */
-// Sources and headline patterns that are almost always promotional or low-information.
-const LOW_QUALITY_SOURCES = /motley fool|fool\.com|investorplace|marketbeat|simply wall st|insider monkey|24\/7 wall st|ainvest|zacks|gurufocus|seeking alpha|stocktwits|the street pro/i;
-const CLICKBAIT = /(stocks? to (buy|watch|own|hold)|should you buy|better (space )?stock|buy (now|right now|and hold)|is it (too late|time) to|millionaire|prediction:|could (soar|skyrocket|double|triple|make you)|no-brainer|forever|warren buffett|moonshot|\b\d+ (space )?stocks? (to|that|for)\b|top \d+ |which is the better)/i;
+// Only concrete events are shown; opinion pieces, law-firm adverts and quote pages are dropped (lib/newsfilter.js).
+const CLICKBAIT = /(stocks? to (buy|watch|own|hold)|buy (now|right now|and hold)|millionaire|could (soar|skyrocket|double|triple|make you)|no-brainer|forever|warren buffett|moonshot|\b\d+ (space )?stocks? (to|that|for)\b|top \d+ )/i;
 // Headlines describing a concrete event (as opposed to commentary).
 const EVENT_WORDS = /contract|award|earnings|revenue|guidance|results|quarter|launch|acquir|merger|offering|raises|priced|price target|upgrade|downgrade|initiat|FCC|approv|partnership|agreement|deal|order|backlog|IPO|lawsuit|investigation|delay|scrub|anomaly|failure|selects|wins|signs|files/i;
 const TOP_SOURCES = /reuters|bloomberg|wall street journal|wsj|financial times|cnbc|barron|spacenews|payload|via satellite|breaking defense|defense news|space\.com|ars technica|techcrunch|associated press|marketwatch|investing\.com|yahoo finance|fierce|the information|axios/i;
 const STOP_WORDS = new Set("the a an and or of to in on for with at by from as is are was were be its it this that after over into amid new says said stock stocks shares space company inc corp ltd co nasdaq nyse why how what will could may up down today week".split(" "));
 
-const isQuality = (i) => !LOW_QUALITY_SOURCES.test(i.source || "") && !CLICKBAIT.test(i.title || "");
+const isQuality = (i) => isNewsworthy(i) && !CLICKBAIT.test(i.title || "");
 const titleWords = (t) => new Set((t || "").toLowerCase().replace(/[^a-z0-9$%. ]/g, " ").split(/\s+/).filter((w) => w.length > 2 && !STOP_WORDS.has(w)));
 const overlap = (a, b) => { let n = 0; a.forEach((w) => b.has(w) && n++); return n / Math.max(1, Math.min(a.size, b.size)); };
 
@@ -2431,7 +2428,8 @@ function clusterNews(items) {
   return clusters.map((c) => {
     const lead = [...c.items].sort((a, b) => (TOP_SOURCES.test(b.source) ? 1 : 0) - (TOP_SOURCES.test(a.source) ? 1 : 0) || b.time - a.time)[0];
     const sources = [...new Map(c.items.map((i) => [i.source, i])).values()];
-    return { ...c, lead, sources, event: c.items.some((i) => EVENT_WORDS.test(i.title)), latest: Math.max(...c.items.map((i) => i.time)) };
+    const out = { ...c, lead, sources, event: c.items.some((i) => EVENT_WORDS.test(i.title)), latest: Math.max(...c.items.map((i) => i.time)) };
+    return { ...out, orbit: orbitArticleFor(out) };
   });
 }
 
@@ -2468,16 +2466,19 @@ function StoryCard({ c, moveOf, compact }) {
         {c.tickers.slice(0, 3).map((t) => (
           <span key={t} style={{ display: "inline-flex", gap: 5, alignItems: "center" }}><TickerChip ticker={t} /><Move v={moveOf(t)} /></span>
         ))}
-        {c.event && <span style={{ fontSize: 9, color: C.yellow, letterSpacing: "0.06em" }}>● EVENT</span>}
+        {c.orbit ? <span style={{ fontSize: 9, color: C.green, letterSpacing: "0.06em" }}>● ORBIT ALPHA STORY</span>
+          : c.event && <span style={{ fontSize: 9, color: C.yellow, letterSpacing: "0.06em" }}>● EVENT</span>}
       </div>
-      <a href={c.lead.link} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: compact ? 13 : 15, color: "#fff", lineHeight: 1.45, textDecoration: "none", fontWeight: 600 }}>{c.lead.title}</a>
+      {c.orbit
+        ? <Link to={`/articles/${c.orbit.slug}`} className="oa-link" style={{ fontSize: compact ? 13 : 15, color: "#fff", lineHeight: 1.45, textDecoration: "none", fontWeight: 600 }}>{c.orbit.title}</Link>
+        : <a href={c.lead.link} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: compact ? 13 : 15, color: "#fff", lineHeight: 1.45, textDecoration: "none", fontWeight: 600 }}>{c.lead.title}</a>}
       <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>
-        {c.lead.source} · {timeAgo(c.latest)}
-        {c.sources.length > 1 && (
+        {c.orbit ? `Orbit Alpha · ${fmtShort(c.orbit.published)}` : `${c.lead.source} · ${timeAgo(c.latest)}`}
+        {(c.orbit ? c.sources.length : c.sources.length - 1) > 0 && (
           <details style={{ display: "inline" }}>
-            <summary style={{ display: "inline", cursor: "pointer", color: C.blue, marginLeft: 6 }}>+{c.sources.length - 1} more {c.sources.length - 1 === 1 ? "source" : "sources"}</summary>
+            <summary style={{ display: "inline", cursor: "pointer", color: C.blue, marginLeft: 6 }}>{c.orbit ? `${c.sources.length} other ${c.sources.length === 1 ? "report" : "reports"}` : `+${c.sources.length - 1} more ${c.sources.length - 1 === 1 ? "source" : "sources"}`}</summary>
             <div style={{ marginTop: 6, display: "grid", gap: 4 }}>
-              {c.sources.filter((i) => i !== c.lead).map((i) => (
+              {c.sources.filter((i) => c.orbit || i !== c.lead).map((i) => (
                 <a key={i.link} href={i.link} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ color: C.light, textDecoration: "none" }}>{i.source}: {i.title}</a>
               ))}
             </div>
@@ -2490,21 +2491,37 @@ function StoryCard({ c, moveOf, compact }) {
 
 const PERIODS = [[1, "24 hours"], [3, "3 days"], [7, "7 days"]];
 
-/* ── Orbit Alpha news briefs (src/stories.json) ──────────────────────────── */
-function OrbitBriefs({ ticker, limit = 6, title = "From Orbit Alpha" }) {
-  const items = stories.filter((s) => !ticker || s.tickers?.includes(ticker)).slice(0, limit);
+/* ── Orbit Alpha news articles (src/articles.json entries with kind "news") ── */
+// Written by the "Space stock news articles" scheduled task when a significant story breaks.
+const newsArticles = articlesData.filter((a) => a.kind === "news").sort((a, b) => b.published.localeCompare(a.published));
+const fmtShort = (iso) => new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+
+// The Orbit Alpha article covering a headline cluster, if one exists: same company, within 3 days,
+// and either every word in the article's `match` list appears in the coverage, or the titles largely overlap.
+function orbitArticleFor(c) {
+  const text = c.items.map((i) => i.title.toLowerCase()).join(" | ");
+  return newsArticles.find((a) =>
+    (a.tickers || []).some((t) => c.tickers.includes(t)) &&
+    Math.abs(+new Date(a.published) - c.latest) < 3.5 * 86_400_000 &&
+    (a.match?.length ? a.match.every((w) => text.includes(w.toLowerCase())) : overlap(titleWords(a.title), c.words) >= 0.5));
+}
+
+function OrbitBriefs({ ticker, limit = 6, title = "Orbit Alpha reports" }) {
+  const items = newsArticles.filter((a) => !ticker || a.tickers?.includes(ticker)).slice(0, limit);
   if (!items.length) return null;
   return (
-    <Card title={title} note="Space news, checked and summarised" style={{ marginBottom: 18 }}>
-      {items.map((s) => (
-        <article key={s.id} style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+    <Card title={title} note="Significant news, checked against primary sources" style={{ marginBottom: 18 }}>
+      {items.map((a) => (
+        <article key={a.slug} style={{ padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <div style={{ fontSize: 10, color: C.muted, marginBottom: 4 }}>
-            {new Date(s.published).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-            {s.tickers?.length > 0 && <> · {s.tickers.map((t, i) => <span key={t}>{i ? ", " : ""}{PROFILES[t] ? <Link to={`/stocks/${t.toLowerCase()}`} className="oa-link" style={{ color: C.green }}>{t}</Link> : t}</span>)}</>}
+            {fmtShort(a.published)}
+            {a.tickers?.length > 0 && <> · {a.tickers.map((t, i) => <span key={t}>{i ? ", " : ""}{PROFILES[t] ? <Link to={`/stocks/${t.toLowerCase()}`} className="oa-link" style={{ color: C.green }}>{t}</Link> : t}</span>)}</>}
           </div>
-          <h3 style={{ fontSize: 14, color: "#fff", fontWeight: 600, lineHeight: 1.4, marginBottom: 6 }}>{s.title}</h3>
-          {String(s.body || "").split(/\n\n+/).map((para, i) => <p key={i} style={{ fontSize: 12.5, color: C.light, lineHeight: 1.65, marginBottom: 6 }}>{para}</p>)}
-          {s.source?.url && <div style={{ fontSize: 10.5, color: C.muted }}>Source: <a href={s.source.url} target="_blank" rel="noopener" className="oa-link" style={{ color: C.blue }}>{s.source.name || "original report"}</a></div>}
+          <h3 style={{ fontSize: 14.5, fontWeight: 600, lineHeight: 1.4, marginBottom: 6 }}>
+            <Link to={`/articles/${a.slug}`} className="oa-link" style={{ color: "#fff", textDecoration: "none" }}>{a.title}</Link>
+          </h3>
+          <p style={{ fontSize: 12.5, color: C.light, lineHeight: 1.65, marginBottom: 6 }}>{a.summary}</p>
+          <Link to={`/articles/${a.slug}`} className="oa-link" style={{ fontSize: 11, color: C.green }}>Read the full story, with sources</Link>
         </article>
       ))}
     </Card>
@@ -2544,7 +2561,7 @@ function News({ news, prices }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 14, marginBottom: 22 }}>
         <div>
           <h1 style={{ fontFamily: SYNE, fontSize: 28, fontWeight: 800, color: "#fff", marginBottom: 6 }}>SPACE STOCK <span style={{ color: C.orange }}>NEWS</span></h1>
-          <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, maxWidth: 560 }}>What actually happened to the stocks we cover. Duplicate coverage is merged into one story and clickbait is filtered out.</p>
+          <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, maxWidth: 560 }}>What actually happened to the stocks we cover: deals, contracts, results, launches, rulings and big share moves. Opinion pieces, adverts and duplicates are filtered out.</p>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           <select value={company} onChange={(e) => setCompany(e.target.value)} style={control}>
@@ -2577,9 +2594,11 @@ function News({ news, prices }) {
                   <span onClick={() => setCompany(t)} style={{ cursor: "pointer" }}><TickerChip ticker={t} /></span>
                   <Move v={move} />
                   <div style={{ minWidth: 0 }}>
-                    <a href={stories[0].lead.link} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: 13, color: C.text, textDecoration: "none", lineHeight: 1.45 }}>{stories[0].lead.title}</a>
+                    {stories[0].orbit
+                      ? <Link to={`/articles/${stories[0].orbit.slug}`} className="oa-link" style={{ fontSize: 13, color: C.text, textDecoration: "none", lineHeight: 1.45 }}>{stories[0].orbit.title} <span style={{ fontSize: 9, color: C.green }}>● ORBIT ALPHA</span></Link>
+                      : <a href={stories[0].lead.link} target="_blank" rel="noopener noreferrer" className="oa-link" style={{ fontSize: 13, color: C.text, textDecoration: "none", lineHeight: 1.45 }}>{stories[0].lead.title}</a>}
                     <div style={{ fontSize: 10, color: C.muted, marginTop: 2 }}>
-                      {stories[0].lead.source} · {timeAgo(stories[0].latest)}
+                      {stories[0].orbit ? `Orbit Alpha · ${fmtShort(stories[0].orbit.published)}` : `${stories[0].lead.source} · ${timeAgo(stories[0].latest)}`}
                       {stories.length > 1 && <span onClick={() => setCompany(t)} style={{ color: C.blue, cursor: "pointer", marginLeft: 6 }}>+{stories.length - 1} more {stories.length - 1 === 1 ? "story" : "stories"}</span>}
                     </div>
                   </div>
@@ -2633,7 +2652,7 @@ function News({ news, prices }) {
           </ForNonSubscribers>
         </aside>
       </div>
-      <SourceNote>Sources: Google News, Yahoo Finance, SEC EDGAR, USAspending.gov. Headlines link to the original publisher. Not financial advice.</SourceNote>
+      <SourceNote>Sources: Google News, Yahoo Finance, SEC EDGAR, USAspending.gov. Stories marked Orbit Alpha link to our own write-up with sources; other headlines link to the original publisher. Not financial advice.</SourceNote>
     </div>
   );
 }

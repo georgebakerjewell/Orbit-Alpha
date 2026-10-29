@@ -187,10 +187,14 @@ const issueArchive = JSON.parse(readFileSync(new URL("../src/issueArchive.json",
 const issueHtml = (n) => {
   try { return JSON.parse(readFileSync(new URL(`../public/issues/${n}.json`, import.meta.url), "utf8")).html; } catch { return ""; }
 };
-// Orbit Alpha news briefs (src/stories.json), newest first.
-const stories = JSON.parse(readFileSync(new URL("../src/stories.json", import.meta.url), "utf8"));
+// Orbit Alpha news: legacy briefs (src/stories.json) plus news articles (src/articles.json, kind "news"), newest first.
+const stories = [
+  ...JSON.parse(readFileSync(new URL("../src/articles.json", import.meta.url), "utf8")).filter((a) => a.kind === "news")
+    .map((a) => ({ slug: a.slug, title: a.title, body: a.summary, published: a.published, tickers: a.tickers })),
+  ...JSON.parse(readFileSync(new URL("../src/stories.json", import.meta.url), "utf8")),
+].sort((a, b) => String(b.published).localeCompare(String(a.published)));
 const resultsData = JSON.parse(readFileSync(new URL("../src/results.json", import.meta.url), "utf8"));
-const storiesHtml = (items, heading) => items.length ? `<h2>${heading}</h2>${items.map((x) => `<article><p>${fmtDate(x.published.slice(0, 10))}${x.tickers?.length ? ` · ${x.tickers.map((t) => (profiles[t] ? `<a href="/stocks/${t.toLowerCase()}">${t}</a>` : esc(t))).join(", ")}` : ""}</p><h3>${esc(x.title)}</h3>${String(x.body || "").split(/\n\n+/).map((p) => `<p>${esc(p)}</p>`).join("")}${x.source?.url ? `<p>Source: <a href="${esc(x.source.url)}" rel="noopener" target="_blank">${esc(x.source.name || "original report")}</a></p>` : ""}</article>`).join("")}` : "";
+const storiesHtml = (items, heading) => items.length ? `<h2>${heading}</h2>${items.map((x) => `<article><p>${fmtDate(x.published.slice(0, 10))}${x.tickers?.length ? ` · ${x.tickers.map((t) => (profiles[t] ? `<a href="/stocks/${t.toLowerCase()}">${t}</a>` : esc(t))).join(", ")}` : ""}</p><h3>${x.slug ? `<a href="/articles/${x.slug}">${esc(x.title)}</a>` : esc(x.title)}</h3>${String(x.body || "").split(/\n\n+/).map((p) => `<p>${esc(p)}</p>`).join("")}${x.source?.url ? `<p>Source: <a href="${esc(x.source.url)}" rel="noopener" target="_blank">${esc(x.source.name || "original report")}</a></p>` : ""}</article>`).join("")}` : "";
 const issueLink = (x) => `<a href="/newsletter/issue-${x.issue}">Issue ${x.issue}: ${esc(x.title)}</a>`;
 
 const count = Object.keys(profiles).length;
@@ -245,7 +249,7 @@ const routes = [
   {
     path: "/news", title: "Space Stock News, Filings and Contract Wins | Orbit Alpha", lastmod: latest(newestFiling, newestAward, stories[0]?.published?.slice(0, 10)),
     description: "Live space stock news, SEC filings, insider trades and government contract wins in one feed, filterable by company.",
-    body: `<h1>Space stock news</h1><p>One feed for everything that moves space stocks: news headlines from financial and industry sources, SEC filings and insider trades, and US government contract wins. Filter by company to follow just the stocks you hold, or by type to see only filings or contracts.</p><p>Key stories, such as large contracts, insider buying and share offerings, are highlighted so they stand out from routine news.</p>${storiesHtml(stories.slice(0, 10), "From Orbit Alpha")}${sectorDirectory}${sources}`,
+    body: `<h1>Space stock news</h1><p>One feed for everything that moves space stocks: news headlines from financial and industry sources, SEC filings and insider trades, and US government contract wins. Filter by company to follow just the stocks you hold, or by type to see only filings or contracts.</p><p>Key stories, such as large contracts, insider buying and share offerings, are highlighted so they stand out from routine news.</p>${storiesHtml(stories.slice(0, 10), "Orbit Alpha reports")}${sectorDirectory}${sources}`,
     ld: [crumbs([["Home", "/"], ["News", "/news"]])],
   },
   {

@@ -1,5 +1,130 @@
 [
  {
+  "kind": "news",
+  "slug": "fcc-approves-amazon-globalstar-deal",
+  "title": "FCC approves Amazon's $11.5 billion Globalstar takeover",
+  "summary": "The FCC approved Amazon Leo's $11.5 billion purchase of Globalstar on 27 October 2026, ending its review of the deal. Globalstar holders can elect $90 a share in cash or Amazon stock capped at $90; GSAT closed at $84.07 on 28 October and the deal is expected to close in 2027.",
+  "published": "2026-10-29",
+  "updated": "2026-10-29",
+  "tickers": [
+   "GSAT"
+  ],
+  "match": [
+   "globalstar",
+   "fcc"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 27 October 2026 the Federal Communications Commission's Space Bureau approved Amazon Leo's application to acquire about 25 megahertz of Globalstar's internationally harmonised mobile-satellite spectrum. The FCC said the approval concludes its review of Amazon Leo's $11.5 billion purchase of Globalstar.",
+     "The regulator found the deal is likely to improve data coverage in unserved and underserved areas, strengthen emergency communications and make more intensive use of mobile-satellite spectrum, and that no material harms to the public interest were likely. Amazon plans to use Globalstar's spectrum and satellites to move into direct-to-device service, connecting ordinary phones straight to satellites."
+    ]
+   ],
+   [
+    "The deal terms",
+    [
+     {
+      "table": {
+       "head": [
+        "Term",
+        "Detail"
+       ],
+       "rows": [
+        [
+         "Price per Globalstar share",
+         "$90.00 in cash, or 0.3210 Amazon shares with a value capped at $90.00"
+        ],
+        [
+         "Cash limit",
+         "Cash elections are capped at 40% of Globalstar shares; any excess converts to Amazon stock pro rata"
+        ],
+        [
+         "Possible reduction",
+         "Up to $110 million less in total if Globalstar misses certain operational milestones"
+        ],
+        [
+         "Shareholder approval",
+         "Holders of about 58% of the voting power approved by written consent in April"
+        ],
+        [
+         "Expected close",
+         "2027"
+        ]
+       ]
+      }
+     },
+     "The stock option is capped, so it is worth $90 only if Amazon shares are at or above about $280 when the deal closes. Below that level each Globalstar share converted into stock is worth less than $90."
+    ]
+   ],
+   [
+    "What still has to happen",
+    [
+     "When the deal was announced on 14 April 2026, Amazon and Globalstar said it was expected to close in 2027, subject to closing conditions including regulatory approvals and Globalstar hitting milestones on its HIBLEO-4 replacement satellites. Those satellites are being built by [MDA Space](/stocks/mda).",
+     "A week before approving the deal, the FCC granted Globalstar US market access for its C-3 system: 48 satellites in 12 orbital planes at an altitude of 1,414 kilometres. The FCC said Amazon Leo may use that grant to build and launch the system once the purchase closes."
+    ]
+   ],
+   [
+    "What it means for iPhone satellite features",
+    [
+     "Globalstar powers Emergency SOS, Messages, Find My and Roadside Assistance via satellite on iPhone 14 and later and Apple Watch Ultra 3. Alongside the takeover, Amazon and Apple agreed that Amazon Leo will keep supporting those features on current devices and work with Apple on future satellite services."
+    ]
+   ],
+   [
+    "How the shares reacted",
+    [
+     "Globalstar closed at $83.90 on 27 October, up 1.2% from $82.88 the day before, on volume of about 2.1 million shares, roughly three times the previous sessions. It closed at $84.07 on 28 October, so the $90 cash price was about 7% above the market price. See the live price on the [GSAT stock page](/stocks/gsat)."
+    ]
+   ],
+   [
+    "The wider race for phone-to-satellite service",
+    [
+     "The FCC said that earlier this year it authorised SpaceX to deploy a 15,000-satellite direct-to-device constellation and [AST SpaceMobile](/stocks/asts) to deploy a 248-satellite system. At its 29 October 2026 open meeting it was due to vote on proposals to auction the 1675-1695 MHz and 2020-2025 MHz bands and to open about 500 megahertz of further spectrum that could be used for direct-to-device services."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Is the Amazon Globalstar deal finished?",
+    "No. The FCC has completed its review, but Amazon and Globalstar expect the deal to close in 2027, once remaining conditions are met, including milestones on Globalstar's replacement satellites."
+   ],
+   [
+    "How much will Globalstar shareholders get?",
+    "Each share can be exchanged for $90.00 in cash or 0.3210 Amazon shares capped at $90.00. Cash is limited to 40% of all Globalstar shares, so some holders who choose cash will receive part of their payment in Amazon stock."
+   ],
+   [
+    "Will iPhone Emergency SOS keep working?",
+    "Yes, according to Amazon and Apple. Amazon Leo will continue to support iPhone and Apple Watch models that use Globalstar's satellites today."
+   ]
+  ],
+  "sources": [
+   [
+    "FCC news release: FCC Approves Amazon Leo's Acquisition of Globalstar (27 October 2026)",
+    "https://docs.fcc.gov/public/attachments/DOC-426214A1.pdf"
+   ],
+   [
+    "FCC order DA 26-1160",
+    "https://docs.fcc.gov/public/attachments/DA-26-1160A1.pdf"
+   ],
+   [
+    "Amazon: Amazon to acquire Globalstar and expand Amazon Leo satellite network (14 April 2026)",
+    "https://www.aboutamazon.com/news/company-news/amazon-globalstar-apple"
+   ],
+   [
+    "Reuters: US agency approves Amazon Leo's $11.5 billion acquisition of Globalstar",
+    "https://www.reuters.com/business/media-telecom/us-agency-approves-amazon-leos-115-billion-acquisition-globalstar-2026-10-27/"
+   ],
+   [
+    "Fierce Network: FCC gives OK for Amazon Leo's acquisition of Globalstar",
+    "https://www.fierce-network.com/wireless/fcc-gives-ok-amazon-leos-acquisition-globalstar"
+   ],
+   [
+    "Yahoo Finance: Globalstar (GSAT) price history",
+    "https://finance.yahoo.com/quote/GSAT/history/"
+   ]
+  ]
+ },
+ {
   "slug": "are-spacex-and-tesla-merging",
   "title": "Are SpaceX and Tesla merging?",
   "summary": "Not yet. On 20 October 2026 Elon Musk said SpaceX and Tesla had each formed a special committee of independent directors to consider a merger, but no terms have been agreed. A deal would need approval from both committees and boards, Musk as SpaceX's controlling shareholder, and 50% of all Tesla shares.",
