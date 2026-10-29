@@ -79,7 +79,18 @@
       var a = e.target && e.target.closest && e.target.closest("a[data-broker]");
       if (a && window.posthog && window.posthog.capture) window.posthog.capture("affiliate_click", { broker: a.getAttribute("data-broker"), placement: a.getAttribute("data-placement"), ticker: a.getAttribute("data-ticker") || null, page: window.location.pathname });
     }, true);
-    if (POSTHOG_KEY) posthog.init(POSTHOG_KEY, {
+    // Owner mode: visit any page with ?owner=on once per browser to stop the sign-up pop-up and stop
+    // your own visits being counted in analytics (?owner=off undoes it). Remembered in this browser only.
+    window.__oaOwner = (function () {
+      try {
+        var u = new URL(location.href), q = u.searchParams.get("owner");
+        if (q === "on") localStorage.setItem("oa_owner", "1");
+        if (q === "off") localStorage.removeItem("oa_owner");
+        if (q) { u.searchParams.delete("owner"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+        return localStorage.getItem("oa_owner") === "1";
+      } catch (e) { return false; }
+    })();
+    if (POSTHOG_KEY && !window.__oaOwner) posthog.init(POSTHOG_KEY, {
       api_host: POSTHOG_HOST,
       person_profiles: "identified_only",
       capture_pageview: "history_change", // count page views as visitors click around the app, not just the first load

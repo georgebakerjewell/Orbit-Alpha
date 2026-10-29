@@ -768,7 +768,7 @@ function AiWelcomeBar({ path }) {
   const logged = useRef("");
   // Event pages already put their sign-up box straight under the answer (and greet AI visitors there).
   const earlyBox = path === "/spacex-stock/lockup-calendar" || /^\/(results|earnings-preview|articles)\/./.test(path);
-  const show = v && !closed && !(subscribed && !done) && path !== "/newsletter" && !earlyBox;
+  const show = v && !closed && !window.__oaOwner && !(subscribed && !done) && path !== "/newsletter" && !earlyBox;
   useEffect(() => { if (show && logged.current !== path) { logged.current = path; window.posthog?.capture?.("ai_bar_shown", { page: path, assistant: v.source }); } }, [show, path]);
   if (!show) return null;
   const close = () => { setClosed(true); try { sessionStorage.setItem("oa_aibar", "x"); } catch {} };
@@ -798,7 +798,7 @@ function SubscribePopup({ path }) {
   const special = pageOffer(path, popEarnings.data);
   const offerKey = special ? special[0] : "pdf";
   const open = useCallbackRef((trigger) => {
-    if (show || subscribed || popupSeen(offerKey) || path === "/newsletter" || aiVisit()) return; // AI visitors get the welcome bar instead
+    if (show || subscribed || window.__oaOwner || popupSeen(offerKey) || path === "/newsletter" || aiVisit()) return; // owner mode: see index.html // AI visitors get the welcome bar instead
     const wait = POPUP_MIN_MS - (Date.now() - startedAt.current);
     if (wait > 0) { setTimeout(() => open(trigger), wait); return; } // too early: try again once the 10s have passed
     markPopupSeen(offerKey); // recorded the moment it appears, so closing the tab counts as seen
