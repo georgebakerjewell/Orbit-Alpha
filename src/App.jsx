@@ -443,6 +443,8 @@ const GlobalStyles = () => (
     .oa-hub-lead{font-size:14px!important;max-width:680px}
     .oa-hub-sub{color:${C.muted}!important;margin-top:-4px!important;font-size:12.5px!important}
     .oa-hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:12px 0 30px}
+    .oa-hub-list{display:grid;gap:10px;margin:12px 0 24px;max-width:760px}
+    .oa-hub-co{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 30px;font-size:12px}
     .oa-issue a.oa-card{display:block;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;background:rgba(255,255,255,0.02);text-decoration:none;color:${C.light};transition:border-color .15s,background .15s}
     .oa-issue a.oa-card:hover{border-color:rgba(0,255,136,0.4);background:rgba(0,255,136,0.04)}
     .oa-issue a.oa-card.feat{border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.05)}
@@ -2271,7 +2273,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       <PeerTable ticker={ticker} data={keyStats.data} prices={prices} />
 
       {/* News */}
-      <Card title={`${ticker} news`} style={{ marginBottom: 14 }}>
+      <Card title={`${ticker} headlines from around the web`} style={{ marginBottom: 14 }}>
         {news.loading && <ListSkeleton rows={3} />}
         {!news.loading && stories.length === 0 && <Empty>No recent stories in our feed.</Empty>}
         {stories.map((item, i) => (
@@ -2524,6 +2526,7 @@ function OrbitBriefs({ ticker, limit = 6, title = "Orbit Alpha reports" }) {
           <Link to={`/articles/${a.slug}`} className="oa-link" style={{ fontSize: 11, color: C.green }}>Read the full story, with sources</Link>
         </article>
       ))}
+      <MoreLink to="/articles">All Orbit Alpha analysis</MoreLink>
     </Card>
   );
 }
@@ -2574,7 +2577,7 @@ function News({ news, prices }) {
         </div>
       </div>
 
-      <OrbitBriefs ticker={company} limit={company ? 10 : 6} />
+      <OrbitBriefs ticker={company} limit={company ? 10 : 4} />
 
       <div className="oa-news-grid">
         <main>
@@ -2582,6 +2585,7 @@ function News({ news, prices }) {
 
           {!news.loading && !company && (
             <>
+              <div style={{ fontSize: 10.5, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", margin: "4px 0 14px", paddingBottom: 8, borderBottom: "1px solid rgba(255,255,255,0.08)" }}>From around the web · headlines from other publishers</div>
               <h2 style={h2}>Top stories</h2>
               <div style={{ fontSize: 10, color: "#667", marginBottom: 6 }}>Ranked by how widely each story was covered, whether it's a concrete event, and how much the stock moved.</div>
               {top.length === 0 && <Empty>No company news in this period.</Empty>}
@@ -2883,7 +2887,9 @@ function About() {
 /* ════════════════════════════════════════════════════════════════════════════
    APP SHELL
    ════════════════════════════════════════════════════════════════════════════ */
-const NAV = [["/", "home", "Home"], ["/markets", "markets", "Markets"], ["/news", "news", "News"], ["/guides", "guide", "Guides"], ["/newsletter", "newsletter", "Newsletter"], ["/about", "about", "About"]];
+// Nav highlight: Analysis covers /articles and every article; Guides covers the other guide pages.
+const navActiveFor = (page, path) => (p) => p === "articles" ? path.startsWith("/articles") : page === p && !(p === "guide" && path.startsWith("/articles"));
+const NAV = [["/", "home", "Home"], ["/markets", "markets", "Markets"], ["/news", "news", "News"], ["/articles", "articles", "Analysis"], ["/guides", "guide", "Guides"], ["/newsletter", "newsletter", "Newsletter"], ["/about", "about", "About"]];
 // Shown under "About" in the mobile menu (the same links as the footer).
 const ABOUT_LINKS = [["/advertise", "Advertise"], ["/space-stocks-widget", "Free widget"], ["mailto:OrbitAlphaApp@proton.me", "Contact"], ["https://x.com/OrbitAlphaApp", "X"], ["https://www.reddit.com/r/SpaceCapital/", "r/SpaceCapital"]];
 
@@ -2896,6 +2902,7 @@ export default function App() {
 
   const { page } = route;
   const path = page === "stock" ? `/stocks/${route.ticker.toLowerCase()}` : window.location.pathname;
+  const navActive = navActiveFor(page, path);
   useDocumentMeta(route, path);
   const go = (to) => { setMenuOpen(false); navigate(to); };
   const goSubscribe = () => go("/newsletter");
@@ -2917,14 +2924,14 @@ export default function App() {
       <Stars />
 
       <div style={{ position: "relative", zIndex: 2 }}>
-        {/* Nav */}
+        {/* Nav ("Analysis" = /articles, Orbit Alpha's own news and question articles) */}
         <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 20px", borderBottom: "1px solid rgba(255,255,255,0.05)", position: "relative" }}>
           <Link to="/" style={{ fontFamily: SYNE, fontSize: 18, fontWeight: 800 }}>
             <span style={{ color: "#fff", fontWeight: 700 }}>ORBIT</span><span style={{ color: C.green }}>ALPHA.</span>
           </Link>
           <div className="desk-only" style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", display: "flex", gap: 28 }}>
             {NAV.map(([to, p, l]) => (
-              <Link key={p} to={to} style={{ fontSize: 11, color: page === p ? C.green : C.muted, borderBottom: `1px solid ${page === p ? C.green : "transparent"}`, paddingBottom: 2 }}>{l}</Link>
+              <Link key={p} to={to} style={{ fontSize: 11, color: navActive(p) ? C.green : C.muted, borderBottom: `1px solid ${navActive(p) ? C.green : "transparent"}`, paddingBottom: 2 }}>{l}</Link>
             ))}
           </div>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
@@ -2939,7 +2946,7 @@ export default function App() {
         {menuOpen && (
           <div style={{ background: "#070a14", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
             {NAV.map(([to, p, l]) => (
-              <Link key={p} to={to} style={{ color: page === p ? C.green : C.light, padding: "10px 0", fontSize: 12, borderBottom: p === "about" ? "none" : "1px solid rgba(255,255,255,0.04)" }}>{l}</Link>
+              <Link key={p} to={to} style={{ color: navActive(p) ? C.green : C.light, padding: "10px 0", fontSize: 12, borderBottom: p === "about" ? "none" : "1px solid rgba(255,255,255,0.04)" }}>{l}</Link>
             ))}
             <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 16px", padding: "0 0 12px 12px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
               {ABOUT_LINKS.map(([to, l]) => to.startsWith("/")
