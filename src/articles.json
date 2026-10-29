@@ -1,6 +1,152 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-40-billion-apollo-gpu-lease",
+  "title": "SpaceX's $40B Apollo GPU lease: debt doubles, $2B a quarter from 2027",
+  "summary": "SpaceX has committed to a $40 billion, five-year finance lease of Nvidia GPUs from an Apollo-managed lessor. Our calculation: debt and leases roughly double to $79 billion, and principal alone runs at about $2 billion a quarter once the chips arrive, nearly five times the AI unit's Q3 operating profit.",
+  "published": "2026-10-29",
+  "updated": "2026-10-29",
+  "tickers": [
+   "SPCX"
+  ],
+  "match": [
+   "spacex",
+   "gpu"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 24 October 2026 SpaceX signed a binding commitment letter for a master finance lease with an entity managed by Apollo Global Management, and disclosed it in an 8-K on 26 October. The lessor will buy GPU pods and related equipment and lease them to SpaceX in tranches, each for about five to five and a quarter years. SpaceX expects total principal payments of about $40 billion. SpaceX says the chips are Nvidia's next-generation Vera Rubin, for its ground-based compute buildout.",
+     "Rent is paid quarterly in advance: one-twentieth of each tranche's cost, plus interest at a fixed rate still to be set at pricing, plus ongoing costs. The lease is expected to close before the end of 2026, and payments start as GPUs are delivered in the first half of 2027. Goldman Sachs structured it, with BlackRock, Goldman Sachs Asset Management and KKR-advised accounts among the anchor investors.",
+     "The share reaction was small. [SPCX](/stocks/spcx) closed at $146.90 on 26 October, 0.4% below the previous close, rose 1.1% to $148.58 on 27 October and fell 2.3% to $145.23 on 28 October. Talks on a $40 billion Apollo-led chip financing had been reported as early as 7 October, so the size was not a surprise."
+    ]
+   ],
+   [
+    "Orbit Alpha view: cheap money, but the chips must pay $2B a quarter",
+    [
+     "The headline is the size. The more useful number is the repayment speed. Because each tranche repays one-twentieth of its cost every quarter, the whole $40 billion is repaid over about five years. Once all tranches are delivered, that is about $2 billion of principal every quarter, or $8 billion a year, before interest.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Before the lease",
+        "With the lease (our calculation)"
+       ],
+       "rows": [
+        [
+         "Debt and finance leases",
+         "$39.0B (30 Sep 2026)",
+         "about $79.0B once fully delivered, roughly double"
+        ],
+        [
+         "Scheduled principal in 2028",
+         "$2.9B",
+         "about $10.9B (adding $8B a year of lease principal)"
+        ],
+        [
+         "Scheduled principal in 2029",
+         "$3.4B",
+         "about $11.4B"
+        ],
+        [
+         "Interest in the first full year",
+         "$0.675B in Q3 2026 alone",
+         "about $2.1B extra at an illustrative 6% rate"
+        ],
+        [
+         "Lease principal as share of market value",
+         "",
+         "about 2.0% of $1.97 trillion"
+        ]
+       ]
+      }
+     },
+     "Our working: debt and finance leases were $38.99 billion at 30 September, from the 10-Q, so adding $40 billion gives about $79 billion. Scheduled principal for 2028 and 2029 comes from the 10-Q maturity table. The interest rate has not been set, so we use 6% purely to show scale: first-year interest on a balance falling from $38 billion to $32 billion is about $2.1 billion, against $675 million of total interest expense in Q3. Each percentage point on the final rate adds about $0.95 billion over the life of the lease. Market value uses 13.58 billion shares outstanding on 15 October and the $145.23 close on 28 October.",
+     "Set against SpaceX's equity value, the extra debt is small: about 4% of market value even after the lease. Set against what the AI business earns today, it is large. The Super Intelligence segment made $431 million of operating income in Q3 on $7.56 billion of revenue. The lease alone will need about $2 billion of principal a quarter, nearly five times that figure, plus interest. The finance chief says SpaceX sees payback of less than a year on AI infrastructure. If that holds, the new chips cover their rent easily; if GPU rental prices fall, Starlink has to carry it. Connectivity made $2.37 billion of operating income in Q3, so the lease principal would take about 85% of a quarter of today's Starlink profit.",
+     "Two features shift risk to SpaceX shareholders. First, this is a finance lease that repays the full cost over five years, so SpaceX carries the risk that the Vera Rubin chips lose earning power before they are paid off, for example when a newer chip generation arrives. Second, payments are fixed and quarterly whatever AI demand does in 2028 to 2032."
+    ]
+   ],
+   [
+    "Why SpaceX did it",
+    [
+     "Cash is going out much faster than it comes in. In the first nine months of 2026 SpaceX generated $13.1 billion from operations but spent $48.1 billion on property and equipment, a gap of about $35 billion. It guided to $35 billion to $40 billion of capital spending in Q4 alone, against $89.9 billion of cash and marketable securities at 30 September. On our calculation, Q4 spending at that guidance would take the pile down to roughly $50 billion to $55 billion before Q4 operating cash flow. The lease moves an amount equal to 83% of the nine-month equipment spend off the upfront cash line and spreads it over five years.",
+     "It also widens who funds the AI buildout. Until now SpaceX's AI hardware leases have come from Valor Equity Partners, a related party whose founder sits on the SpaceX board: those obligations grew from $4.5 billion at the end of 2025 to $12.9 billion at 30 September and made up $351 million of Q3's $675 million interest expense. The Apollo lease is about three times that size and comes from outside lenders, which the finance chief described as diversifying funding sources."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     {
+      "list": [
+       "Scale: the $40 billion lease is larger than the whole market value of [Rocket Lab](/stocks/rklb), about $36.8 billion at its 28 October close of $58.60. SpaceX's AI spending now dwarfs the space sector it is listed in.",
+       "SpaceX's capital is going to compute, not rockets: of $19.6 billion of Q3 capital spending, $16.4 billion went to AI, while the Space segment lost $7 million. For investors who own SPCX as a space stock, more of the result now depends on GPU economics. See the [SpaceX Q3 results](/results/spcx-q3-2026).",
+       "Lenders are willing to fund this kind of build at scale when strong cash flows sit behind it. Smaller companies with heavy satellite spending, such as [AST SpaceMobile](/stocks/asts), do not have a Starlink-sized earner behind their borrowing, so this deal is not a template they can copy on the same terms."
+      ]
+     }
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "The fixed rate, set at pricing before the master lease is signed, and the closing, expected before the end of 2026.",
+       "GPU deliveries in the first half of 2027, which start the quarterly payments.",
+       "AI segment operating income in the Q4 and Q1 results against the roughly $2 billion of quarterly principal to come. SpaceX has guided to Q1 2027 revenue of $33 billion to $37 billion.",
+       "The 8 December lock-up expiry and the Tesla merger talks, which also bear on the share price. See [when the SpaceX lock-up ends](/articles/spacex-lock-up-ends-8-december) and [are SpaceX and Tesla merging?](/articles/are-spacex-and-tesla-merging)."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much will SpaceX pay each year under the Apollo GPU lease?",
+    "About $8 billion a year of principal once all tranches are delivered, because each quarterly payment repays one-twentieth of a tranche's cost. Interest comes on top at a fixed rate not yet set. At an illustrative 6% rate, our calculation puts first-year interest at about $2.1 billion."
+   ],
+   [
+    "Does the lease make SpaceX highly indebted?",
+    "Not against its size. Debt and finance leases roughly double from $39.0 billion to about $79 billion, but that is about 4% of SpaceX's market value of roughly $1.97 trillion at the 28 October close. The pressure is on cash flow: the lease needs about $2 billion a quarter, while the AI segment made $431 million of operating income in Q3."
+   ],
+   [
+    "Why lease the GPUs instead of buying them with cash?",
+    "SpaceX spent $48.1 billion on equipment in the first nine months of 2026 against $13.1 billion of operating cash flow, and guided to $35 billion to $40 billion more in Q4. Leasing spreads $40 billion of chip costs over five years and adds lenders beyond Valor Equity Partners, a related party."
+   ]
+  ],
+  "sources": [
+   [
+    "SpaceX Form 8-K, 26 October 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000110465926118614/tm2628247d1_8k.htm"
+   ],
+   [
+    "SpaceX Secures $40 Billion in the Largest GPU Financing Ever (SpaceX investor relations, 26 October 2026)",
+    "https://s21.q4cdn.com/184289198/files/doc_news/2026/Oct/26/SpaceX-Secures-40-Billion-in-the-Largest-GPU-Financing-Ever.pdf"
+   ],
+   [
+    "SpaceX Form 10-Q for the quarter ended 30 September 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/0001181412/000162828026066880/spcx-20260930.htm"
+   ],
+   [
+    "SpaceX Reports Third Quarter 2026 Results (SpaceX investor relations)",
+    "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ],
+   [
+    "SpaceX locks in $40B GPU financing deal with Apollo (TechCrunch)",
+    "https://techcrunch.com/2026/10/26/spacex-locks-in-40b-gpu-financing-deal-with-apollo/"
+   ],
+   [
+    "SpaceX looks to raise $40bn to buy Nvidia chips in financing led by Apollo (TechNews, 7 October 2026)",
+    "https://finance.technews.tw/2026/10/07/spacex-looks-to-raise-40bn-to-buy-nvidia-chips-in-financing-led-by-apollo/"
+   ],
+   [
+    "SpaceX quarterly revenue jumps, beats estimates as AI business surges (Reuters)",
+    "https://www.reuters.com/business/media-telecom/spacex-quarterly-revenue-jumps-beats-estimates-ai-business-surges-2026-10-20/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "fcc-approves-amazon-globalstar-deal",
   "title": "FCC clears Amazon-Globalstar deal: why GSAT still trades below $90",
   "summary": "The FCC approved Amazon Leo's $11.5 billion Globalstar purchase on 27 October. The headline price is $90, but with Amazon at $254.60 the stock option is worth $81.73 and cash is capped at 40%, so the realistic mix is worth about $85.04, close to GSAT's $84.07 close.",
