@@ -14,6 +14,7 @@
       "SpaceX plans to catch both stages with the launch tower's arms; a success would be the first full recovery of a Starship vehicle and would allow the first reflight of a properly recovered ship (NASASpaceflight).",
       "Elon Musk put the chance of a successful ship catch on the first attempt at about 50 to 60 percent (Space Launch Schedule, Wikipedia).",
       "Flight 14 on 28 September 2026 was the first Starship flight to reach orbit and deployed 26 Starlink V3 satellites, though the booster and the ship each lost an engine during ascent.",
+      "Booster 22 completed a 16-second, full-duration static fire of all 33 engines on 25 October 2026 (Aviation Week), and both the booster and Ship 42 had completed static fire testing by 27 October (WAI Hub).",
       "Flight 16, targeted for December, could be the first Starship launch from Launch Complex 39A in Florida; NASASpaceflight notes those plans depend on how Flight 15 goes."
     ],
     "facts": [
@@ -74,9 +75,17 @@
       [
         "24/7 Wall St.: SpaceX flew the most powerful rocket ever built and the stock fell anyway",
         "https://247wallst.com/investing/2026/09/29/spacex-flew-the-most-powerful-rocket-ever-built-and-the-stock-fell-anyway/"
+      ],
+      [
+        "Aviation Week: Super Heavy tested for Flight 15 (26 October 2026)",
+        "https://aviationweek.com/space/launch-vehicles-propulsion/super-heavy-tested-flight-15"
+      ],
+      [
+        "WAI Hub: Starship Flight 15",
+        "https://www.whataboutit.space/launches/starship-flight-15"
       ]
     ],
-    "updated": "2026-10-22"
+    "updated": "2026-10-29"
   },
   {
     "slug": "ast-spacemobile-bluebirds-14-16-launch",
@@ -91,9 +100,10 @@
     "summary": "AST SpaceMobile's BlueBirds 14, 15 and 16 reached Cape Canaveral in October 2026 and await a launch date, listed for the fourth quarter. The launch would take the constellation to 16 satellites as AST works towards about 45 in orbit by early 2027.",
     "stakes": [
       "AST is aiming for about 45 satellites in orbit by early 2027 and about 90 for continuous global coverage; BlueBirds 11 to 13 took the count to 13 in August 2026.",
-      "After the August launch, AST said it was preparing for beta services later in 2026 and working towards service activation in the US, Canada, Europe, Saudi Arabia and Japan, and for the US Government.",
+      "In October 2026 AST said it was targeting initial, intermittent coverage by the end of 2026 in the US, Canada, Japan, the UK and Saudi Arabia, with more satellites extending how long and how often coverage is available (Light Reading).",
       "AST's full year 2026 revenue guidance is $150 million to $200 million, with about half expected to come from contracted backlog.",
-      "Advanced Television reports this batch is about a month behind the schedule shown in August, and that later launches depend partly on the availability of Blue Origin's New Glenn."
+      "Advanced Television reports this batch is about a month behind the schedule shown in August, and that later launches depend partly on the availability of Blue Origin's New Glenn.",
+      "AST will hold its third quarter 2026 business update call on 9 November 2026 (StockTitan)."
     ],
     "facts": [
       [
@@ -149,9 +159,17 @@
       [
         "Next Spaceflight: BlueBird 14 to 16",
         "https://nextspaceflight.com/launches/details/8242/"
+      ],
+      [
+        "Light Reading: AST SpaceMobile says limited coverage coming soon in US and beyond (21 October 2026)",
+        "https://www.lightreading.com/satellite/ast-spacemobile-says-limited-coverage-coming-soon-in-us-and-beyond"
+      ],
+      [
+        "StockTitan: AST SpaceMobile news",
+        "https://www.stocktitan.net/news/ASTS/"
       ]
     ],
-    "updated": "2026-10-22"
+    "updated": "2026-10-29"
   },
   {
     "slug": "firefly-alpha-block-2-first-launch",
@@ -301,25 +319,25 @@
   },
   {
     "slug": "virgin-galactic-delta-flight-tests",
-    "title": "Virgin Galactic Delta Spaceship Flight Tests",
+    "title": "Virgin Galactic Delta Spaceship Apeiron Flight Tests",
     "tickers": [
       "SPCE"
     ],
-    "vehicle": "Delta-class spaceship, carried by VMS Eve",
+    "vehicle": "Delta-class spaceship Apeiron, carried by VMS Eve",
     "status": "upcoming",
     "date": null,
-    "dateText": "Flight test phase from October 2026; commercial service expected February 2027",
-    "summary": "Virgin Galactic expected its first Delta-class spaceship to start flight testing in October 2026, moving through captive carry, glide and powered flights before commercial service now expected in February 2027. Delta is the ship meant to return the company to revenue flights.",
+    "dateText": "Flight tests after avionics software validation; first commercial spaceflight expected early second quarter 2027",
+    "summary": "Virgin Galactic flew its first Delta-class spaceship, Apeiron, to Spaceport America on 28 October 2026 ahead of captive carry, glide and powered test flights. First commercial service is now expected in early Q2 2027, the flights meant to return the company to revenue.",
     "stakes": [
-      "In August 2026 Virgin Galactic moved first commercial service from the fourth quarter of 2026 to February 2027, with a second ship due to join in March 2027.",
-      "The shares fell about 13% after hours, to roughly $2.89, after the delay was announced with second quarter results (TechTimes).",
-      "Cash, cash equivalents and marketable securities were $286 million at 30 June 2026.",
-      "A tranche of spaceflights priced at $750,000 was oversubscribed and booked out ahead of schedule, according to the company."
+      "On 26 October 2026 Virgin Galactic moved its first Delta commercial spaceflight from February 2027 to early in the second quarter of 2027, citing extra time for avionics software integration and validation (Yahoo Finance).",
+      "The shares fell about 2% after hours on the announcement (Yahoo Finance); an earlier delay in August, from the fourth quarter of 2026 to February 2027, was followed by a fall of about 13% after hours (TechTimes).",
+      "A second Delta ship is expected to enter service in late Q2 or early Q3 2027, with two-ship commercial operations targeted for early Q3 2027 (Yahoo Finance).",
+      "Cash, cash equivalents and marketable securities were $286 million at 30 June 2026."
     ],
     "facts": [
       [
         "Spaceship",
-        "Delta 1 (first Delta-class ship)"
+        "Apeiron (first Delta-class ship)"
       ],
       [
         "Carrier aircraft",
@@ -327,22 +345,34 @@
       ],
       [
         "Base",
-        "Spaceport America, New Mexico"
+        "Spaceport America, New Mexico (arrived 28 October 2026 from Mesa, Arizona)"
       ],
       [
         "Test sequence",
-        "Captive carry, then glide flights, then powered flights"
+        "Avionics software validation, then captive carry, glide and powered flights"
       ],
       [
         "Commercial service",
-        "Expected February 2027"
+        "Expected early second quarter 2027"
       ],
       [
         "Second ship",
-        "Planned to join the fleet in March 2027"
+        "Expected in service late Q2 or early Q3 2027"
       ]
     ],
     "sources": [
+      [
+        "Yahoo Finance: SPCE slips after hours as Virgin Galactic delays first Delta flight to early Q2 2027 (26 October 2026)",
+        "https://finance.yahoo.com/markets/stocks/articles/spce-stock-slips-hours-branson-235035387.html"
+      ],
+      [
+        "Universe Today: Virgin Galactic flies next-gen space plane to new home with new name (28 October 2026)",
+        "https://www.universetoday.com/articles/virgin-galactic-flies-next-gen-space-plane-to-new-home-with-new-name"
+      ],
+      [
+        "Yahoo Tech: Virgin Galactic unveils Spaceship Apeiron",
+        "https://tech.yahoo.com/science/articles/virgin-galactic-unveils-spaceship-apeiron-183008503.html"
+      ],
       [
         "Virgin Galactic: Second quarter 2026 results and business update",
         "https://www.virgingalactic.com/news/virgin-galactic-announces-second-quarter-2026-financial-results-and-provides-business-update"
@@ -352,6 +382,92 @@
         "https://www.techtimes.com/articles/324278/20260813/virgin-galactic-hits-80m-cash-floor-delta-avionics-delay-pushes-launch-february.htm"
       ]
     ],
-    "updated": "2026-10-22"
+    "updated": "2026-10-29",
+    "history": [
+      [
+        "Delta service delay announced with Q2 results",
+        "August 2026",
+        "First commercial service moved from Q4 2026 to February 2027",
+        "SPCE down about 13% after hours, to roughly $2.89 (TechTimes)"
+      ],
+      [
+        "Delta service delay to early Q2 2027",
+        "26 October 2026",
+        "Avionics software work cited",
+        "SPCE down about 2% after hours (Yahoo Finance)"
+      ]
+    ]
+  },
+  {
+    "slug": "telesat-lightspeed-first-launch",
+    "title": "Telesat Lightspeed First Satellites Launch",
+    "tickers": [
+      "TSAT",
+      "MDA"
+    ],
+    "vehicle": "Falcon 9",
+    "status": "upcoming",
+    "date": null,
+    "dateText": "No earlier than December 2026 (Telesat: first launches before the end of 2026)",
+    "summary": "The first two Telesat Lightspeed satellites, built by MDA Space, are due to launch on a Falcon 9 no earlier than December 2026. It is the first flight of Telesat's 225-satellite LEO network and MDA's largest constellation programme.",
+    "stakes": [
+      "Telesat said on its second quarter 2026 call that the funded constellation is 225 satellites, needing 15 Falcon 9 launches (14 under contract), with all launches done by the end of 2028 and global commercial availability in the first quarter of 2028.",
+      "Telesat reported a Lightspeed contractual backlog of $5.6 billion and, in August 2026, signed a $2.7 billion polar satellite communications contract with Canada's Defence Investment Agency (SpaceQ).",
+      "MDA Space builds the Lightspeed satellites; an August 2026 order for 27 more took its total to 225 and added $474 million to the contract value (MDA Space).",
+      "Lightspeed is meant to offset declines in Telesat's geostationary business (SpaceNews)."
+    ],
+    "facts": [
+      [
+        "Payload",
+        "First two Telesat Lightspeed satellites"
+      ],
+      [
+        "Manufacturer",
+        "MDA Space (Aurora satellite platform)"
+      ],
+      [
+        "Launch vehicle",
+        "Falcon 9"
+      ],
+      [
+        "Launch site",
+        "Cape Canaveral Space Force Station, Florida (listed)"
+      ],
+      [
+        "Constellation",
+        "225 satellites in low Earth orbit"
+      ],
+      [
+        "Launch contract",
+        "15 Falcon 9 launches needed, 14 under contract"
+      ],
+      [
+        "Commercial service",
+        "Global availability targeted for the first quarter of 2028"
+      ]
+    ],
+    "sources": [
+      [
+        "Space Launch Schedule: Falcon 9, Telesat Lightspeed 1",
+        "https://www.spacelaunchschedule.com/launch/falcon-9-block-5-telesat-lightspeed-1/"
+      ],
+      [
+        "SpaceQ: Telesat Q2 2026, Lightspeed expands after $2.7B military contract (14 August 2026)",
+        "https://spaceq.ca/telesat-q2-2026-lightspeed-expands-after-2-7b-military-contract-but-debt-a-worry/"
+      ],
+      [
+        "The Motley Fool: Telesat Q2 2026 earnings call transcript",
+        "https://www.fool.com/earnings/call-transcripts/2026/08/20/telesat-tsat-q2-2026-earnings-call-transcript/"
+      ],
+      [
+        "MDA Space: Awarded $474 million to expand the Telesat Lightspeed LEO constellation (4 August 2026)",
+        "https://mda.space/article/mda-space-awarded-474-million-to-expand-the-telesat-lightspeed-leo-constellation"
+      ],
+      [
+        "SpaceNews: Telesat eyes December 2026 for Lightspeed pathfinder debut",
+        "https://spacenews.com/telesat-eyes-december-2026-for-lightspeed-pathfinder-debut/"
+      ]
+    ],
+    "updated": "2026-10-29"
   }
 ]
