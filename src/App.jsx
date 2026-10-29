@@ -2889,9 +2889,10 @@ function About() {
    ════════════════════════════════════════════════════════════════════════════ */
 // Nav highlight: Analysis covers /articles and every article; Guides covers the other guide pages.
 const navActiveFor = (page, path) => (p) => p === "articles" ? path.startsWith("/articles") : page === p && !(p === "guide" && path.startsWith("/articles"));
-const NAV = [["/", "home", "Home"], ["/markets", "markets", "Markets"], ["/news", "news", "News"], ["/articles", "articles", "Analysis"], ["/guides", "guide", "Guides"], ["/newsletter", "newsletter", "Newsletter"], ["/about", "about", "About"]];
+// Five main links; the logo goes home, and About sits with the smaller links (mobile menu and home footer).
+const NAV = [["/markets", "markets", "Markets"], ["/news", "news", "News"], ["/articles", "articles", "Analysis"], ["/guides", "guide", "Guides"], ["/newsletter", "newsletter", "Newsletter"]];
 // Shown under "About" in the mobile menu (the same links as the footer).
-const ABOUT_LINKS = [["/advertise", "Advertise"], ["/space-stocks-widget", "Free widget"], ["mailto:OrbitAlphaApp@proton.me", "Contact"], ["https://x.com/OrbitAlphaApp", "X"], ["https://www.reddit.com/r/SpaceCapital/", "r/SpaceCapital"]];
+const ABOUT_LINKS = [["/about", "About"], ["/advertise", "Advertise"], ["/space-stocks-widget", "Free widget"], ["mailto:OrbitAlphaApp@proton.me", "Contact"], ["https://x.com/OrbitAlphaApp", "X"], ["https://www.reddit.com/r/SpaceCapital/", "r/SpaceCapital"]];
 
 export default function App() {
   const [route, navigate] = useRouter();
@@ -2946,9 +2947,9 @@ export default function App() {
         {menuOpen && (
           <div style={{ background: "#070a14", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
             {NAV.map(([to, p, l]) => (
-              <Link key={p} to={to} style={{ color: navActive(p) ? C.green : C.light, padding: "10px 0", fontSize: 12, borderBottom: p === "about" ? "none" : "1px solid rgba(255,255,255,0.04)" }}>{l}</Link>
+              <Link key={p} to={to} style={{ color: navActive(p) ? C.green : C.light, padding: "10px 0", fontSize: 12, borderBottom: p === "newsletter" ? "none" : "1px solid rgba(255,255,255,0.04)" }}>{l}</Link>
             ))}
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 16px", padding: "0 0 12px 12px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 16px", padding: "10px 0 12px", borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
               {ABOUT_LINKS.map(([to, l]) => to.startsWith("/")
                 ? <Link key={to} to={to} style={{ color: C.muted, fontSize: 11.5 }}>{l}</Link>
                 : <a key={to} href={to} target={to.startsWith("http") ? "_blank" : undefined} rel="noopener" style={{ color: C.muted, fontSize: 11.5, textDecoration: "none" }}>{l}</a>)}
