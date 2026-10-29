@@ -1,6 +1,150 @@
 [
  {
   "kind": "news",
+  "slug": "eutelsat-iris2-order-book-12-billion",
+  "title": "Eutelsat's order book jumps to €12.1bn: why the IRIS² boost is not profit",
+  "summary": "Eutelsat's order book rose to €12.1bn from €3.4bn as €8.9bn of IRIS² construction work was booked, about 3.8 times its market value. But that work is kept out of its margin targets, Eutelsat must invest €3.39bn itself, and the rest of the order book fell to €3.2bn.",
+  "published": "2026-10-29",
+  "updated": "2026-10-29",
+  "tickers": [
+   "ETL",
+   "SESG",
+   "OHB"
+  ],
+  "match": [
+   "eutelsat",
+   "iris"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 29 October 2026, after the Paris market closed, [Eutelsat](/stocks/etl) published its trading update for the quarter to 30 September. The headline was its order book: €12.1 billion, up from €3.4 billion at the end of June, because the EU's IRIS² secure connectivity constellation has entered construction and Eutelsat booked €8.9 billion of IRIS² construction work. It expects to recognise most of that between 2027 and 2031.",
+     "Eutelsat also said for the first time that access to IRIS² should bring more than €10 billion of commercial services revenue between 2032 and 2040. In return it will invest €3.39 billion between 2027 and 2034: €2.23 billion in shared infrastructure and €1.16 billion in its own commercial infrastructure.",
+     "The quarter itself was weak. Revenue from its four operating businesses fell 2.1% like for like to €278.3 million, below the €291 million analysts expected according to Reuters, as video revenue fell 17.6% while OneWeb (LEO) revenue rose 31.1% to €70.9 million. All financial targets for 2026-27 and 2028-29 were confirmed. The shares closed at about €2.01 before the release and traded at €2.00 on Tradegate that evening, so the market's full reaction comes on 30 October."
+    ]
+   ],
+   [
+    "Orbit Alpha view: a bigger order book, not a bigger profit pool",
+    [
+     "On paper this is transformational. The €8.9 billion of IRIS² construction work is about 7.2 times Eutelsat's last annual revenue of €1.24 billion and about 3.8 times its market value of roughly €2.37 billion (our calculation from about 1.18 billion shares and the 29 October close of about €2.01). Spread evenly over 2027 to 2031, it would add about €1.8 billion of revenue a year, more than Eutelsat's whole business brings in today.",
+     "But three details in the release point the other way. First, Eutelsat keeps IRIS² construction out of its adjusted EBITDA margin targets. Our reading is that it does not expect this work to earn anything like the margins of its satellite services: much of the money is likely to pass through to the manufacturers building the satellites, such as Airbus and Thales Alenia Space. Second, Eutelsat has to put in €3.39 billion of its own, about 1.4 times its market value, or about €424 million a year over 2027 to 2034 on our even-spread calculation, on top of about €1 billion for 229 more OneWeb satellites. Third, the rest of the order book went backwards: excluding IRIS², it fell to about €3.2 billion from €3.4 billion in June, and fell to 2.6 years of revenue from 2.7.",
+     {
+      "table": {
+       "head": [
+        "Figure",
+        "Amount",
+        "What it compares to (our calculation)"
+       ],
+       "rows": [
+        [
+         "IRIS² construction backlog",
+         "€8.9bn",
+         "7.2x last year's €1.24bn revenue; 3.8x market value"
+        ],
+        [
+         "Eutelsat's own IRIS² investment, 2027 to 2034",
+         "€3.39bn",
+         "1.4x market value; about €424m a year"
+        ],
+        [
+         "Expected IRIS² services revenue, 2032 to 2040",
+         "over €10bn",
+         "about €1.1bn a year, roughly 90% of last year's revenue"
+        ],
+        [
+         "Order book excluding IRIS²",
+         "about €3.2bn",
+         "down from about €3.4bn at 30 June"
+        ],
+        [
+         "IRIS² construction revenue booked in the quarter",
+         "€5.1m",
+         "0.06% of the €8.9bn backlog"
+        ]
+       ]
+      }
+     },
+     "The real prize is the services revenue after 2032: more than €10 billion over nine years is about €1.1 billion a year, close to Eutelsat's entire revenue last year, from access to more than twice OneWeb's current capacity. Set against €3.39 billion of investment, that is roughly three euros of revenue for each euro invested, but it is revenue, not profit, and it only starts once the commercial Ku-band layer is fully operational, targeted for mid-2032. Until then, investors are being asked to fund a heavy spending programme while the old video business shrinks.",
+     "So the €12.1 billion order book says less about near-term earnings than the headline suggests. What it does show is that Eutelsat's future now rests on two European government-backed bets, OneWeb and IRIS², with funding the open question: the release gave no net debt figure and said only that Eutelsat will keep looking at ways to optimise its debt."
+    ]
+   ],
+   [
+    "Why Eutelsat is doing it",
+    [
+     "Eutelsat's video business, still its largest single line at €110 million in the quarter, is declining fast. IRIS² gives it a government-anchored low Earth orbit network to grow into, sovereign European customers who want an alternative to [SpaceX](/stocks/spcx)'s Starlink, and capacity it would struggle to finance on its own. As leader of the constellation's LEO segment it designs, deploys and operates 330 satellites, with the first launches from 2029."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     {
+      "list": [
+       "[SES](/stocks/sesg) leads the IRIS² medium Earth orbit segment and expects to commit up to €1.35 billion to it, according to Via Satellite. Eutelsat's numbers give investors a first sense of the scale of construction revenue partners can book, and of the funding they must find.",
+       "[OHB](/stocks/ohb) won a contract worth nearly €1 billion from SES at the end of August to build 18 MEO satellite platforms for IRIS². With the programme now in construction, that work moves from award to delivery, with first launches planned for 2029.",
+       "[SpaceX](/stocks/spcx) is the competitor IRIS² is designed to answer in Europe. A funded, government-backed rival from 2030 matters most for Starlink's government and defence sales in the EU."
+      ]
+     }
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "The share reaction on 30 October, the first trading session after the release.",
+       "Eutelsat's annual general meeting on 26 November 2026, which includes a share buyback and cancellation authority.",
+       "How fast IRIS² construction revenue builds this year from €5.1 million in the first quarter, which Eutelsat expects to rise materially.",
+       "Any refinancing or new debt to fund the €3.39 billion IRIS² commitment and the €1 billion OneWeb top-up.",
+       "Whether operating revenue reaches the €1.5 billion to €1.7 billion target for the year to June 2029, with an EBITDA margin above 60%."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Why did Eutelsat's order book jump to €12.1 billion?",
+    "Because €8.9 billion of IRIS² construction work was added once the EU programme entered construction. Excluding IRIS², the order book fell to about €3.2 billion from €3.4 billion at the end of June."
+   ],
+   [
+    "Does the IRIS² backlog mean much higher profits for Eutelsat?",
+    "Not directly. Eutelsat keeps IRIS² construction out of its margin targets, which suggests much of it will pass through to satellite builders. The bigger prize is more than €10 billion of services revenue over 2032 to 2040, which needs €3.39 billion of Eutelsat's own investment first."
+   ],
+   [
+    "How big is IRIS² compared with Eutelsat's market value?",
+    "The €8.9 billion construction backlog is about 3.8 times Eutelsat's market value of roughly €2.37 billion, and its own €3.39 billion investment is about 1.4 times, on our calculation from the 29 October close."
+   ]
+  ],
+  "sources": [
+   [
+    "Eutelsat Communications: First Quarter 2026-27 Revenues (Business Wire, 29 October 2026)",
+    "https://www.finanznachrichten.de/nachrichten-2026-10/69978767-eutelsat-communications-first-quarter-2026-27-revenues-004.htm"
+   ],
+   [
+    "Airbus starts the development of IRIS² satellites on behalf of Eutelsat (Airbus, 10 September 2026)",
+    "https://www.airbus.com/en/newsroom/press-releases/2026-09-airbus-starts-the-development-of-iris2-satellites-on-behalf-of-eutelsat"
+   ],
+   [
+    "Eutelsat expects $11 billion revenue after EU's Starlink rival comes online (Reuters via Global Banking & Finance Review)",
+    "https://www.globalbankingandfinance.com/eutelsat-expects-11-billion-revenue-eus-starlink-rival-comes/"
+   ],
+   [
+    "OHB to Build 18 MEO Satellites for IRIS² in Nearly €1B Award (Via Satellite, 31 August 2026)",
+    "https://www.satellitetoday.com/connectivity/2026/08/31/ohb-to-build-18-meo-satellites-for-iris%c2%b2-in-nearly-e1b-award/"
+   ],
+   [
+    "Eutelsat vise plus de 10 milliards d'euros de revenus entre 2032 et 2040 grâce à IRIS² (ABC Bourse)",
+    "https://abcbourse.com/marches/eutelsat-vise-plus-de-10-milliards-d-euros-de-revenus-entre-2032-et-2040-grace-a_705214"
+   ],
+   [
+    "Eutelsat Communications SA share data (Investing.com)",
+    "https://www.investing.com/equities/eutelsat-comm"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "fcc-direct-to-device-spectrum-482-mhz",
   "title": "FCC proposes 482 MHz more for satellite-to-phone: why SpaceX gains most",
   "summary": "On 29 October the FCC voted 3-0 to propose adding 482 MHz across eight bands to its satellite-to-phone rules, a 140% rise on today's 344 MHz. The bigger change is letting operators that own spectrum skip carrier leases, which suits SpaceX's spectrum buying more than AST SpaceMobile's partner model.",
