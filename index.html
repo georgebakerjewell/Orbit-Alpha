@@ -90,6 +90,21 @@
         return localStorage.getItem("oa_owner") === "1";
       } catch (e) { return false; }
     })();
+    // Visitor country from Vercel's edge header (/api/geo), added to every event as visitor_country.
+    // PostHog discards IPs (anonymize_ips), so it has no country of its own. Cached for the session;
+    // analytics starts once the country is known, or after 800ms at most.
+    var oaInit = function (country) { if (country) window.__oaTouchProps.visitor_country = country; startPosthog(); };
+    var oaStarted = false;
+    try {
+      var cc = sessionStorage.getItem("oa_cc");
+      if (cc !== null) oaInit(cc);
+      else {
+        var t = setTimeout(function () { oaInit(""); }, 800);
+        fetch("/api/geo").then(function (r) { return r.json(); }).then(function (j) { clearTimeout(t); var c = (j && j.country) || ""; try { sessionStorage.setItem("oa_cc", c); } catch (e) {} oaInit(c); }).catch(function () { clearTimeout(t); oaInit(""); });
+      }
+    } catch (e) { oaInit(""); }
+    function startPosthog() {
+    if (oaStarted) return; oaStarted = true;
     if (POSTHOG_KEY && !window.__oaOwner) posthog.init(POSTHOG_KEY, {
       api_host: POSTHOG_HOST,
       person_profiles: "identified_only",
@@ -100,6 +115,7 @@
       // Every event carries the visitor's first channel, so reports can be split by Reddit, X, Google and so on.
       before_send: function (ev) { if (ev && ev.properties) { for (var k in window.__oaTouchProps) if (ev.properties[k] == null) ev.properties[k] = window.__oaTouchProps[k]; } return ev; },
     });
+    }
     </script>
     <!-- Meta Pixel -->
     <script>
