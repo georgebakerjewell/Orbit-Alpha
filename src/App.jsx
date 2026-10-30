@@ -1118,18 +1118,6 @@ function Home({ news, prices, launches }) {
         </div>
       </Card>
 
-      {/* Guides, grouped (lib/pagemeta.js GUIDE_GROUPS); the full list is at /guides */}
-      <Card title="Space stock guides" note={<Link to="/guides" className="oa-link" style={{ color: C.green }}>All {GUIDE_LIST.length} guides</Link>} style={{ marginBottom: 14 }}>
-        {GUIDE_GROUPS.map(([id, name]) => (
-          <div key={id} style={{ marginBottom: 12 }}>
-            <div style={{ fontSize: 10, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>{name}</div>
-            <div style={{ display: "flex", gap: "8px 18px", flexWrap: "wrap", fontSize: 12 }}>
-              {GUIDE_LIST.filter(([, g]) => g.group === id && !g.hubHide).map(([p, g]) => <Link key={p} to={p} className="oa-link" style={{ color: id === "spacex" ? C.green : C.blue }}>{g.label}</Link>)}
-            </div>
-          </div>
-        ))}
-      </Card>
-
       {/* Closing CTA */}
       <ForNonSubscribers>
       <section style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", textAlign: "center", padding: "32px 20px", marginBottom: 24 }}>
