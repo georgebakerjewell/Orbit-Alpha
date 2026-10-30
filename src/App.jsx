@@ -745,7 +745,7 @@ function upcomingResults(earnings, ticker) {
 
 function pageOffer(path, earnings) {
   const stockT = path.startsWith("/stocks/") ? path.split("/")[2]?.toUpperCase() : null;
-  const pageCta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES);
+  const pageCta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES, articlesData);
   const next = stockT && upcomingResults(earnings, stockT);
   if (next && PROFILES[stockT]) {
     const name = PROFILES[stockT].name;
@@ -2836,7 +2836,7 @@ function GuidePage({ path }) {
     }).catch(() => alive && setFailed(true));
     return () => { alive = false; };
   }, [path]);
-  const cta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES);
+  const cta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES, articlesData);
   const onClick = (e) => {
     const href = e.target.closest("a")?.getAttribute("href");
     if (!href || !href.startsWith("/") || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
