@@ -74,6 +74,11 @@
       window.__oaFirstTouch = ft;
       window.__oaTouchProps = { first_source: (ft && ft.source) || "direct", first_medium: (ft && ft.medium) || "none", first_landing: ft && ft.landing };
     })();
+    // "Read next" and related links (lock-up calendar, articles, stock pages): do visitors go on to a second page?
+    document.addEventListener("click", function (e) {
+      var a = e.target && e.target.closest && e.target.closest("a[data-next]");
+      if (a && window.posthog && window.posthog.capture) window.posthog.capture("read_next_click", { placement: a.getAttribute("data-next"), target: a.getAttribute("href"), page: window.location.pathname });
+    });
     // Broker link clicks ("Where to buy" boxes on stock pages and guides) for the revenue dashboard.
     document.addEventListener("click", function (e) {
       var a = e.target && e.target.closest && e.target.closest("a[data-broker]");

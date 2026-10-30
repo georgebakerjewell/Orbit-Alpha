@@ -10,6 +10,7 @@
 // A block is a paragraph string, { list: [..] } or { table: { head: [..], rows: [[..]] } }.
 // Text is escaped; [link text](/internal/path) becomes a link (internal paths only).
 import { chartLinkHtml } from "../lib/affiliates.js";
+import { readNextHtml } from "../lib/readnext.js";
 export function buildArticles(ctx) {
   const { SITE, ORG, crumbs, esc, list, fmtDate, profiles, articles = [], asOf } = ctx;
   const ext = (u, t) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>`;
@@ -32,7 +33,7 @@ export function buildArticles(ctx) {
       description: a.summary,
       body: `<div class="oa-guide"><h1>${esc(a.h1 || a.title)}</h1><!--oa-answer-->
 ${a.canonical ? `<p class="oa-note">The full answer, kept up to date, is on <a href="${esc(a.canonical)}">${esc(a.canonicalLabel || "this page")}</a>.</p>` : ""}
-${(a.sections || []).map(([h, blocks]) => `<h2>${esc(h)}</h2>${[].concat(blocks).map(block).join("")}`).join("\n")}
+${(a.sections || []).map(([h, blocks], i) => `<h2>${esc(h)}</h2>${[].concat(blocks).map(block).join("")}${i === 1 && a.tickers?.[0] ? readNextHtml({ ticker: a.tickers[0], exclude: path, profiles, esc, placement: `article:${a.slug}`, articles }) : ""}`).join("\n")}
 ${a.faq?.length ? `<h2>Questions and answers</h2>${a.faq.map(([q, ans]) => `<h3>${esc(q)}</h3><p>${md(ans)}</p>`).join("")}` : ""}
 <h2>More</h2>${list([...(a.tickers || []).flatMap((t) => [`<a href="/stocks/${t.toLowerCase()}">${t} stock: live price, filings and contracts</a>`, ...(profiles[t].listing ? [] : [chartLinkHtml(t, `article:${a.slug}`, esc)])]), ...related.map((x) => `<a href="/articles/${x.slug}">${esc(x.title)}</a>`), `<a href="/articles">All Orbit Alpha analysis</a>`])}
 ${a.sources?.length ? `<h2>Sources</h2>${list(a.sources.map(([t, u]) => ext(u, t)))}` : ""}

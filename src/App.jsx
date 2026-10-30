@@ -967,6 +967,33 @@ function WhatsNext() {
   );
 }
 
+// "Today in space stocks": the day's biggest gainer and faller among covered stocks, plus the newest Orbit
+// Alpha analysis. Changes daily, so returning visitors see something new. Clicks log as read_next_click.
+function TodayStrip({ prices }) {
+  const moves = prices.stocks.filter((s) => PROFILES[s.ticker] && typeof s.changePct === "number").sort((a, b) => b.changePct - a.changePct);
+  const up = moves[0], down = moves[moves.length - 1];
+  const art = newsArticles.find((a) => !a.canonical);
+  const cards = [
+    art && [`/articles/${art.slug}`, `Latest analysis · ${fmtShort(art.published)}`, art.title, C.green],
+    up && up.changePct > 0 && [`/stocks/${up.ticker.toLowerCase()}`, prices.isLive ? "Top gainer today" : "Top gainer, last session", `${PROFILES[up.ticker].name} ${pct(up.changePct)}`, C.green],
+    down && down.changePct < 0 && [`/stocks/${down.ticker.toLowerCase()}`, prices.isLive ? "Biggest faller today" : "Biggest faller, last session", `${PROFILES[down.ticker].name} ${pct(down.changePct)}`, C.red],
+  ].filter(Boolean);
+  if (!cards.length) return null;
+  return (
+    <section aria-label="Today in space stocks" style={{ marginBottom: 18 }}>
+      <div style={{ fontSize: 11, color: C.muted, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 8 }}>Today in space stocks</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 10 }}>
+        {cards.map(([to, label, text, color]) => (
+          <Link key={to} to={to} data-next="home-today" className="oa-link" style={{ ...cardStyle, padding: "12px 14px", textDecoration: "none", display: "block" }}>
+            <div style={{ fontSize: 10, color, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 4 }}>{label}</div>
+            <div style={{ fontSize: 13, color: "#fff", lineHeight: 1.4 }}>{text}</div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Home({ news, prices, launches }) {
   const latest = issues[0];
   const subscribers = useSubscriberLabel();
@@ -1013,6 +1040,9 @@ function Home({ news, prices, launches }) {
           </a>
         )}
       </section>
+
+      {/* Today in space stocks: something new on every visit, and a second page to go to */}
+      <TodayStrip prices={prices} />
 
       {/* What's next: the dated events with their own pages and sign-up offers (dist/data/whats-next.json, written by the prerender) */}
       <WhatsNext />
@@ -2243,6 +2273,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
         {!chart.data && !chart.error ? <Skeleton w="100%" h={190} /> : <PriceChart points={points} intraday={range === "1d" || range === "5d"} currency={result?.meta?.currency || live?.currency} />}
       </Card>
 
+      <StockMore ticker={ticker} />
       <KeyStats ticker={ticker} data={keyStats.data} error={keyStats.error} live={live} />
       <ConsensusCard ticker={ticker} data={consensus.data} error={consensus.error} />
 
@@ -2528,6 +2559,30 @@ function orbitArticleFor(c) {
     (a.tickers || []).some((t) => c.tickers.includes(t)) &&
     Math.abs(+new Date(a.published) - c.latest) < 3.5 * 86_400_000 &&
     (a.match?.length ? a.match.every((w) => text.includes(w.toLowerCase())) : overlap(titleWords(a.title), c.words) >= 0.5));
+}
+
+// "More on <company>" just under the chart: the newest Orbit Alpha analysis and results write-up for this
+// company, so visitors who came for the price have a second page to go to. Clicks log as read_next_click.
+function StockMore({ ticker }) {
+  const name = PROFILES[ticker]?.name || ticker;
+  const art = newsArticles.find((a) => a.tickers?.includes(ticker) && !a.canonical);
+  const res = resultsData.filter((r) => r.ticker === ticker).sort((a, b) => b.reported.localeCompare(a.reported))[0];
+  const links = [
+    art && [`/articles/${art.slug}`, "Latest analysis", art.title],
+    res && [`/results/${res.slug}`, `${res.quarter} results`, res.headline],
+    ticker === "SPCX" && ["/spacex-stock/lockup-calendar", "Lock-up calendar", "Every SpaceX share release date and how SPCX traded"],
+  ].filter(Boolean);
+  if (!links.length) return null;
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10, marginBottom: 14 }} aria-label={`More on ${name}`}>
+      {links.map(([to, label, text]) => (
+        <Link key={to} to={to} data-next={`stock:${ticker}`} className="oa-link" style={{ ...cardStyle, padding: "12px 14px", textDecoration: "none", display: "block" }}>
+          <div style={{ fontSize: 10, color: C.green, fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 4 }}>{label}</div>
+          <div style={{ fontSize: 13, color: "#fff", lineHeight: 1.4 }}>{text}</div>
+        </Link>
+      ))}
+    </div>
+  );
 }
 
 function OrbitBriefs({ ticker, limit = 6, title = "Orbit Alpha reports" }) {
