@@ -5,7 +5,9 @@
 // Entry shape:
 //   { slug, title (the question, as people search it), h1?, summary (the direct answer, 2 to 3 sentences,
 //     under 320 characters), published "YYYY-MM-DD", updated "YYYY-MM-DD", tickers: [..],
-//     sections: [[heading, [block, ...]]], faq?: [[question, answer]], sources: [[title, url]] }
+//     sections: [[heading, [block, ...]]], faq?: [[question, answer]], sources: [[title, url]],
+//     card?: { stat: "5x", label: "lease repayments vs AI profit", color?: "green"|"red"|"white" } }
+// card draws the share image as one big centred number (news articles), so it survives Reddit's square crop.
 // A block is a paragraph string, { list: [..] } or { table: { head: [..], rows: [[..]] } }.
 // Text is escaped; [link text](/internal/path) becomes a link (internal paths only).
 import { chartLinkHtml } from "../lib/affiliates.js";
@@ -26,7 +28,7 @@ export function buildArticles(ctx) {
     return {
       path, guide: true, lastmod: a.updated || a.published,
       ...(a.tickers?.length ? { og: { file: `og/articles/${a.slug}.png`, ticker: a.tickers[0], name: profiles[a.tickers[0]].name, sector: a.kind === "news" ? "Space stock news" : "Question answered", path,
-        headline: a.title, asOf: fmtDate(a.updated || a.published), stats: [], tagline: a.kind === "news" ? "What happened, checked against primary sources" : "A short, sourced answer, updated as news lands" } } : {}),
+        headline: a.title, asOf: fmtDate(a.updated || a.published), stats: [], card: a.card, tagline: a.kind === "news" ? "What happened, checked against primary sources" : "A short, sourced answer, updated as news lands" } } : {}),
       title: `${a.title} | Orbit Alpha`,
       description: a.summary,
       body: `<div class="oa-guide"><h1>${esc(a.h1 || a.title)}</h1><!--oa-answer-->

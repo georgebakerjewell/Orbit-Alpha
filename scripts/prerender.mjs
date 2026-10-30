@@ -14,7 +14,7 @@ import { sheetHtml } from "./sheet.mjs";
 import { widgetHtml } from "./embed.mjs";
 import { previewTargets, quarterFor } from "./previews.mjs";
 import { buildGuides } from "./guides.mjs";
-import { stockCard, OG_COLORS } from "./og.mjs";
+import { stockCard, articleCard, OG_COLORS } from "./og.mjs";
 
 const SITE = "https://www.orbitalpha.cloud";
 const X_HANDLE = "OrbitAlphaApp";
@@ -407,7 +407,7 @@ for (const route of routes.filter((r) => r.og)) {
   try {
     const file = route.og.file || `og/stocks/${route.og.ticker.toLowerCase()}.png`; // guides set their own file
     mkdirSync(dirname(new URL(file, DIST).pathname), { recursive: true });
-    writeFileSync(new URL(file, DIST), await stockCard(route.og));
+    writeFileSync(new URL(file, DIST), await (route.og.card?.stat ? articleCard(route.og) : stockCard(route.og)));
     route.ogImage = `/${file}`;
     cards++;
   } catch (e) {

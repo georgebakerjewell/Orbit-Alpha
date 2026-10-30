@@ -146,7 +146,11 @@
     "Why is SpaceX stock falling after-hours today? (Investing.com)",
     "https://www.investing.com/news/stock-market-news/why-is-spacex-stock-falling-afterhours-today-93CH-4985677"
    ]
-  ]
+  ],
+  "card": {
+   "stat": "34.5%",
+   "label": "of revenue from one client"
+  }
  },
  {
   "kind": "news",
@@ -598,7 +602,12 @@
     "SpaceX quarterly revenue jumps, beats estimates as AI business surges (Reuters)",
     "https://www.reuters.com/business/media-telecom/spacex-quarterly-revenue-jumps-beats-estimates-ai-business-surges-2026-10-20/"
    ]
-  ]
+  ],
+  "card": {
+   "stat": "5x",
+   "label": "lease repayments vs AI profit",
+   "color": "red"
+  }
  },
  {
   "kind": "news",

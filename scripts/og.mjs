@@ -45,4 +45,21 @@ export async function stockCard({ ticker, name, sector, stats, asOf, path, headl
   return new Resvg(svg, { fitTo: { mode: "width", value: 1200 } }).render().asPng();
 }
 
+// News article card. Reddit and other feeds crop the 1200x630 image to a centred square-ish box, so
+// everything that matters sits in the middle ~600px: the ticker, one big number and a short label.
+// card: { stat: "5x", label: "lease repayments vs AI profit", color?: "green" | "red" | "white" }
+export async function articleCard({ ticker, card }) {
+  const col = { green: C.green, red: C.red, white: C.text }[card.color || "green"] || C.green;
+  const statSize = card.stat.length <= 4 ? 210 : card.stat.length <= 6 ? 170 : 130;
+  const tree = h("div", { width: 1200, height: 630, background: C.bg, flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "Inter", color: C.text,
+    backgroundImage: `radial-gradient(circle, ${col}2e 0%, ${C.bg} 60%)` }, [
+    h("div", { fontSize: 56, fontWeight: 800, color: C.text, letterSpacing: "0.04em", border: `3px solid ${C.line}`, borderRadius: 14, padding: "4px 22px" }, ticker),
+    h("div", { fontSize: statSize, fontWeight: 800, color: col, lineHeight: 1, letterSpacing: "-0.03em", marginTop: 22 }, card.stat),
+    h("div", { fontSize: 42, fontWeight: 600, color: C.text, marginTop: 22, maxWidth: 620, textAlign: "center", justifyContent: "center", lineHeight: 1.15 }, card.label),
+    h("div", { fontSize: 26, fontWeight: 800, marginTop: 34, letterSpacing: "-0.01em" }, [h("span", {}, "ORBIT"), h("span", { color: C.green }, "ALPHA.")]),
+  ]);
+  const svg = await satori(tree, { width: 1200, height: 630, fonts: FONTS });
+  return new Resvg(svg, { fitTo: { mode: "width", value: 1200 } }).render().asPng();
+}
+
 export const OG_COLORS = C;
