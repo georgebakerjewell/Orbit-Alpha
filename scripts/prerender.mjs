@@ -240,6 +240,7 @@ const routes = [
     body: `<h1>Orbit Alpha: the space stocks newsletter and dashboard</h1>
 <p>Orbit Alpha tracks ${count} publicly traded space companies in one place. The space stocks dashboard shows live prices, market caps and daily moves, alongside the things that actually move these stocks: rocket launches, US government contract awards, SEC filings, insider trades and earnings dates.</p>
 <p>The free Orbit Alpha newsletter lands every Sunday with the week in space stocks, analyst target changes and one deep dive on a single company. It is written for investors who follow the sector closely and want the numbers without the hype.</p>
+${(() => { const news = stories.filter((x) => x.slug && !x.canonical).slice(0, 6); return news.length ? `<h2>Latest Orbit Alpha analysis</h2>${list(news.map((x) => `<a href="/articles/${x.slug}">${esc(x.title)}</a>`))}` : ""; })()}
 <h2>What you can do on Orbit Alpha</h2>${list([
       `<a href="/markets">Check live prices</a> for every space stock and space ETF, sorted by size, sector or daily move.`,
       `<a href="/markets/performance">Compare performance</a> of space stocks and ETFs against the S&amp;P 500 and Nasdaq 100.`,
@@ -401,13 +402,15 @@ function fitDescription(d) {
   const stop = cut.lastIndexOf(". ");
   return stop >= 90 ? cut.slice(0, stop + 1) : `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:]$/, "")}…`;
 }
-function render({ path, title: rawTitle, description: rawDescription, body, ld = [], ogImage }) {
+function render({ path, title: rawTitle, description: rawDescription, body, ld = [], ogImage, canonical }) {
   const url = SITE + path;
+  // A page that repeats a stronger page names that page as canonical, so Google counts them as one.
+  const canonUrl = SITE + (canonical || path);
   const title = fitTitle(rawTitle), description = fitDescription(rawDescription || "");
   const head = [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}" />`,
-    `<link rel="canonical" href="${url}" />`,
+    `<link rel="canonical" href="${canonUrl}" />`,
     hasMd(path) ? `<link rel="alternate" type="text/markdown" href="${url}.md" />` : "",
     `<meta property="og:type" content="${path.startsWith("/newsletter/issue-") ? "article" : "website"}" />`,
     `<meta property="og:site_name" content="Orbit Alpha" />`,
@@ -454,7 +457,7 @@ for (const route of routes) {
 const prio = (p) => (p === "/" ? "1.0" : p.startsWith("/stocks/") ? "0.8" : "0.6");
 writeFileSync(
   new URL("sitemap.xml", DIST),
-  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes.filter((r) => !r.canonical)
     // lastmod is the date the page's content last really changed (newest filing, contract, issue or
     // trading day), and is left out when unknown. A date that is always "today" teaches Google to ignore it.
     .map((r) => `  <url><loc>${SITE}${r.path}</loc>${r.lastmod ? `<lastmod>${r.lastmod}</lastmod>` : ""}<changefreq>daily</changefreq><priority>${prio(r.path)}</priority></url>`)
@@ -553,7 +556,7 @@ const INDEXNOW_KEY = "e4c892f1da1e8baa936548f9dcf68053";
 if (process.env.VERCEL_ENV === "production" && !OFFLINE) {
   // Every page is submitted for the first few days after IndexNow went live (18 Oct 2026), then only changed ones.
   const all = process.env.INDEXNOW_ALL === "1" || today <= "2026-10-21";
-  const changed = routes.filter((r) => all || r.lastmod === today || r.lastmod === tradingDay).map((r) => SITE + r.path);
+  const changed = routes.filter((r) => !r.canonical).filter((r) => all || r.lastmod === today || r.lastmod === tradingDay).map((r) => SITE + r.path);
   if (changed.length) {
     try {
       const res = await fetch("https://api.indexnow.org/indexnow", {

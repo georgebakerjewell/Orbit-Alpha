@@ -173,7 +173,8 @@ function useDocumentMeta(route, path) {
       el.setAttribute(attr, value);
     };
     set('meta[name="description"]', "content", description);
-    set('link[rel="canonical"]', "href", SITE_URL + (path === "/" ? "/" : path));
+    const art = path.startsWith("/articles/") ? articlesData.find((a) => `/articles/${a.slug}` === path) : null;
+    set('link[rel="canonical"]', "href", SITE_URL + (path === "/" ? "/" : art?.canonical || path));
   }, [path]);
 }
 

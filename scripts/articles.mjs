@@ -5,7 +5,8 @@
 // Entry shape:
 //   { slug, title (the question, as people search it), h1?, summary (the direct answer, 2 to 3 sentences,
 //     under 320 characters), published "YYYY-MM-DD", updated "YYYY-MM-DD", tickers: [..],
-//     sections: [[heading, [block, ...]]], faq?: [[question, answer]], sources: [[title, url]] }
+//     sections: [[heading, [block, ...]]], faq?: [[question, answer]], sources: [[title, url]],
+//     canonical?: "/path" and canonicalLabel?: when a stronger page already answers this (drops it from the sitemap) }
 // A block is a paragraph string, { list: [..] } or { table: { head: [..], rows: [[..]] } }.
 // Text is escaped; [link text](/internal/path) becomes a link (internal paths only).
 import { chartLinkHtml } from "../lib/affiliates.js";
@@ -24,12 +25,13 @@ export function buildArticles(ctx) {
     const path = `/articles/${a.slug}`;
     const related = valid.filter((x) => x.slug !== a.slug && (x.tickers || []).some((t) => (a.tickers || []).includes(t))).slice(0, 4);
     return {
-      path, guide: true, lastmod: a.updated || a.published,
+      path, guide: true, lastmod: a.updated || a.published, ...(a.canonical ? { canonical: a.canonical } : {}),
       ...(a.tickers?.length ? { og: { file: `og/articles/${a.slug}.png`, ticker: a.tickers[0], name: profiles[a.tickers[0]].name, sector: a.kind === "news" ? "Space stock news" : "Question answered", path,
         headline: a.title, asOf: fmtDate(a.updated || a.published), stats: [], tagline: a.kind === "news" ? "What happened, checked against primary sources" : "A short, sourced answer, updated as news lands" } } : {}),
       title: `${a.title} | Orbit Alpha`,
       description: a.summary,
       body: `<div class="oa-guide"><h1>${esc(a.h1 || a.title)}</h1><!--oa-answer-->
+${a.canonical ? `<p class="oa-note">The full answer, kept up to date, is on <a href="${esc(a.canonical)}">${esc(a.canonicalLabel || "this page")}</a>.</p>` : ""}
 ${(a.sections || []).map(([h, blocks]) => `<h2>${esc(h)}</h2>${[].concat(blocks).map(block).join("")}`).join("\n")}
 ${a.faq?.length ? `<h2>Questions and answers</h2>${a.faq.map(([q, ans]) => `<h3>${esc(q)}</h3><p>${md(ans)}</p>`).join("")}` : ""}
 <h2>More</h2>${list([...(a.tickers || []).flatMap((t) => [`<a href="/stocks/${t.toLowerCase()}">${t} stock: live price, filings and contracts</a>`, ...(profiles[t].listing ? [] : [chartLinkHtml(t, `article:${a.slug}`, esc)])]), ...related.map((x) => `<a href="/articles/${x.slug}">${esc(x.title)}</a>`), `<a href="/articles">All Orbit Alpha analysis</a>`])}

@@ -1142,7 +1142,9 @@
     "StockAnalysis: SPCX daily price history",
     "https://stockanalysis.com/stocks/spcx/history/"
    ]
-  ]
+  ],
+  "canonical": "/spacex-stock/lockup-calendar",
+  "canonicalLabel": "the SpaceX lockup calendar"
  },
  {
   "slug": "rocket-lab-q3-2026-earnings-date",
@@ -1249,7 +1251,9 @@
     "Seeking Alpha: Rocket Lab projects $250M-$265M Q3 2026 revenue as it targets mid-2027 Iridium close",
     "https://seekingalpha.com/news/4630457-rocket-lab-projects-250m-265m-q3-2026-revenue-as-it-targets-midminus-2027-iridium-close"
    ]
-  ]
+  ],
+  "canonical": "/earnings-preview/rklb",
+  "canonicalLabel": "the Rocket Lab earnings preview"
  },
  {
   "slug": "ast-spacemobile-q3-2026-earnings-date",

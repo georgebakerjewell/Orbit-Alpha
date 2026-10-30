@@ -306,7 +306,17 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
   // Finish every guide: the quick answer, a visible "updated" date and WebPage data with dateModified.
   // "Where to buy" boxes on the guides with buying intent.
   const BUY = { "/spacex-stock": ["SPCX", "SpaceX"], "/starlink-stock": ["SPCX", "SpaceX"], "/space-stocks/uk-europe": [null, "UK and European space stocks"], "/space-stocks/under-10": [null, "US space stocks"] };
+  // Pages Google already indexes link to the newest news articles, so new articles get crawled sooner.
+  const LATEST_ON = new Set(["/spacex-stock/lockup-calendar", "/spacex-stock", "/space-stocks", "/space-stocks/earnings-calendar"]);
+  const latestNews = JSON.parse(readFileSync(new URL("../src/articles.json", import.meta.url), "utf8"))
+    .filter((a) => a.kind === "news" && !a.canonical).sort((a, b) => b.published.localeCompare(a.published)).slice(0, 5);
+  const latestHtml = latestNews.length ? `<h2>Latest Orbit Alpha analysis</h2><ul>${latestNews.map((a) => `<li><a href="/articles/${a.slug}">${esc(a.title)}</a></li>`).join("")}</ul>` : "";
   for (const g of pages) {
+    if (latestHtml && LATEST_ON.has(g.path)) {
+      const i = g.body.indexOf("<h2>More space stock guides</h2>");
+      const j = i >= 0 ? i : g.body.lastIndexOf("</div>");
+      g.body = g.body.slice(0, j) + latestHtml + g.body.slice(j);
+    }
     const buy = BUY[g.path] || (GUIDES[g.path]?.compare ? [null, "these stocks"] : null);
     if (buy) {
       const box = brokerBoxHtml({ ticker: buy[0], name: buy[1], placement: `guide:${g.path}`, esc, tools: !!buy[0] });
