@@ -733,7 +733,7 @@ const POPUP_MIN_MS = 10000;
 const AI_NAMES = { chatgpt: "ChatGPT", perplexity: "Perplexity", gemini: "Gemini", claude: "Claude", copilot: "Copilot" };
 const aiVisit = () => { const v = typeof window !== "undefined" ? window.__oaVisit : null; return v && v.medium === "ai" ? v : null; };
 
-// The sign-up offer that fits a page: an unlock reminder, a company's results, or null for the PDF default.
+// The sign-up offer that fits a page: an unlock, a company's results, or null for the PDF default.
 // The next results date for a ticker if it falls within the next 45 days (from /api/earnings).
 function upcomingResults(earnings, ticker) {
   const e = Array.isArray(earnings) ? earnings.find((x) => x.ticker === ticker) : null;
@@ -791,7 +791,7 @@ function SubscribePopup({ path }) {
   const subscribed = useSubscribed();
   const subscribers = useSubscriberLabel();
   const startedAt = useRef(Date.now());
-  // On pages about one company or event, the pop-up leads with that (an unlock reminder, a company's
+  // On pages about one company or event, the pop-up leads with that (an unlock, a company's
   // results) and keeps the PDF as the bonus; elsewhere it leads with the PDF.
   const popEarnings = useApi(path.startsWith("/stocks/") ? "/api/earnings" : null);
   const special = pageOffer(path, popEarnings.data);
@@ -2817,7 +2817,7 @@ function GuidePage({ path }) {
         : <ListSkeleton rows={8} />}
       <ForNonSubscribers>
         <div style={{ ...cardStyle, border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.03)", margin: "32px 0 0" }}>
-          {/* Pages about one company or event repeat their own offer (an unlock reminder, follow a company), with the PDF as the bonus. */}
+          {/* Pages about one company or event repeat their own offer (follow a company or event), with the PDF as the bonus. */}
           <div style={{ fontFamily: SYNE, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 6 }}>{cta[2] ? cta[0] : "Free report: a page on every space stock"}</div>
           <p style={{ fontSize: 12, color: C.muted, marginBottom: 12, lineHeight: 1.6 }}>{cta[2] ? `${cta[1]} You also get Space Stocks 2026, a free 34-page PDF on every listed space company.` : "Subscribe to the free Sunday newsletter and get Space Stocks 2026, a printable PDF of every listed space company with market cap, revenue, cash runway and next results date."}</p>
           <SubscribeForm source="guide-page" follow={cta[2]} reward={SHEET} label={cta[2] ? cta[3] || "Subscribe" : "Get the PDF"} />
