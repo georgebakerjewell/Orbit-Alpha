@@ -408,6 +408,7 @@ const HUB_TEXT = {
   "/articles": ["Short, sourced answers to this week's questions.", "New"],
   "/space-stocks/insider-trading": ["Who is buying and selling their own shares.", ""],
   "/space-stocks/cash-runway": ["Who needs to raise money, ranked by months of cash.", ""],
+  "/space-stocks/analyst-price-targets": ["Consensus targets and ratings, ranked by upside.", "New"],
   "/space-stocks/government-contracts": ["NASA, Space Force and DoD awards, ranked by value.", ""],
   "/space-stocks/earnings-calendar": ["When each company reports next, with estimates.", ""],
   "/space-stocks/under-10": ["The cheaper names, with cash runway and dilution.", ""],

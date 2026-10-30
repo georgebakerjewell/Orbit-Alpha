@@ -5,8 +5,15 @@
 //   GET /api/quote?ticker=RKLB&stats=1
 // Key stats from a year of daily closes (52-week range, YTD and 1-year return, volume) for the stock,
 // its sector peers and the UFO space ETF. Kept in this file to stay inside Vercel's free function limit.
+//   GET /api/quote?consensus=1
+// Analyst consensus (price targets, ratings, EPS and revenue estimates) for every covered stock, from
+// lib/consensus.js. Same file for the same reason. Cached for 6 hours.
 import { ROSTER, ETF_TICKERS, BENCHMARKS, COVERED } from "../lib/roster.js";
 import { yahooChart, marketCapUsd, summarize } from "../lib/market.js";
+import { allConsensus } from "../lib/consensus.js";
+
+// The consensus mode makes ~35 Yahoo calls on a cold cache; give it room.
+export const config = { maxDuration: 30 };
 
 const RANGES = new Set(["1d", "5d", "7d", "1mo", "3mo", "6mo", "ytd", "1y"]);
 const INTRADAY = { "1d": "5m", "5d": "30m" };
@@ -68,6 +75,12 @@ async function keyStats(symbol) {
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
+  if (req.query.consensus) {
+    const data = await allConsensus();
+    const n = Object.keys(data.stocks).length;
+    res.setHeader("Cache-Control", n >= 5 ? "s-maxage=21600, stale-while-revalidate=86400" : "s-maxage=300");
+    return res.status(n ? 200 : 502).json(data);
+  }
   const symbol = String(req.query.ticker || "").toUpperCase();
   if (!ALLOWED.has(symbol)) return res.status(400).json({ error: "Unknown ticker" });
   if (req.query.stats) {
