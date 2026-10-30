@@ -1,6 +1,151 @@
 [
  {
   "kind": "news",
+  "slug": "mda-space-iris2-antenna-contract",
+  "title": "MDA's $100M IRIS² antenna deal: 2.5% of backlog, 20% of the satellites",
+  "summary": "MDA Space will supply digital antennas for the first 66 IRIS² satellites under a deal worth more than $100M with Thales Alenia Space. That is only about 2.5% of its $4.0bn backlog, but it covers just 66 of the 330 low orbit satellites and gives its AURORA antenna a European customer.",
+  "published": "2026-10-30",
+  "updated": "2026-10-30",
+  "tickers": [
+   "MDA",
+   "ETL"
+  ],
+  "match": [
+   "mda",
+   "iris"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 30 October 2026, before the US market opened, [MDA Space](/stocks/mda) said it had signed an authorisation to proceed (ATP) agreement with Thales Alenia Space, the Thales and Leonardo joint venture, to start work on its AURORA digital phased array antennas and digital antenna controller for the 66 \"Layer 1\" satellites of IRIS², the EU's secure connectivity constellation. The ATP is valued at more than $100 million.",
+     "MDA said the hardware will be designed, built and tested at its Montréal facility, the satellites are due to launch in 2029, the ATP will enter its backlog in the fourth quarter of 2026, and the definitive contract for its full scope of work still has to be finalised. MDA's New York listed shares closed at $29.12 on 29 October, before the news, down 0.6% on the day and about 41% below their 52-week high of $49.37."
+    ]
+   ],
+   [
+    "Orbit Alpha view: small in dollars, bigger for AURORA",
+    [
+     "Measured against MDA's own numbers, the order is modest. More than $100 million is about 2.5% of the $4.0 billion backlog MDA reported at 30 June, and about 5.4% of the midpoint of its 2026 revenue guidance of $1.8 billion to $1.9 billion (our calculation; MDA reports in Canadian dollars and the release does not name a currency, so we compare in the dollars it uses). In the second quarter alone MDA booked about $809 million of new work, so this ATP is roughly one eighth of a single quarter's orders.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Our calculation"
+       ],
+       "rows": [
+        [
+         "ATP value",
+         "more than $100M",
+         "starting value, not the full contract"
+        ],
+        [
+         "Backlog at 30 June 2026",
+         "$4.0bn",
+         "ATP is about 2.5%"
+        ],
+        [
+         "2026 revenue guidance midpoint",
+         "$1.85bn",
+         "ATP is about 5.4%"
+        ],
+        [
+         "Q2 2026 net bookings",
+         "about $809M",
+         "ATP is about 12%"
+        ],
+        [
+         "Value per Layer 1 satellite",
+         "more than about $1.5M",
+         "$100M spread over 66 satellites"
+        ],
+        [
+         "IRIS² low orbit satellites covered",
+         "66 of 330",
+         "20%; the 264 Layer 2 satellites are not part of this ATP"
+        ]
+       ]
+      }
+     },
+     "The more useful point is what the order changes in MDA's mix. Satellite Systems produced $649.2 million of MDA's $962.7 million revenue in the first half of 2026, about 67%, and MDA said that segment's growth was driven primarily by the Telesat Lightspeed programme. IRIS² puts AURORA on a second low orbit constellation, run by a different customer and funded by a different government, which matters for a company whose largest growth driver is a single programme.",
+     "Two details keep this in proportion. First, an ATP is permission to start work, not the final contract: the value can grow when the definitive contract is signed, but the release gives no figure for the full scope. Second, Thales Alenia Space is also responsible for the governmental payloads on the 264 Layer 2 satellites, four times as many as Layer 1, and nothing in the release says MDA has been chosen for those. The scale of the opportunity therefore depends on work MDA has not yet won.",
+     "So the order adds little to MDA's numbers today. What it shows is that a Canadian supplier has been given a role building hardware for a programme Europe describes as sovereign, which is a commercial reference for AURORA beyond its home market."
+    ]
+   ],
+   [
+    "Why MDA wanted it",
+    [
+     "MDA has been building AURORA as a production-line product for constellations rather than a one-off payload, and said the system is engineered for high-volume production. A 66-satellite order is the kind of volume that design is meant for. The release also frames the deal as part of MDA's push into sovereign and defence programmes, the same theme its second quarter results highlighted with wins for the Canadian Space Agency, Japan's Ministry of Defense and the European Space Agency."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     {
+      "list": [
+       "[Eutelsat](/stocks/etl) leads the IRIS² low orbit segment and booked €8.9 billion of IRIS² construction work this week. As we noted in [our analysis of that order book](/articles/eutelsat-iris2-order-book-12-billion), much of that money is likely to pass through to the companies building the satellites. MDA's deal is an early example of that money reaching suppliers.",
+       "[Telesat](/stocks/tsat) remains MDA's main constellation customer through Lightspeed. A second large constellation customer means MDA's satellite business depends a little less on one programme's timetable."
+      ]
+     }
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "5 November 2026: MDA's third quarter results. The ATP will not be in the 30 September backlog, since MDA says it will be booked in the fourth quarter, so watch for comments on the definitive contract and its value.",
+       "The definitive contract with Thales Alenia Space, which will show how much larger than $100 million MDA's full scope is.",
+       "Any supplier choices for the 264 IRIS² Layer 2 satellites, where Thales Alenia Space provides the governmental payloads.",
+       "The 2029 launch date for the first 66 Layer 1 satellites, which sets the deadline for MDA's deliveries."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How big is MDA's IRIS² contract?",
+    "The authorisation to proceed is worth more than $100 million, about 2.5% of MDA's $4.0 billion backlog at 30 June 2026 and about 5.4% of the midpoint of its 2026 revenue guidance, on our calculation. The definitive contract has not yet been signed."
+   ],
+   [
+    "Which IRIS² satellites does MDA's deal cover?",
+    "The 66 Ka-band Layer 1 satellites in low Earth orbit, due to launch in 2029. That is 20% of the 330 low orbit satellites planned; the 264 Layer 2 satellites are not part of this agreement."
+   ],
+   [
+    "When will the contract show up in MDA's results?",
+    "MDA says the ATP will be added to backlog in the fourth quarter of 2026, so it will not appear in the third quarter figures due on 5 November 2026."
+   ]
+  ],
+  "sources": [
+   [
+    "MDA Space: IRIS² constellation, MDA Space to provide Thales Alenia Space with digital antenna subsystems for 66 early-delivery satellites (30 October 2026)",
+    "https://www.prnewswire.com/news-releases/iris-constellation-mda-space-to-provide-thales-alenia-space-with-digital-antenna-subsystems-for-66-early-delivery-satellites-302924382.html"
+   ],
+   [
+    "MDA Space: second quarter 2026 results (7 August 2026)",
+    "https://www.prnewswire.com/news-releases/mda-space-reports-second-quarter-2026-results-302845656.html"
+   ],
+   [
+    "MDA Space: third quarter 2026 earnings call on 5 November 2026",
+    "https://mda-en.investorroom.com/2026-10-15-MDA-SPACE-TO-HOLD-ITS-THIRD-QUARTER-2026-EARNINGS-CONFERENCE-CALL-ON-NOVEMBER-5,-2026"
+   ],
+   [
+    "Thales Alenia Space: digital and secure payloads for 330 IRIS² telecommunications satellites (10 September 2026)",
+    "https://www.thalesaleniaspace.com/en/press-releases/thales-alenia-space-provide-digital-and-secure-payloads-330-iris2-telecommunications"
+   ],
+   [
+    "Investing.com: MDA Space wins $100M+ contract for EU satellite antennas",
+    "https://in.investing.com/news/stock-market-news/mda-space-wins-100m-contract-for-eu-satellite-antennas-93CH-5668022"
+   ],
+   [
+    "Yahoo Finance: Strong second quarter leads to a more favorable 2026 guidance for MDA Space",
+    "https://finance.yahoo.com/markets/stocks/articles/strong-second-quarter-leads-more-200846542.html"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "anthropic-spacex-customer-b-revenue",
   "title": "Anthropic is SpaceX's Customer B: $5B a quarter on a 90-day exit",
   "summary": "Bloomberg reports that Anthropic is the unnamed customer behind 34.5% of SpaceX's Q3 revenue, about $5.0B. Anthropic's own filing shows the deal steps up to about $3.1B a month, yet either side can end it on 90 days' notice after early 2027, while SpaceX's GPU financing runs for five years.",
