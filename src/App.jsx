@@ -999,18 +999,10 @@ function Home({ news, prices, launches }) {
   const subscribers = useSubscriberLabel();
   const filings = useApi("/api/filings");
   const contracts = useApi("/api/contracts");
-  const earnings = useApi("/api/earnings");
 
   const covered = prices.stocks.filter((s) => PROFILES[s.ticker]);
   const signals = buildFeed([], filings.data?.filings || [], contracts.data?.awards || []).filter((i) => i.key_story).slice(0, 6);
   const signalsLoading = !filings.data && !filings.error && !contracts.data && !contracts.error;
-  const moveOf = (t) => prices.stocks.find((s) => s.ticker === t)?.changePct;
-  const headlines = newsClusters(news.items, Date.now() - 3 * 86_400_000)
-    .map((c) => ({ ...c, score: storyScore(c, moveOf) }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
-  const nextLaunches = (launches || []).filter((l) => l.tickers.length).slice(0, 3);
-  const nextEarnings = Array.isArray(earnings.data) ? earnings.data.slice(0, 4) : [];
 
   return (
     <div style={{ animation: "fu 0.5s ease", maxWidth: 1040, margin: "0 auto", padding: "0 20px" }}>
@@ -1062,57 +1054,19 @@ function Home({ news, prices, launches }) {
               <span style={{ fontSize: 10, color: "#667", width: 44, flexShrink: 0, paddingTop: 2 }}>{fmtDay(i.day, { day: "numeric", month: "short" })}</span>
               <span style={{ flexShrink: 0 }}><TickerChip ticker={i.tickers[0]} /></span>
               <span style={{ fontSize: 11, color: i.color || "#fff", lineHeight: 1.5 }}>{i.title}</span>
-            </a>
+            </Link>
           ))}
           <MoreLink to="/news">All news, filings and contracts</MoreLink>
         </Card>
         )}
       </div>
 
-      {/* Space vs S&P 500 */}
-      <Card title="Space stocks vs the S&P 500" style={{ marginBottom: 14 }}>
-        <PerformanceChart />
-        <MoreLink to="/markets/performance">Compare space ETFs and individual stocks</MoreLink>
-      </Card>
-
-      <div className="oa-grid" style={{ marginBottom: 14 }}>
-        {!(earnings.data && launches && !nextEarnings.length && !nextLaunches.length) && !(earnings.error && launches && !nextLaunches.length) && (
-        <Card title="Coming up">
-          {!earnings.data && !earnings.error && launches === null && <ListSkeleton rows={4} />}
-          {nextEarnings.map((e) => (
-            <div key={e.ticker + e.date} style={{ display: "flex", gap: 10, alignItems: "center", padding: "7px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-              <span style={{ fontSize: 10, color: C.blue, width: 64 }}>Earnings</span>
-              <TickerChip ticker={e.ticker} />
-              <span style={{ fontSize: 11, color: C.light, marginLeft: "auto" }}>{fmtDay(e.date, { weekday: "short", day: "numeric", month: "short" })}</span>
-            </div>
-          ))}
-          {nextLaunches.map((l, i) => (
-            <div key={i} style={{ display: "flex", gap: 10, alignItems: "center", padding: "7px 0", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-              <span style={{ fontSize: 10, color: C.orange, width: 64 }}>Launch</span>
-              {l.tickers.slice(0, 2).map((t) => <TickerChip key={t} ticker={t} />)}
-              <span style={{ fontSize: 11, color: C.muted, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{l.mission.split(" · ").pop()}</span>
-              <span style={{ fontSize: 11, color: C.light }}>{l.date}</span>
-            </div>
-          ))}
-          <MoreLink to="/markets/earnings">Earnings and launch calendars</MoreLink>
-        </Card>
-
-        )}
-        {(news.loading || headlines.length > 0) && (
-        <Card title="Top stories" note="Last 3 days">
-          {news.loading && <ListSkeleton rows={4} />}
-          {headlines.map((c) => <StoryCard key={c.lead.link} c={c} moveOf={moveOf} compact />)}
-          <MoreLink to="/news">All news</MoreLink>
-        </Card>
-        )}
-      </div>
-
       {/* Coverage */}
-      <Card title="Stocks we cover" note="Each has its own page" style={{ marginBottom: 14 }}>
+      <Card title="Stocks we cover" note="Tap a ticker for its page" style={{ marginBottom: 14 }}>
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           {Object.entries(PROFILES).map(([t, p]) => (
             <Link key={t} to={`/stocks/${t.toLowerCase()}`} className="hov" title={p.name} style={{ border: "1px solid rgba(0,255,136,0.18)", borderRadius: 4, padding: "6px 10px", fontSize: 11, color: C.green, fontWeight: 700 }}>
-              {t} <span style={{ color: C.muted, fontWeight: 400 }}>{p.name}</span>
+              {t}
             </Link>
           ))}
         </div>
