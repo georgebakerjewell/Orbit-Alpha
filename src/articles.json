@@ -1,6 +1,155 @@
 [
  {
   "kind": "news",
+  "slug": "anthropic-spacex-customer-b-revenue",
+  "title": "Anthropic is SpaceX's Customer B: $5B a quarter on a 90-day exit",
+  "summary": "Bloomberg reports that Anthropic is the unnamed customer behind 34.5% of SpaceX's Q3 revenue, about $5.0B. Anthropic's own filing shows the deal steps up to about $3.1B a month, yet either side can end it on 90 days' notice after early 2027, while SpaceX's GPU financing runs for five years.",
+  "published": "2026-10-30",
+  "updated": "2026-10-30",
+  "tickers": [
+   "SPCX"
+  ],
+  "match": [
+   "anthropic",
+   "spacex",
+   "revenue"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "SpaceX's 10-Q for the quarter to 30 September shows that one customer, labelled only \"Customer B\", provided 34.5% of consolidated revenue in the quarter and 24.2% over nine months, all of it in the Super Intelligence (AI) segment. A year earlier Customer B was below the 10% disclosure threshold. On 29 October Bloomberg reported, citing a person familiar with the matter, that Customer B is Anthropic. Neither company has confirmed the name.",
+     "The terms are in Anthropic's own S-1, filed on 26 October 2026. Between May and October 2026 Anthropic signed and amended several agreements with SpaceX's AI subsidiary for Nvidia GPU compute. It agreed to spend up to $120.5 billion over terms running into 2029, about $3.1 billion a month once all capacity is delivered, which Anthropic expects in December 2026. After non-cancellable periods ending in January 2027 and March 2027, either party can cancel each agreement on 90 days' written notice.",
+     "[SPCX](/stocks/spcx) closed at $143.89 on 29 October, down 0.9%, with the Bloomberg report published during the session. It traded at $139.80 after hours as technology shares fell further after Amazon's results, according to Investing.com."
+    ]
+   ],
+   [
+    "Orbit Alpha view: SpaceX's biggest income stream is its least secure",
+    [
+     "Put the two filings side by side and the size of the dependence is clear, and so is the mismatch in contract length.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "How we got it"
+       ],
+       "rows": [
+        [
+         "Customer B revenue, Q3 2026",
+         "about $5.03B",
+         "34.5% of $14.58B total revenue"
+        ],
+        [
+         "Share of AI segment revenue",
+         "about 67%",
+         "$5.03B of $7.56B"
+        ],
+        [
+         "Share of AI solutions and infrastructure revenue",
+         "about 72%",
+         "$5.03B of $7.02B"
+        ],
+        [
+         "Customer B revenue, first half of 2026",
+         "about $1.53B",
+         "24.2% of $27.08B nine-month revenue, less Q3"
+        ],
+        [
+         "Quarterly payments at full capacity",
+         "about $9.3B",
+         "$3.1B a month from Anthropic's S-1, times three"
+        ],
+        [
+         "Full-capacity payments as share of Q1 2027 revenue guidance",
+         "25% to 28%",
+         "$9.3B against $33B to $37B"
+        ],
+        [
+         "Q3 revenue without Customer B",
+         "about $9.55B",
+         "$14.58B less $5.03B"
+        ],
+        [
+         "Apollo GPU lease principal",
+         "about $2B a quarter for five years",
+         "from SpaceX's 26 October 8-K"
+        ]
+       ]
+      }
+     },
+     "All figures are our calculations from SpaceX's 10-Q and results release and Anthropic's S-1. Customer B's revenue in the third quarter alone was more than three times its revenue for the whole first half, so this is a contract that is still ramping. Once it reaches full capacity in December, it would on its own be worth about 64% of SpaceX's entire Q3 revenue.",
+     "The headline \"up to $120.5 billion\" overstates what is locked in. Only the periods to January and March 2027 are non-cancellable, followed by 90 days' notice. On our reading of the S-1, if either side wanted out at the first opportunity, payments could stop by around the second quarter of 2027. Everything beyond that depends on Anthropic still wanting the capacity and SpaceX still wanting to sell it at the agreed price.",
+     "Set that against SpaceX's own commitments. The $40 billion Apollo-managed GPU lease we covered in [SpaceX's $40B Apollo GPU lease](/articles/spacex-40-billion-apollo-gpu-lease) runs for about five years with fixed quarterly payments from 2027. The customer that provides two thirds of AI revenue can leave on three months' notice from early 2027; the lender cannot be left. We do not know which customers the new Vera Rubin chips will serve, but the group as a whole now has long, fixed obligations and a short, cancellable top customer.",
+     "There is also a guidance point. SpaceX guided to Q1 2027 revenue of $33 billion to $37 billion against $14.58 billion in Q3. Anthropic stepping up from about $5.03 billion to about $9.3 billion a quarter adds roughly $4.3 billion, only 19% to 23% of the gap. The rest has to come from other cloud customers, Cursor, Grok and Starlink, so investors should not treat the Anthropic deal as the main support for that guidance."
+    ]
+   ],
+   [
+    "Why the concentration matters less for Starlink and launch",
+    [
+     "Customer A, which SpaceX says buys across all three segments and which Bloomberg's headline identifies as the US government, fell from 23.9% to 16.6% of revenue. That is not a shrinking customer: on our calculation its revenue rose from about $1.33 billion to about $2.42 billion, up about 82%. Its share fell only because Anthropic's spending grew faster.",
+     "Connectivity, mainly Starlink, made $2.37 billion of operating income in Q3 at a 45.1% margin, against $431 million for the whole AI segment, as set out in our [SpaceX Q3 2026 results](/results/spcx-q3-2026). So if the Anthropic deal ended, the revenue loss would be large but the profit loss, at Q3 margins, would be far smaller. The bigger exposure is to the AI capital plan: $16.4 billion of SpaceX's $19.6 billion Q3 capital spending went to the AI segment, and it guided to $35 billion to $40 billion of capital spending in Q4. Those data centres need tenants, and today one tenant pays for most of the segment.",
+     "One customer also made up 27.7% of SpaceX's $4.77 billion of receivables at 30 September, about $1.32 billion on our calculation. The 10-Q does not say which customer that is."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "December 2026: Anthropic expects all contracted capacity to be delivered, taking payments to about $3.1 billion a month. SpaceX's Q4 results should show Customer B's share rising.",
+       "January and March 2027: the non-cancellable periods end and 90-day notice becomes possible on each agreement.",
+       "Anthropic's IPO prospectus updates: any amendment to the S-1 that changes the SpaceX commitment or adds capacity elsewhere, such as its AMD Helios systems in 2027 and its $110 billion Amazon commitment.",
+       "Whether SpaceX names more cloud customers or reports another customer above 10% of revenue, which would show how far it has spread the risk.",
+       "Pricing of the Apollo lease, expected to close before the end of 2026, and the Tesla merger talks covered in [Are SpaceX and Tesla merging?](/articles/are-spacex-and-tesla-merging)."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much of SpaceX's revenue comes from Anthropic?",
+    "SpaceX's 10-Q shows Customer B provided 34.5% of Q3 2026 revenue, about $5.03 billion on our calculation, and 24.2% over nine months. Bloomberg reported on 29 October that Customer B is Anthropic; neither company has confirmed it."
+   ],
+   [
+    "Is the $120.5 billion Anthropic deal guaranteed?",
+    "No. Anthropic's S-1 says it agreed to spend up to $120.5 billion into 2029, about $3.1 billion a month at full capacity, but after non-cancellable periods ending in January and March 2027 either party can cancel on 90 days' notice."
+   ],
+   [
+    "What would SpaceX's revenue be without Anthropic?",
+    "On our calculation, Q3 2026 revenue excluding Customer B was about $9.55 billion, against $14.58 billion reported. Most of SpaceX's operating profit still came from Starlink rather than the AI segment."
+   ]
+  ],
+  "sources": [
+   [
+    "SpaceX Form 10-Q for the quarter ended 30 September 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm"
+   ],
+   [
+    "Anthropic, PBC Form S-1, 26 October 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
+   ],
+   [
+    "SpaceX Reports Third Quarter 2026 Results (SpaceX investor relations)",
+    "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ],
+   [
+    "SpaceX's Largest Revenue Source Is a Finite Deal With Anthropic (Bloomberg)",
+    "https://www.bloomberg.com/news/articles/2026-10-29/spacex-s-largest-revenue-source-is-a-finite-deal-with-anthropic"
+   ],
+   [
+    "SpaceX is said to earn more than a third of revenue from Anthropic (Seeking Alpha)",
+    "https://seekingalpha.com/news/4660687-spacex-is-said-to-earn-more-than-a-third-of-revenue-from-anthropic"
+   ],
+   [
+    "Why is SpaceX stock falling after-hours today? (Investing.com)",
+    "https://www.investing.com/news/stock-market-news/why-is-spacex-stock-falling-afterhours-today-93CH-4985677"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "eutelsat-iris2-order-book-12-billion",
   "title": "Eutelsat's order book jumps to €12.1bn: why the IRIS² boost is not profit",
   "summary": "Eutelsat's order book rose to €12.1bn from €3.4bn as €8.9bn of IRIS² construction work was booked, about 3.8 times its market value. But that work is kept out of its margin targets, Eutelsat must invest €3.39bn itself, and the rest of the order book fell to €3.2bn.",
