@@ -1,6 +1,178 @@
 [
  {
   "kind": "news",
+  "slug": "viasat-equatys-terrestar-mou",
+  "title": "Viasat jumps 11% on Terrestar MoU: $1.1bn added, no cash changes hands",
+  "summary": "Viasat rose 11.3% on 28 October after Canada's Terrestar agreed to link its planned CaStar constellation to Equatys. By our calculation the move added about $1.1 billion of market value, 2.7 times Viasat's whole $400 million Equatys commitment, for a non-binding MoU that pays Viasat nothing directly.",
+  "published": "2026-10-30",
+  "updated": "2026-10-30",
+  "tickers": [
+   "VSAT"
+  ],
+  "match": [
+   "terrestar",
+   "equatys"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 28 October 2026 Space42, Viasat and Terrestar Solutions, Canada's only Canadian-controlled mobile-satellite operator, signed a memorandum of understanding to build an open interoperability framework between Terrestar's planned CaStar low orbit constellation and Equatys, the direct-to-device venture Viasat and Space42 agreed to form in September. Each operator keeps its own satellites, ground stations, licences and customers. Equatys calls this its first \"sovereign shell\".",
+     "Viasat closed at $78.26 that day, up 11.3% from $70.30, on about 4.7 million shares, roughly double the previous session. The gain has held: the stock closed at $77.99 on 29 October and traded at $77.54 on 30 October."
+    ]
+   ],
+   [
+    "Orbit Alpha view: a $1.1bn move for a deal with no price tag",
+    [
+     "The MoU contains no payment, no order and no binding commitment. Yet on our calculation (the 30 October market value of about $10.68 billion at $77.54 implies roughly 137.8 million shares) the 28 October rise added about $1.1 billion to Viasat's market value. That is 2.7 times the $400 million Viasat has committed to put into Equatys, and almost six times the $189 million of free cash flow, excluding one-off items, that Viasat generated in the twelve months to 30 June 2026.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Source or working"
+       ],
+       "rows": [
+        [
+         "Market value added on 28 October",
+         "About $1.10bn",
+         "Our calculation: $7.96 rise x about 137.8m shares"
+        ],
+        [
+         "Viasat's Equatys equity commitment",
+         "$400m",
+         "Space42 and Viasat, 14 September 2026"
+        ],
+        [
+         "Move as a multiple of that commitment",
+         "2.7x",
+         "Our calculation"
+        ],
+        [
+         "Free cash flow, 12 months to 30 June 2026, excluding one-offs",
+         "$189m",
+         "Viasat Q1 FY2027 shareholder letter"
+        ],
+        [
+         "Commitment in years of that free cash flow",
+         "About 2.1 years",
+         "Our calculation"
+        ],
+        [
+         "Cash at 30 June 2026",
+         "$1.74bn",
+         "Viasat Q1 FY2027 results"
+        ],
+        [
+         "Net debt at 30 June 2026",
+         "$4.83bn (3.2x EBITDA)",
+         "Viasat Q1 FY2027 results"
+        ]
+       ]
+      }
+     },
+     "So what is the market paying for? Not Terrestar's money: under the sovereign shell model Terrestar pays for its own constellation and Viasat receives nothing from this MoU. The value is in what it proves about the model. Equatys is built like a mobile tower company: the more spectrum holders share one set of satellites, the smaller each participant's share of the cost. Viasat, with $4.83 billion of net debt, cannot easily fund a 2,800-satellite system alone, so every outside operator that plugs in lowers the capital Viasat needs per unit of coverage. Terrestar is the first operator other than the two founders to sign up.",
+     "The band matters more than the size of the partner. Terrestar is licensed for 2000 to 2020 MHz and 2180 to 2200 MHz across Canada. In the United States those same frequencies are the AWS-4 band that EchoStar agreed to sell to [SpaceX](/stocks/spcx) in September 2025 as part of a deal worth about $17 billion. The Canadian twin of SpaceX's US satellite-to-phone band is now lining up with the Equatys camp rather than with SpaceX.",
+     "Two cautions keep the number in proportion. First, part of the week's rise was not about Viasat alone: the stock had already climbed from $61.47 on 23 October to $70.30 on 27 October during a wider rally in space and communications stocks, so the full run since 23 October is 27%, or about $2.3 billion by our calculation. Second, Equatys itself is not yet formed: its formation, the satellite procurement and Viasat's appointment as prime contractor are all still subject to closing conditions and regulatory approvals."
+    ]
+   ],
+   [
+    "Why Viasat is doing it",
+    [
+     "Viasat holds L-band mobile-satellite rights worldwide and S-band rights in Europe, but it also carries $4.83 billion of net debt. Equatys lets it put that spectrum to work in direct-to-device service without carrying the full cost of a new constellation. The founders have committed $400 million each, with Space42 expected to add $200 million more in a later round open to outside investors; at that point, on our calculation, Viasat would hold 40% of the founders' $1 billion, before any third-party money.",
+     "There is a second prize: Viasat is due to be appointed prime technology contractor for the satellites, so a bigger Equatys also means more manufacturing work for Viasat's own business. Viasat's chief executive has said the system will start with fewer than 200 satellites and aims to offer service by the end of 2029."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     {
+      "list": [
+       "[SpaceX](/stocks/spcx) owns the AWS-4 band in the US and runs its own satellite-to-phone network. A shared, standards-based rival that national operators can join without giving up control is a direct pitch to countries wary of depending on one US provider.",
+       "[AST SpaceMobile](/stocks/asts) partners with mobile operators using their own cellular spectrum, while Equatys pools licensed satellite spectrum. Both are now courting the same operators and regulators, and the FCC's proposal to free up more satellite-to-phone spectrum, covered in [our analysis](/articles/fcc-direct-to-device-spectrum-482-mhz), adds to the competition for partners.",
+       "[Globalstar](/stocks/gsat) shows what satellite spectrum is fetching: Amazon is paying $11.5 billion for it, as set out in [our deal analysis](/articles/fcc-approves-amazon-globalstar-deal). That price is part of why investors put a value on spectrum alliances like this one."
+      ]
+     }
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "Viasat's fiscal second-quarter results on 5 November 2026, for any update on Equatys timing, funding or the prime contract.",
+       "Formal formation of Equatys and the award of the first satellite tranche, both still subject to regulatory approvals.",
+       "Whether the Terrestar MoU becomes a binding agreement, and whether other national operators sign up as sovereign shells.",
+       "The outside equity round in which Space42 is expected to add $200 million, which will show what third-party investors think Equatys is worth.",
+       "Follow the live price on the [VSAT stock page](/stocks/vsat)."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Why did Viasat stock rise on 28 October 2026?",
+    "Because Canada's Terrestar signed a memorandum of understanding to connect its planned CaStar constellation to Equatys, the direct-to-device venture Viasat is forming with Space42. Viasat closed up 11.3% at $78.26, adding about $1.1 billion of market value by our calculation."
+   ],
+   [
+    "Does Terrestar pay Viasat anything under the deal?",
+    "No payment is disclosed. The MoU is non-binding, and under the sovereign shell model Terrestar keeps and pays for its own satellites and ground network while interworking with Equatys."
+   ],
+   [
+    "How much is Viasat investing in Equatys?",
+    "Viasat has committed $400 million of equity on formation, about 2.1 years of its free cash flow excluding one-off items in the year to 30 June 2026. Space42 is committing $400 million and is expected to add $200 million more later."
+   ]
+  ],
+  "sources": [
+   [
+    "Viasat: Terrestar Solutions joins with Equatys (28 October 2026)",
+    "https://www.viasat.com/news/latest-news/corporate/2026/terrestar-solutions-joins-with-equatys--expanding-shared-satelli/"
+   ],
+   [
+    "Space42: Space42 and Viasat sign binding agreement to co-found Equatys (14 September 2026)",
+    "https://space42.ai/en/press-release/2026/space42-and-viasat-co-found-equatys/"
+   ],
+   [
+    "Viasat Q1 FY2027 results, Exhibit 99.2 (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/797721/000119312526332896/d131434dex992.htm"
+   ],
+   [
+    "Viasat Q1 FY2027 shareholder letter",
+    "https://investors.viasat.com/static-files/ea1cbd20-c0b1-4755-a9ea-5a779051a1c0"
+   ],
+   [
+    "EchoStar: spectrum sale and commercial agreement with SpaceX (8 September 2025)",
+    "https://ir.echostar.com/news-releases/news-release-details/echostar-announces-spectrum-sale-and-commercial-agreement-spacex"
+   ],
+   [
+    "Via Satellite: Canadian MSS operator Terrestar joins with Equatys for D2D",
+    "https://www.satellitetoday.com/connectivity/2026/10/28/canadian-mss-operator-terrestar-joins-with-equatys-for-d2d/"
+   ],
+   [
+    "Light Reading: How the EchoStar-SpaceX deal reshapes the US wireless and satellite landscape",
+    "https://www.lightreading.com/satellite/how-the-echostar-spacex-deal-reshapes-the-u-s-wireless-and-satellite-landscape"
+   ],
+   [
+    "Zacks via Yahoo Finance: ViaSat (VSAT) surges 11.3%",
+    "https://finance.yahoo.com/markets/stocks/articles/viasat-vsat-surges-11-3-123100142.html"
+   ],
+   [
+    "Viasat sets 5 November 2026 for fiscal Q2 2027 results (GlobeNewswire via Yahoo Finance)",
+    "https://finance.yahoo.com/markets/stocks/articles/viasat-sets-november-5-2026-200500039.html"
+   ],
+   [
+    "AlphaStreet: Viasat jumps 6.8% amid sector-wide rally (26 October 2026)",
+    "https://news.alphastreet.com/viasat-jumps-6-8-amid-sector-wide-rally/"
+   ],
+   [
+    "Orbit Alpha VSAT quote data",
+    "https://www.orbitalpha.cloud/stocks/vsat"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "mda-space-iris2-antenna-contract",
   "title": "MDA's $100M IRIS² antenna deal: 2.5% of backlog, 20% of the satellites",
   "summary": "MDA Space will supply digital antennas for the first 66 IRIS² satellites under a deal worth more than $100M with Thales Alenia Space. That is only about 2.5% of its $4.0bn backlog, but it covers just 66 of the 330 low orbit satellites and gives its AURORA antenna a European customer.",
