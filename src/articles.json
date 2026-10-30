@@ -1101,5 +1101,192 @@
     "https://seekingalpha.com/news/4630457-rocket-lab-projects-250m-265m-q3-2026-revenue-as-it-targets-midminus-2027-iridium-close"
    ]
   ]
+ },
+ {
+  "slug": "ast-spacemobile-q3-2026-earnings-date",
+  "title": "When does AST SpaceMobile report Q3 2026 earnings?",
+  "summary": "AST SpaceMobile reports Q3 2026 results on Monday 9 November, with a call at 5pm Eastern (10pm UK). To meet its $150M to $200M revenue guidance for 2026 it needs $103.7M to $153.7M in the second half: 1.6 to 2.4 times Q2's $31.5M in each quarter, by our calculation.",
+  "published": "2026-10-30",
+  "updated": "2026-10-30",
+  "tickers": [
+   "ASTS"
+  ],
+  "sections": [
+   [
+    "The date",
+    [
+     "AST SpaceMobile announced on 26 October 2026 that it will hold its third quarter 2026 business update call on Monday 9 November 2026 at 5pm Eastern, which is 10pm UK time. Management will cover the business and the financial results and take questions from shareholders, with a live webcast on the Events page of AST's investor relations website.",
+     "For Q2, AST published its results and held the call on the same day, 10 August. Rocket Lab also reports on the evening of 9 November: see [when Rocket Lab reports Q3 2026 earnings](/articles/rocket-lab-q3-2026-earnings-date)."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the second half has to do almost all the work",
+    [
+     "AST has not given guidance for Q3 on its own. What it has said, in its Q2 release on 10 August, is that it was on track for full year 2026 revenue of $150M to $200M. It booked $46.3M in the first half ($14.7M in Q1 and $31.5M in Q2). So the guidance only holds if Q3 and Q4 together bring in $103.7M to $153.7M.",
+     {
+      "table": {
+       "head": [
+        "2026 revenue (our calculation from AST's figures)",
+        "Low end of guidance",
+        "High end of guidance"
+       ],
+       "rows": [
+        [
+         "Full year guidance",
+         "$150.0M",
+         "$200.0M"
+        ],
+        [
+         "Reported in the first half",
+         "$46.3M",
+         "$46.3M"
+        ],
+        [
+         "Needed in Q3 and Q4 together",
+         "$103.7M",
+         "$153.7M"
+        ],
+        [
+         "Average needed per quarter",
+         "$51.9M",
+         "$76.9M"
+        ],
+        [
+         "Versus Q2's $31.5M",
+         "1.6 times",
+         "2.4 times"
+        ],
+        [
+         "Q4 needed if Q3 only matches Q2",
+         "$72.2M",
+         "$122.2M"
+        ]
+       ]
+      }
+     },
+     "That is why the Q3 revenue figure matters more than usual on 9 November. A Q3 close to $52M keeps the low end of the range within reach without an outsized Q4; a Q3 near Q2's level leaves Q4 needing more than twice what AST has ever booked in a quarter. Q2 revenue came mainly from gateway deliveries and US government milestones, not subscriber service, so the timing of those deliveries and milestones decides the quarter.",
+     "Cash is the other number to check. In the first half AST used $145.2M in operations and spent $859.2M on property and equipment, about $1.0B in total or roughly $502M a quarter (our calculation from its cash flow statement; it also paid $100M in capital advances to Ligado and $42.1M for spectrum). Against the more than $3.7B of pro forma cash, cash equivalents and restricted cash AST reported on a pro forma basis at 30 June (the reported $2.7B plus, on our reading, July's $1.15B convertible bond), that is about seven quarters at the first-half pace. Spending is likely to rise as more satellites are built and launched, so treat that as a ceiling on runway, not a forecast."
+    ]
+   ],
+   [
+    "Where AST stands going into the results",
+    [
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Latest figure",
+        "Date and source"
+       ],
+       "rows": [
+        [
+         "Satellites in orbit",
+         "13",
+         "After BlueBirds 11 to 13 launched, Q2 release, 10 August"
+        ],
+        [
+         "Next satellites",
+         "BlueBirds 14, 15 and 16 at Cape Canaveral, no launch date announced",
+         "October 2026, see the [BlueBirds 14 to 16 launch page](/launches/ast-spacemobile-bluebirds-14-16-launch)"
+        ],
+        [
+         "Revenue backlog",
+         "About $1.30B",
+         "Q2 release, 10 August"
+        ],
+        [
+         "Cash, cash equivalents and restricted cash",
+         "About $2.7B (more than $3.7B pro forma)",
+         "30 June 2026"
+        ],
+        [
+         "Long-term debt",
+         "$2.96B",
+         "30 June 2026 balance sheet"
+        ],
+        [
+         "Q2 net loss to common shareholders",
+         "$230.9M, or $0.77 a Class A share",
+         "Q2 release, including a $125.9M loss on involuntary conversion"
+        ],
+        [
+         "Shares outstanding (Class A, B and C)",
+         "About 389.1M",
+         "30 June 2026"
+        ],
+        [
+         "Market value",
+         "About $16.8B at $43.07",
+         "Close on 29 October 2026"
+        ]
+       ]
+      }
+     },
+     "At $16.8B, AST is valued at about 13 times its $1.30B backlog and about 96 times the $175M midpoint of its 2026 revenue guidance (our calculations). The market is pricing the network AST is building, not this year's revenue, which is why launch timing and service dates tend to move the shares more than the quarterly numbers."
+    ]
+   ],
+   [
+    "What to watch on 9 November",
+    [
+     {
+      "list": [
+       "Q3 revenue against the roughly $52M a quarter needed for the low end of the $150M to $200M guidance, and whether AST repeats the range.",
+       "A launch date and rocket for BlueBirds 14 to 16, and the schedule for the rest. In July AST said it expected about 45 satellites in orbit in early 2027; it has 13. Light Reading noted that AST's 21 October update gave no launch timing.",
+       "Service: on 21 October AST said it was targeting initial, intermittent coverage before the end of 2026 in the US, Canada, Japan, the UK and Saudi Arabia, and that about 5,600 cells covering the contiguous US would be activated by year end, up from 3,000.",
+       "Cash at 30 September and capital spending in Q3, which show how fast the $3.7B pro forma balance is being used.",
+       "Share count. Class A shares rose about 5% in the first half, from 285.4M to 299.7M. July's convertible converts at $149.20 a share, about 7.7M shares if fully converted, well above the current price."
+      ]
+     },
+     "The [AST SpaceMobile earnings preview](/earnings-preview/asts) collects the figures to compare against once results are out."
+    ]
+   ],
+   [
+    "How ASTS has traded into the results",
+    [
+     "ASTS closed at $43.07 on 29 October 2026, about 68% below its 52-week high of $133.86 and not far above its 52-week low of $36.72. On 9 October the shares fell 10.5% on volume of 53.8 million after SpaceX agreed to buy Grain Management's 800MHz spectrum, which AST had been testing with AT&T.",
+     "Competition for phone-to-satellite spectrum is the backdrop to these results. See [the FCC's proposal for 482 MHz more satellite-to-phone spectrum](/articles/fcc-direct-to-device-spectrum-482-mhz) and [the FCC's approval of Amazon's Globalstar deal](/articles/fcc-approves-amazon-globalstar-deal). The [ASTS stock page](/stocks/asts) has the live price and filings."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "When is AST SpaceMobile's Q3 2026 earnings call?",
+    "Monday 9 November 2026 at 5pm Eastern, 10pm UK time, with a webcast on AST's investor relations website."
+   ],
+   [
+    "What revenue does AST SpaceMobile expect in 2026?",
+    "$150M to $200M for the full year, the range AST said it was on track for in August. With $46.3M booked in the first half, that needs $103.7M to $153.7M in Q3 and Q4 combined, by our calculation."
+   ],
+   [
+    "How many AST SpaceMobile satellites are in orbit?",
+    "13 as of its last results. BlueBirds 14, 15 and 16 reached Cape Canaveral in October 2026 but no launch date has been announced. AST has said it expects about 45 in orbit in early 2027."
+   ],
+   [
+    "How much cash does AST SpaceMobile have?",
+    "About $2.7B of cash, cash equivalents and restricted cash at 30 June 2026, or more than $3.7B on the pro forma basis AST reported, which on our reading includes the $1.15B convertible bond it sold in July."
+   ]
+  ],
+  "sources": [
+   [
+    "AST SpaceMobile: to host third quarter 2026 business update call on 9 November 2026 (Business Wire, 26 October 2026)",
+    "https://www.financialcontent.com/article/bizwire-2026-10-26-ast-spacemobile-to-host-third-quarter-2026-business-update-call-on-november-9-2026"
+   ],
+   [
+    "AST SpaceMobile: business update and second quarter 2026 results (SEC 8-K exhibit 99.1, 10 August 2026)",
+    "https://www.sec.gov/Archives/edgar/data/0001780312/000119312526342540/asts-ex99_1.htm"
+   ],
+   [
+    "Light Reading: AST SpaceMobile limited coverage coming soon in US and beyond (21 October 2026)",
+    "https://www.lightreading.com/satellite/ast-spacemobile-says-limited-coverage-coming-soon-in-us-and-beyond"
+   ],
+   [
+    "The Motley Fool: Stock Market Today, Oct. 9: AST SpaceMobile slides on SpaceX spectrum move",
+    "https://www.fool.com/coverage/stock-market-today/2026/10/09/stock-market-today-oct-9-ast-spacemobile-slides-on-spacex-spectrum-move/"
+   ],
+   [
+    "Orbit Alpha live quote: ASTS (close 29 October 2026, market value and 52-week range)",
+    "https://www.orbitalpha.cloud/api/quote?ticker=ASTS"
+   ]
+  ]
  }
 ]
