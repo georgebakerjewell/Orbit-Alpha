@@ -1050,7 +1050,7 @@ function Home({ news, prices, launches }) {
         <Card title="Latest signals" note="Insider trades, offerings, contract wins">
           {signalsLoading && <ListSkeleton rows={4} />}
           {signals.map((i) => (
-            <a key={i.type + i.key} href={i.link || undefined} target="_blank" rel="noopener noreferrer" className="hov" style={{ display: "flex", gap: 10, padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none", alignItems: "flex-start" }}>
+            <Link key={i.type + i.key} to={i.tickers?.[0] ? `/stocks/${i.tickers[0].toLowerCase()}` : "/news"} data-next="home-signals" className="hov" style={{ display: "flex", gap: 10, padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", textDecoration: "none", alignItems: "flex-start" }}>
               <span style={{ fontSize: 10, color: "#667", width: 44, flexShrink: 0, paddingTop: 2 }}>{fmtDay(i.day, { day: "numeric", month: "short" })}</span>
               <span style={{ flexShrink: 0 }}><TickerChip ticker={i.tickers[0]} /></span>
               <span style={{ fontSize: 11, color: i.color || "#fff", lineHeight: 1.5 }}>{i.title}</span>
