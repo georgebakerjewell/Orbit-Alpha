@@ -2136,6 +2136,72 @@ function DilutionTracker({ data, error }) {
   );
 }
 
+/* ── Analyst consensus (from /api/quote?consensus=1, built in lib/consensus.js) ─────── */
+const RATING_LABEL = { strong_buy: "Strong buy", buy: "Buy", hold: "Hold", underperform: "Underperform", sell: "Sell", strong_sell: "Strong sell" };
+const CONSENSUS_MIN = 3; // keep in step with MIN_ANALYSTS in lib/consensus.js
+function ratingOf(c) {
+  if (c?.rating?.key && RATING_LABEL[c.rating.key]) return RATING_LABEL[c.rating.key];
+  const s = c?.split;
+  if (!s) return null;
+  const buys = s.strongBuy + s.buy, sells = s.sell + s.strongSell;
+  return buys > s.hold + sells ? "Buy" : sells > buys + s.hold ? "Sell" : "Hold";
+}
+const fiscalLabel = (end, kind) => {
+  if (!end) return kind === "quarter" ? "Current quarter" : "Current year";
+  const d = new Date(end + "T12:00:00Z");
+  return kind === "quarter" ? `Quarter to ${d.toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "UTC" })}` : `Year to ${d.toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "UTC" })}`;
+};
+
+function ConsensusCard({ ticker, data, error }) {
+  const c = data?.stocks?.[ticker];
+  const thin = c && (c.analysts || 0) < CONSENSUS_MIN;
+  const s = c?.split;
+  const buys = s ? s.strongBuy + s.buy : 0, sells = s ? s.sell + s.strongSell : 0, total = s ? buys + s.hold + sells : 0;
+  const cur = c?.currency || "USD", rcur = c?.reportingCurrency || "USD";
+  const est = c?.estimates || {};
+  const estRows = [["quarter", est.quarter], ["year", est.year], ["nextYear", est.nextYear]].filter(([, e]) => e);
+  const epsText = (v) => (v == null ? "-" : `${v < 0 ? "-" : ""}${money(Math.abs(v), rcur)}`);
+  return (
+    <Card title="Analyst consensus" note={c?.analysts ? `${c.analysts} ${c.analysts === 1 ? "analyst" : "analysts"}` : null} style={{ marginBottom: 14 }}>
+      {!data && !error && <Skeleton w="100%" h={60} />}
+      {error && !data && <Empty>Unavailable right now.</Empty>}
+      {data && !c && <Empty>No analysts publish price targets or estimates for {ticker} at the moment.</Empty>}
+      {c && (
+        <>
+          {thin && <div style={{ fontSize: 11, color: C.yellow, marginBottom: 12, lineHeight: 1.6 }}>Only {c.analysts || "one"} {c.analysts === 1 || !c.analysts ? "analyst covers" : "analysts cover"} {ticker}, so this is a single view rather than a consensus.</div>}
+          <div className="oa-stats" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: "16px 20px" }}>
+            <Stat label={thin ? "Price target" : "Consensus target"} value={c.target ? money(c.target.mean, cur) : "-"} sub={c.target?.low != null && c.target?.high != null && c.target.low !== c.target.high ? `Range ${money(c.target.low, cur)} to ${money(c.target.high, cur)}` : null} />
+            <Stat label="Implied move" value={c.upside != null ? pct(c.upside) : "-"} color={c.upside == null ? null : signColor(c.upside)} sub={c.price ? `From ${money(c.price, cur)}` : null} />
+            {ratingOf(c) && <Stat label="Rating" value={ratingOf(c)} sub={total ? `${buys} buy · ${s.hold} hold · ${sells} sell` : null} />}
+          </div>
+          {total > 0 && (
+            <div style={{ display: "flex", height: 6, borderRadius: 3, overflow: "hidden", marginTop: 14, background: "rgba(255,255,255,0.05)" }} aria-hidden="true">
+              <div style={{ width: `${(buys / total) * 100}%`, background: C.green }} />
+              <div style={{ width: `${(s.hold / total) * 100}%`, background: "#556" }} />
+              <div style={{ width: `${(sells / total) * 100}%`, background: C.red }} />
+            </div>
+          )}
+          {estRows.length > 0 && (
+            <div style={{ marginTop: 14 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr 1fr", gap: 8, fontSize: 11, color: C.muted, paddingBottom: 4 }}>
+                <span>Estimates</span><span>EPS</span><span>Revenue</span>
+              </div>
+              {estRows.map(([k, e]) => (
+                <div key={k} style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr 1fr", gap: 8, padding: "7px 0", borderBottom: "1px solid rgba(255,255,255,0.04)", fontSize: 12, alignItems: "baseline" }}>
+                  <span style={{ color: C.light }}>{fiscalLabel(e.end, k === "quarter" ? "quarter" : "year")}</span>
+                  <span style={{ color: "#fff", fontWeight: 600 }}>{epsText(e.eps)}{e.epsYearAgo != null && <span style={{ color: C.muted, fontSize: 10, fontWeight: 400 }}> · yr ago {epsText(e.epsYearAgo)}</span>}</span>
+                  <span style={{ color: "#fff", fontWeight: 600 }}>{e.revenue != null ? fmtAmt(e.revenue, rcur) : "-"}{e.revenue != null && e.revenueYearAgo ? <span style={{ color: e.revenue >= e.revenueYearAgo ? C.green : C.red, fontSize: 10, fontWeight: 400 }}> {pct((e.revenue / e.revenueYearAgo - 1) * 100, 0)}</span> : null}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+      <SourceNote>Source: {c?.source || "Yahoo Finance"} analyst consensus{data?.asOf ? `, as of ${fmtDay(data.asOf.slice(0, 10), { day: "numeric", month: "short", year: "numeric" })}` : ""}. Targets and estimates are the published views of brokerage analysts, not Orbit Alpha forecasts. Not investment advice. <Link to="/space-stocks/analyst-price-targets" className="oa-link" style={{ color: C.blue }}>Compare every space stock</Link></SourceNote>
+    </Card>
+  );
+}
+
 function StockPage({ ticker, prices, launches, news, goSubscribe }) {
   const profile = PROFILES[ticker];
   const country = useCountry();
@@ -2147,6 +2213,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
   const keyStats = useApi(profile ? `/api/quote?ticker=${ticker}&stats=1` : null);
   const fin = useApi(profile && hasSec(ticker) ? `/api/filings?ticker=${ticker}&financials=1` : null);
   const insiders = useApi(profile && hasForm4(ticker) ? `/api/filings?ticker=${ticker}&insiders=1` : null);
+  const consensus = useApi(profile ? "/api/quote?consensus=1" : null);
   if (!profile) return <NotFound />;
 
   const live = prices.stocks.find((x) => x.ticker === ticker && x.price != null);
@@ -2223,6 +2290,7 @@ function StockPage({ ticker, prices, launches, news, goSubscribe }) {
       </Card>
 
       <KeyStats ticker={ticker} data={keyStats.data} error={keyStats.error} live={live} />
+      <ConsensusCard ticker={ticker} data={consensus.data} error={consensus.error} />
 
       {hasSec(ticker) && (
         <div className="oa-grid" style={{ marginBottom: 14 }}>

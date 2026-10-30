@@ -14,9 +14,10 @@ import { buildArticles } from "./articles.mjs";
 import { readFileSync } from "node:fs";
 import { brokerBoxHtml } from "../lib/affiliates.js";
 import { RUNWAY_NOTES, RUNWAY_NOTE_SOURCE } from "../lib/runway-notes.js";
+import { MIN_ANALYSTS, ratingLabel, splitCounts } from "../lib/consensus.js";
 
 export function buildGuides(ctx) {
-  const { SITE, profiles, ETFS, SECTOR_ORDER, quotes, ytdBy, perfBy, earnings, filingsBy, contractsBy, finBy, insidersBy, asOf, count,
+  const { SITE, profiles, ETFS, SECTOR_ORDER, quotes, ytdBy, perfBy, earnings, filingsBy, contractsBy, finBy, insidersBy, consensusBy = {}, consensusAsOf, asOf, count,
     esc, list, crumbs, ORG, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate } = ctx;
   const and = (xs) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
   const usd = (n) => (n > 0 && n < 1000 ? "under $1K" : fmtUsd(n));
@@ -129,6 +130,54 @@ ${generative.length ? `<h2>Cash generative</h2><p>These companies produced posit
 <p>It is a rough guide, not a forecast. It ignores undrawn credit lines, money still to come from at-the-market share programmes, and large contract payments due in future. Capital spending in this industry is lumpy, so a year with a big satellite or factory build can make runway look shorter than the underlying business would suggest. A company that has just raised money will look much healthier the quarter after the cash arrives. Check the latest filing before drawing conclusions.</p>
 <p>Companies that report in currencies other than US dollars, and those that do not file with the SEC, are not included.</p>
 ${asOfLine("Source: SEC EDGAR financial statements (10-Q and 10-K).")}`);
+
+  /* ── 3b. Analyst price targets ───────────────────────────────────────────── */
+  const cons = Object.entries(consensusBy).filter(([t, c]) => profiles[t] && c);
+  const covered = cons.filter(([, c]) => c.target && c.upside != null && (c.analysts || 0) >= MIN_ANALYSTS).sort((a, b) => b[1].upside - a[1].upside);
+  const thinCov = cons.filter(([, c]) => c.target && (c.analysts || 0) < MIN_ANALYSTS);
+  const noCov = Object.keys(profiles).filter((t) => !consensusBy[t]?.target);
+  const cAsOf = consensusAsOf || asOf;
+  const splitText = (c) => { const k = splitCounts(c.split); return k ? `${k.buy} / ${k.hold} / ${k.sell}` : null; };
+  const pxt = (c, v) => (v == null ? null : fmtPrice(v, c.currency || "USD"));
+  const consRow = (t, c) => [link(t), tick(t), pxt(c, c.price), pxt(c, c.target.mean), c.upside != null ? fmtPct(c.upside) : null, c.target.low != null && c.target.high != null ? `${pxt(c, c.target.low)} to ${pxt(c, c.target.high)}` : null, c.analysts || null, ratingLabel(c), splitText(c)];
+  const estOf = (c) => c.estimates?.year;
+  const withEst = cons.filter(([, c]) => estOf(c)?.revenue != null || estOf(c)?.eps != null);
+  const revText = (c, v) => (v == null ? null : !c.reportingCurrency || c.reportingCurrency === "USD" ? fmtUsd(v) : `${esc(c.reportingCurrency)} ${fmtUsd(v).slice(1)}`);
+  const epsT = (c, v) => (v == null ? null : `${v < 0 ? "-" : ""}${fmtPrice(Math.round(Math.abs(v) * 100) / 100, c.reportingCurrency || "USD").replace(/(\.\d\d)0$/, "$1")}`);
+  const buyRated = covered.filter(([, c]) => /buy/i.test(ratingLabel(c) || ""));
+  const below = covered.filter(([, c]) => c.upside < 0);
+  const best = covered[0], worst = covered[covered.length - 1];
+  const spcx = consensusBy.SPCX?.target ? consensusBy.SPCX : null;
+  const targetsFaq = faq([
+    ...(best ? [["Which space stock has the most upside to its analyst price target?", `As of ${fmtDate(cAsOf)}, ${profiles[best[0]].name} (${best[0]}) has the highest implied upside of the space stocks with at least ${MIN_ANALYSTS} analysts: a consensus target of ${pxt(best[1], best[1].target.mean)}, ${fmtPct(best[1].upside)} from its last price. Targets are analysts' views, not guarantees.`]] : []),
+    ...(spcx ? [["What is the analyst price target for SpaceX (SPCX)?", `${spcx.analysts ? `${spcx.analysts} analysts cover SpaceX. ` : ""}Their consensus target is ${pxt(spcx, spcx.target.mean)}, ${spcx.upside != null ? `${fmtPct(spcx.upside)} from the last price, ` : ""}as of ${fmtDate(cAsOf)}.`]] : []),
+    ["How often are analyst price targets updated?", "Analysts revise their targets after results, big contract news or a large move in the share price, so a consensus figure changes a little at a time. This page refreshes every day from the latest published consensus."],
+    ["Are analyst price targets reliable?", "They are a useful summary of what the brokers covering a stock think, not a forecast to rely on. Targets usually look 12 months ahead, tend to follow the share price rather than lead it, and for small space companies may reflect only two or three analysts, several of whom may work for banks that helped the company raise money."],
+    ["What does implied upside mean?", "Implied upside is the gap between the average analyst price target and the current share price. A large figure can mean analysts are bullish, or simply that the shares have fallen and the targets have not caught up yet."],
+  ]);
+  const targetsPage = page("/space-stocks/analyst-price-targets", "Space stocks analyst price targets and ratings",
+    `<p>What the brokerage analysts who cover each listed space company expect: the average (consensus) 12-month price target, how far that is from today's share price, the spread between the most and least bullish analyst, and how many rate the stock a buy, hold or sell. The same consensus figures appear on each company's page, and changes are covered every Sunday in the newsletter's Broker Pulse section.</p>
+<h2>Consensus price targets, ranked by implied upside</h2>
+${covered.length ? table(["Company", "Ticker", "Price", "Consensus target", "Implied move", "Target range", "Analysts", "Rating", "Buy / hold / sell"], covered.map(([t, c]) => consRow(t, c))) : `<p>Analyst data is temporarily unavailable. The figures are on each company's page.</p>`}
+<p class="oa-note">Only stocks covered by at least ${MIN_ANALYSTS} analysts are ranked. Prices and targets are in each stock's trading currency.</p>
+${covered.length ? `<p>${buyRated.length} of the ${covered.length} ranked space stocks carry an average rating of buy or better.${below.length ? ` ${and(below.map(([t]) => link(t)))} ${below.length === 1 ? "trades" : "trade"} above ${below.length === 1 ? "its" : "their"} consensus target, which often means the shares have risen faster than analysts have raised their targets.` : ""}</p>` : ""}
+${thinCov.length ? `<h2>Limited analyst coverage</h2><p>These companies are covered by fewer than ${MIN_ANALYSTS} analysts, so the figure is one or two individual views rather than a consensus.</p>${table(["Company", "Ticker", "Price", "Target", "Implied move", "Analysts"], thinCov.map(([t, c]) => [link(t), tick(t), pxt(c, c.price), pxt(c, c.target.mean), c.upside != null ? fmtPct(c.upside) : null, c.analysts || 1]))}` : ""}
+${noCov.length ? `<p>No published analyst price target: ${and(noCov.map(link))}.</p>` : ""}
+${withEst.length ? `<h2>Consensus earnings and revenue estimates</h2><p>The average analyst forecast for each company's current financial year, with the change on the year before. Most space companies are still loss-making, so revenue growth is usually the number that moves the shares.</p>${table(["Company", "Ticker", "Year to", "Revenue estimate", "Revenue growth", "EPS estimate", "Analysts"], withEst.map(([t, c]) => { const e = estOf(c); return [link(t), tick(t), e.end ? fmtDate(e.end) : null, revText(c, e.revenue), e.revenue != null && e.revenueYearAgo ? fmtPct((e.revenue / e.revenueYearAgo - 1) * 100) : null, epsT(c, e.eps), e.revenueAnalysts || e.epsAnalysts || null]; }))}` : ""}
+<h2>How to read analyst price targets</h2>
+<p>A price target is where an analyst thinks the shares will trade in about 12 months. The consensus is the average across every analyst who publishes one, so a single very bullish or very bearish target can pull it a long way, especially when only a handful of analysts cover the stock. The range column shows how far apart they are.</p>
+<p>Targets tend to follow the share price. After a sharp rally many space stocks trade above their consensus target until analysts catch up, and after a sell-off the implied upside can look large simply because targets have not been cut yet. Check when the last targets changed before reading much into a big number.</p>
+<p>Many analysts covering young space companies work for banks that have helped them raise money, and sell ratings are rare across the whole market. A hold rating is often as cautious as an analyst gets.</p>
+<h2>Where the data comes from</h2>
+<p>Price targets, ratings and estimates are the published consensus figures on Yahoo Finance, with Nasdaq's analyst summary used for US stocks Yahoo has no target for. They are refreshed daily. Orbit Alpha does not make its own forecasts.</p>
+${targetsFaq.html}${asOfLine("Source: Yahoo Finance and Nasdaq analyst consensus.")}`,
+    [targetsFaq.ld], cAsOf);
+  if (best && worst && covered.length >= 3) targetsPage.answer = `As of ${fmtDate(cAsOf)}, analysts see the most upside in ${profiles[best[0]].name} (${best[0]}), with a consensus target ${fmtPct(best[1].upside)} from the last price, and the least in ${profiles[worst[0]].name} (${worst[0]}), at ${fmtPct(worst[1].upside)}. ${buyRated.length} of ${covered.length} space stocks with at least ${MIN_ANALYSTS} analysts are rated buy on average.`;
+  targetsPage.datasets = [{
+    slug: "space-stocks-analyst-price-targets", name: "Space stocks analyst price targets", description: "Consensus analyst price target, target range, number of analysts, average rating and buy/hold/sell counts for each listed space stock.",
+    columns: ["ticker", "name", "currency", "price", "target_mean", "target_low", "target_high", "implied_move_pct", "analysts", "rating", "buy", "hold", "sell", "source"],
+    rows: cons.filter(([, c]) => c.target).map(([t, c]) => { const k = splitCounts(c.split) || {}; return [t, profiles[t].name, c.currency || "", c.price ?? "", c.target.mean, c.target.low ?? "", c.target.high ?? "", c.upside ?? "", c.analysts ?? "", ratingLabel(c) || "", k.buy ?? "", k.hold ?? "", k.sell ?? "", c.source]; }),
+  }];
 
   /* ── 4. Government contracts ─────────────────────────────────────────────── */
   const con = Object.entries(contractsBy).filter(([, d]) => d && d.total > 0).sort((a, b) => b[1].total - a[1].total);
@@ -243,7 +292,7 @@ ${euroFaq.html}${asOfLine("Prices from Yahoo Finance; market caps from the lates
   }];
 
   const RESULTS = JSON.parse(readFileSync(new URL("../src/results.json", import.meta.url), "utf8"));
-  const pages = [listPage, insiderPage, runwayPage, contractsPage, earningsPage, euroPage, etfPage,
+  const pages = [listPage, insiderPage, runwayPage, targetsPage, contractsPage, earningsPage, euroPage, etfPage,
     ...buildSpaceX({ ...ctx, page, table, faq, and, usd, asOfLine }),
     ...buildIpos({ ...ctx, page, table, faq, and, usd, asOfLine }),
     ...buildMoreGuides({ ...ctx, page, table, faq, and, usd, asOfLine }),

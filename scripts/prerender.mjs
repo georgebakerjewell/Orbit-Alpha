@@ -10,6 +10,7 @@ import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, stockTitle } from "../l
 import { withConfirmed } from "../lib/earnings-confirmed.js";
 import { brokerBoxHtml } from "../lib/affiliates.js";
 import { RUNWAY_NOTES } from "../lib/runway-notes.js";
+import { MIN_ANALYSTS, ratingLabel, splitCounts } from "../lib/consensus.js";
 import { sheetHtml } from "./sheet.mjs";
 import { widgetHtml } from "./embed.mjs";
 import { previewTargets, quarterFor } from "./previews.mjs";
@@ -99,6 +100,10 @@ const contractsBy = Object.fromEntries(Object.entries(contractsFull).map(([t, d]
 const finBy = await pool(secTickers, 4, (t) => api(`/api/filings?ticker=${t}&financials=1`, 30000));
 const insidersBy = await pool(form4Tickers, 4, (t) => api(`/api/filings?ticker=${t}&insiders=1`, 30000));
 const quotes = quotesRes?.quotes || {};
+// Analyst consensus (price targets, ratings, estimates) from /api/quote?consensus=1.
+const consensusRes = await api("/api/quote?consensus=1", 40000);
+const consensusBy = consensusRes?.stocks || {};
+const consensusAsOf = consensusRes?.asOf?.slice(0, 10) || null;
 // The trading day the latest prices belong to: before 8pm UTC (the US close in summer time) or at a weekend,
 // the last close is from the previous weekday.
 const quotesDate = (() => {
@@ -127,6 +132,19 @@ const latest = (...dates) => dates.filter(Boolean).sort().pop() || null;
 
 const previewFor = previewTargets({ earnings: earningsList, results: JSON.parse(readFileSync(new URL("../src/results.json", import.meta.url), "utf8")), profiles, today });
 const earningsSentence = (name, e) => `${name} ${e.confirmed ? "reports" : "is expected to report"} its next results on ${fmtDate(e.date)}${e.time && e.time !== "Time TBC" ? `, ${e.time.toLowerCase()}` : ""}${e.confirmed ? " (confirmed by the company)" : ""}${e.epsEst ? `, with consensus earnings per share of ${epsText(e.epsEst)}` : ""}.`;
+// "<ticker> price target" is searched constantly: one sentence that answers it, reused in the FAQ.
+function targetSentence(t, name) {
+  const c = consensusBy[t];
+  if (!c?.target) return null;
+  const px = (v) => fmtPrice(v, c.currency || "USD");
+  const n = c.analysts || 1, k = splitCounts(c.split), r = ratingLabel(c);
+  const move = c.upside != null && c.price ? `, ${Math.abs(c.upside).toFixed(1)}% ${c.upside >= 0 ? "above" : "below"} the last price of ${px(c.price)}` : "";
+  const range = c.target.low != null && c.target.high != null && c.target.low !== c.target.high ? ` Individual targets range from ${px(c.target.low)} to ${px(c.target.high)}.` : "";
+  const rating = r && n >= MIN_ANALYSTS ? ` The average rating is ${r.toLowerCase()}${k ? ` (${k.buy} buy, ${k.hold} hold, ${k.sell} sell)` : ""}.` : "";
+  return n < MIN_ANALYSTS
+    ? `Only ${n === 1 ? "one analyst publishes" : `${n} analysts publish`} a price target for ${name} (${t}): ${px(c.target.mean)}${move}, as of ${fmtDate(consensusAsOf || today)}.${range}`
+    : `The consensus analyst price target for ${name} (${t}) is ${px(c.target.mean)}, the average of ${n} analysts${move}, as of ${fmtDate(consensusAsOf || today)}.${range}${rating}`;
+}
 function stockFacts(t, name) {
   const q = quotes[t], ytd = ytdBy[t], e = nextEarnings[t];
   const filings = (filingsBy[t] || []).slice(0, 5), awards = (contractsBy[t] || []).slice(0, 5);
@@ -139,6 +157,15 @@ function stockFacts(t, name) {
   if (rows.length) html += `<h2>${esc(name)} (${t}) stock at a glance</h2>${list(rows)}<p>Figures as of ${fmtDate(quotesDate || today)}. Prices on the live page update through the trading day.</p>`;
   // "<ticker> earnings date" is searched every quarter: answer it in its own section.
   if (e) html += `<h2>${esc(name)} (${t}) next earnings date</h2><p>${esc(earningsSentence(name, e))} ${e.confirmed ? `Source: <a href="${esc(e.source)}" rel="noopener" target="_blank">${esc(name)} investor relations</a>.` : "Date from the Nasdaq earnings calendar; companies usually confirm it two to four weeks ahead, and this page updates when they do."} ${previewFor[t]?.mode === "ahead" ? `Read the <a href="/earnings-preview/${t.toLowerCase()}">${esc(name)} ${quarterFor(e.date)} earnings preview</a>, or see` : "See"} every company's date on the <a href="/space-stocks/earnings-calendar">space stocks earnings calendar</a>.</p>`;
+  const ts = targetSentence(t, name), cs = consensusBy[t];
+  if (ts) {
+    const y = cs.estimates?.year, money = (v) => (cs.reportingCurrency && cs.reportingCurrency !== "USD" ? `${esc(cs.reportingCurrency)} ${fmtUsd(v).slice(1)}` : fmtUsd(v));
+    const est = [
+      y?.revenue != null ? `Revenue estimate for the year to ${fmtDate(y.end)}: ${money(y.revenue)}${y.revenueYearAgo ? ` (${fmtPct((y.revenue / y.revenueYearAgo - 1) * 100)} on the year before)` : ""}` : null,
+      y?.eps != null ? `Earnings per share estimate for the same year: ${y.eps < 0 ? "-" : ""}${fmtPrice(Math.round(Math.abs(y.eps) * 100) / 100, cs.reportingCurrency || "USD").replace(/(\.\d\d)0$/, "$1")}` : null,
+    ].filter(Boolean);
+    html += `<h2>${esc(name)} (${t}) analyst price target</h2><p>${esc(ts)}</p>${est.length ? list(est) : ""}<p>Source: ${esc(cs.source)} analyst consensus. Targets are analysts' published views, not Orbit Alpha forecasts. Compare every space stock on the <a href="/space-stocks/analyst-price-targets">analyst price targets page</a>.</p>`;
+  }
   html += brokerBoxHtml({ ticker: t, name, placement: "stock-page", esc, tools: !profiles[t]?.listing && t !== "MDA" });
   // Key financials from the latest 10-Q/10-K (US SEC filers), so "<company> revenue" and "<company>
   // cash" searches find a direct answer. 12-month figures where available, else the latest quarter.
@@ -278,6 +305,7 @@ const routes = [
     const qq = quotes[t], ne = nextEarnings[t], fs = finBy[t]?.snapshot?.currency === "USD" ? finBy[t].snapshot : null, ins = insidersBy[t]?.m12;
     const asof = fmtDate(quotesDate || today);
     const dataQs = [
+      targetSentence(t, p.name) ? [`What is the price target for ${t} stock?`, targetSentence(t, p.name)] : null,
       ne ? [`When does ${p.name} report earnings?`, `${earningsSentence(p.name, ne)}${ne.confirmed ? "" : " The date is from the Nasdaq earnings calendar until the company confirms it."}`] : null,
       qq?.marketCap ? [`How much is ${p.name} worth?`, `About ${fmtCap(qq.marketCap)} in market value as of ${asof}, at a share price of ${fmtPrice(qq.price, qq.currency)}.`] : null,
       ytdBy[t] != null && t !== "SPCX" ? [`How has ${t} stock done this year?`, `${t} is ${ytdBy[t] >= 0 ? "up" : "down"} ${Math.abs(ytdBy[t]).toFixed(1)}% this year as of ${asof}.`] : null,
@@ -349,7 +377,7 @@ ${q.html}${sources}${share(`/stocks/${t.toLowerCase()}`, `${p.name} ($${t}): liv
   }),
   ...buildGuides({
     SITE, profiles, ETFS, SECTOR_ORDER, quotes, ytdBy, perfBy, earnings: earningsList,
-    filingsBy, contractsBy: contractsFull, finBy, insidersBy, asOf: tradingDay || today, today, count,
+    filingsBy, contractsBy: contractsFull, finBy, insidersBy, consensusBy, consensusAsOf, asOf: tradingDay || today, today, count,
     esc, list, crumbs, ORG, fmtPrice, fmtCap, fmtPct, fmtUsd, fmtDate,
   }),
 ];
