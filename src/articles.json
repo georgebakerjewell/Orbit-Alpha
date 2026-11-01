@@ -1,6 +1,195 @@
 [
  {
   "kind": "news",
+  "slug": "direct-to-device-spectrum-race-spacex-amazon-ast",
+  "title": "Satellite-to-phone spectrum race: SpaceX has paid $28bn, Amazon $11.5bn",
+  "summary": "With Amazon's Globalstar deal cleared, three companies now hold their own spectrum for satellite-to-phone service. By our count SpaceX has agreed to pay about $27.6bn for 79 MHz, three times Amazon's MHz, while AST SpaceMobile rents up to 45 MHz from Ligado for $550M upfront plus about $80M a year.",
+  "published": "2026-11-01",
+  "updated": "2026-11-01",
+  "tickers": [
+   "SPCX",
+   "GSAT",
+   "ASTS"
+  ],
+  "match": [
+   "spectrum",
+   "direct-to-device"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "October settled the shape of the US satellite-to-phone market. On 19 October Globalstar said the FCC had authorised its third-generation C-3 system: 48 low Earth orbit satellites, six in-orbit spares and about 90 ground station antennas, built to serve ordinary smartphones in its mobile-satellite (MSS) spectrum. On 27 October the FCC approved Amazon Leo's $11.5 billion purchase of Globalstar, which we covered in [FCC clears Amazon-Globalstar deal](/articles/fcc-approves-amazon-globalstar-deal). On 29 October the FCC proposed adding 482 MHz to its satellite-to-phone rules and letting operators that hold their own licences skip carrier leases, covered in [FCC proposes 482 MHz more](/articles/fcc-direct-to-device-spectrum-482-mhz).",
+     "Meanwhile the carriers have kept satellite companies at arm's length. T-Mobile's chief executive has ruled out letting SpaceX resell mobile service over its network (an MVNO) and said in April that satellite usage on T-Mobile's Starlink service was well below what it expected. In July he said T-Mobile, AT&T and Verizon were moving towards a long-form agreement for a joint venture to buy satellite capacity, and that T-Mobile's exclusivity with Starlink runs beyond 2026."
+    ]
+   ],
+   [
+    "Orbit Alpha view: SpaceX, not Amazon, is the biggest spectrum owner",
+    [
+     "A common reading of the Globalstar deal is that Amazon now owns spectrum while SpaceX and AST SpaceMobile borrow it from carriers. The filings say otherwise. Adding up the deals agreed since September 2025, SpaceX has committed about $27.6 billion for about 79 MHz of its own spectrum, more than three times the roughly 25 MHz Amazon is buying with Globalstar. AST SpaceMobile has taken a third route: long-term rights rather than ownership, at a small fraction of the price.",
+     {
+      "table": {
+       "head": [
+        "Deal",
+        "Spectrum",
+        "MHz",
+        "Price",
+        "Price per MHz (our calculation)"
+       ],
+       "rows": [
+        [
+         "SpaceX from EchoStar (Sept 2025)",
+         "AWS-4 and H block, with the matching MSS licences",
+         "about 50",
+         "$17.0bn ($8.5bn cash, $8.5bn SpaceX stock), plus about $2bn of EchoStar interest payments",
+         "about $340M"
+        ],
+        [
+         "SpaceX from EchoStar (Nov 2025)",
+         "Unpaired AWS-3, 1695 to 1710 MHz",
+         "15",
+         "$2.6bn in SpaceX stock",
+         "about $173M"
+        ],
+        [
+         "SpaceX from Grain (Oct 2026, awaiting FCC)",
+         "Nationwide 800 MHz",
+         "14 (paired)",
+         "about $8bn cash, as reported by the WSJ",
+         "about $571M"
+        ],
+        [
+         "SpaceX total",
+         "",
+         "about 79",
+         "about $27.6bn",
+         "about $349M"
+        ],
+        [
+         "Amazon Leo buys Globalstar (FCC cleared 27 Oct 2026)",
+         "Internationally harmonised MSS",
+         "about 25",
+         "$11.5bn for the whole company",
+         "up to $460M"
+        ],
+        [
+         "AST SpaceMobile from Ligado (Jan 2025)",
+         "L-band MSS (40 MHz) plus 1670 to 1675 MHz (5 MHz), 80+ year usage rights",
+         "up to 45",
+         "about $550M upfront, about $80M a year, plus revenue share",
+         "about $12M upfront, plus about $1.8M a year"
+        ]
+       ]
+      }
+     },
+     "Price per MHz is our calculation from the published prices and bandwidths, excluding EchoStar's interest payments, and it is only a rough guide: the bands differ in coverage, in how well they travel and in what they can legally be used for. The Amazon figure is an upper bound, because $11.5 billion also buys Globalstar's satellites, ground network, revenue and the Apple contract.",
+     "Three points follow. First, SpaceX's spending is the biggest in absolute terms but small for SpaceX: $27.6 billion is about 1.5% of its $1.83 trillion market value at the 30 October close of $134.72 (our calculation from the share price and market value shown on our quote feed). Second, SpaceX has bought both satellite (MSS) and terrestrial licences, the combination the FCC's 29 October proposal would let it use without a carrier's consent. Third, AST SpaceMobile's route is by far the cheapest per MHz, but it is rented rather than owned, and its US service still runs mainly on spectrum belonging to AT&T and Verizon, the same carriers now forming a joint venture to buy satellite capacity together.",
+     "So the split is not owners against borrowers. SpaceX owns the most and has the strongest balance sheet; Amazon owns less but gets spectrum that is harmonised internationally, a working constellation and Apple as a paying customer; AST SpaceMobile spends least on spectrum and relies most on its carrier partners."
+    ]
+   ],
+   [
+    "Why each company chose its route",
+    [
+     {
+      "list": [
+       "SpaceX wants to be a mobile operator in its own right, not just a supplier. Owning AWS-4, H block, AWS-3 and (if approved) 800 MHz gives it bands that standard phones already support, without needing T-Mobile, which has said no to an MVNO.",
+       "Amazon needed time as well as spectrum. Amazon has said its own direct-to-device satellites start deploying in 2028, so Globalstar gives Amazon Leo a licensed band and the Apple service years earlier.",
+       "AST SpaceMobile has to conserve capital while it builds its constellation. It had $2.29 billion of cash and cash equivalents at 30 June 2026 according to its 10-Q, so a $550 million upfront Ligado payment is about 24% of that cash; buying spectrum on SpaceX's scale was never an option. Its 10-Q also shows $100 million of capital advances to Ligado in the first half of 2026."
+      ]
+     }
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     {
+      "list": [
+       "[Globalstar](/stocks/gsat) trades on Amazon's share price until the deal closes in 2027; the spectrum argument does not change the deal terms.",
+       "[AST SpaceMobile](/stocks/asts) is most exposed to the carrier joint venture. If the JV becomes the main buyer of satellite capacity for AT&T, Verizon and T-Mobile, AST's partners get more bargaining power, but AST also gets a route to T-Mobile's customers once Starlink's exclusivity ends in 2027.",
+       "[SpaceX](/stocks/spcx) gains most if the FCC adopts its proposal to let licence holders skip carrier leases, because it is the only one of the three holding large terrestrial licences.",
+       "[MDA Space](/stocks/mda) builds Globalstar's next satellites, so its contract continues under Amazon ownership."
+      ]
+     }
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "9 November: AST SpaceMobile's third-quarter business update call, for any news on further spectrum and on its carrier agreements.",
+       "FCC approval of SpaceX's Grain 800 MHz purchase, the last part of its roughly $27.6 billion total.",
+       "The long-form agreement for the AT&T, T-Mobile and Verizon satellite joint venture, and who it buys capacity from.",
+       "Comments on the FCC's satellite-to-phone proposal, which run to about late January 2027 at the earliest.",
+       "Completion of the Amazon-Globalstar deal, expected in 2027."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Who owns the most satellite-to-phone spectrum in the US?",
+    "SpaceX, by a wide margin. By our count it has agreed deals for about 79 MHz (AWS-4, H block, unpaired AWS-3 and, pending FCC approval, 800 MHz) for about $27.6 billion. Amazon's Globalstar deal brings about 25 MHz, and AST SpaceMobile has rights to up to 45 MHz from Ligado."
+   ],
+   [
+    "Does AST SpaceMobile own spectrum?",
+    "Not on the scale of SpaceX. Its Ligado agreement gives it long-term usage rights to up to 45 MHz for about $550 million upfront and about $80 million a year, and its US service relies mainly on AT&T and Verizon spectrum."
+   ],
+   [
+    "Did Amazon overpay for Globalstar's spectrum?",
+    "Not on a like-for-like basis. $11.5 billion for about 25 MHz is up to $460 million per MHz, above SpaceX's EchoStar deal at about $340 million, but the Globalstar price also buys a working constellation, revenue and the Apple contract."
+   ]
+  ],
+  "sources": [
+   [
+    "Satellite Today: FCC authorizes Globalstar's C-3 constellation for direct-to-device (19 October 2026)",
+    "https://www.satellitetoday.com/connectivity/2026/10/19/fcc-authorizes-globalstars-c-3-constellation-for-direct-to-device/"
+   ],
+   [
+    "FCC news release: FCC Approves Amazon Leo's Acquisition of Globalstar (27 October 2026)",
+    "https://docs.fcc.gov/public/attachments/DOC-426214A1.pdf"
+   ],
+   [
+    "FCC news release: FCC Proposes to Modernize Leasing Rules for D2D Services (29 October 2026)",
+    "https://docs.fcc.gov/public/attachments/DOC-426297A1.txt"
+   ],
+   [
+    "EchoStar: agreement to sell unpaired AWS-3 licences to SpaceX (6 November 2025)",
+    "https://ir.echostar.com/news-releases/news-release-details/echostar-agrees-sell-full-unpaired-aws-3-spectrum-license"
+   ],
+   [
+    "AST SpaceMobile: agreement for up to 45 MHz of lower mid-band spectrum (January 2025)",
+    "https://www.businesswire.com/news/home/20250106998015/en/AST-SpaceMobile-Announces-Agreement-for-Long-Term-Access-to-up-to-45-MHz-of-Premium-Lower-Mid-Band-Spectrum-in-the-United-States-for-Direct-to-Device-Satellite-Applications"
+   ],
+   [
+    "AST SpaceMobile Form 10-Q for the quarter to 30 June 2026",
+    "https://www.sec.gov/Archives/edgar/data/0001780312/000119312526342550/asts-20260630.htm"
+   ],
+   [
+    "Broadband Breakfast: SpaceX buying EchoStar satellite spectrum for $17 billion",
+    "https://broadbandbreakfast.com/spacex-buying-echostar-satellite-spectrum-for-17-billion/"
+   ],
+   [
+    "Broadband Breakfast: SpaceX pays $8 billion for Grain Management airwaves",
+    "https://broadbandbreakfast.com/earthquake-in-the-sky-spacex-pays-8-billion-for-grain-management-airwaves-to-advance-starlink-mobile/"
+   ],
+   [
+    "Light Reading: Starlink D2D use is less than expected, says T-Mobile",
+    "https://lightreading.com/satellite/starlink-d2d-use-is-less-than-expected-says-t-mobile"
+   ],
+   [
+    "Light Reading: T-Mobile looks to new JV for D2D but still tied to Starlink",
+    "https://www.lightreading.com/satellite/t-mobile-looks-to-new-jv-for-d2d-but-still-tied-to-starlink"
+   ],
+   [
+    "AST SpaceMobile to host third quarter 2026 business update call on 9 November 2026",
+    "https://finviz.com/news/408301/ast-spacemobile-to-host-third-quarter-2026-business-update-call-on-november-9-2026"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "viasat-equatys-terrestar-mou",
   "title": "Viasat jumps 11% on Terrestar MoU: $1.1bn added, no cash changes hands",
   "summary": "Viasat rose 11.3% on 28 October after Canada's Terrestar agreed to link its planned CaStar constellation to Equatys. By our calculation the move added about $1.1 billion of market value, 2.7 times Viasat's whole $400 million Equatys commitment, for a non-binding MoU that pays Viasat nothing directly.",
