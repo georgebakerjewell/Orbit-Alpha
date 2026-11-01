@@ -1,5 +1,23 @@
 [
   {
+    "issue": 29,
+    "date": "2026-11-01",
+    "title": "SpaceX Stumbles on Merger Jitters While the Rest of the Sector Splits the Week",
+    "url": "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-29",
+    "description": "🌎 SpaceX Stumbles on Merger Jitters While the Rest of the Sector Splits the Week",
+    "tickers": [
+      "SPCX",
+      "RKLB",
+      "ASTS",
+      "GSAT",
+      "LUNR",
+      "SPCE",
+      "RDW",
+      "MDA",
+      "PL"
+    ]
+  },
+  {
     "issue": 28,
     "date": "2026-10-25",
     "title": "SpaceX Turns Its First Profit, Then Meets Its Biggest Lockup Test Yet",
@@ -381,29 +399,6 @@
       "BKSY",
       "SPCE",
       "SPIR"
-    ]
-  },
-  {
-    "issue": 9,
-    "date": "2026-06-14",
-    "title": "The week \"space\" stopped being one trade.",
-    "url": "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-9",
-    "description": "The week built toward a single moment, and that moment broke the basket. SpaceX priced its IPO at $135 per share for 555.6 million shares on Thursday...",
-    "tickers": [
-      "SPCX",
-      "RKLB",
-      "VSAT",
-      "BKSY",
-      "SPIR",
-      "RDW",
-      "MDA",
-      "MNTS",
-      "ASTS",
-      "PL",
-      "LUNR",
-      "GSAT",
-      "FLY",
-      "SPCE"
     ]
   }
 ]
