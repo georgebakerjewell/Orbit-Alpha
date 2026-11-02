@@ -383,5 +383,88 @@
         "https://finance.yahoo.com/markets/stocks/articles/telesat-q3-earnings-snapshot-120621330.html"
       ]
     ]
+  },
+  {
+    "slug": "voyg-q3-2026",
+    "ticker": "VOYG",
+    "quarter": "Q3 2026",
+    "period": "the three months to 30 September 2026",
+    "reported": "2026-11-02",
+    "headline": "Revenue up 124% to $89M, backlog at a record $742M",
+    "summary": "Voyager revenue rose 124% to $88.7M and bookings rose 135% to $116M, while the net loss widened to $55.7M from $16.3M. Backlog reached a record $742M, including $347M from the Astrobotic acquisition, and the low end of 2026 revenue guidance was raised by $10M.",
+    "metrics": [
+      [
+        "Revenue",
+        "$88.7M",
+        "+124% (from $39.6M); +68% on Q2"
+      ],
+      [
+        "Gross profit",
+        "$10.2M",
+        "from $6.1M"
+      ],
+      [
+        "Gross margin",
+        "11.5%",
+        "from 15.4%; +310 bps on Q2"
+      ],
+      [
+        "Net loss attributable to Voyager",
+        "$55.7M",
+        "from $16.3M"
+      ],
+      [
+        "Loss per share",
+        "$0.91",
+        "adjusted loss $0.87"
+      ],
+      [
+        "Adjusted EBITDA",
+        "-$44.9M",
+        "from -$17.7M"
+      ],
+      [
+        "Bookings",
+        "$116M",
+        "+135% (from $49M); book-to-bill 1.3x"
+      ],
+      [
+        "Backlog",
+        "$742M",
+        "+293% year on year; from $336M at 30 June"
+      ],
+      [
+        "Cash and cash equivalents",
+        "$553.6M",
+        "from $491.3M at 31 December 2025"
+      ],
+      [
+        "Total liquidity",
+        "$815.7M",
+        "includes $262.1M undrawn revolver"
+      ]
+    ],
+    "points": [
+      "Backlog more than doubled from the second quarter, helped by $347M added through the Astrobotic acquisition, including a $298M NASA award.",
+      "Starlab commercial reservations rose to about $700M from about $500M last quarter; cumulative milestone cash receipts reached $212.5M.",
+      "NASA released its Commercial LEO Destination Phase 2 request for proposals in October, with submissions due in December 2026 and an award expected in spring 2027.",
+      "Announced a strategic partnership with Anduril and completed Griffin-1 acceptance testing ahead of a planned late 2026 launch.",
+      "Convertible notes stood at $841.1M, net, at the end of the quarter."
+    ],
+    "guidance": "Voyager raised the lower end of its 2026 revenue guidance by $10M, to a range of $285M to $305M, which it said represents growth of about 72% to 84%.",
+    "sources": [
+      [
+        "Voyager Reports Record Third Quarter 2026 Revenue, Bookings and Backlog (Business Wire via Morningstar)",
+        "https://www.morningstar.com/news/business-wire/20261102392426/voyager-reports-record-third-quarter-2026-revenue-bookings-and-backlog"
+      ],
+      [
+        "Voyager Technologies Q3 revenue beats; low end of 2026 outlook range raised (Reuters via TradingView)",
+        "https://www.tradingview.com/news/reuters.com,2026:newsml_L2N46J10U:0-voyager-technologies-q3-revenue-beats-low-end-of-2026-outlook-range-raised/"
+      ],
+      [
+        "Voyager Technologies Reports Mixed Q3, Revenue Up 124% Year-Over-Year (Benzinga)",
+        "https://www.benzinga.com/markets/earnings/26/11/62800527/voyager-technologies-reports-mixed-q3-revenue-up-124-year-over-year"
+      ]
+    ]
   }
 ]
