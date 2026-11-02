@@ -8,9 +8,10 @@
     "vehicle": "Starship (Super Heavy Booster 22, Ship 42)",
     "status": "upcoming",
     "date": null,
-    "dateText": "Targeting November 2026 (no earlier than 8 November in planning documents)",
-    "summary": "SpaceX's Starship Flight 15 is targeting November 2026 from Starbase, Texas, with the first attempt to catch both the Super Heavy booster and the Starship upper stage. A double catch would open the way to the first reflight of a recovered ship, a key step towards full reuse.",
+    "dateText": "No earlier than 12 November 2026 (pending FAA approval)",
+    "summary": "SpaceX's Starship Flight 15 is targeting no earlier than 12 November 2026 from Starbase, Texas, with the first attempt to catch both the Super Heavy booster and the Starship upper stage. A double catch would open the way to the first reflight of a recovered ship.",
     "stakes": [
+      "The target moved from 8 November to no earlier than 12 November 2026, according to a CADENA high profile missions slide reported by NASASpaceflight; the date remains subject to FAA approval (Starlust).",
       "SpaceX plans to catch both stages with the launch tower's arms; a success would be the first full recovery of a Starship vehicle and would allow the first reflight of a properly recovered ship (NASASpaceflight).",
       "Elon Musk put the chance of a successful ship catch on the first attempt at about 50 to 60 percent (Space Launch Schedule, Wikipedia).",
       "Flight 14 on 28 September 2026 was the first Starship flight to reach orbit and deployed 26 Starlink V3 satellites, though the booster and the ship each lost an engine during ascent.",
@@ -57,6 +58,14 @@
     ],
     "sources": [
       [
+        "NASASpaceflight on X: Flight 15 now NET November 12",
+        "https://x.com/NASASpaceflight/status/2115817094960873916"
+      ],
+      [
+        "Starlust: Possible date for Starship Flight 15 revealed (30 October 2026)",
+        "https://starlust.org/spacex-starship-flight-15-possible-launch-date-revealed/"
+      ],
+      [
         "NASASpaceflight: SpaceX working through Starship Flight 15 and 16 milestones (18 October 2026)",
         "https://www.nasaspaceflight.com/2026/10/spacex-flight-15-16-milestones/"
       ],
@@ -85,7 +94,7 @@
         "https://www.whataboutit.space/launches/starship-flight-15"
       ]
     ],
-    "updated": "2026-10-29"
+    "updated": "2026-11-02"
   },
   {
     "slug": "ast-spacemobile-bluebirds-14-16-launch",
@@ -405,16 +414,18 @@
       "TSAT",
       "MDA"
     ],
-    "vehicle": "Falcon 9",
+    "vehicle": "Falcon 9 (rideshare)",
     "status": "upcoming",
     "date": null,
-    "dateText": "No earlier than December 2026 (Telesat: first launches before the end of 2026)",
-    "summary": "The first two Telesat Lightspeed satellites, built by MDA Space, are due to launch on a Falcon 9 no earlier than December 2026. It is the first flight of Telesat's 225-satellite LEO network and MDA's largest constellation programme.",
+    "dateText": "Around June 2027 (Telesat: rideshare on a third-party Falcon 9 in mid-2027)",
+    "summary": "Telesat's first two Lightspeed satellites, built by MDA Space, will now ride on a third-party Falcon 9 around June 2027 rather than in December 2026. The slip pushes global Lightspeed service back to the end of the second quarter of 2028.",
     "stakes": [
-      "Telesat said on its second quarter 2026 call that the funded constellation is 225 satellites, needing 15 Falcon 9 launches (14 under contract), with all launches done by the end of 2028 and global commercial availability in the first quarter of 2028.",
+      "On its third quarter 2026 call, Telesat said it would not use one of its own Falcon 9 slots for two satellites and will instead ride on a third-party Falcon 9 in mid-2027; after about two months of in-orbit testing it will start launching 15 satellites per Falcon 9 (Via Satellite).",
+      "Global service moves from the end of the first quarter to the end of the second quarter of 2028, while Telesat says service in higher latitudes, including for the Canadian military in the Arctic, still starts by the end of the first quarter of 2028 (Via Satellite).",
       "Telesat reported a Lightspeed contractual backlog of $5.6 billion and, in August 2026, signed a $2.7 billion polar satellite communications contract with Canada's Defence Investment Agency (SpaceQ).",
       "MDA Space builds the Lightspeed satellites; an August 2026 order for 27 more took its total to 225 and added $474 million to the contract value (MDA Space).",
-      "Lightspeed is meant to offset declines in Telesat's geostationary business (SpaceNews)."
+      "Lightspeed is meant to offset declines in Telesat's geostationary business (SpaceNews).",
+      "Telesat reported CA$3.1 billion of GEO debt maturing between December 2026 and October 2027 and is seeking to refinance it (Via Satellite)."
     ],
     "facts": [
       [
@@ -427,11 +438,7 @@
       ],
       [
         "Launch vehicle",
-        "Falcon 9"
-      ],
-      [
-        "Launch site",
-        "Cape Canaveral Space Force Station, Florida (listed)"
+        "Third-party Falcon 9 rideshare (pathfinders); 15 satellites per Falcon 9 for the main campaign"
       ],
       [
         "Constellation",
@@ -443,10 +450,14 @@
       ],
       [
         "Commercial service",
-        "Global availability targeted for the first quarter of 2028"
+        "Higher latitudes by the end of Q1 2028; global service by the end of Q2 2028"
       ]
     ],
     "sources": [
+      [
+        "Via Satellite: Telesat delays Lightspeed full service entry to mid-2028 (29 October 2026)",
+        "https://www.satellitetoday.com/finance/2026/10/29/telesat-delays-lightspeed-service-entry-to-mid-2028-goldberg-addresses-launch-crunch-and-sovereign-demand/"
+      ],
       [
         "Space Launch Schedule: Falcon 9, Telesat Lightspeed 1",
         "https://www.spacelaunchschedule.com/launch/falcon-9-block-5-telesat-lightspeed-1/"
@@ -468,6 +479,6 @@
         "https://spacenews.com/telesat-eyes-december-2026-for-lightspeed-pathfinder-debut/"
       ]
     ],
-    "updated": "2026-10-29"
+    "updated": "2026-11-02"
   }
 ]
