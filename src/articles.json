@@ -1,6 +1,139 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-boost-mobile-echostar-talks",
+  "title": "SpaceX eyes Boost Mobile: EchoStar is owed $35bn of SpaceX stock",
+  "summary": "SpaceX is in talks to buy EchoStar's Boost Mobile or use its network, the Washington Post reports. By our calculation EchoStar is already owed up to 261.8 million SpaceX shares, worth $35.3bn at the 30 October close, about 1.25 times EchoStar's own market value.",
+  "published": "2026-11-02",
+  "updated": "2026-11-02",
+  "tickers": [
+   "ECHO",
+   "SPCX"
+  ],
+  "match": [
+   "spacex",
+   "boost"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 2 November the Washington Post reported that SpaceX has been talking to EchoStar in recent months about buying Boost Mobile, or about gaining access to the network Boost leases from AT&T and T-Mobile, so that SpaceX can launch its own mobile phone service. According to the report, Elon Musk met EchoStar chairman Charlie Ergen last month, after asking the large US carriers for network access. The report adds that Boost's network agreements may not pass to a new owner without the carriers' consent. Neither company has announced anything.",
+     "Boost is EchoStar's retail wireless business, with 7.375 million subscribers on 30 June 2026. EchoStar shares closed at $96.94 on 30 October and were trading at about $103, up 6.3%, before the US open on 2 November, according to our [quote feed](/stocks/echo). SpaceX shares were up about 1.6% before the open at $136.91."
+    ]
+   ],
+   [
+    "Orbit Alpha view: EchoStar already trades as a SpaceX holding",
+    [
+     "The headline frames EchoStar as a possible seller. The bigger fact for EchoStar shareholders is that the company is already one of SpaceX's large future shareholders. Under the amended spectrum sale agreed in 2025, EchoStar's 30 June 10-Q says SpaceX will pay up to $11bn of the price in SpaceX Class A stock: after SpaceX's 5-for-1 split in May 2026, that is about 261.8 million shares at a fixed value of $42.40 each. The shares are due at the Spectrum Acquisition Closing, which EchoStar says is targeted for 30 November 2027.",
+     {
+      "table": {
+       "head": [
+        "Item (our calculation)",
+        "Value"
+       ],
+       "rows": [
+        [
+         "SpaceX shares owed to EchoStar (up to)",
+         "about 261.8 million"
+        ],
+        [
+         "Their value at the 30 October SpaceX close of $134.72",
+         "about $35.3bn"
+        ],
+        [
+         "EchoStar shares outstanding (Class A plus B, 30 June 10-Q)",
+         "290.5 million"
+        ],
+        [
+         "EchoStar market value at the 30 October close of $96.94",
+         "about $28.2bn"
+        ],
+        [
+         "SpaceX stock owed, per EchoStar share",
+         "about $121"
+        ],
+        [
+         "Debt and finance lease obligations on 30 June, per EchoStar share",
+         "about $60"
+        ],
+        [
+         "Change in EchoStar's SpaceX stake per $1 move in SpaceX shares",
+         "about $0.90 per EchoStar share"
+        ]
+       ]
+      }
+     },
+     "Our calculations use the share counts in EchoStar's 30 June 10-Q and closing prices from our quote feed. Two points follow. First, at about $121 a share, the SpaceX stock EchoStar is owed is worth more than EchoStar's entire share price, although it is not free value: EchoStar also carried $17.4bn of debt and finance lease obligations on 30 June (about $60 a share), and the stock is not received until closing. Second, because the number of shares is fixed, EchoStar's value moves with SpaceX's. A 10% move in SpaceX shares changes the stake by about $12 per EchoStar share, roughly 12.5% of EchoStar's price. On the pre-market quotes this morning, SpaceX's own rise of $2.19 adds about $1.97 per EchoStar share, about a third of EchoStar's $6.06 gain. The rest is what the market is paying for the Boost news itself.",
+     "The Boost business is small next to the SpaceX stake. Wireless revenue was $929m in the second quarter, about $3.7bn a year on our annualised figure, with segment OIBDA of $51m. That is about a quarter of the $14.6bn SpaceX reported for a single quarter (the third). Revenue per subscriber works out at about $42 a month on our calculation from the quarter's revenue and average subscribers, against $69 a month for a Starlink broadband customer in the third quarter."
+    ]
+   ],
+   [
+    "Why SpaceX wants Boost",
+    [
+     "SpaceX already owns a large stock of spectrum (we counted about 79 MHz in [our spectrum race piece](/articles/direct-to-device-spectrum-race-spacex-amazon-ast)), but owning spectrum does not give it a working ground network in cities. T-Mobile has refused to let SpaceX resell service on its network, and the Post reports that Musk asked Verizon and other carriers for network access before the EchoStar talks. Boost offers three things SpaceX lacks: 7.4 million paying phone customers, a cloud 5G core that EchoStar still runs, and wholesale access to AT&T and T-Mobile under existing contracts. The subscribers are the cheapest part; the contracts are the prize, and they are also the weak point, because the carriers whose consent may be needed are the competitors SpaceX wants to challenge.",
+     "For SpaceX the cost would be small either way. Even EchoStar's whole market value of about $28bn is about 1.5% of SpaceX's $1.86 trillion market value at the 30 October close, and no price for Boost has been reported. The harder costs are the ones Reuters points to: ground infrastructure, customer service and handset subsidies."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "A SpaceX retail phone service would compete directly with AT&T and Verizon, the partners that carry [AST SpaceMobile](/stocks/asts) traffic in the US. If the carriers see SpaceX as a rival operator rather than a supplier, that could strengthen their reasons to back an alternative such as AST. [Globalstar](/stocks/gsat), being bought by Amazon, gives Amazon spectrum and the Apple service but, like SpaceX, no retail mobile brand of its own in the US."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "Any 8-K or statement from EchoStar or SpaceX confirming talks or terms, and whether any price would be paid in SpaceX stock, which would add to EchoStar's existing exposure.",
+       "Whether AT&T or T-Mobile say Boost's network agreements can pass to SpaceX, or signal a legal challenge.",
+       "EchoStar's third-quarter results, its first update since the report, for Boost subscribers and any comment on the SpaceX closing.",
+       "The Spectrum Acquisition Closing, targeted for 30 November 2027, when the 261.8 million SpaceX shares are due."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Is SpaceX buying Boost Mobile?",
+    "Not yet. The Washington Post reported on 2 November that SpaceX is in talks to buy Boost or use its network. Neither EchoStar nor SpaceX has announced a deal, and the report says the carriers' consent may be needed for Boost's network agreements."
+   ],
+   [
+    "How many SpaceX shares does EchoStar own?",
+    "EchoStar's 30 June 10-Q says it is owed up to about 261.8 million SpaceX Class A shares, at a fixed value of $42.40 each, from its spectrum sale. They are due at closing, targeted for 30 November 2027. At the 30 October close of $134.72 they were worth about $35.3bn, by our calculation."
+   ],
+   [
+    "Why does EchoStar stock move with SpaceX?",
+    "Because the number of SpaceX shares it is owed is fixed. By our calculation every $1 move in SpaceX shares changes the stake's value by about $0.90 per EchoStar share, so a 10% move in SpaceX is worth about 12.5% of EchoStar's price."
+   ]
+  ],
+  "sources": [
+   [
+    "EchoStar Form 10-Q for the quarter ended 30 June 2026 (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1415404/000110465926089370/sats-20260630x10q.htm"
+   ],
+   [
+    "EchoStar second-quarter 2026 results release",
+    "https://ir.echostar.com/news-releases/news-release-details/echostar-announces-financial-results-three-and-six-months-8"
+   ],
+   [
+    "SpaceX third-quarter 2026 results",
+    "https://s21.q4cdn.com/184289198/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ],
+   [
+    "Washington Post: Inside Elon Musk's plan to conquer a new industry",
+    "https://www.washingtonpost.com/technology/2026/11/02/inside-elon-musks-plan-upend-wireless-phone-industry/"
+   ],
+   [
+    "Reuters: SpaceX in talks to buy Boost Mobile or use its network",
+    "https://www.reuters.com/business/media-telecom/spacex-talks-buy-boost-mobile-or-use-its-network-washington-post-reports-2026-11-02/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "direct-to-device-spectrum-race-spacex-amazon-ast",
   "title": "Satellite-to-phone spectrum race: SpaceX has paid $28bn, Amazon $11.5bn",
   "summary": "With Amazon's Globalstar deal cleared, three companies now hold their own spectrum for satellite-to-phone service. By our count SpaceX has agreed to pay about $27.6bn for 79 MHz, three times Amazon's MHz, while AST SpaceMobile rents up to 45 MHz from Ligado for $550M upfront plus about $80M a year.",
