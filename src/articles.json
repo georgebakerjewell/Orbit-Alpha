@@ -1374,6 +1374,258 @@
   ]
  },
  {
+  "slug": "when-will-ast-spacemobile-start-commercial-service",
+  "title": "When will AST SpaceMobile start commercial service?",
+  "summary": "AST SpaceMobile is targeting initial, intermittent beta service in the US and four other countries before the end of 2026, with paid service three to six months after beta starts: spring 2027 at the earliest. Its launch plan needs 33 more satellites by March 2027; it has launched six since June.",
+  "published": "2026-11-03",
+  "updated": "2026-11-03",
+  "tickers": [
+   "ASTS"
+  ],
+  "sections": [
+   [
+    "The short answer",
+    [
+     "Not yet, and not before 2027 for paid service. On 20 October 2026 AST SpaceMobile said it is targeting \"initial, intermittent coverage\" before the end of 2026 in the United States, Canada, Japan, the United Kingdom and Saudi Arabia. In August it described the first step as beta service with select strategic partners.",
+     "Paid, commercial service comes later. According to a Bank of America note reported by Investing.com on 21 October, AST expects to begin commercial service three to six months after beta testing starts. If beta starts by 31 December 2026, that puts paid service between the end of March and the end of June 2027 (our arithmetic). Even then, coverage will be intermittent: AST says service will only be available where its satellites are overhead, and more launches are needed to make it continuous."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the launch rate sets the date, and it is behind",
+    [
+     "AST's own dates depend on getting satellites into orbit, so the useful check is how many it needs against how fast it has been launching them. AST had 13 satellites in orbit after the 5 August launch. An unconfirmed schedule published by Advanced Television on 19 October has AST reaching 46 satellites by the end of March 2027.",
+     {
+      "table": {
+       "head": [
+        "Satellites in orbit",
+        "Count",
+        "Source"
+       ],
+       "rows": [
+        [
+         "Today (after BlueBirds 11 to 13, 5 August 2026)",
+         "13",
+         "AST Q2 release"
+        ],
+        [
+         "Earlier estimate for intermittent US coverage",
+         "About 25",
+         "Light Reading, 21 October"
+        ],
+        [
+         "End of 2026 if every listed launch happens",
+         "27",
+         "Our sum of the Advanced Television schedule (14 to 27)"
+        ],
+        [
+         "Promised for 2026 in December 2025 testimony to Congress",
+         "45 to 60 launched during 2026",
+         "Advanced Television"
+        ],
+        [
+         "Earlier estimate for continuous US coverage",
+         "About 45",
+         "Light Reading"
+        ],
+        [
+         "Schedule target, end of March 2027",
+         "46",
+         "Advanced Television"
+        ],
+        [
+         "Needed to start global service",
+         "90",
+         "AST, via Advanced Television"
+        ]
+       ]
+      }
+     },
+     "The gap is the point. Going from 13 to 46 satellites by the end of March means adding 33 in about five months. Falcon 9 has carried AST's satellites three at a time, so that is the equivalent of 11 Falcon 9 launches (our calculation). Since June, AST has managed two: BlueBirds 8 to 10 on 17 June and 11 to 13 on 5 August. The plan leans on Blue Origin's New Glenn returning around the turn of the year, after it put one AST satellite in the wrong orbit in April and exploded on the pad in May.",
+     "The first step has already slipped. Advanced Television's 19 October schedule had BlueBirds 14 to 16 launching later in October; on 3 November Next Spaceflight still listed them as no earlier than the fourth quarter, with no date. Our reading: beta by year end is achievable with the coverage AST already has, because it is defined as intermittent, but the move to paid and then continuous service depends on a launch rate AST has not yet shown.",
+     {
+      "table": {
+       "head": [
+        "What a slip costs (our calculations)",
+        "Figure",
+        "Working"
+       ],
+       "rows": [
+        [
+         "Cash used in the first half of 2026",
+         "$1,004.4M",
+         "$145.2M operating cash outflow plus $859.2M of property and equipment, from AST's Q2 cash flow statement"
+        ],
+        [
+         "Average per quarter",
+         "About $502M",
+         "$1,004.4M divided by two"
+        ],
+        [
+         "Pro forma cash at 30 June 2026",
+         "Over $3.7B",
+         "AST Q2 release, including July's $1.15B convertible"
+        ],
+        [
+         "Market value, 2 November close",
+         "$14.14B at $36.33",
+         "Orbit Alpha quote data"
+        ],
+        [
+         "One quarter of spending as a share of market value",
+         "About 3.6%",
+         "$502M divided by $14.14B"
+        ]
+       ]
+      }
+     },
+     "So each quarter that paid service slips costs roughly half a billion dollars of cash at the first-half pace before subscriber revenue arrives, while 2026 revenue barely depends on it: Q2's $31.5M came from gateway deliveries and US government work, not subscribers. That is why the share price reacts to launch and service news more than to quarterly revenue. At $14.14B, AST is valued at about 81 times the $175M midpoint of its 2026 revenue guidance and about 11 times its $1.30B backlog (our calculations)."
+    ]
+   ],
+   [
+    "What \"service\" means at each stage",
+    [
+     {
+      "table": {
+       "head": [
+        "Stage",
+        "What it is",
+        "Timing"
+       ],
+       "rows": [
+        [
+         "Beta",
+         "Intermittent service with select partners, only where satellites are overhead",
+         "Targeted before the end of 2026 in the US, Canada, Japan, the UK and Saudi Arabia"
+        ],
+        [
+         "Commercial",
+         "Paid service through operators such as AT&T and Verizon, still intermittent at first",
+         "Three to six months after beta starts (Bank of America note); end of March to end of June 2027 if beta starts by year end"
+        ],
+        [
+         "Continuous US",
+         "Coverage at all times rather than when a satellite passes",
+         "Earlier estimates put this at about 45 satellites; the schedule reaches 46 by end of March 2027"
+        ],
+        [
+         "Global",
+         "Service across partner markets worldwide",
+         "90 satellites needed to start; a target of 243 by the end of 2028 (Advanced Television)"
+        ]
+       ]
+      }
+     },
+     "AST sells through mobile operators rather than directly. Its partners include AT&T, Verizon, Vodafone, Rakuten Mobile, Bell Canada, TELUS and stc Group, and it says it works with more than 60 operators covering over 3 billion subscribers."
+    ]
+   ],
+   [
+    "What AST has done to get ready",
+    [
+     {
+      "list": [
+       "Ground network: more than 60 gateways deployed, installed or in planning worldwide (20 October).",
+       "US coverage cells: over 3,000 enabled, with the roughly 5,600 needed to cover the contiguous US expected before year end. AST calls the remaining cells a prerequisite for nationwide rollout.",
+       "Handoff test: on 2 November AST and AT&T announced a 21 October test near Granite Falls, Washington, in which a phone kept its connection while switching between AT&T's network and AST's satellites. AT&T said the next phase is expected to include beta services.",
+       "Licence: the FCC approved a modified authorisation in April 2026 for up to 248 satellites using 700 MHz and 800 MHz spectrum.",
+       "Production: under way through BlueBird 50 at Midland, Texas."
+      ]
+     },
+     "The timeline has moved before. Light Reading notes that in late 2025 AST was targeting intermittent nationwide service in early 2026, a year earlier than now."
+    ]
+   ],
+   [
+    "Competition and the share price",
+    [
+     "SpaceX already sells satellite-to-phone service through operators, including T-Mobile's T-Satellite, though it is limited to texting, photo sharing, location sharing and light data. AST's pitch is full broadband from much larger satellites, but SpaceX is moving on spectrum and distribution: it agreed to buy Grain Management's 800 MHz spectrum, which AST had been testing, and is reported to be in talks over EchoStar's Boost Mobile. See [SpaceX eyes Boost Mobile](/articles/spacex-boost-mobile-echostar-talks) and [the direct-to-device spectrum race](/articles/direct-to-device-spectrum-race-spacex-amazon-ast).",
+     "ASTS fell 11.3% on 2 November to $36.33, a 16-month low, as the Boost reports landed a week before results. That is about 73% below its 52-week high of $133.86 (our calculation). The [ASTS stock page](/stocks/asts) has the live price and filings, and the [BlueBirds 14 to 16 launch page](/launches/ast-spacemobile-bluebirds-14-16-launch) tracks the next launch."
+    ]
+   ],
+   [
+    "Dates to watch",
+    [
+     {
+      "list": [
+       "9 November 2026: AST's Q3 business update call. Look for a launch date for BlueBirds 14 to 16, a confirmed beta start and any firmer date for paid service. The [AST earnings preview](/earnings-preview/asts) has the figures to compare.",
+       "BlueBirds 14 to 16 on Falcon 9: no date announced, listed for the fourth quarter.",
+       "November and December: BlueBirds 17 to 27 are scheduled in three more batches by year end, per Advanced Television. Falling behind here pushes back the 46-satellite target.",
+       "Around year end: New Glenn's return to flight, which the 2027 launch schedule depends on.",
+       "31 December 2026: AST's target for initial, intermittent coverage in five countries.",
+       "End of March to end of June 2027: the window for paid service if beta starts on time."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Is AST SpaceMobile service available now?",
+    "No. AST is targeting initial, intermittent beta coverage before the end of 2026 in the US, Canada, Japan, the UK and Saudi Arabia, with paid service expected three to six months after beta starts."
+   ],
+   [
+    "How many satellites does AST SpaceMobile have?",
+    "13 in orbit after the 5 August 2026 launch. BlueBirds 14 to 16 are at Cape Canaveral awaiting a launch date. An unconfirmed schedule has 46 in orbit by the end of March 2027."
+   ],
+   [
+    "Which carriers will offer AST SpaceMobile service?",
+    "In the US, AT&T and Verizon. Other partners include Vodafone, Rakuten Mobile, Bell Canada, TELUS and stc Group."
+   ],
+   [
+    "Will AST SpaceMobile service be continuous?",
+    "Not at first. Early service works only when a satellite is overhead. Earlier estimates put continuous US coverage at about 45 satellites, and AST says 90 are needed to start global service."
+   ]
+  ],
+  "sources": [
+   [
+    "AST SpaceMobile: advances service readiness ahead of initial space-based cellular broadband coverage (20 October 2026)",
+    "https://www.nasdaq.com/press-release/ast-spacemobile-advances-service-readiness-ahead-initial-space-based-cellular"
+   ],
+   [
+    "AST SpaceMobile: business update and second quarter 2026 results (SEC 8-K exhibit 99.1, 10 August 2026)",
+    "https://www.sec.gov/Archives/edgar/data/0001780312/000119312526342540/asts-ex99_1.htm"
+   ],
+   [
+    "Investing.com: AST SpaceMobile plans initial broadband coverage by year-end (Bank of America note, 21 October 2026)",
+    "https://www.investing.com/news/stock-market-news/ast-spacemobile-plans-initial-broadband-coverage-by-yearend-93CH-4962054"
+   ],
+   [
+    "Light Reading: AST SpaceMobile limited coverage coming soon in US and beyond (21 October 2026)",
+    "https://www.lightreading.com/satellite/ast-spacemobile-says-limited-coverage-coming-soon-in-us-and-beyond"
+   ],
+   [
+    "Telecompetitor: AST SpaceMobile says initial satellite-to-smartphone service will launch by year-end (21 October 2026)",
+    "https://www.telecompetitor.com/ast-spacemobile-says-initial-satellite-to-smartphone-service-will-launch-by-year-end/"
+   ],
+   [
+    "Advanced Television: AST SpaceMobile launch schedule updated (19 October 2026)",
+    "https://www.advanced-television.com/2026/10/19/ast-spacemobile-launch-schedule-updated/"
+   ],
+   [
+    "Next Spaceflight: BlueBird 14 to 16 (checked 3 November 2026)",
+    "https://nextspaceflight.com/launches/details/8242/"
+   ],
+   [
+    "Space.com: SpaceX launches BlueBirds 8 to 10 (17 June 2026)",
+    "https://www.space.com/space-exploration/launches-spacecraft/spacex-falcon-9-bluebird-8-to-10-direct-to-cell-launch"
+   ],
+   [
+    "Spaceflight Now: SpaceX launches BlueBirds 11 to 13 (5 August 2026)",
+    "https://spaceflightnow.com/2026/08/05/live-coverage-spacex-to-launch-3-ast-spacemobile-bluebird-satellites-on-falcon-9-rocket-from-cape-canaveral/"
+   ],
+   [
+    "Stocktwits via Yahoo Finance: ASTS climbs from 16-month low; AT&T handoff test (2 November 2026)",
+    "https://finance.yahoo.com/markets/stocks/articles/asts-stock-climbs-16-month-033048959.html"
+   ],
+   [
+    "MarketBeat: AST SpaceMobile shares down 11.3% (2 November 2026)",
+    "https://www.marketbeat.com/instant-alerts/price-ast-spacemobile-nasdaq-asts-shares-down-113-heres-what-happened-2026-11-02/"
+   ],
+   [
+    "Orbit Alpha live quote: ASTS (close 2 November 2026, market value and 52-week range)",
+    "https://www.orbitalpha.cloud/api/quote?ticker=ASTS"
+   ]
+  ]
+ },
+ {
   "slug": "are-spacex-and-tesla-merging",
   "title": "Are SpaceX and Tesla merging?",
   "summary": "Not yet. On 20 October 2026 Elon Musk said SpaceX and Tesla had each formed a special committee of independent directors to consider a merger, but no terms have been agreed. A deal would need approval from both committees and boards, Musk as SpaceX's controlling shareholder, and 50% of all Tesla shares.",
@@ -1899,7 +2151,7 @@
   "title": "When does AST SpaceMobile report Q3 2026 earnings?",
   "summary": "AST SpaceMobile reports Q3 2026 results on Monday 9 November, with a call at 5pm Eastern (10pm UK). To meet its $150M to $200M revenue guidance for 2026 it needs $103.7M to $153.7M in the second half: 1.6 to 2.4 times Q2's $31.5M in each quarter, by our calculation.",
   "published": "2026-10-30",
-  "updated": "2026-10-30",
+  "updated": "2026-11-03",
   "tickers": [
    "ASTS"
   ],
@@ -2079,6 +2331,8 @@
     "Orbit Alpha live quote: ASTS (close 29 October 2026, market value and 52-week range)",
     "https://www.orbitalpha.cloud/api/quote?ticker=ASTS"
    ]
-  ]
+  ],
+  "canonical": "/earnings-preview/asts",
+  "canonicalLabel": "the AST SpaceMobile earnings preview"
  }
 ]
