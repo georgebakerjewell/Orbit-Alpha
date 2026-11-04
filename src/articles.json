@@ -1,6 +1,188 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-qualcomm-starlink-mobile-5g-network",
+  "title": "SpaceX picks Qualcomm for Starlink Mobile masts: the tower plan is real",
+  "summary": "Qualcomm will supply the radio chips for tens of thousands of Starlink Mobile 5G masts from 2027, at 2 GHz, where SpaceX's EchoStar licences sit. On our calculation SpaceX's $2.49 fall today explains about 81% of EchoStar's own drop, because EchoStar is owed 261.8 million SpaceX shares.",
+  "published": "2026-11-04",
+  "updated": "2026-11-04",
+  "tickers": [
+   "SPCX",
+   "ECHO",
+   "ASTS"
+  ],
+  "match": [
+   "spacex",
+   "qualcomm"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 4 November Qualcomm said SpaceX has chosen its Dragonwing QRU100 and QDU100 platforms, with Qualcomm's Layer 1 software, for the base stations of Starlink Mobile's US nationwide ground 5G network. The radios will be 64-transmit, 64-receive Massive MIMO units. SpaceX plans to start the nationwide rollout in 2027, with tens of thousands of sites over a multi-year agreement. No price was given. Qualcomm told CNBC it is its largest 5G initiative to date, and its executive told Fierce that the sites are all macro cells, with Massive MIMO brought down to the 2 GHz band SpaceX plans to use. Qualcomm supplies the chips and software; SpaceX builds the boxes and the higher network layers.",
+     "The deal landed on a bad morning for [SpaceX](/stocks/spcx) shares, which were hit by the Democrats' midterm wins. SPCX opened at $133.27 and fell as low as $133.14, 5.8% below Tuesday's $141.31 close, before recovering to $138.83 (down 1.8%) at 10:40 New York time, according to our quote feed. [EchoStar](/stocks/echo), which published its third-quarter 10-Q on 3 November, was down 2.7% at $99.19."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the tower plan has moved from talk to hardware",
+    [
+     "Until today the evidence for a SpaceX ground network was reports: Bloomberg on 22 October said SpaceX wants access to at least 80,000 US cell sites, and BNP Paribas called tower deals \"the last bluff\" to push a big carrier into giving SpaceX wholesale access. A multi-year chip order that starts shipping in 2027 is harder to dismiss as a bluff. It also fixes the shape of the network: macro towers, not the femtocells SpaceX first talked about, in the 2 GHz range. That is where the AWS-4 (2000 to 2020 and 2180 to 2200 MHz) and H block (1915 to 1920 and 1995 to 2000 MHz) licences SpaceX is buying from EchoStar sit.",
+     {
+      "table": {
+       "head": [
+        "Item",
+        "Figure",
+        "Source or working"
+       ],
+       "rows": [
+        [
+         "Sites in the Qualcomm deal",
+         "tens of thousands, from 2027",
+         "Qualcomm release"
+        ],
+        [
+         "Sites SpaceX is seeking",
+         "at least 80,000",
+         "Bloomberg, 22 October"
+        ],
+        [
+         "Towers per big carrier",
+         "about 65,000 to 75,000 (AT&T, Verizon); about 85,000 (T-Mobile)",
+         "BNP Paribas estimates and T-Mobile disclosure, via Fierce"
+        ],
+        [
+         "Cost of a tower-based network",
+         "at least $100bn",
+         "BNP Paribas estimate, via Fierce"
+        ],
+        [
+         "SpaceX cash and marketable securities, 30 Sept",
+         "$89.9bn ($51.3bn plus $38.6bn)",
+         "Q3 results"
+        ],
+        [
+         "$100bn as a share of that cash",
+         "about 111%",
+         "our calculation"
+        ],
+        [
+         "$100bn against Q3 capital spending of $19.59bn",
+         "about 5 quarters",
+         "our calculation"
+        ],
+        [
+         "$100bn against SpaceX market value of about $1.89tn",
+         "about 5.3%",
+         "our calculation, 4 November quote"
+        ],
+        [
+         "SpaceX value lost today at 10:40 (down $2.485 a share)",
+         "about $34bn",
+         "our calculation"
+        ]
+       ]
+      }
+     },
+     "Three points follow from the numbers. First, scale: a network on BNP's estimate would cost more than all the cash and securities SpaceX held at the end of September, and about five quarters of its record third-quarter capital spending, most of which ($16.4bn) went to AI computing. SpaceX can afford it, but not out of spare change, and Starlink Mobile would compete for capital with the AI buildout that drives the stock. Second, timing: EchoStar's 10-Q says the AWS-4, H block and AWS-3 licences moved into a trust on 22 May 2026, and the Spectrum Acquisition Closing, when EchoStar receives up to 261.8 million SpaceX shares, is targeted for 30 November 2027. The Qualcomm rollout starts in 2027 and, in Qualcomm's words, ramps rapidly from there, so the build and the final spectrum closing run side by side. Third, today's share price says the market is not trading the deal: the roughly $34bn of SpaceX value lost by mid-morning is more than the about $27.6bn SpaceX has committed to all its spectrum deals, as we counted in [our spectrum race piece](/articles/direct-to-device-spectrum-race-spacex-amazon-ast). Politics, not radios, moved the stock.",
+     "The same arithmetic explains EchoStar's fall. Because EchoStar is owed a fixed number of SpaceX shares, each $1 move in SPCX changes EchoStar's stake by about $0.90 per EchoStar share (261.8 million SpaceX shares spread over 291.0 million EchoStar shares outstanding on 26 October, our calculation from the 10-Q). SpaceX's $2.485 fall therefore takes about $2.24 off each EchoStar share, about 81% of EchoStar's $2.75 drop at the same time. At $138.83, the stake is worth about $36.3bn, or about $125 per EchoStar share, against an EchoStar share price of $99.19. As we noted in [our Boost Mobile piece](/articles/spacex-boost-mobile-echostar-talks), that is not free money: the shares arrive only at closing and EchoStar had $9.66bn of debt and finance lease obligations on 30 September, against $13.4bn of cash and cash equivalents."
+    ]
+   ],
+   [
+    "Why SpaceX did it",
+    [
+     {
+      "list": [
+       "No carrier will rent it a network. AT&T, Verizon and T-Mobile have all refused SpaceX a wholesale (MVNO) deal, so a ground network of its own is the only route to full phone service that does not depend on them.",
+       "Satellites alone are not enough. As CNBC notes, Starlink's satellite service cannot yet match the voice, video and data coverage carriers offer on ordinary smartphones, so full phone service needs towers. Qualcomm's pitch is that 64T64R Massive MIMO at 2 GHz gets more capacity from each site, which matters for a newcomer paying for every tower lease.",
+       "It buys time on the hardest part. SpaceX said it wants Qualcomm to accelerate its base station timeline: buying proven chips and Layer 1 software, rather than designing them, lets its engineers focus on the network software above.",
+       "Starlink pays for it. Connectivity was 36% of SpaceX's third-quarter revenue and about 85% of its operating income ($2.37bn of $2.79bn), so mobile is an extension of the profitable part of the group."
+      ]
+     }
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     {
+      "list": [
+       "[EchoStar](/stocks/echo) now trades mostly as a SpaceX holding, as the calculation above shows. Separately, Boost Mobile lost about 182,000 net subscribers in the third quarter to 7.193 million, and Dish Wireless is in Chapter 11 talks with tower companies over its abandoned 5G network, with a court hearing on 4 November. BNP Paribas has said the cleanest solution would be for SpaceX to take on those tower commitments; a SpaceX that needs tens of thousands of macro sites makes that idea more plausible, but nothing has been announced.",
+       "[AST SpaceMobile](/stocks/asts) is partnered with AT&T and Verizon, the carriers Starlink Mobile is now equipping itself to fight. A fourth national network owned by its biggest satellite rival strengthens AST's role as the carriers' satellite ally, but also raises the stakes on AST getting its own service live. See [when AST SpaceMobile plans to start commercial service](/articles/when-will-ast-spacemobile-start-commercial-service).",
+       "[Globalstar](/stocks/gsat), being bought by Amazon, holds satellite spectrum rather than ground licences, so this deal does not change its terms; see [our piece on the Amazon deal](/articles/fcc-approves-amazon-globalstar-deal)."
+      ]
+     }
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "4 November, after the US close: Qualcomm's fiscal fourth-quarter results and call, the first chance for any figure on the size of the SpaceX order.",
+       "The Dish Wireless Chapter 11 process, and whether SpaceX appears as a buyer or taker of the old tower leases.",
+       "Any tower company agreement: Bloomberg reported talks with at least one major operator for the 80,000 sites, and Qualcomm's chips need masts to go on.",
+       "9 November: AST SpaceMobile's third-quarter business update.",
+       "FCC approval of SpaceX's 800 MHz purchase from Grain, low-band spectrum that would suit a tower network's coverage layer.",
+       "30 November 2027: target date for the EchoStar Spectrum Acquisition Closing."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How big is the SpaceX Qualcomm deal?",
+    "Neither company gave a price. Qualcomm says it covers tens of thousands of sites over several years from 2027 and called it its largest 5G initiative to date. For scale, BNP Paribas estimates a tower-based US network would cost SpaceX at least $100bn, about 111% of the $89.9bn of cash and securities SpaceX held on 30 September (our calculation)."
+   ],
+   [
+    "Why did SpaceX shares fall on the day of the Qualcomm news?",
+    "The fall followed the Democrats' midterm wins, not the deal. SPCX was down as much as 5.8% at the open and 1.8% by mid-morning on 4 November. On our calculation the value lost by then, about $34bn, exceeded the about $27.6bn SpaceX has committed to all its spectrum purchases."
+   ],
+   [
+    "Why does EchoStar move with SpaceX?",
+    "EchoStar is owed up to 261.8 million SpaceX shares at the closing of its spectrum sale, targeted for 30 November 2027. That is about 0.9 SpaceX shares per EchoStar share, so on 4 November SpaceX's fall explained about 81% of EchoStar's drop (our calculation)."
+   ]
+  ],
+  "sources": [
+   [
+    "Qualcomm via Business Wire: SpaceX Selects Qualcomm to Accelerate Starlink Mobile's Nationwide 5G Network (4 November 2026)",
+    "https://www.businesswire.com/news/home/20261104680757/en/"
+   ],
+   [
+    "EchoStar Form 10-Q for the quarter to 30 September 2026",
+    "https://www.sec.gov/Archives/edgar/data/0001415404/000110465926121675/sats-20260930x10q.htm"
+   ],
+   [
+    "FCC: Order granting SpaceX-EchoStar applications",
+    "https://www.fcc.gov/document/order-granting-spacex-echostar-applications"
+   ],
+   [
+    "CNBC: SpaceX signs deal with Qualcomm to provide network technology for U.S. mobile service (4 November 2026)",
+    "https://www.cnbc.com/2026/11/04/spacex-strikes-deal-with-qualcomm-for-mobile-network-infrastructure.html"
+   ],
+   [
+    "Fierce Network: SpaceX's nationwide terrestrial 5G plans get real as Qualcomm signs on (4 November 2026)",
+    "https://www.fierce-network.com/wireless/spacexs-nationwide-terrestrial-5g-plans-get-real-qualcomm-signs"
+   ],
+   [
+    "Fierce Network: SpaceX might sign deals for 80,000 towers to build mobile network, or is it bluffing?",
+    "https://www.fierce-network.com/wireless/spacex-might-sign-deals-80000-towers-build-mobile-network-it-bluffing"
+   ],
+   [
+    "Bloomberg: SpaceX in talks to access 80,000 cell sites for new network (22 October 2026)",
+    "https://www.bloomberg.com/news/articles/2026-10-22/spacex-in-talks-to-access-80-000-cell-sites-for-wireless-network"
+   ],
+   [
+    "Fierce Network: EchoStar loses 182K wireless customers in Q3 (3 November 2026)",
+    "https://www.fierce-network.com/wireless/echostar-loses-182k-wireless-customers-q3"
+   ],
+   [
+    "Orbit Alpha: SpaceX Q3 2026 results",
+    "https://www.orbitalpha.cloud/results/spcx-q3-2026"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "spacex-boost-mobile-echostar-talks",
   "title": "SpaceX eyes Boost Mobile: EchoStar is owed $35bn of SpaceX stock",
   "summary": "SpaceX is in talks to buy EchoStar's Boost Mobile or use its network, the Washington Post reports. By our calculation EchoStar is already owed up to 261.8 million SpaceX shares, worth $35.3bn at the 30 October close, about 1.25 times EchoStar's own market value.",
