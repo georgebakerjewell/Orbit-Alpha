@@ -26,7 +26,7 @@ function secondFullTradingDay(date, time = "") {
 const daysBetween = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
 const dayN = (n) => addDays(PRICING, n);
 const shares = (n) => (n >= 1e9 ? `${(n / 1e9).toFixed(2).replace(/\.?0+$/, "")} billion` : `${(n / 1e6).toFixed(1).replace(/\.0$/, n % 1e6 ? ".0" : "")} million`);
-import { chartLinkHtml } from "../lib/affiliates.js";
+import { chartLinkHtml, brokerBoxHtml } from "../lib/affiliates.js";
 import { readNextHtml } from "../lib/readnext.js";
 const ext = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${text}</a>`;
 
@@ -201,6 +201,7 @@ ${list([
         : `The Q3 release depends on when SpaceX reports. ${q3Src ? `Results are expected on ${fmtDate(q3Src.date)}, which would put the release on ${fmtDate(q3Row.trade)}.` : "SpaceX had not confirmed a date at the last update."} If results came after 8 December, the full expiry would release these shares first.`,
       "Shares bought in the IPO through the directed share programme (up to 5% of the offering, reserved for employees and people chosen by SpaceX) were never locked up.",
     ])}
+${brokerBoxHtml({ ticker: "SPCX", name: "SpaceX", placement: "lockup-calendar", esc, tools: true })}
 ${readNextHtml({ ticker: "SPCX", profiles: ctx.profiles, esc, placement: "lockup-calendar" })}
 <h2>When can Elon Musk sell SpaceX shares?</h2>
 <p>Elon Musk and a group of large shareholders, together holding about 7.8 billion shares (more than 63% of the shares outstanding before the IPO), agreed to stricter terms that run beyond December. Musk himself gets no early release at all.</p>
