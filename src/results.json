@@ -466,5 +466,89 @@
         "https://www.benzinga.com/markets/earnings/26/11/62800527/voyager-technologies-reports-mixed-q3-revenue-up-124-year-over-year"
       ]
     ]
+  },
+  {
+    "slug": "rdw-q3-2026",
+    "ticker": "RDW",
+    "quarter": "Q3 2026",
+    "period": "the three months to 30 September 2026",
+    "reported": "2026-11-04",
+    "headline": "Revenue up 5.4% to $109M, record backlog of $619.7M",
+    "summary": "Redwire revenue rose 5.4% to $109.0M and gross margin reached a record 32.3%, up from 16.3%, while the net loss narrowed to $23.2M from $41.2M. Backlog hit a record $619.7M, book-to-bill was 1.73 and 2026 revenue guidance of $450M to $500M was reaffirmed.",
+    "metrics": [
+      [
+        "Revenue",
+        "$109.0M",
+        "+5.4% (from $103.4M)"
+      ],
+      [
+        "Space revenue",
+        "$61.3M",
+        "from $46.5M"
+      ],
+      [
+        "Defense Tech revenue",
+        "$47.8M",
+        "from $56.9M"
+      ],
+      [
+        "Gross margin",
+        "32.3%",
+        "from 16.3% (adjusted 27.1%)"
+      ],
+      [
+        "Net loss",
+        "$23.2M",
+        "from $41.2M"
+      ],
+      [
+        "Loss per share",
+        "$0.09",
+        "from $0.29"
+      ],
+      [
+        "Adjusted EBITDA",
+        "-$5.3M",
+        "from -$2.6M"
+      ],
+      [
+        "Contracts awarded",
+        "$188.7M",
+        "from $129.8M; book-to-bill 1.73"
+      ],
+      [
+        "Backlog",
+        "$619.7M",
+        "record; up nearly 75% year on year"
+      ],
+      [
+        "Total liquidity",
+        "$538.9M",
+        "up 313.9% since end of 2025"
+      ]
+    ],
+    "points": [
+      "Space revenue grew to $61.3M while Defense Tech revenue fell to $47.8M from $56.9M a year earlier.",
+      "Research and development spending rose 87.1% to $14.4M, which the company cited as the main reason adjusted EBITDA slipped.",
+      "Won a $20M DARPA contract for further testing of a scaled SabreSat spacecraft ahead of a very low Earth orbit flight test.",
+      "Received a follow-on Axiom Space order for two Roll-Out Solar Array wings, and after the quarter launched the final pair of ISS solar arrays.",
+      "Secured follow-on Stalker drone orders, including from the US National Guard."
+    ],
+    "guidance": "Redwire reaffirmed its forecast of $450M to $500M in revenue for 2026, having recorded $323.1M in the first nine months.",
+    "reaction": "Shares were down 8.23% at $7.08 in after-hours trading on 4 November, per Benzinga at about 4:45pm ET.",
+    "sources": [
+      [
+        "Redwire Corporation Reports Third Quarter 2026 Financial Results, Expands Backlog, Achieves Record Gross Margins (Business Wire)",
+        "https://www.businesswire.com/news/home/20261104027120/en/Redwire-Corporation-Reports-Third-Quarter-2026-Financial-Results-Expands-Backlog-Achieves-Record-Gross-Margins"
+      ],
+      [
+        "Redwire Form 8-K, 4 November 2026 (SEC EDGAR)",
+        "https://www.sec.gov/Archives/edgar/data/1819810/000181981026000139/0001819810-26-000139-index.htm"
+      ],
+      [
+        "Redwire Stock Slips as Uneven Revenue Timing Softens Q3 Results (Benzinga)",
+        "https://www.benzinga.com/markets/earnings/26/11/62894817/redwire-stock-slips-as-uneven-revenue-timing-softens-q3-results"
+      ]
+    ]
   }
 ]
