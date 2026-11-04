@@ -1,6 +1,177 @@
 [
  {
   "kind": "news",
+  "slug": "viasat-nasa-ka-band-relay-tdrs-award",
+  "title": "Viasat wins $461m NASA relay award: why it is a ceiling, not revenue",
+  "summary": "NASA picked Viasat, Astranis and Global Enterprise Solutions to develop Ka-band relays to replace TDRS. Viasat's $460.9 million is the largest share, 43% of $1.07 billion, but it is a ceiling reached only by surviving NASA's downselects. Viasat shares still fell 11.2% on the day.",
+  "published": "2026-11-04",
+  "updated": "2026-11-04",
+  "tickers": [
+   "VSAT"
+  ],
+  "match": [
+   "nasa",
+   "relay"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 4 November 2026 NASA selected three companies to develop Ka-band space relay services that work with spacecraft already in orbit, so that missions built for NASA's ageing Tracking and Data Relay Satellite (TDRS) fleet can keep communicating without hardware changes. The maximum potential values, including all options, are $460.9 million for Viasat, $340.4 million for Global Enterprise Solutions and $264.3 million for Astranis, a combined $1.07 billion.",
+     "The awards are firm fixed price. The first period runs from 4 November 2026 to 3 May 2027, with priced options that can carry the work through 2029, from concept development to an in-orbit flight demonstration.",
+     "[Viasat](/stocks/vsat) did not rally on the news. The shares closed at $66.79 on 4 November, down 11.2% from $75.24, after trading as high as $77.00 during the day."
+    ]
+   ],
+   [
+    "Orbit Alpha view: a headline ceiling behind a series of cuts",
+    [
+     "The $460.9 million is the most Viasat could earn if NASA exercised every option, and NASA's own plan says it will not keep every contractor. The March 2026 notice for this programme, called NEXUS, describes a phased competition with \"progressive downselects based on demonstrated performance, technical credibility, and commercial viability\": about 6 months to mature concepts, about 15 months to build and integrate for the contractors NASA keeps, then about 6 months of in-orbit demonstration. Three companies start; fewer are expected to reach the flight test.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Source or working"
+       ],
+       "rows": [
+        [
+         "Viasat maximum potential value",
+         "$460.9m",
+         "NASA, 4 November 2026"
+        ],
+        [
+         "Share of the three awards ($1,065.6m)",
+         "43%",
+         "Our calculation"
+        ],
+        [
+         "Against FY2026 revenue ($4.6bn)",
+         "10%",
+         "Our calculation; revenue from Viasat Q1 FY2027 presentation"
+        ],
+        [
+         "Against total backlog at 30 June 2026 ($4.22bn)",
+         "11%",
+         "Our calculation; Viasat Q1 FY2027 results"
+        ],
+        [
+         "Against Defense and Advanced Technologies backlog ($1.4bn)",
+         "33%",
+         "Our calculation; Viasat Q1 FY2027 shareholder letter"
+        ],
+        [
+         "Against Viasat's two earlier NASA relay awards ($81m)",
+         "5.7x",
+         "Our calculation; Viasat, 21 October 2026"
+        ],
+        [
+         "Per year if every option ran evenly to end-2029",
+         "About $146m (about 3% of FY2026 revenue)",
+         "Our calculation over about 3.2 years; NASA has not published phase values"
+        ],
+        [
+         "Against market value at the 4 November close ($9.2bn)",
+         "5%",
+         "Our calculation"
+        ],
+        [
+         "Market value lost on 4 November",
+         "About $1.16bn",
+         "Our calculation: $8.45 fall x about 137.8m shares"
+        ]
+       ]
+      }
+     },
+     "Read that way, the award is meaningful but not transformative. Even if Viasat won every phase, the yearly revenue would be around 3% of what the company already books, and the work is development, not service income. The bigger prize comes later. NASA's notice says it wants a relay service that stays compatible with legacy TDRS users \"for a minimum of fifteen years\", bought through separate transition contracts and then a full and open competition for long-term service. Winning this round does not guarantee that contract, but a company that has flown the demonstration will be hard to ignore.",
+     "That is where Viasat looks best placed of the three. NASA said it does not expect to be the only customer and wants solutions backed by a wider commercial business. Viasat already runs the Ka-band ViaSat-3 network, whose three-satellite build-out it has recently completed, and on 20 October launched Maxwell, a relay demonstration satellite for an earlier NASA contract, with Ka-band and L-band tests running through March 2027. Those tests overlap with the first phase of the new award, so Viasat should have in-orbit relay data in hand before NASA decides who goes forward.",
+     "The share price says the market is not trading this news. The 4 November fall wiped out roughly 2.5 times the full contract ceiling in one session. We found no Viasat announcement that explains the drop; it came on a day when defence-linked stocks fell after the US midterm elections, and one day before Viasat reports its quarterly results."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "Four companies that won NASA relay demonstration contracts in 2022 are missing from this round: SpaceX ($69.95 million then), Amazon's Kuiper ($67 million), Telesat ($30.65 million) and SES ($28.96 million). That is not a verdict on their networks. This round is narrow by design: NASA said backward-compatible Ka-band service is needed in addition to the commercial capabilities its partners are already developing, for missions that cannot change their radios. For [SES](/stocks/sesg) and [Telesat](/stocks/tsat) it is still a lost opportunity in a market where GEO Ka-band operators would seem natural bidders.",
+     "[Rocket Lab](/stocks/rklb) built Maxwell at its Long Beach plant, including the spacecraft bus and a new L-band radio, according to Viasat. No supplier has been named for the new NEXUS work, so any benefit to Rocket Lab is unannounced. [SpaceX](/stocks/spcx) launched Maxwell on its Bandwagon-5 rideshare."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "5 November, after the US close: Viasat's quarterly results. Look for whether it quantifies the award or the funded first phase in backlog. Results and filings will appear on the [Viasat stock page](/stocks/vsat).",
+       "Through March 2027: Maxwell's Ka-band and L-band relay demonstrations, the in-orbit evidence Viasat can bring to the first downselect.",
+       "3 May 2027: end of the first period of performance, when NASA decides which contractors continue to the build phase.",
+       "2028: NASA's March plan targeted a flight demonstration by June 2028 and a service transition contract around October 2028. Awards came about five weeks later than the September 2026 target, so watch for further slips against the 2029 to 2031 window NASA flagged as its TDRS continuity risk."
+      ]
+     },
+     "For Viasat's recent spectrum moves, see [our analysis of the Terrestar agreement](/articles/viasat-equatys-terrestar-mou)."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much will Viasat actually get from NASA's Ka-band relay award?",
+    "Up to $460.9 million, but only if NASA exercises every option. The first period runs to 3 May 2027 and NASA plans to cut the field as the work progresses, so the guaranteed amount is the first phase only, which NASA has not disclosed. Spread evenly to the end of 2029, the full ceiling would be about $146 million a year, around 3% of Viasat's FY2026 revenue (our calculation)."
+   ],
+   [
+    "Why did Viasat stock fall on the day it won the NASA contract?",
+    "The award was too small to move the valuation much: the ceiling is about 5% of Viasat's market value. The shares fell 11.2% on 4 November, losing about 2.5 times the contract's value, with no company announcement we could find, on a day when defence-linked stocks fell after the US midterms and a day before Viasat's results."
+   ],
+   [
+    "Did SpaceX, SES or Telesat win NASA's TDRS replacement contracts?",
+    "Not in this round. SpaceX, Amazon's Kuiper, Telesat and SES all won NASA relay demonstration contracts in 2022, but the three November 2026 awards went to Viasat, Global Enterprise Solutions and Astranis. This round covers only services compatible with existing TDRS users; NASA plans a separate open competition for long-term service."
+   ]
+  ],
+  "sources": [
+   [
+    "NASA: NASA Announces Ka-Band Satellite Relay Awards for Space Communications (4 November 2026)",
+    "https://www.nasa.gov/news-release/nasa-announces-ka-band-satellite-relay-awards-for-space-communications/"
+   ],
+   [
+    "SAM.gov: NEXUS Ka-Band Backward-Compatible Relay BAA, NextSTEP-3 Appendix E (March 2026)",
+    "https://sam.gov/workspace/contract/opp/e33cd0cc61064a6497a55fca8e9b30c6/view"
+   ],
+   [
+    "Viasat: NASA Communications Services Project demonstration launch (21 October 2026)",
+    "https://investors.viasat.com/news-releases/news-release-details/viasat-advances-nasa-communications-services-project"
+   ],
+   [
+    "Viasat Q1 FY2027 shareholder letter (SEC exhibit 99.2)",
+    "https://www.sec.gov/Archives/edgar/data/797721/000119312526332896/d131434dex992.htm"
+   ],
+   [
+    "Viasat Q1 FY2027 earnings presentation",
+    "https://investors.viasat.com/static-files/ea1cbd20-c0b1-4755-a9ea-5a779051a1c0"
+   ],
+   [
+    "Aviation Week: NASA To Develop Commercial Ka-band Space Comm Assets (4 November 2026)",
+    "https://aviationweek.com/space/satellites/nasa-develop-commercial-ka-band-space-comm-assets"
+   ],
+   [
+    "Payload: NASA Awards Communication Services Project Contracts (2022)",
+    "https://payloadspace.com/nasa-awards-communication-services-project-contracts/"
+   ],
+   [
+    "Runway Girl Network: Viasat says global Lightspeed coverage delay doesn't change plans (4 November 2026)",
+    "https://runwaygirlnetwork.com/2026/11/viasat-says-global-lightspeed-coverage-delay-doesnt-change-plans/"
+   ],
+   [
+    "Investor's Business Daily via Yahoo Finance: Defense Stocks Tumble After Midterm Rebuke Of Iran War (4 November 2026)",
+    "https://finance.yahoo.com/m/53ded892-f11b-327b-9c54-be8129c7bb63/defense-stocks-tumble-after.html"
+   ],
+   [
+    "Stock Titan: Viasat sets 5 November 2026 for Q2 FY2027 results",
+    "https://www.stocktitan.net/news/VSAT/viasat-sets-november-5-2026-for-second-quarter-fiscal-year-2027-pq5ebz3ltjam.html"
+   ],
+   [
+    "Yahoo Finance: Viasat (VSAT) price history",
+    "https://finance.yahoo.com/quote/VSAT/history/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "spacex-qualcomm-starlink-mobile-5g-network",
   "title": "SpaceX picks Qualcomm for Starlink Mobile masts: the tower plan is real",
   "summary": "Qualcomm will supply the radio chips for tens of thousands of Starlink Mobile 5G masts from 2027, at 2 GHz, where SpaceX's EchoStar licences sit. On our calculation SpaceX's $2.49 fall today explains about 81% of EchoStar's own drop, because EchoStar is owed 261.8 million SpaceX shares.",
