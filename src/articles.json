@@ -1,6 +1,166 @@
 [
  {
   "kind": "news",
+  "slug": "blue-origin-new-glenn-delay-ast-spacemobile-satellites",
+  "title": "New Glenn delay puts AST SpaceMobile's 46-satellite March goal at risk",
+  "summary": "Blue Origin has pushed New Glenn's return to flight to January 2027. For AST SpaceMobile, each New Glenn ride is worth up to eight satellites: if one misses the first quarter, its target of 46 in orbit by the end of March falls to 38, below the roughly 45 needed for continuous US coverage.",
+  "published": "2026-11-05",
+  "updated": "2026-11-05",
+  "tickers": [
+   "ASTS",
+   "SPCX"
+  ],
+  "match": [
+   "blue origin",
+   "new glenn"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "Blue Origin has delayed the next launch of its New Glenn rocket to January 2027, according to an internal memo from chief executive Dave Limp seen by Reuters and first reported by the Financial Times on 5 November. It had been aiming to fly again by the end of 2026. New Glenn has been grounded since it exploded in May on Blue Origin's only launch pad in Florida; the memo says the access tower has been restacked and the launch bridge restored, but summer weather slowed the rebuild.",
+     "AST SpaceMobile is the covered company most exposed. It is one of New Glenn's main customers, and its April launch on New Glenn placed BlueBird 7 in the wrong orbit. AST shares were already down about 8% on Thursday morning in a broad sell-off of growth and AI stocks, before the report, despite AST announcing a US Space Force sensing contract through prime contractor STR. By 13:38 New York time they were at $30.31, down 14.9% on the day and at a new 52-week low, valuing AST at about $11.8B."
+    ]
+   ],
+   [
+    "Orbit Alpha view: New Glenn is the difference between 38 and 46 satellites",
+    [
+     "The useful question is not when New Glenn flies, but how many AST satellites ride on it before the end of March 2027. AST has 13 BlueBirds in orbit. The unconfirmed launch schedule published by Advanced Television on 19 October adds 33 more by the end of March to reach 46, and it said that plan depended on New Glenn returning \"by late December or early January\". It also said Blue Origin's first flight back was expected to be its own test flight, with AST launches after that.",
+     "New Glenn matters because of its size. Its seven-metre fairing lets AST carry up to eight Block 2 BlueBirds per launch, against three per Falcon 9 so far. The only eight-satellite batch in the schedule, BlueBirds 36 to 43 in early March, matches that capacity (our reading; AST has not confirmed which rocket carries which batch).",
+     {
+      "table": {
+       "head": [
+        "Satellites in orbit by end of March 2027",
+        "Count",
+        "Working (our calculations)"
+       ],
+       "rows": [
+        [
+         "Today",
+         "13",
+         "AST, after BlueBirds 11 to 13 on 5 August"
+        ],
+        [
+         "Schedule delivered in full",
+         "46",
+         "13 plus 33, Advanced Television schedule"
+        ],
+        [
+         "If the eight-satellite batch slips past March",
+         "38",
+         "46 minus 8"
+        ],
+        [
+         "Continuous US coverage (AST's earlier estimate)",
+         "About 45",
+         "Light Reading"
+        ],
+        [
+         "Intermittent US coverage (AST's earlier estimate)",
+         "About 25",
+         "Light Reading"
+        ],
+        [
+         "Falcon 9 launches needed for all 33 without New Glenn",
+         "11",
+         "33 divided by 3"
+        ],
+        [
+         "AST launches since June",
+         "2",
+         "17 June and 5 August, both Falcon 9"
+        ]
+       ]
+      }
+     },
+     "So the delay does not threaten AST's year-end beta, which only needs intermittent coverage and rests on the satellites already in orbit plus the launches scheduled before the end of the year, starting with BlueBirds 14 to 16 on Falcon 9. What it threatens is the step after: continuous US service, which is what turns beta into paying subscribers. With New Glenn now returning in January and flying its own mission first, a March AST launch leaves almost no room for a second slip. Without it, AST would need SpaceX to fly 11 Falcon 9 missions for it in about five months, having flown two in the past five.",
+     "The cost of waiting is measurable. AST used $1,004.4M in the first half of 2026 (operating cash outflow plus capital spending), about $502M a quarter, against pro forma cash of over $3.7B at 30 June. A quarter's slip in paid service costs roughly that much before subscriber revenue starts, equal to about 4.3% of today's $11.8B market value. Thursday's fall of about $2.1B in market value, from $13.86B at Wednesday's close, is around four quarters of that spending; the larger part of the move began before the report and matched the wider sell-off, so the market has not priced the delay alone."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "[SpaceX](/stocks/spcx) becomes even more central to AST's plans. Falcon 9 is now AST's only working launcher, while SpaceX is building a rival phone service of its own: see [SpaceX's Qualcomm deal](/articles/spacex-qualcomm-starlink-mobile-5g-network) and [the direct-to-device spectrum race](/articles/direct-to-device-spectrum-race-spacex-amazon-ast). AST's 2027 build-out now runs through a company competing for the same mobile operators and customers, and AST has no other rocket of New Glenn's size available.",
+     "Amazon is the other big New Glenn customer: Reuters notes its Leo broadband network relies on Blue Origin, and New Glenn exploded days before it was due to carry Amazon satellites. That does not change the terms of Amazon's agreed purchase of [Globalstar](/stocks/gsat), covered in [our deal analysis](/articles/fcc-approves-amazon-globalstar-deal), but it slows the network Amazon wants Globalstar's spectrum for."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "9 November, 5pm Eastern: AST's Q3 business update. The key detail is whether it still targets about 46 satellites by the end of March and how many it now assigns to Falcon 9. See [our earnings preview](/articles/ast-spacemobile-q3-2026-earnings-date).",
+       "The Falcon 9 launch of [BlueBirds 14 to 16](/launches/ast-spacemobile-bluebirds-14-16-launch), still listed for the fourth quarter with no date. A launch before the end of November keeps the year-end beta on track.",
+       "New Glenn's January return flight, and whether AST is on the first or a later mission.",
+       "The 31 December target for intermittent beta service in the US, Canada, Japan, the UK and Saudi Arabia: see [when AST will start commercial service](/articles/when-will-ast-spacemobile-start-commercial-service)."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Why does the New Glenn delay matter for AST SpaceMobile?",
+    "New Glenn can carry up to eight of AST's Block 2 satellites per launch, against three on Falcon 9. AST's schedule to reach 46 satellites by the end of March 2027 relied on New Glenn returning around the turn of the year. If one eight-satellite New Glenn launch misses March, the total falls to 38, below the roughly 45 AST has said continuous US coverage needs (our calculation)."
+   ],
+   [
+    "Does the delay stop AST's beta service this year?",
+    "Not on its own. Beta is intermittent and rests on the 13 satellites in orbit plus launches scheduled before the end of the year, starting with BlueBirds 14 to 16 on Falcon 9. The delay mainly puts at risk the move to continuous coverage and paid service in 2027."
+   ],
+   [
+    "How much does a delay cost AST?",
+    "AST spent about $502M a quarter in the first half of 2026 on operations and equipment. Each quarter that paid service slips costs roughly that much before subscriber revenue arrives, about 4.3% of its $11.8B market value at $30.31 on 5 November (our calculation)."
+   ]
+  ],
+  "sources": [
+   [
+    "AST SpaceMobile: business update and second quarter 2026 results (SEC 8-K exhibit 99.1, 10 August 2026)",
+    "https://www.sec.gov/Archives/edgar/data/0001780312/000119312526342540/asts-ex99_1.htm"
+   ],
+   [
+    "Business Wire via Morningstar: AST SpaceMobile awarded US Space Force contract through STR (5 November 2026)",
+    "https://www.morningstar.com/news/business-wire/20261104508354/ast-spacemobile-awarded-us-space-force-contract-through-str-to-advance-space-based-sensing-capabilities"
+   ],
+   [
+    "Reuters: Blue Origin pushes New Glenn rocket launch to January, sources say (5 November 2026)",
+    "https://www.reuters.com/science/blue-origin-delays-new-glenn-rocket-launch-into-january-ft-reports-2026-11-05/"
+   ],
+   [
+    "CNBC: Blue Origin pushes launch to January 2027 as it races to rebuild damaged launch pad (5 November 2026)",
+    "https://www.cnbc.com/2026/11/05/blue-origin-launch-new-glenn.html"
+   ],
+   [
+    "Advanced Television: AST SpaceMobile launch schedule updated (19 October 2026)",
+    "https://www.advanced-television.com/2026/10/19/ast-spacemobile-launch-schedule-updated/"
+   ],
+   [
+    "Light Reading: AST SpaceMobile limited coverage coming soon in US and beyond (21 October 2026)",
+    "https://www.lightreading.com/satellite/ast-spacemobile-says-limited-coverage-coming-soon-in-us-and-beyond"
+   ],
+   [
+    "SatNews: AST SpaceMobile encapsulates BlueBird 7 satellite for inaugural New Glenn mission (26 February 2026)",
+    "https://satnews.com/2026/02/26/ast-spacemobile-encapsulates-bluebird-7-satellite-for-inaugural-new-glenn-mission/"
+   ],
+   [
+    "Next Spaceflight: BlueBird 14 to 16 (checked 5 November 2026)",
+    "https://nextspaceflight.com/launches/details/8242/"
+   ],
+   [
+    "TradingView: AST SpaceMobile wins US Space Force contract, but shares drop 8% (5 November 2026)",
+    "https://www.tradingview.com/news/seekingalpha:2a746b240094b:0-ast-spacemobile-wins-u-s-space-force-contract-but-shares-drop-8/"
+   ],
+   [
+    "Benzinga: AST SpaceMobile stock slides Thursday despite Space Force contract (5 November 2026)",
+    "https://www.benzinga.com/trading-ideas/movers/26/11/62936422/ast-spacemobile-stock-slides-thursday-despite-space-force-contract-whats-going-on"
+   ],
+   [
+    "Orbit Alpha live quote: ASTS (13:38 New York time, 5 November 2026)",
+    "https://www.orbitalpha.cloud/api/quote?ticker=ASTS"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "ohb-esa-sentinel-3-ngt-contract-554-million",
   "title": "OHB wins EUR 554m Sentinel-3 contract: big for backlog, small per year",
   "summary": "ESA has signed OHB as prime for the Sentinel-3 Next Generation Topography satellite, worth EUR 554 million. That adds about 17% to OHB's June order backlog, but with launch planned for mid-2034 it averages roughly EUR 71 million a year, about 5% of 2026 guidance.",
