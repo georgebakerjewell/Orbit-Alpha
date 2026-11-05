@@ -631,6 +631,102 @@
         "BlackSky Reports $42.8 Million Revenue and $18.5 Million Net Income (TradingView)",
         "https://www.tradingview.com/news/tradingview:1171ea4bba829:0-blacksky-reports-42-8-million-revenue-and-18-5-million-net-income/"
       ]
+    ],
+    "updated": "2026-11-05",
+    "tables": [
+      {
+        "title": "Revenue by line",
+        "head": [
+          "Line",
+          "Q3 2026",
+          "Q3 2025",
+          "Direct costs Q3 2026"
+        ],
+        "rows": [
+          [
+            "Space-based intelligence & AI services",
+            "$32.7M",
+            "$15.8M",
+            "$4.9M"
+          ],
+          [
+            "Mission solutions",
+            "$4.7M",
+            "$0.9M",
+            "$1.3M"
+          ],
+          [
+            "Advanced technology programs",
+            "$5.4M",
+            "$3.0M",
+            "$2.8M"
+          ],
+          [
+            "Total",
+            "$42.8M",
+            "$19.6M",
+            "$9.1M"
+          ]
+        ],
+        "note": "Direct costs exclude depreciation and amortisation, as presented by BlackSky."
+      }
+    ],
+    "analysis": [
+      [
+        "The growth is in the highest-margin line",
+        [
+          "Space-based intelligence and AI services, BlackSky's imagery and analytics subscriptions, more than doubled to $32.7M and made up 76.4% of revenue. Its direct costs were $4.9M, so before depreciation that line kept about 85 cents of every dollar. Across the whole business, direct costs fell to 21.2% of revenue from 34.7% a year earlier.",
+          "Overheads grew far more slowly than sales. Selling, general and administrative costs rose 16.8% to $25.4M while revenue rose 118%, which is why the operating line moved from a $16.8M loss to a $0.4M profit."
+        ]
+      ],
+      [
+        "The profit is mostly an accounting gain",
+        [
+          "Net income of $18.5M included a $19.7M gain on derivatives. Without it, pre-tax income would have been a loss of about $1.2M. The derivative gain also explains the gap between basic earnings per share of $0.45 and diluted earnings per share of $0.10.",
+          "The more durable improvement is in cash. Operating cash outflow for the first nine months was $2.3M, against $19.0M a year earlier, so the core business is now close to funding itself before capital spending."
+        ]
+      ],
+      [
+        "Guidance implies Q3 is a new floor",
+        [
+          "Nine-month revenue was $96.9M, up 35.8%. The raised full-year range of $140M to $150M therefore implies Q4 revenue of roughly $43M to $53M, at or above the record Q3 level. This was the second guidance increase of the year.",
+          "Adjusted EBITDA guidance rose to $18M to $24M and capital spending guidance stayed at $50M to $60M. In the first nine months BlackSky spent $46.5M on property, equipment and satellites in progress."
+        ]
+      ],
+      [
+        "International customers are carrying more of the story",
+        [
+          "The headline commercial win was selection as exclusive provider of very high resolution optical satellites for a $1B consortium investment including France and the UAE, covering an initial 50-satellite constellation. An international defence customer also moved from a small Gen-2 pilot to a seven-figure Gen-3 Assured subscription in under six months.",
+          "That pattern, a pilot followed by a larger subscription, is how BlackSky is trying to turn one-off contracts into recurring revenue. A wider international base also reduces dependence on US government budgets, though the US government remains a customer through pilots such as the seven-figure assured Gen-3 trial completed in the quarter."
+        ]
+      ],
+      [
+        "The cost of getting here",
+        [
+          "BlackSky raised $160.0M of equity, net of costs, in the first nine months of 2026, and the basic weighted average share count rose 15.7% from a year earlier to 40.7M. It ended September with $231.1M of cash, restricted cash and short-term investments."
+        ]
+      ]
+    ],
+    "analysisNote": "Analysis by Orbit Alpha from the BlackSky results release and the sources below. Percentages, implied figures and totals not stated by BlackSky are Orbit Alpha calculations from reported figures.",
+    "watch": [
+      "Q4 revenue against the $43M to $53M implied by full-year guidance.",
+      "Further Gen-3 satellite launches and how quickly each reaches revenue-generating operations.",
+      "Progress on the France and UAE consortium programme, the largest commercial opportunity named in the release.",
+      "Whether net income continues to swing with derivative gains and losses, which can move the headline result in either direction."
+    ],
+    "faq": [
+      [
+        "Did BlackSky make a profit in Q3 2026?",
+        "BlackSky reported net income of $18.5M for the three months to 30 September 2026, against a $15.3M loss a year earlier. That included a $19.7M gain on derivatives; operating income was $0.4M."
+      ],
+      [
+        "What is BlackSky's 2026 revenue guidance?",
+        "BlackSky raised its 2026 revenue guidance to $140M to $150M and adjusted EBITDA guidance to $18M to $24M, and kept capital spending guidance at $50M to $60M."
+      ],
+      [
+        "How much cash does BlackSky have?",
+        "BlackSky had $231.1M of cash, restricted cash and short-term investments at 30 September 2026."
+      ]
     ]
   },
   {
@@ -723,6 +819,136 @@
       [
         "MDA Space reports $30.9M Q3 profit, raises guidance for full year (CTV News)",
         "https://www.ctvnews.ca/business/article/mda-space-reports-309m-q3-profit-raises-guidance-for-full-year/"
+      ],
+      [
+        "MDA Space to acquire Blue Canyon Technologies, Form 6-K, June 2026 (SEC EDGAR)",
+        "https://www.sec.gov/Archives/edgar/data/0001857047/000110465926078520/tm2618697d2_ex99-1.htm"
+      ]
+    ],
+    "updated": "2026-11-05",
+    "tables": [
+      {
+        "title": "Revenue by segment",
+        "head": [
+          "Segment",
+          "Q3 2026",
+          "Change",
+          "Share of revenue"
+        ],
+        "rows": [
+          [
+            "Satellite Systems",
+            "C$358.3M",
+            "+26.4%",
+            "71.9%"
+          ],
+          [
+            "Robotics & Space Operations",
+            "C$79.9M",
+            "+2.0%",
+            "16.0%"
+          ],
+          [
+            "Geointelligence",
+            "C$59.9M",
+            "+24.8%",
+            "12.0%"
+          ],
+          [
+            "Total",
+            "C$498.1M",
+            "+21.5%",
+            "100%"
+          ]
+        ]
+      },
+      {
+        "title": "2026 guidance",
+        "head": [
+          "Measure",
+          "New",
+          "Previous"
+        ],
+        "rows": [
+          [
+            "Revenue",
+            "C$1.90B to C$1.95B",
+            "C$1.8B to C$1.9B"
+          ],
+          [
+            "Adjusted EBITDA",
+            "C$355M to C$375M",
+            "C$330M to C$370M"
+          ],
+          [
+            "Adjusted EBITDA margin",
+            "18% to 20%",
+            "18% to 20%"
+          ],
+          [
+            "Capital expenditure",
+            "C$225M to C$275M",
+            "C$225M to C$275M"
+          ]
+        ]
+      }
+    ],
+    "analysis": [
+      [
+        "One programme is driving the growth",
+        [
+          "Satellite Systems, where the Telesat Lightspeed constellation is the main contract, grew by about C$75M and accounted for 71.9% of revenue. Robotics, built around Canadarm3, grew 2.0%, and Geointelligence grew 24.8% on new programmes.",
+          "That mix explains the slight margin squeeze. Large satellite manufacturing work carries lower margins than MDA's other lines, and gross margin slipped to 25.3% from 26.4% while adjusted EBITDA margin fell to 19.3% from 20.2%, still inside the 18% to 20% full-year range."
+        ]
+      ],
+      [
+        "Guidance points to a quieter Q4",
+        [
+          "MDA booked C$1,460.8M of revenue in the first nine months, up 28.8%. The new full-year range therefore implies Q4 revenue of about C$439M to C$489M and Q4 adjusted EBITDA of about C$72M to C$92M, both below Q3's C$498.1M and C$96.0M. Raising the annual number while implying a softer final quarter indicates management does not expect Q3's pace to repeat in Q4."
+        ]
+      ],
+      [
+        "Backlog is being consumed faster than it is replaced",
+        [
+          "Bookings rose to C$444.2M from C$174.2M, but that was still less than revenue, a book-to-bill ratio of 0.89. Backlog of C$3,949.1M was 10.1% lower than a year earlier, though level with Q2.",
+          "For a company whose revenue rests on a few very large programmes, the size of the next big award matters more than any single quarter. MDA cites a C$40B opportunity pipeline, and its selection for Europe's IRIS2 programme is one route to refilling the backlog."
+        ]
+      ],
+      [
+        "Turning cash into a broader business",
+        [
+          "MDA ended the quarter with C$1,328.0M of net cash, against C$120.0M of net debt at the end of 2025, and C$2.9B of total liquidity after issuing C$600M of senior unsecured notes in August. Free cash flow was C$61.6M in the quarter.",
+          "That cash is earmarked for the pending acquisitions of CLS and Blue Canyon Technologies. Blue Canyon, bought from RTX's Raytheon business for US$620M in cash, makes small satellites and components in Colorado and gives MDA a manufacturing base in the US defence market; MDA said it adds US$3.5B to its opportunity pipeline and expects it to add to adjusted EBITDA and adjusted earnings per share in 2027.",
+          "Alongside its own CHORUS Earth observation constellation, due to launch later in 2026, and the MDA MIDNIGHT and MDA AURORA BLACK defence products, the deals move MDA from a contract manufacturer towards a company that also owns satellites, sells data and competes for US defence work."
+        ]
+      ],
+      [
+        "Profit per share is not keeping up",
+        [
+          "Adjusted net income rose 26.1% to C$60.4M, but adjusted diluted earnings per share was flat at C$0.37 because of a higher average share count. Net income rose 14.4% to C$30.9M."
+        ]
+      ]
+    ],
+    "analysisNote": "Analysis by Orbit Alpha from the MDA Space results release and the sources below. Percentages, implied figures and totals not stated by MDA Space are Orbit Alpha calculations from reported figures.",
+    "watch": [
+      "Completion of the Blue Canyon Technologies acquisition, expected by the end of 2026, and the CLS deal.",
+      "Launch of the CHORUS constellation, scheduled for later in 2026.",
+      "Q4 bookings and backlog, after a book-to-bill of 0.89 in Q3.",
+      "Q4 revenue against the C$439M to C$489M implied by full-year guidance.",
+      "Contract awards under Europe's IRIS2 programme."
+    ],
+    "faq": [
+      [
+        "Did MDA Space raise its guidance?",
+        "Yes. MDA raised 2026 revenue guidance to C$1.90B to C$1.95B from C$1.8B to C$1.9B, and adjusted EBITDA guidance to C$355M to C$375M from C$330M to C$370M."
+      ],
+      [
+        "What is MDA Space's backlog?",
+        "MDA's backlog was C$3,949.1M at 30 September 2026, down from C$4,392.8M a year earlier and in line with Q2 2026."
+      ],
+      [
+        "Are MDA Space's figures in Canadian dollars?",
+        "Yes. MDA reports in Canadian dollars, and all figures on this page are in C$ unless stated."
       ]
     ]
   },
@@ -805,6 +1031,110 @@
       [
         "GSAT: Q3 losses widened as network investment continued and the Amazon merger advanced (TradingView)",
         "https://www.tradingview.com/news/urn:summary_document_report:quartr.com:3977084:0-gsat-q3-losses-widened-as-network-investment-continued-and-the-amazon-merger-advanced/"
+      ],
+      [
+        "Globalstar Form 8-K, Amazon merger announcement, April 2026 (SEC EDGAR)",
+        "https://www.sec.gov/Archives/edgar/data/1366868/000114036126014528/ef20070409_ex99-1.htm"
+      ]
+    ],
+    "updated": "2026-11-05",
+    "tables": [
+      {
+        "title": "Subscribers and ARPU",
+        "head": [
+          "Service",
+          "Average subscribers Q3 2026",
+          "Change",
+          "Monthly ARPU Q3 2026",
+          "Q3 2025 ARPU"
+        ],
+        "rows": [
+          [
+            "Commercial IoT",
+            "591,114",
+            "+8.9%",
+            "$4.34",
+            "$4.22"
+          ],
+          [
+            "SPOT",
+            "202,952",
+            "-8.0%",
+            "$14.12",
+            "$14.28"
+          ],
+          [
+            "Duplex",
+            "14,673",
+            "-27.4%",
+            "$74.58",
+            "$77.91"
+          ],
+          [
+            "Total",
+            "808,921",
+            "+3.2%",
+            "",
+            ""
+          ]
+        ]
+      }
+    ],
+    "analysis": [
+      [
+        "The quarter matters less than the deal",
+        [
+          "Amazon agreed in April 2026 to acquire Globalstar for $90.00 per share in cash, or 0.3210 Amazon shares with the value capped at $90.00, with cash elections limited to 40% of shares. The price can be cut by up to $110M if Globalstar misses certain operational milestones, and closing depends on HIBLEO-4 replacement satellite milestones. The deal is expected to close in 2027.",
+          "Globalstar gave no guidance this quarter and said it does not intend to hold future earnings calls. For shareholders, progress on the satellites and approvals now carries more weight than quarterly revenue."
+        ]
+      ],
+      [
+        "Progress on the conditions that count",
+        [
+          "The first set of HIBLEO-4 replacement satellites launched in Q3, the first step towards the milestones the deal depends on. In October the FCC Space Bureau approved Amazon's application to acquire Globalstar's FCC licences.",
+          "Work on the next-generation C-3 system also moved forward, with a key FCC authorisation, a German regulatory authorisation and completed ground station construction in the US, Canada and Greece."
+        ]
+      ],
+      [
+        "Why profit fell",
+        [
+          "Service revenue fell 6.1% to $65.4M, mainly from lower wholesale capacity revenue, the timing of network cost reimbursements and churn in Duplex and SPOT. Adjusted EBITDA margin fell to 42.7% from 50.9%.",
+          "The net loss of $15.7M was driven mainly by higher non-cash imputed interest linked to the 2024 Prepayment Agreement, so it overstates the decline in the underlying business. Income from operations was still positive at $7.6M."
+        ]
+      ],
+      [
+        "The subscriber base is changing shape",
+        [
+          "Commercial IoT grew 8.9% to 591,114 average subscribers, with record activations on a last twelve months basis, and its ARPU rose to $4.34. The higher-value consumer products are shrinking: Duplex subscribers fell 27.4% and SPOT 8.0%. Duplex earns more than 17 times as much per user each month as IoT, so the growth in subscriber numbers does not translate into revenue growth.",
+          "Subscriber equipment sales rose 31% to $5.5M, a sign of continuing IoT device demand."
+        ]
+      ],
+      [
+        "Cash is going into the network",
+        [
+          "Cash fell to $329.9M at 30 September from $447.5M at the end of 2025, while debt principal edged up to $414.7M. Adjusted free cash flow for the first nine months roughly halved to $66.8M from $133.3M, reflecting spending on HIBLEO-4, C-3 and ground infrastructure."
+        ]
+      ]
+    ],
+    "analysisNote": "Analysis by Orbit Alpha from the Globalstar results release and the sources below. Percentages, implied figures and totals not stated by Globalstar are Orbit Alpha calculations from reported figures. Deal terms are from the merger announcement filed with the SEC in April 2026.",
+    "watch": [
+      "Further HIBLEO-4 launches and whether Globalstar meets the satellite milestones the Amazon deal depends on.",
+      "Remaining regulatory approvals for the Amazon transaction, expected to close in 2027.",
+      "C-3 system progress following the FCC and German authorisations.",
+      "Globalstar will not hold further earnings calls, so filings and press releases are now the main source of updates."
+    ],
+    "faq": [
+      [
+        "Is Amazon buying Globalstar?",
+        "Yes. Amazon agreed in April 2026 to acquire Globalstar for $90.00 per share in cash or 0.3210 Amazon shares capped at $90.00, subject to a downward adjustment of up to $110M if certain operational milestones are missed. Closing is expected in 2027."
+      ],
+      [
+        "Why did Globalstar report a loss in Q3 2026?",
+        "Globalstar's $15.7M net loss was mainly due to higher non-cash imputed interest linked to its 2024 Prepayment Agreement. It made $7.6M of income from operations."
+      ],
+      [
+        "Will Globalstar hold earnings calls?",
+        "No. Globalstar said that, given the pending Amazon transaction, it does not intend to hold future earnings conference calls."
       ]
     ]
   }
