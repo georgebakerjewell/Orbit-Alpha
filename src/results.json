@@ -550,5 +550,262 @@
         "https://www.benzinga.com/markets/earnings/26/11/62894817/redwire-stock-slips-as-uneven-revenue-timing-softens-q3-results"
       ]
     ]
+  },
+  {
+    "slug": "bksy-q3-2026",
+    "ticker": "BKSY",
+    "quarter": "Q3 2026",
+    "period": "the three months to 30 September 2026",
+    "reported": "2026-11-05",
+    "headline": "Record revenue up 118% to $42.8M, net income of $18.5M",
+    "summary": "BlackSky revenue rose 118% to a record $42.8M and it swung to net income of $18.5M from a $15.3M loss, with record adjusted EBITDA of $12.8M. It raised 2026 guidance to revenue of $140M to $150M and adjusted EBITDA of $18M to $24M.",
+    "metrics": [
+      [
+        "Revenue",
+        "$42.8M",
+        "+118% (from $19.6M); +29% on Q2"
+      ],
+      [
+        "Space-based intelligence & AI services revenue",
+        "$32.7M",
+        "from $15.8M"
+      ],
+      [
+        "Mission solutions revenue",
+        "$4.7M",
+        "from $0.9M"
+      ],
+      [
+        "Advanced technology programs revenue",
+        "$5.4M",
+        "from $3.0M"
+      ],
+      [
+        "Operating income",
+        "$0.4M",
+        "from a $16.8M loss"
+      ],
+      [
+        "Net income",
+        "$18.5M",
+        "from a $15.3M loss"
+      ],
+      [
+        "Diluted EPS",
+        "$0.10",
+        "from a $0.44 loss"
+      ],
+      [
+        "Adjusted EBITDA",
+        "$12.8M",
+        "record; 29.9% margin, from -$4.5M"
+      ],
+      [
+        "Cash, restricted cash and short-term investments",
+        "$231.1M",
+        "at 30 September 2026"
+      ]
+    ],
+    "points": [
+      "Net income was helped by a $19.7M gain on derivatives; operating income was $0.4M.",
+      "Deployed a fifth Gen-3 satellite, which reached first light and revenue-generating operations within 24 hours.",
+      "Named exclusive provider of very high resolution optical satellites for a $1B consortium investment including France and the UAE, covering an initial 50-satellite constellation.",
+      "An international defence customer moved from a small Gen-2 pilot to a seven-figure Gen-3 Assured subscription in under six months.",
+      "Won a seven-figure renewal with HEO for non-Earth imaging space domain awareness services."
+    ],
+    "guidance": "BlackSky raised its 2026 outlook for the second time this year, to revenue of $140M to $150M and adjusted EBITDA of $18M to $24M, and kept capital expenditure guidance at $50M to $60M.",
+    "sources": [
+      [
+        "BlackSky Reports Third Quarter 2026 Results, Exhibit 99.1 (SEC EDGAR)",
+        "https://www.sec.gov/Archives/edgar/data/0001753539/000175353926000154/exhibit991-blackskyq32026e.htm"
+      ],
+      [
+        "BlackSky Form 8-K, 5 November 2026 (SEC EDGAR)",
+        "https://www.sec.gov/Archives/edgar/data/0001753539/000175353926000154/bksy-20261105.htm"
+      ],
+      [
+        "BlackSky Reports Third Quarter 2026 Results (Business Wire via Yahoo Finance)",
+        "https://finance.yahoo.com/markets/stocks/articles/blacksky-reports-third-quarter-2026-120000393.html"
+      ],
+      [
+        "BlackSky Reports $42.8 Million Revenue and $18.5 Million Net Income (TradingView)",
+        "https://www.tradingview.com/news/tradingview:1171ea4bba829:0-blacksky-reports-42-8-million-revenue-and-18-5-million-net-income/"
+      ]
+    ]
+  },
+  {
+    "slug": "mda-q3-2026",
+    "ticker": "MDA",
+    "quarter": "Q3 2026",
+    "period": "the three months to 30 September 2026",
+    "reported": "2026-11-05",
+    "headline": "Revenue up 21.5% to C$498.1M, 2026 guidance raised",
+    "summary": "MDA Space revenue rose 21.5% to C$498.1M and net income reached C$30.9M, up from C$27.0M, while adjusted EBITDA grew 15.9% to C$96.0M. It raised 2026 revenue guidance to C$1.90B to C$1.95B; backlog stood at C$3.95B.",
+    "metrics": [
+      [
+        "Revenue",
+        "C$498.1M",
+        "+21.5% (from C$409.8M)"
+      ],
+      [
+        "Satellite Systems revenue",
+        "C$358.3M",
+        "+26.4%"
+      ],
+      [
+        "Robotics & Space Operations revenue",
+        "C$79.9M",
+        "+2.0%"
+      ],
+      [
+        "Geointelligence revenue",
+        "C$59.9M",
+        "+24.8%"
+      ],
+      [
+        "Gross margin",
+        "25.3%",
+        "from 26.4%"
+      ],
+      [
+        "Net income",
+        "C$30.9M",
+        "from C$27.0M"
+      ],
+      [
+        "Adjusted EBITDA",
+        "C$96.0M",
+        "+15.9%; 19.3% margin, from 20.2%"
+      ],
+      [
+        "Adjusted diluted EPS",
+        "C$0.37",
+        "flat (C$0.37)"
+      ],
+      [
+        "Bookings",
+        "C$444.2M",
+        "from C$174.2M"
+      ],
+      [
+        "Backlog",
+        "C$3,949.1M",
+        "from C$4,392.8M; in line with Q2"
+      ],
+      [
+        "Free cash flow",
+        "C$61.6M",
+        "from -C$36.7M"
+      ],
+      [
+        "Net cash",
+        "C$1,328.0M",
+        "from net debt of C$120.0M at end of 2025"
+      ]
+    ],
+    "points": [
+      "Satellite Systems growth was driven mainly by the Telesat Lightspeed programme; Robotics revenue came from steady Canadarm3 work.",
+      "Selected to take part in Europe's IRIS2 satellite programme.",
+      "Deployed the first satellites it built for Globalstar's existing constellation and began operations at a new high-volume satellite factory.",
+      "Launched two defence-focused products, MDA MIDNIGHT and MDA AURORA BLACK, and issued C$600M of senior unsecured notes in August.",
+      "Total liquidity of C$2.9B is earmarked partly for the pending acquisitions of CLS and Blue Canyon Technologies."
+    ],
+    "guidance": "MDA raised 2026 guidance to revenue of C$1.90B to C$1.95B (from C$1.8B to C$1.9B) and adjusted EBITDA of C$355M to C$375M (from C$330M to C$370M), and reaffirmed an 18% to 20% adjusted EBITDA margin.",
+    "sources": [
+      [
+        "MDA Space Reports Third Quarter 2026 Results (PR Newswire)",
+        "https://www.prnewswire.com/news-releases/mda-space-reports-third-quarter-2026-results-302930072.html"
+      ],
+      [
+        "MDA Space investor relations",
+        "https://mda-en.investorroom.com/"
+      ],
+      [
+        "MDA Space reports $30.9M Q3 profit, raises guidance for full year (CTV News)",
+        "https://www.ctvnews.ca/business/article/mda-space-reports-309m-q3-profit-raises-guidance-for-full-year/"
+      ]
+    ]
+  },
+  {
+    "slug": "gsat-q3-2026",
+    "ticker": "GSAT",
+    "quarter": "Q3 2026",
+    "period": "the three months to 30 September 2026",
+    "reported": "2026-11-05",
+    "headline": "Revenue down 4% to $70.9M, net loss of $15.7M",
+    "summary": "Globalstar revenue fell to $70.9M from $73.8M and it posted a net loss of $15.7M against net income of $1.1M a year earlier, as non-cash imputed interest rose. Adjusted EBITDA was $30.3M, down from $37.6M.",
+    "metrics": [
+      [
+        "Revenue",
+        "$70.9M",
+        "from $73.8M"
+      ],
+      [
+        "Service revenue",
+        "$65.4M",
+        "from $69.6M"
+      ],
+      [
+        "Subscriber equipment sales",
+        "$5.5M",
+        "+31% (from $4.2M)"
+      ],
+      [
+        "Income from operations",
+        "$7.6M",
+        "from $10.2M"
+      ],
+      [
+        "Net loss",
+        "$15.7M",
+        "from net income of $1.1M"
+      ],
+      [
+        "Adjusted EBITDA",
+        "$30.3M",
+        "from $37.6M"
+      ],
+      [
+        "Cash and equivalents",
+        "$329.9M",
+        "from $447.5M at end of 2025"
+      ],
+      [
+        "Average subscribers",
+        "808,921",
+        "from 783,773"
+      ],
+      [
+        "Commercial IoT subscribers",
+        "591,114",
+        "from 542,715"
+      ]
+    ],
+    "points": [
+      "Service revenue fell mainly on lower wholesale capacity revenue, timing of network cost reimbursements and churn in Duplex and SPOT, partly offset by Commercial IoT.",
+      "Commercial IoT reached record activations on a last twelve months basis, with gross activations up 25%.",
+      "Launched the first set of HIBLEO-4 replacement satellites during the quarter.",
+      "Received a key FCC authorisation and a German regulatory authorisation for the C-3 constellation, and expanded its ground station in Greece.",
+      "The FCC Space Bureau approved Amazon's application to acquire Globalstar's FCC licences in October; the deal is expected to close in 2027."
+    ],
+    "guidance": "Globalstar gave no guidance and, with the Amazon transaction pending, said it does not intend to hold future earnings calls.",
+    "sources": [
+      [
+        "Globalstar Announces Third Quarter 2026 Financial Results, Exhibit 99.1 (SEC EDGAR)",
+        "https://www.sec.gov/Archives/edgar/data/0001366868/000136686826000045/gsat20260930-ex991.htm"
+      ],
+      [
+        "Globalstar Form 8-K, 5 November 2026 (SEC EDGAR)",
+        "https://www.sec.gov/Archives/edgar/data/0001366868/000136686826000045/gsat-20261105.htm"
+      ],
+      [
+        "Globalstar Announces Third Quarter 2026 Financial Results (GlobeNewswire)",
+        "https://www.globenewswire.com/news-release/2026/11/05/3396352/9076/en/globalstar-announces-third-quarter-2026-financial-results.html"
+      ],
+      [
+        "GSAT: Q3 losses widened as network investment continued and the Amazon merger advanced (TradingView)",
+        "https://www.tradingview.com/news/urn:summary_document_report:quartr.com:3977084:0-gsat-q3-losses-widened-as-network-investment-continued-and-the-amazon-merger-advanced/"
+      ]
+    ]
   }
 ]
