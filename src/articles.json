@@ -1,6 +1,174 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-stock-below-ipo-price-credit-default-swaps",
+  "title": "SpaceX sinks below its $135 IPO price: the credit move matters more",
+  "summary": "SpaceX fell 9% to $123.62 on 5 November, 8% below its $135 IPO price, as the midterm results hit AI stocks. It is not a first: it closed below $135 on 19 days in July and August. The newer signal is credit: default insurance has nearly doubled to about 284bp while the $40bn GPU lease is still unpriced.",
+  "published": "2026-11-05",
+  "updated": "2026-11-05",
+  "tickers": [
+   "SPCX",
+   "ECHO",
+   "RKLB",
+   "ASTS"
+  ],
+  "match": [
+   "spacex",
+   "ipo"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "[SPCX](/stocks/spcx) closed at $123.62 on Thursday 5 November, down 9.0% on the day and 12.5% over two sessions from $141.31 on 3 November. That is 8.4% below the $135 price at which SpaceX sold 555.6 million shares in its June IPO, and the lowest close since 6 August. On our calculation, using 13.58 billion shares outstanding, the two-day fall took about $240 billion off SpaceX's market value, leaving it at about $1.68 trillion.",
+     "Reports tied the fall to the Democratic sweep of Congress and the Texas governorship in the 3 November midterms. Yahoo Finance and Benzinga reported worries about tougher approval for a SpaceX-Tesla merger and about data-centre building in Texas, where the governor-elect has promised to freeze new approvals. Separately, Bloomberg reported that Goldman Sachs and Apollo had started sounding out investors for slices of SpaceX's $40 billion GPU financing, and that the cost of insuring SpaceX debt against default had hit a record."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the IPO line is a headline, the credit move is new",
+    [
+     "Several reports called this the first time SpaceX has traded below its IPO price. Our quote history shows otherwise: SPCX closed below $135 on 19 trading days between 16 July and 20 August, with a lowest close of $108.27 on 5 August, and again at $134.72 on 30 October. The $135 line has been crossed before and recovered from. What has not happened before is the credit market pricing SpaceX this cautiously.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "How we got it"
+       ],
+       "rows": [
+        [
+         "Close vs IPO price",
+         "$123.62, 8.4% below $135",
+         "424B4 prospectus price and our quote feed"
+        ],
+        [
+         "Paper loss for IPO buyers",
+         "about $6.3 billion",
+         "555.6 million shares times $11.38"
+        ],
+        [
+         "Close vs peak close",
+         "41.5% below $211.39 on 16 June",
+         "our quote feed"
+        ],
+        [
+         "Market value lost over two days",
+         "about $240 billion",
+         "$17.69 fall times 13.58 billion shares"
+        ],
+        [
+         "Five-year credit default swaps",
+         "about 284bp, from about 150bp two months earlier",
+         "ICE data reported by Bloomberg and Benzinga"
+        ],
+        [
+         "Extra lease interest if the rise passed through fully",
+         "about $0.47 billion in the first full year; about $1.3 billion over the lease",
+         "illustration only: 1.34 points on about $35 billion, and our earlier $0.95 billion per point"
+        ],
+        [
+         "Debt plus GPU lease vs market value",
+         "about 4.7%",
+         "$39.0 billion debt and leases (10-Q) plus $40 billion, against $1.68 trillion"
+        ]
+       ]
+      }
+     },
+     "Our working uses the 5 November close and SpaceX's 10-Q. The credit point matters because of timing. SpaceX's 26 October 8-K says the GPU lease carries a fixed interest rate that is set at pricing, and the lease is expected to close before the end of 2026. Lenders are now being approached as default insurance on SpaceX has risen from about 150bp to about 284bp in two months. Default swap spreads are not the lease rate, and the lease is secured on the chips, so a full pass-through is unlikely; we show it only to give a sense of scale. Even then, about $0.47 billion of extra interest in a year would be large against the $675 million of total interest SpaceX paid in the whole third quarter.",
+     "The swaps are not pricing a weak balance sheet today. SpaceX had $89.9 billion of cash and marketable securities against $39.0 billion of debt and finance leases on 30 September, net cash of about $51 billion, and Fitch said the lease leaves its BBB+ rating unchanged, according to Benzinga. What lenders are pricing is the spending: SpaceX guided to $35 billion to $40 billion of capital spending in Q4 alone, mostly for AI, and new state limits on data centres in Texas could slow how quickly that spending earns money."
+    ]
+   ],
+   [
+    "Was it about the merger?",
+    [
+     "Less than the headlines suggest. Tesla fell 13.8% over the same two sessions, from $398.50 to $343.69, slightly more than SpaceX's 12.5%. So the ratio of the two share prices, which would drive any all-stock merger terms, moved only 1.4%, and in SpaceX's favour. Kalshi traders cut the odds of a binding merger agreement before 2028 from 76% to about 71%, according to Benzinga. Nothing in the price action shows investors marking down a SpaceX-specific merger premium; both stocks fell with the wider AI sell-off. Our explainer [Are SpaceX and Tesla merging?](/articles/are-spacex-and-tesla-merging) sets out the approvals any deal would still need."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     {
+      "list": [
+       "SpaceX was not the worst performer. On 5 November [Rocket Lab](/stocks/rklb) fell 12.2%, [AST SpaceMobile](/stocks/asts) 15.2% and [Viasat](/stocks/vsat) 11.1%, while the UFO space ETF fell 5.6%. SpaceX's one-day loss of about $167 billion in value was still about 5.8 times Rocket Lab's entire market value.",
+       "[EchoStar](/stocks/echo) is owed up to about 261.8 million SpaceX shares under its spectrum sale, as set out in [SpaceX eyes Boost Mobile](/articles/spacex-boost-mobile-echostar-talks). Thursday's $12.30 fall in SPCX cut that stake by about $3.2 billion, or about $11.08 per EchoStar share on its 30 June share count. EchoStar itself fell $8.70 to $89.92, less than the fall in its SpaceX stake.",
+       "If lenders demand more to fund SpaceX's AI chips, smaller companies borrowing for satellites face a tougher market too, as we noted in [SpaceX's $40B Apollo GPU lease](/articles/spacex-40-billion-apollo-gpu-lease)."
+      ]
+     }
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "The pricing of the GPU lease and its fixed rate, expected before the end of 2026.",
+       "Whether SpaceX's default swaps keep widening while the shares fall, or settle back towards the 150bp level of September.",
+       "Tuesday 8 December, when about 798 million locked-up shares become free to sell: about $99 billion at Thursday's close. See [what happens when the lock-up ends](/articles/spacex-lock-up-ends-8-december).",
+       "Any detail from Texas on how a freeze on data-centre approvals would apply to sites already planned or under construction."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Is this the first time SpaceX stock has fallen below its IPO price?",
+    "No. SpaceX priced its IPO at $135 on 11 June 2026. On our quote history it closed below $135 on 19 trading days between 16 July and 20 August, as low as $108.27 on 5 August, and at $134.72 on 30 October. The 5 November close of $123.62 is the lowest since 6 August."
+   ],
+   [
+    "Why does SpaceX's credit default swap level matter to shareholders?",
+    "Because SpaceX is about to fix the interest rate on a $40 billion GPU lease. Default insurance has risen from about 150bp to about 284bp in two months. If even part of that shows up in the lease rate, each percentage point adds about $0.95 billion of interest over the lease's five years, on our calculation."
+   ],
+   [
+    "Did the merger worry cause the fall?",
+    "Not on its own. Tesla fell slightly more than SpaceX over the two sessions, so the ratio of their share prices moved only 1.4%. Both fell with a wider sell-off in AI and chip stocks after the midterm results."
+   ]
+  ],
+  "sources": [
+   [
+    "SpaceX IPO prospectus (Form 424B4), 11 June 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000162828026042639/spaceexplorationtechnologi.htm"
+   ],
+   [
+    "SpaceX Form 8-K, 26 October 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000110465926118614/tm2628247d1_8k.htm"
+   ],
+   [
+    "SpaceX Form 10-Q for the quarter ended 30 September 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm"
+   ],
+   [
+    "SpaceX Reports Third Quarter 2026 Results (SpaceX investor relations)",
+    "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ],
+   [
+    "Goldman, Apollo in Talks to Sell SpaceX's $40 Billion AI Deal (Bloomberg)",
+    "https://www.bloomberg.com/news/articles/2026-11-04/goldman-apollo-in-talks-to-sell-spacex-s-40-billion-ai-deal"
+   ],
+   [
+    "SpaceX Default Risk Hits Fresh Peak as Tech-Led Selloff Builds (Bloomberg)",
+    "https://www.bloomberg.com/news/articles/2026-11-05/spacex-default-risk-hits-fresh-peak-as-tech-led-selloff-builds"
+   ],
+   [
+    "Elon Musk's SpaceX Default Risk Hits Record High as Democratic Sweep Adds to AI Rout (Benzinga)",
+    "https://www.benzinga.com/markets/prediction-markets/26/11/62948387/elon-musks-spacex-default-risk-hits-record-high-as-democratic-sweep-adds-to-ai-rout"
+   ],
+   [
+    "SpaceX Stock Falls as Banks Test Demand for AI Debt (GuruFocus via TradingView)",
+    "https://www.tradingview.com/news/gurufocus:fea78d811094b:0-spacex-stock-falls-as-banks-test-demand-for-ai-debt/"
+   ],
+   [
+    "SpaceX, Tesla stocks tumble as Democratic sweep raises questions on merger prospects, AI build-out (Yahoo Finance)",
+    "https://finance.yahoo.com/markets/article/spacex-tesla-stocks-tumble-as-democratic-sweep-raises-questions-on-merger-prospects-ai-buildout-153753814.html"
+   ],
+   [
+    "Tesla (TSLA) historical prices (Yahoo Finance)",
+    "https://finance.yahoo.com/quote/TSLA/history/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "blue-origin-new-glenn-delay-ast-spacemobile-satellites",
   "title": "New Glenn delay puts AST SpaceMobile's 46-satellite March goal at risk",
   "summary": "Blue Origin has pushed New Glenn's return to flight to January 2027. For AST SpaceMobile, each New Glenn ride is worth up to eight satellites: if one misses the first quarter, its target of 46 in orbit by the end of March falls to 38, below the roughly 45 needed for continuous US coverage.",
