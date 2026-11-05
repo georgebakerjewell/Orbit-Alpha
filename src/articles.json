@@ -1,6 +1,165 @@
 [
  {
   "kind": "news",
+  "slug": "ohb-esa-sentinel-3-ngt-contract-554-million",
+  "title": "OHB wins EUR 554m Sentinel-3 contract: big for backlog, small per year",
+  "summary": "ESA has signed OHB as prime for the Sentinel-3 Next Generation Topography satellite, worth EUR 554 million. That adds about 17% to OHB's June order backlog, but with launch planned for mid-2034 it averages roughly EUR 71 million a year, about 5% of 2026 guidance.",
+  "published": "2026-11-05",
+  "updated": "2026-11-05",
+  "tickers": [
+   "OHB",
+   "AVIO"
+  ],
+  "match": [
+   "ohb",
+   "sentinel"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 4 November 2026 [OHB](/stocks/ohb) said its subsidiary OHB System AG has been contracted by the European Space Agency (ESA) to develop Sentinel-3 Next Generation Topography (S3-NGT), the follow-on radar altimetry mission in the EU's Copernicus Earth observation programme. OHB put the value at EUR 554 million, with an option for a second satellite. OHB is prime contractor and will lead a European industrial consortium.",
+     "The mission will measure sea level, sea ice, land ice, coastal waters and rivers and lakes. ESA's June 2026 mission status presentation describes a constellation of two large satellites on OHB's EOS standard platform, carrying a Thales nadir altimeter, a new Ka-band swath altimeter and an Airbus microwave radiometer.",
+     "OHB shares closed at EUR 218.00 on 4 November, up 3.1% from EUR 211.50. By midday on 5 November they were at EUR 207.50, 4.8% lower on the day and below where they stood before the announcement."
+    ]
+   ],
+   [
+    "Orbit Alpha view: a backlog event, not a revenue event",
+    [
+     "The award is large against OHB's order book and its market value, but it will be earned over the best part of a decade. ESA's June presentation set out the timetable: contract kick-off in September 2026 starting an \"instruments first\" phase, a system requirements review in the first quarter of 2027, and a current best estimate of mid-2034 for launching the first satellite. Spread evenly over that period, EUR 554 million is a modest yearly sum for a group guiding to EUR 1.4 billion of total operating performance this year.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Source or working"
+       ],
+       "rows": [
+        [
+         "Contract value",
+         "EUR 554m",
+         "OHB, 4 November 2026"
+        ],
+        [
+         "Against order backlog at 30 June 2026 (EUR 3,304m)",
+         "17%",
+         "Our calculation; OHB Q2 2026 results"
+        ],
+        [
+         "Against 2026 guided total operating performance (EUR 1,400m)",
+         "40%",
+         "Our calculation; OHB Q2 2026 results"
+        ],
+        [
+         "Average per year, September 2026 to mid-2034 (about 7.75 years)",
+         "About EUR 71m (about 5% of 2026 guidance)",
+         "Our straight-line calculation; real spending will not be even"
+        ],
+        [
+         "OHB implied order intake in Q2 2026",
+         "About EUR 279m",
+         "Our calculation: backlog change (EUR 3,304m less EUR 3,354m) plus Q2 revenue of EUR 329.2m"
+        ],
+        [
+         "This award against Q2 implied intake",
+         "About 2x",
+         "Our calculation"
+        ],
+        [
+         "Against market value at EUR 207.50 (about EUR 4.32bn)",
+         "13%",
+         "Our calculation; 20,827,928 shares per OHB"
+        ],
+        [
+         "Market value added on 4 November",
+         "About EUR 135m",
+         "Our calculation: EUR 6.50 rise x 20,827,928 shares"
+        ]
+       ]
+      }
+     },
+     "The most useful number is the order intake. OHB's backlog fell from EUR 3,354 million at the end of March to EUR 3,304 million at the end of June, which means the second quarter brought in roughly EUR 279 million of new orders against EUR 329 million of revenue, a book-to-bill of about 0.85 on our working. This one contract is worth about two quarters of that intake. Together with the nearly EUR 1 billion IRIS2 platform order from SES in late August, it points to a much stronger second half for orders than the second quarter suggested. OHB announced the award after the 30 September quarter end and has not given a signing date, so it may land in either the third- or fourth-quarter backlog.",
+     "Two caveats temper the headline. First, much of the value will flow through to the consortium: ESA's material names Thales for both altimeters and Airbus for the radiometer, and those instruments are the costly, specialised parts of an altimetry mission. OHB has not said how much of the EUR 554 million it keeps. Second, the design ESA presented in June is a two-satellite constellation, while OHB describes the second satellite as an option. If ESA's design holds, the second spacecraft is potential further work for OHB that is not yet in this number.",
+     "The award was also not a surprise. ESA's June presentation shows the tender evaluation board recommended the OHB consortium at the end of March 2026 and that ESA and the EU procurement board endorsed it before negotiations. That helps explain a muted share reaction: the 4 November rise added about EUR 135 million of market value, a quarter of the contract value, and was more than reversed the next morning. The shares are also well below the EUR 300 at which OHB placed new shares in June 2026, about 31% lower at the 5 November midday price, so the market is weighing more than single awards.",
+     "One point of confusion is worth clearing up. An Aviation Week report on 6 October credited Airbus with a EUR 550 million Sentinel-3 Next Generation Topography contract. ESA's own June status presentation lists Airbus as the radiometer supplier selected in an earlier tender and the OHB consortium as the recommended satellite prime, which matches OHB's announcement."
+    ]
+   ],
+   [
+    "Why it matters for OHB",
+    [
+     "Copernicus missions are long, government-funded programmes, and S3-NGT is meant to keep Sentinel-3 altimetry going through 2030 to 2050. ESA says it is funded partly by ESA member states, subscribed at the 2022 ministerial conference, and partly under the EU budget. For OHB, that means a multi-year anchor programme for its Earth observation platform, alongside its role in Europe's IRIS2 connectivity constellation covered in our [IRIS2 order book piece](/articles/eutelsat-iris2-order-book-12-billion).",
+     "It also supports OHB's stated mid-term target of more than EUR 4.0 billion of total operating performance, nearly three times this year's guidance. Contracts of this size, rather than this one alone, are what that target needs."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "[Avio](/stocks/avio) is the one other covered company with a direct line to the mission: ESA's June presentation names Vega-E as the planned launcher for the first satellite in mid-2034. That is a planning assumption for a launch eight years away, not a signed launch contract, so it has no near-term revenue effect.",
+     "The prime contracts for the first-generation Sentinel-3 satellites went to Thales Alenia Space, according to the eoPortal mission record. OHB winning the next generation shows European Earth observation primes are contestable, which matters for the many Copernicus expansion missions still to be awarded."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     "OHB's next quarterly report: the order backlog at 30 September should show the August IRIS2 order, and either it or the year-end figure will show this award. Then the system requirements review planned for the first quarter of 2027, any decision on the second-satellite option, and whether OHB says how much of the contract value stays in-house."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How big is the Sentinel-3 contract for OHB?",
+    "EUR 554 million is about 17% of OHB's EUR 3,304 million order backlog at 30 June 2026 and about 13% of its market value at EUR 207.50 a share, on our calculations. It is roughly twice OHB's implied order intake in the second quarter."
+   ],
+   [
+    "When will OHB earn the money?",
+    "Over many years. ESA planned a September 2026 kick-off and a mid-2034 launch for the first satellite. Spread evenly, that is about EUR 71 million a year, around 5% of OHB's 2026 guidance of EUR 1.4 billion total operating performance, by our working."
+   ],
+   [
+    "Did Airbus or OHB win the Sentinel-3 NGT contract?",
+    "OHB is the satellite prime. ESA's June 2026 mission status shows the OHB consortium was recommended for the satellite, with Airbus supplying the microwave radiometer and Thales the altimeters."
+   ]
+  ],
+  "sources": [
+   [
+    "OHB: OHB awarded EUR 554 million contract for new Copernicus Sentinel-3 Next Generation Topography satellite (4 November 2026)",
+    "https://www.ohb.de/en/news/ohb-awarded-eur-554-million-contract-for-new-copernicus-sentinel-3-next-generation-topography-satellite"
+   ],
+   [
+    "ESA: The Sentinel-3 Next Generation Topography Copernicus Altimetry Mission, Mission Status (OSTST, 22 June 2026)",
+    "https://ostst.aviso.altimetry.fr/fileadmin/user_upload/OSTST2026/Presentations/OPE2026-The_Sentinel-3_Next_Generation_Topography_Copernicus_Altimetry_Mission_-_Mission_Status.pdf"
+   ],
+   [
+    "OHB: Financial results Q2 2026",
+    "https://www.ohb.de/en/ir-announcements/financial-results-q2-2026-strong-first-half-year-with-profitable-growth"
+   ],
+   [
+    "OHB: Q1 2026 financial results",
+    "https://www.ohb.de/en/ir-announcements/finanzergebnisse-q1-2026-starkes-profitables-wachstum"
+   ],
+   [
+    "OHB: OHB stock (share capital)",
+    "https://www.ohb.de/en/investor-relations/ohb-stock"
+   ],
+   [
+    "OHB: Capital increase at EUR 300 per new share (June 2026)",
+    "https://www.ohb.de/en/ad-hoc-announcements/ohb-se-beschliesst-bezugsrechtskapitalerhohung-zu-einem-bezugspreis-von-eur-300-je-neuer-aktie-sowie-eine-vorlaufende-privatplatzierung"
+   ],
+   [
+    "Aviation Week: Airbus Secures ESA Sentinel-3 Next-Generation Topography Contract (6 October 2026)",
+    "https://aviationweek.com/space/satellites/airbus-secures-esa-sentinel-3-next-generation-topography-contract"
+   ],
+   [
+    "eoPortal: Copernicus Sentinel-3",
+    "https://www.eoportal.org/satellite-missions/copernicus-sentinel-3"
+   ],
+   [
+    "MarketScreener: OHB wins EUR554 million contract for next-generation Sentinel-3 topography satellite",
+    "https://www.marketscreener.com/news/ohb-wins-eur554-million-contract-for-next-generation-sentinel-3-topography-satellite-ce785fdfdd8df723"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "viasat-nasa-ka-band-relay-tdrs-award",
   "title": "Viasat wins $461m NASA relay award: why it is a ceiling, not revenue",
   "summary": "NASA picked Viasat, Astranis and Global Enterprise Solutions to develop Ka-band relays to replace TDRS. Viasat's $460.9 million is the largest share, 43% of $1.07 billion, but it is a ceiling reached only by surviving NASA's downselects. Viasat shares still fell 11.2% on the day.",
