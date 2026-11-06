@@ -1,6 +1,181 @@
 [
  {
   "kind": "news",
+  "slug": "ast-spacemobile-blacklift-rocket-firefly-engine-deal",
+  "title": "AST SpaceMobile's $1.3B Firefly engine deal: worth half of Firefly",
+  "summary": "AST SpaceMobile will build its own reusable rocket, Blacklift, on Firefly engines, paying more than $1.3B including $400M in cash and 10 to 14M AST shares. On our sums that is about half Firefly's $2.54B market value and three times its 2026 revenue guidance, yet Blacklift is not due to fly until late 2028.",
+  "published": "2026-11-06",
+  "updated": "2026-11-06",
+  "tickers": [
+   "ASTS",
+   "FLY",
+   "SPCX",
+   "RKLB"
+  ],
+  "match": [
+   "firefly",
+   "blacklift"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "Before the US market opened on 6 November, AST SpaceMobile said it will build its own 20-ton reusable rocket, called Blacklift, to launch its BlueBird satellites, carrying up to five per flight from late 2028. [Firefly Aerospace](/stocks/fly) will supply 36 engines for the first three rockets (27 Miranda engines and nine vacuum Vira engines), provide engineering support for three years, and grant AST a perpetual licence to make both engines itself at a new US factory. Firefly keeps ownership of the engine designs.",
+     "The price, from AST's release: about $800M up front for the licence, made up of $400M in cash and 10 to 14 million AST Class A shares set by a forward volume-weighted average price, plus $250M for the engines for the first three rockets and $250M for three years of engineering support. Firefly puts the total at more than $1.3B and says the shares are subject to lock-ups. AST will keep buying launches from others: its agreements now cover more than 100 BlueBirds to be launched in 2027 and 2028.",
+     "Both stocks went into the news after a heavy fall. On 5 November AST closed at $30.20, down 15.2%, in a sell-off across space and AI stocks, valuing it at about $11.75B. Firefly closed at $15.18, a market value of about $2.54B."
+    ]
+   ],
+   [
+    "Orbit Alpha view: a big deal for Firefly, a long-dated hedge for AST",
+    [
+     "The same $1.3B looks very different from each side. For Firefly it is worth about three times this year's expected revenue; for AST it is a meaningful but affordable bet that does nothing for its launch schedule until the 2027 to 2028 build-out is largely done.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Working (our calculations)"
+       ],
+       "rows": [
+        [
+         "Deal value against Firefly's market value",
+         "About 51%",
+         "$1.3B / $2.54B at the 5 November close"
+        ],
+        [
+         "Deal value against Firefly's 2026 revenue guidance",
+         "About 3.0 times",
+         "$1.3B / $435M, the midpoint of $420M to $450M"
+        ],
+        [
+         "Upfront cash against Firefly's cash and short-term investments",
+         "About 63%",
+         "$400M / $635.2M at 30 June 2026"
+        ],
+        [
+         "Upfront cash in quarters of Firefly's spending",
+         "About 4.3",
+         "$400M / $92.6M a quarter (H1 2026: $144.1M operating outflow + $41.1M capital spending, halved)"
+        ],
+        [
+         "Share price range implied by 10 to 14M shares for $400M",
+         "$28.57 to $40.00",
+         "Our reading: $400M / 14M and $400M / 10M"
+        ],
+        [
+         "Shares at the 5 November close",
+         "About 13.2M",
+         "$400M / $30.20"
+        ],
+        [
+         "Dilution for AST shareholders",
+         "2.6% to 3.6%",
+         "10M to 14M / 389.17M shares outstanding"
+        ],
+        [
+         "Cash AST could pay, if the $500M for engines and support is in cash",
+         "Up to $900M",
+         "$400M + $250M + $250M (the releases do not give the split)"
+        ],
+        [
+         "That cash in quarters of AST's spending",
+         "About 1.8",
+         "$900M / about $502M a quarter in H1 2026"
+        ],
+        [
+         "That cash against AST's pro forma liquidity",
+         "About 24%",
+         "$900M / more than $3.7B at 30 June 2026"
+        ]
+       ]
+      }
+     },
+     "The share terms matter more than usual because AST's price is near the bottom of the range. Our reading of the release is that the 10 to 14 million shares are meant to be worth about $400M, which only works between about $28.57 and $40.00 a share. AST closed at $30.20 on 5 November, only 5.7% above the lower edge. Below $28.57 the share count stops at 14 million, so on our reading any further fall in AST before the price is set comes out of Firefly's side of the deal, not AST's. At the top of the range AST's dilution is 3.6%.",
+     "For AST the cost is real but contained. Even if the full $900M not paid in shares is cash, that is under two quarters of the roughly $502M a quarter AST spent in the first half, and about a quarter of its pro forma liquidity. It also fits what AST said in July, when it raised a convertible bond and listed partnerships or acquisitions to secure more access to orbit as a possible use of the money. What it does not do is fix the problem in our [New Glenn delay analysis](/articles/blue-origin-new-glenn-delay-ast-spacemobile-satellites): the 2027 and 2028 launches still depend on SpaceX and Blue Origin, and Blacklift's five BlueBirds per flight sits between Falcon 9's three and New Glenn's eight.",
+     "Licensing also looks cheaper than buying. Some analysts had floated a takeover of a rocket company, Firefly included. At Firefly's 5 November market value, before any takeover premium, that would have cost about $2.54B, nearly twice the licence deal, and brought Firefly's other businesses and its $189.0M first-half net loss with it. The trade-off is risk: AST takes on building and flying a rocket, using engines whose published record so far is ground testing (more than 175 hot-fire tests of Miranda, per Firefly), two years before its first launch."
+    ]
+   ],
+   [
+    "Why AST did it",
+    [
+     "Control. AST's network needs dozens more satellites, and its only working launcher today is [SpaceX](/stocks/spcx), which is building a rival phone service of its own (see [the direct-to-device spectrum race](/articles/direct-to-device-spectrum-race-spacex-amazon-ast)). New Glenn is grounded until at least January 2027 and [Rocket Lab's Neutron](/articles/when-is-rocket-lab-neutron-first-launch) slipped into 2027. Owning a rocket from late 2028 gives AST a way to replace and add satellites without queuing behind a competitor. Firefly's chief executive described it as giving AST control of its launch schedule; AST claims Blacklift offers the best owner economics in the industry, but has published no cost per launch to check that against."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "[Firefly](/stocks/fly) gains cash, a validation of the Miranda engine and a stake in AST, but also concentration: a large part of its near-term income now depends on one customer, paid partly in a volatile stock. [SpaceX](/stocks/spcx) keeps AST's business for 2027 and 2028 but now has a dated end to it for some launches. For [Rocket Lab](/stocks/rklb), it removes one of the most obvious future customers for a medium-lift rocket, since AST has chosen to build rather than buy a ride on Neutron."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "9 November: AST's Q3 call, see [our earnings preview](/articles/ast-spacemobile-q3-2026-earnings-date). Look for the cash and share split and timing of the payments, and cash at 30 September.",
+       "10 November, 5pm Eastern: Firefly's Q3 call, where it will discuss the deal. Look for how and when it books the $800M licence fee as revenue.",
+       "12 November: AST's Blacklift unveiling in New York, the first chance to see the rocket's design, launch site and cost targets.",
+       "The forward price period that sets the share count: any close below $28.57 points to the full 14 million shares."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much is AST SpaceMobile paying Firefly?",
+    "More than $1.3B: about $800M up front for the engine licence ($400M in cash and 10 to 14 million AST shares), $250M for engines for the first three Blacklift rockets and $250M for three years of engineering support. That equals about half Firefly's market value at the 5 November close, on our calculation."
+   ],
+   [
+    "When will Blacklift launch?",
+    "AST says Blacklift will start launching BlueBirds in late 2028, carrying up to five per flight. Until then AST relies on outside launchers, with agreements covering more than 100 satellites in 2027 and 2028."
+   ],
+   [
+    "How much will the deal dilute AST shareholders?",
+    "Between 2.6% and 3.6%, on our calculation: 10 to 14 million new shares against 389.17 million outstanding. At the 5 November close of $30.20, $400M would buy about 13.2 million shares, near the top of that range."
+   ]
+  ],
+  "sources": [
+   [
+    "AST SpaceMobile to Build Own 20-Ton Rocket, Blacklift (AST SpaceMobile release via Business Wire, reproduced by StockTitan, 6 November 2026)",
+    "https://www.stocktitan.net/news/FLY/ast-space-mobile-to-build-own-20-ton-rocket-to-deploy-blue-bird-w2qoxbqqvss6.html"
+   ],
+   [
+    "Firefly Aerospace Signs Rocket Engine Deal Valued at More Than $1.3 Billion with AST SpaceMobile (GlobeNewswire, 6 November 2026)",
+    "https://www.globenewswire.com/news-release/2026/11/06/3397457/0/en/firefly-aerospace-signs-rocket-engine-deal-valued-at-more-than-1-3-billion-with-ast-spacemobile.html"
+   ],
+   [
+    "Firefly Aerospace second quarter 2026 results, Form 8-K exhibit 99.1 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/0001860160/000186016026000022/fly-ex99_1.htm"
+   ],
+   [
+    "AST SpaceMobile second quarter 2026 results, Form 8-K exhibit 99.1 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/0001780312/000119312526216946/asts-ex99_1.htm"
+   ],
+   [
+    "ASTS stock extends sell-off: convertible note offering and use of proceeds (Stocktwits, 15 July 2026)",
+    "https://stocktwits.com/news-articles/markets/equity/asts-analyst-buy-rocket-company-1b-raise/cZZ3MzCR7rm"
+   ],
+   [
+    "Did ASTS miss its Rocket Lab moment? Analyst floats Firefly as a target (Stocktwits)",
+    "https://stocktwits.com/news-articles/markets/equity/asts-miss-rocket-lab-moment-analyst-deal-window-closing-firefly-target/cZx0pBFRBru"
+   ],
+   [
+    "SpaceX and Tesla sink as election fallout hits; Rocket Lab and AST SpaceMobile tumble (24/7 Wall St., 5 November 2026)",
+    "https://247wallst.com/investing/2026/11/05/spacex-and-tesla-sink-9-as-texas-election-fallout-threatens-musks-data-center-plans-rocket-lab-and-ast-spacemobile-tumble-13/"
+   ],
+   [
+    "AST SpaceMobile shares outstanding (StockAnalysis)",
+    "https://stockanalysis.com/stocks/asts/"
+   ],
+   [
+    "Firefly Aerospace shares outstanding (StockAnalysis)",
+    "https://stockanalysis.com/stocks/fly/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "spacex-stock-below-ipo-price-credit-default-swaps",
   "title": "SpaceX sinks below its $135 IPO price: the credit move matters more",
   "summary": "SpaceX fell 9% to $123.62 on 5 November, 8% below its $135 IPO price, as the midterm results hit AI stocks. It is not a first: it closed below $135 on 19 days in July and August. The newer signal is credit: default insurance has nearly doubled to about 284bp while the $40bn GPU lease is still unpriced.",
