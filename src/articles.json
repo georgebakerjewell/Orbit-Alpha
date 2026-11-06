@@ -1,6 +1,157 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-government-revenue-under-10-percent-musk",
+  "title": "Musk's under-10% government claim implies a $24B SpaceX quarter",
+  "summary": "Musk says government work will be under 10% of SpaceX revenue this quarter and under 5% in a year. Government revenue rose about 82% to $2.42B in Q3, so if it merely holds, Q4 revenue must top $24.2B, above the $22.9B consensus. SPCX rose 8.6% to $134.27.",
+  "published": "2026-11-06",
+  "updated": "2026-11-06",
+  "tickers": [
+   "SPCX",
+   "ECHO"
+  ],
+  "match": [
+   "spacex",
+   "government"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On Friday 6 November Elon Musk wrote on X that government revenue will be less than 10% of SpaceX revenue this quarter and less than 5% a year from now, according to Investing.com and Quartz. Investing.com reported that he put the figure for the last quarter at 16.6%. Musk also said SpaceX's government contracts offer the best product at the lowest price, and that he would cancel any contract the government did not want. The posts came three days after Democrats won control of both chambers of Congress in the midterms.",
+     "The same day 24/7 Wall St reported a remark, relayed on X, in which Musk said SpaceX's annual recurring revenue would quite likely exceed $500 billion in December 2027, calling it his best guess rather than a promise. He had given a range of $500 billion to $1 trillion on the 20 October results call.",
+     "[SPCX](/stocks/spcx) closed at $134.27, up 8.6% from $123.62, recovering about $145 billion of market value on our calculation (13.57 billion shares). It is still 0.5% below the $135 IPO price and 5.0% below the 3 November close of $141.31, before the [midterm sell-off](/articles/spacex-stock-below-ipo-price-credit-default-swaps)."
+    ]
+   ],
+   [
+    "Orbit Alpha view: a revenue forecast, not a retreat from government",
+    [
+     "The 16.6% Musk cited matches exactly the share of Q3 revenue that SpaceX's 10-Q attributes to \"Customer A\", a customer that buys from all three segments. That confirms Customer A is government. In dollars it is not shrinking: on our calculation its Q3 revenue was about $2.42 billion (16.6% of $14.58 billion), up about 82% from about $1.33 billion a year earlier (23.9% of $5.58 billion). Its share fell only because AI revenue, led by [Anthropic](/articles/anthropic-spacex-customer-b-revenue), grew faster.",
+     "So a falling percentage tells you about the denominator. The useful way to read Musk's claim is to ask what total revenue it needs if government spending simply holds at its Q3 level.",
+     {
+      "table": {
+       "head": [
+        "Scenario",
+        "Quarterly revenue",
+        "Government share if it stays at $2.42B"
+       ],
+       "rows": [
+        [
+         "Q3 2026 (reported)",
+         "$14.58B",
+         "16.6%"
+        ],
+        [
+         "Q4 2026 analyst consensus (24/7 Wall St)",
+         "$22.9B",
+         "10.6%"
+        ],
+        [
+         "Revenue needed for Musk's under-10% claim",
+         "above $24.2B",
+         "under 10%"
+        ],
+        [
+         "$100B annual recurring revenue target, as a quarter",
+         "$25.0B",
+         "9.7%"
+        ],
+        [
+         "Q1 2027 guidance",
+         "$33B to $37B",
+         "6.5% to 7.3%"
+        ],
+        [
+         "Revenue needed for under 5% a year from now",
+         "above $48.4B",
+         "under 5%"
+        ],
+        [
+         "Musk's $500B run rate for December 2027, as a quarter",
+         "$125B",
+         "1.9%"
+        ]
+       ]
+      }
+     },
+     "All figures are our calculations from SpaceX's 10-Q, its Q3 results and the guidance reported from its 20 October call. Three points follow.",
+     {
+      "list": [
+       "The under-10% claim for this quarter is a statement that Q4 revenue will beat consensus. At the $22.9 billion consensus, flat government revenue would still be 10.6%. To get below 10% either revenue has to exceed about $24.2 billion, at least 6% above consensus and 66% above Q3, or government revenue has to fall. It lines up neatly with the finance chief's target of about $100 billion of annual recurring revenue by the end of 2026, which on a quarterly basis is $25 billion.",
+       "The under-5% claim for a year from now needs quarterly revenue above $48.4 billion, about $194 billion a year, if government spending stays flat. If government spending grows another 82%, to about $4.39 billion, the bar rises to about $88 billion a quarter. Analysts' average 2027 revenue estimate of about $180 billion, reported by 24/7 Wall St, works out at $45 billion a quarter, where flat government revenue would be 5.4%. So the 5% claim is the $500 billion run-rate guess in another form, and rests on the same AI ramp.",
+       "The political message and the financial one pull in different directions. A shrinking share makes government look less important to SpaceX, but about $2.42 billion a quarter, roughly $9.7 billion a year, is more than the whole Space segment earned in Q3 ($1.77 billion). Government also buys Starlink services, launches and programmes such as the [Space Data Network backbone](/articles/viasat-space-force-space-data-network-operations-center). Losing it would not be trivial, even if the percentage looks small."
+      ]
+     }
+    ]
+   ],
+   [
+    "What the market is pricing",
+    [
+     "Friday's 8.6% rise in SPCX was about twice Tesla's gain of about 4%, according to Quartz and Investing.com, and came as technology shares rebounded from Thursday's sell-off, so not all of it can be credited to Musk's posts. Rocket Lab and AST SpaceMobile also rose strongly during the day, according to 24/7 Wall St. The recovery leaves SPCX below where it was before the election, which fits a market that has priced in some lasting political risk but not a loss of government business.",
+     "[EchoStar](/stocks/echo), which is owed up to about 261.8 million SpaceX shares under its spectrum sale (see [SpaceX eyes Boost Mobile](/articles/spacex-boost-mobile-echostar-talks)), rose $4.70 to $94.62. On our calculation Friday's $10.65 rise in SPCX lifted that stake by about $2.79 billion, while EchoStar's own market value rose by about $1.37 billion, using the $27.5 billion market value in our quote feed. As on Thursday's fall, EchoStar moved by about half of the change in its SpaceX stake."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "SpaceX's Q4 results: revenue above about $24.2 billion is what Musk's under-10% claim needs if government spending holds, against a $22.9 billion consensus. The annual report should show Customer A's share for the quarter.",
+       "Whether government revenue keeps growing in dollars. A fall in dollars, not just in share, would be the first sign of political pressure reaching the accounts.",
+       "The new Congress, seated in January 2027, and any action on SpaceX contracts, including the lunar lander and national security work.",
+       "Tuesday 8 December, when about 798 million locked-up shares become free to sell. See [what happens when the lock-up ends](/articles/spacex-lock-up-ends-8-december)."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much of SpaceX's revenue comes from the US government?",
+    "SpaceX's 10-Q shows Customer A, which Musk's 16.6% figure confirms is government, provided 16.6% of Q3 2026 revenue, about $2.42 billion on our calculation. That was up about 82% in dollars from a year earlier, when the share was 23.9%."
+   ],
+   [
+    "Is SpaceX doing less government work?",
+    "Not on the figures so far. Government revenue grew about 82% in a year; its share fell because AI revenue grew faster. Musk's under-10% forecast for Q4 needs total revenue above about $24.2 billion if government spending holds, not a cut in government work."
+   ],
+   [
+    "What revenue does Musk's under-5% claim imply?",
+    "If government revenue stays at about $2.42 billion a quarter, it needs SpaceX revenue above about $48.4 billion a quarter a year from now, about $194 billion a year. Analysts' average 2027 estimate is about $180 billion, according to 24/7 Wall St."
+   ]
+  ],
+  "sources": [
+   [
+    "SpaceX Form 10-Q for the quarter ended 30 September 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm"
+   ],
+   [
+    "SpaceX Reports Third Quarter 2026 Results (SpaceX investor relations)",
+    "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ],
+   [
+    "Elon Musk post on X, 6 November 2026",
+    "https://x.com/elonmusk/status/2118737725964837353"
+   ],
+   [
+    "SpaceX government contracts to be under 10% of revenue, Musk says (Investing.com)",
+    "https://www.investing.com/news/stock-market-news/spacex-government-contracts-to-be-under-10-of-revenue-musk-says-5008950"
+   ],
+   [
+    "SpaceX to Get Under 10% of Revenue From US Government, Musk Says (Bloomberg)",
+    "https://www.bloomberg.com/news/articles/2026-11-06/spacex-to-get-under-10-of-revenue-from-us-government-musk-says"
+   ],
+   [
+    "Elon Musk said U.S. government revenue will fall below 10% of SpaceX sales this quarter (Quartz)",
+    "https://qz.com/spacex-government-revenue-under-10-percent-musk-110626"
+   ],
+   [
+    "Musk Says SpaceX Will Hit a Revenue Number That Not One of Its 37 Analysts Believes (24/7 Wall St)",
+    "https://finance.yahoo.com/markets/stocks/articles/musk-says-spacex-hit-revenue-202644095.html"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "viasat-space-force-space-data-network-operations-center",
   "title": "Viasat's $450m Space Force SDN deal: signed in July, $25m funded so far",
   "summary": "Space Force picked Viasat to build and run the operations centre for its Space Data Network, a $450 million ceiling with a $115 million first order. Only $25 million is funded, and the deal is dated 31 July, inside the quarter Viasat has just reported. The 10% share rise on 6 November added about $820 million.",
