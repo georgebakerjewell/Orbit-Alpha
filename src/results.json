@@ -1343,5 +1343,112 @@
         "https://www.ctpost.com/business/article/viasat-fiscal-q2-earnings-snapshot-22515189.php"
       ]
     ]
+  },
+  {
+    "slug": "echo-q3-2026",
+    "ticker": "ECHO",
+    "quarter": "Q3 2026",
+    "period": "the three months to 30 September 2026",
+    "reported": "2026-11-03",
+    "headline": "Revenue down 69% to $1.13B on deconsolidation, net income $2.78B",
+    "summary": "EchoStar revenue fell to $1.13B from $3.61B after Pay-TV and Broadband were deconsolidated, while net income was $2.78B against a $12.78B loss, lifted by a $3.11B AT&T spectrum sale gain. Wireless lost 182,000 subscribers to 7.19M.",
+    "metrics": [
+      [
+        "Revenue",
+        "$1.13B",
+        "from $3.61B"
+      ],
+      [
+        "Wireless revenue",
+        "$905.2M",
+        "-3.4% (from $936.6M)"
+      ],
+      [
+        "Wireless service revenue",
+        "$855M",
+        "+2.3%"
+      ],
+      [
+        "Broadband and Satellite Services revenue",
+        "$119.3M",
+        "from $345.8M"
+      ],
+      [
+        "Operating income",
+        "$147.8M",
+        "from a loss of $16.64B"
+      ],
+      [
+        "Net income attributable to EchoStar",
+        "$2.78B",
+        "from a loss of $12.78B"
+      ],
+      [
+        "Diluted EPS",
+        "$7.97",
+        "from a loss of $44.37"
+      ],
+      [
+        "Adjusted OIBDA",
+        "$242.2M",
+        "from $230.9M"
+      ],
+      [
+        "AT&T Transactions gain",
+        "$3.11B",
+        "one-off"
+      ],
+      [
+        "Cash and equivalents",
+        "$13.44B",
+        "from $1.88B at end of 2025"
+      ],
+      [
+        "Wireless subscribers",
+        "7.193M",
+        "from 7.520M"
+      ],
+      [
+        "Wireless net additions",
+        "-182,000",
+        "from +223,000"
+      ],
+      [
+        "Wireless ARPU",
+        "$39.11",
+        "from $37.22"
+      ],
+      [
+        "Wireless churn",
+        "2.97%",
+        "from 2.86%"
+      ]
+    ],
+    "points": [
+      "Revenue fell mainly because substantially all of the Pay-TV and Other segments were deconsolidated from 30 June 2026 and substantially all of Broadband and Satellite Services from 31 July 2026.",
+      "The AT&T spectrum sale closed on 28 July 2026, bringing $20.25B in cash, with a further $2.4B paid by AT&T directly into the Wireless Creditor Trust.",
+      "DISH DBS emerged from its prepackaged Chapter 11 on 1 October 2026 and will be reconsolidated; the DISH Wireless Chapter 11 cases remain pending.",
+      "The SpaceX spectrum licences were transferred to a trust in May 2026, with the acquisition closing still targeted for 30 November 2027.",
+      "EchoStar reported through its 10-Q only, with no results press release or conference call."
+    ],
+    "reaction": "Shares were at $101.80, up more than 3%, in early morning trading on 3 November 2026, according to Fierce Network.",
+    "sources": [
+      [
+        "EchoStar Form 10-Q for the quarter ended 30 September 2026 (SEC EDGAR)",
+        "https://www.sec.gov/Archives/edgar/data/1415404/000110465926121675/sats-20260930x10q.htm"
+      ],
+      [
+        "EchoStar 10-Q filing index, 3 November 2026 (SEC EDGAR)",
+        "https://www.sec.gov/Archives/edgar/data/1415404/000110465926121675/0001104659-26-121675-index.htm"
+      ],
+      [
+        "Did Profit Rebound Just Shift EchoStar (ECHO) Stock Narrative? (Yahoo Finance)",
+        "https://finance.yahoo.com/markets/stocks/articles/did-profit-rebound-just-shift-131337751.html"
+      ],
+      [
+        "EchoStar loses 182K wireless customers in Q3 (Fierce Network)",
+        "https://www.fierce-network.com/wireless/echostar-loses-182k-wireless-customers-q3"
+      ]
+    ]
   }
 ]
