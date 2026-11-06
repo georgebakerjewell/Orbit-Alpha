@@ -1,6 +1,155 @@
 [
  {
   "kind": "news",
+  "slug": "viasat-space-force-space-data-network-operations-center",
+  "title": "Viasat's $450m Space Force SDN deal: signed in July, $25m funded so far",
+  "summary": "Space Force picked Viasat to build and run the operations centre for its Space Data Network, a $450 million ceiling with a $115 million first order. Only $25 million is funded, and the deal is dated 31 July, inside the quarter Viasat has just reported. The 10% share rise on 6 November added about $820 million.",
+  "published": "2026-11-06",
+  "updated": "2026-11-06",
+  "tickers": [
+   "VSAT",
+   "SPCX",
+   "RKLB",
+   "YSS"
+  ],
+  "match": [
+   "viasat",
+   "space force"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 5 November 2026 Space Systems Command said it had awarded [Viasat](/stocks/vsat) a competitive indefinite-delivery, indefinite-quantity contract with a maximum ceiling of $450 million and an initial task order of $115 million to design, field and scale a Mission Operations Center (MOC) for the Space Data Network Backbone (SDN-B), working with the Golden Dome for America homeland defence programme. Viasat becomes the network and mission system integrator, the hub that ties together satellites from several providers.",
+     "Federal contract records show the dates behind the announcement: the contract was awarded on 31 July 2026 and the first task order, for a \"minimum viable capability\" Phase 1A, on 29 July 2026, running to 30 July 2027. Two companies bid. Orders can be placed until 31 July 2031.",
+     "Viasat shares were at $65.33 at 13:38 New York time on 6 November, up 10.0% on the day, after falls of 11.2% on 4 November and 11.1% on 5 November. Viasat reported its fiscal second-quarter results after the close on 5 November, so today's move reflects both."
+    ]
+   ],
+   [
+    "Orbit Alpha view: real strategic win, already in the books",
+    [
+     "The headline number is a ceiling, and most of it is not yet ordered. The money committed so far is much smaller, and the timing matters: both the contract and its first order fall inside the July to September quarter that Viasat reported on 5 November.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Source or working"
+       ],
+       "rows": [
+        [
+         "Contract ceiling, to July 2031",
+         "$450m",
+         "Space Systems Command, 5 November 2026"
+        ],
+        [
+         "First task order, with all options",
+         "$115.6m (26% of ceiling)",
+         "Federal award record; our calculation"
+        ],
+        [
+         "Current value, options exercised so far",
+         "$79.2m (18% of ceiling)",
+         "Federal award record; our calculation"
+        ],
+        [
+         "Funds actually obligated",
+         "$25m (6% of ceiling)",
+         "Federal award record; our calculation"
+        ],
+        [
+         "Ceiling per year if fully used evenly over 5 years",
+         "About $90m",
+         "Our calculation"
+        ],
+        [
+         "That yearly figure against defence segment revenue ($365m a quarter, about $1.46bn a year)",
+         "About 6%",
+         "Our calculation from Viasat's 5 November results"
+        ],
+        [
+         "Ceiling against defence segment backlog ($1.4bn at 30 September)",
+         "32%",
+         "Our calculation"
+        ],
+        [
+         "Ceilings won this week: this deal plus NASA relay award ($460.9m)",
+         "$910.9m (65% of defence backlog)",
+         "Our calculation"
+        ],
+        [
+         "Market value added on 6 November, to 13:38 New York time",
+         "About $820m (1.8x the ceiling)",
+         "Our calculation: $5.95 rise x about 137.8m shares"
+        ]
+       ]
+      }
+     },
+     "Two things follow. First, this is not new revenue on top of the numbers published on 5 November. Viasat's shareholder letter does not name the award, but with the contract dated 31 July, the firm portion would normally fall into the quarter's $1.1 billion of new awards and the record $1.4 billion defence backlog, rather than add to them. Readers should treat the Space Force announcement as disclosure of business already won, not a fresh boost to the order book.",
+     "Second, the size is modest for a company of Viasat's scale. Even if Space Force ordered the full $450 million evenly over five years, it would add about 6% to the defence segment's current revenue. On 6 November the share price added roughly 1.8 times the whole ceiling, and the gain recovered only about 38% of the $15.86 the shares lost over the previous two sessions. The rise is better read as a rebound after the results than as a verdict on this contract.",
+     "The real value is the role. Viasat is not supplying satellites here; it is running the network operations layer that orchestrates other companies' constellations. GovCon Wire reports that [SpaceX](/stocks/spcx) holds the programme's foundational $2.29 billion agreement for the backbone constellation, which must have a fully operational prototype by the end of 2027, and Space Systems Command lists Amazon LEO for Government, [Rocket Lab](/stocks/rklb) and [York Space Systems](/stocks/yss) among vendors on earlier orders. The company that runs the operations centre sits between the government and every one of those suppliers, which tends to make it hard to replace once the network is live."
+    ]
+   ],
+   [
+    "Why Viasat wanted it",
+    [
+     "Viasat's consumer broadband business is shrinking while defence grows: in the quarter to 30 September, Communication Services revenue fell 3% while Defense and Advanced Technologies rose 20% to $365 million ([full results](/results/vsat-q3-2026)). A vendor-neutral integration role fits that shift. It earns from the network whichever constellations Space Force buys, so Viasat does not have to beat Starlink in orbit to benefit from military spending on low Earth orbit data links. It also adds to a run of government wins this week, after the [NASA Ka-band relay award](/articles/viasat-nasa-ka-band-relay-tdrs-award) on 4 November."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "For [SpaceX](/stocks/spcx), a competitor now runs the operations hub for a network in which SpaceX holds the largest award. Space Force says the aim is to \"reduce single points of failure\" across a multi-vendor design, and GovCon Wire reports the service has asked for $800 million to bring on additional vendors. A neutral operations centre makes that easier, which is a modest positive for smaller satellite builders such as [Rocket Lab](/stocks/rklb) and [York Space Systems](/stocks/yss) that want a larger share of future orders, and a sign the Space Force does not intend to depend on one constellation."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     "Further task orders under the $450 million contract, which would show how quickly the ceiling turns into funded work; only $25 million is obligated today.",
+     "Completion of Phase 1A by 30 July 2027, and SpaceX's backbone prototype, due fully operational by the end of 2027.",
+     "Congressional action on the Space Force's request of nearly $1.5 billion for the SDN Backbone in a fiscal 2027 reconciliation bill, which sets the budget future orders come from."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much is Viasat's Space Data Network contract worth?",
+    "Up to $450 million through July 2031. The first task order is worth $115.6 million with all options, $79.2 million on options exercised so far, and $25 million has been obligated."
+   ],
+   [
+    "Is the Space Force contract new revenue for Viasat?",
+    "Largely not new to its reported numbers. The contract is dated 31 July 2026, inside the quarter Viasat reported on 5 November, so the firm portion would normally already sit in that quarter's awards and backlog."
+   ],
+   [
+    "Why did Viasat stock rise 10% on 6 November?",
+    "The rise came the day after Viasat's quarterly results and two days of 11% falls. It added about $820 million in market value, about 1.8 times the full contract ceiling, so the contract alone does not explain it on our sums."
+   ]
+  ],
+  "sources": [
+   [
+    "USSF, in partnership with Golden Dome for America, expands multi-vendor Space Data Network Backbone with Mission Operations Center (Space Systems Command)",
+    "https://www.ssc.spaceforce.mil/Newsroom/Article/4642795/ussf-in-partnership-with-golden-dome-for-america-expands-multi-vendor-space-dat"
+   ],
+   [
+    "Contract FA881926DB017, Space Data Network Backbone Mission Operations Center (GovTribe, from SAM.gov/FPDS)",
+    "https://govtribe.com/award/federal-idv-award/indefinite-delivery-contract-fa881926db017"
+   ],
+   [
+    "Viasat Q2 FY27 Shareholder Letter, Exhibit 99.2 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/797721/000119312526449775/d179648dex992.htm"
+   ],
+   [
+    "Viasat Wins $450M Space Force SDN Mission Operations Deal (GovCon Wire)",
+    "https://www.govconwire.com/articles/space-systems-command-viasat-450m-sdn-contract"
+   ],
+   [
+    "Viasat wins Space Force network operations contract worth up to $450 million (SpaceNews)",
+    "https://spacenews.com/viasat-wins-space-force-network-operations-contract-worth-up-to-450-million/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "ast-spacemobile-blacklift-rocket-firefly-engine-deal",
   "title": "AST SpaceMobile's $1.3B Firefly engine deal: worth half of Firefly",
   "summary": "AST SpaceMobile will build its own reusable rocket, Blacklift, on Firefly engines, paying more than $1.3B including $400M in cash and 10 to 14M AST shares. On our sums that is about half Firefly's $2.54B market value and three times its 2026 revenue guidance, yet Blacklift is not due to fly until late 2028.",
