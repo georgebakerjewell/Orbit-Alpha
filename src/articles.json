@@ -2214,6 +2214,189 @@
   ]
  },
  {
+  "slug": "when-is-rocket-lab-neutron-first-launch",
+  "title": "When is Rocket Lab's Neutron first launch?",
+  "summary": "Rocket Lab now expects Neutron's first launch in 2027, not Q4 2026, and will set a date only after tank testing ends, which it expects by the end of Q1 2027. Our sums: the delay day cut about $2.5B from its market value, yet its $2.39B of cash and securities covers about 25 quarters of H1 2026 cash burn.",
+  "published": "2026-11-06",
+  "updated": "2026-11-06",
+  "tickers": [
+   "RKLB"
+  ],
+  "sections": [
+   [
+    "The short answer",
+    [
+     "Rocket Lab has not given a date. On 14 October 2026 it said Neutron's inaugural launch is now expected to occur in 2027. In August it had said Stage 1 tank production was aligned with delivering Neutron to the launch pad in Q4 2026.",
+     "The cause is the first-stage tank. On the briefing, the chief executive said voids had formed within the carbon composite layers of the propellant dome during manufacturing, that the problem is solved, and that cryo and hydrostatic testing should finish before the end of Q1 2027, at which point Rocket Lab will set a new launch date. So the earliest point at which a firm date can be given is roughly the end of March 2027, and the launch itself would follow after that."
+    ]
+   ],
+   [
+    "Orbit Alpha view: a timing problem, not a funding problem",
+    [
+     "The delay hurt the share price more than the balance sheet. Rocket Lab ended June 2026 with $2.39B of cash and marketable securities after raising $1.53B through at-the-market share sales in the first half. In that half it used $134.4M in operations and spent $53.1M on equipment, about $94M a quarter. At that pace the cash would last about 25 quarters, so another quarter or two of Neutron work does not force a raise on its own.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "How we got it"
+       ],
+       "rows": [
+        [
+         "Share price before the news",
+         "$59.18",
+         "Our calculation: the 15 October close of $55.25 was down 6.64%"
+        ],
+        [
+         "Market value lost on 15 October",
+         "About $2.5B",
+         "Our calculation: $3.93 fall x about 632M shares implied by today's quote"
+        ],
+        [
+         "Backlog at 30 June 2026",
+         "$2.36B",
+         "Q2 2026 results"
+        ],
+        [
+         "Cash and marketable securities, 30 June 2026",
+         "$2.39B",
+         "Our sum: $2,129.5M cash + $172.7M current + $85.4M non-current securities"
+        ],
+        [
+         "Cash used, H1 2026",
+         "$187.5M",
+         "Our sum: $134.4M operating outflow + $53.1M capital spending"
+        ],
+        [
+         "Quarters of cash at H1 pace",
+         "About 25",
+         "Our calculation: $2,387.6M / $93.8M a quarter"
+        ],
+        [
+         "Share price, 5 November 2026 close",
+         "$45.99",
+         "Down 22% from $59.18 (our calculation)"
+        ]
+       ]
+      }
+     },
+     "Two points stand out. First, on the day of the news the market took off roughly the value of Rocket Lab's entire $2.36B backlog, which shows how much of the valuation rests on Neutron rather than on contracted work. Second, most of the fall since then is not about Neutron: the shares dropped 12.2% on 5 November alone as space stocks sold off alongside SpaceX. The cash cover also has a caveat: the Iridium deal pays $27 in cash per Iridium share, backed by a $3.6B bridge loan commitment, so the cash pile is not all free for Neutron.",
+     "What the delay does cost is time. Analysts have noted that management ties reaching positive cash flow and profit to Neutron's first successful launch, so each quarter of slip pushes that point out. It also extends the period in which SpaceX's Falcon 9 faces no Neutron competition for medium-lift launches, a market Firefly is also aiming at with its planned Eclipse rocket."
+    ]
+   ],
+   [
+    "How Neutron's date has moved",
+    [
+     {
+      "table": {
+       "head": [
+        "When said",
+        "First launch target"
+       ],
+       "rows": [
+        [
+         "March 2021 (Neutron announced)",
+         "2024"
+        ],
+        [
+         "Later updates",
+         "2025"
+        ],
+        [
+         "November 2025",
+         "2026"
+        ],
+        [
+         "August 2026",
+         "Launch pad delivery in Q4 2026"
+        ],
+        [
+         "14 October 2026",
+         "2027, date to be set after testing ends by end of Q1 2027"
+        ]
+       ]
+      }
+     },
+     "That is at least three years later than the first target. Neutron is designed to carry up to 13,000 kg to low Earth orbit, with a reusable first stage and a fairing that stays attached to the booster."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "9 November 2026: [Q3 2026 results](/earnings-preview/rklb), the first chance to ask about Neutron since the delay, and any change to spending plans.",
+       "Q1 2027: end of cryo and hydrostatic testing of the redesigned tank, and the new launch date that Rocket Lab says will follow.",
+       "Neutron arriving at the launch pad, which had been the Q4 2026 milestone.",
+       "Cash: the Q3 balance sheet, at-the-market share sales and progress on Iridium, which Rocket Lab targets closing in mid-2027."
+      ]
+     },
+     "For how Rocket Lab compares with its launch rivals see [Rocket Lab vs SpaceX](/compare/spacex-vs-rocket-lab) and [Rocket Lab vs Firefly](/compare/rocket-lab-vs-firefly), and for Firefly's next rocket milestone the [Alpha Block 2 launch page](/launches/firefly-alpha-block-2-first-launch). Live figures are on the [Rocket Lab stock page](/stocks/rklb) and the [cash runway guide](/space-stocks/cash-runway)."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Has Rocket Lab's Neutron launched yet?",
+    "No. As of 6 November 2026 Neutron has not flown. Rocket Lab expects its first launch in 2027."
+   ],
+   [
+    "Why was Neutron delayed again?",
+    "Rocket Lab found voids in the carbon composite layers of the first-stage propellant dome during manufacturing. It says the fix is in place, but tank testing will now run into Q1 2027."
+   ],
+   [
+    "When will Rocket Lab give a new Neutron launch date?",
+    "After cryo and hydrostatic testing of the tank, which it expects to finish before the end of Q1 2027."
+   ],
+   [
+    "How much did Rocket Lab stock fall on the Neutron delay?",
+    "It closed at $55.25 on 15 October 2026, down 6.64%. On our numbers that removed about $2.5B of market value."
+   ]
+  ],
+  "sources": [
+   [
+    "Rocket Lab: Update on Neutron Development and Adjusted Target Launch Timing (14 October 2026)",
+    "https://investors.rocketlabcorp.com/news-releases/news-release-details/rocket-lab-provides-update-neutron-development-and-adjusts"
+   ],
+   [
+    "Rocket Lab: Second Quarter 2026 Financial Results (10 August 2026)",
+    "https://investors.rocketlabcorp.com/news-releases/news-release-details/rocket-lab-announces-second-quarter-2026-financial-results-posts"
+   ],
+   [
+    "The Register: Rocket Lab pushes back first Neutron launch to 2027 (15 October 2026)",
+    "https://www.theregister.com/science/2026/10/15/rocket-lab-pushes-back-first-neutron-launch-to-2027/5303224"
+   ],
+   [
+    "The Motley Fool: Stock Market Today, Oct. 15: Rocket Lab Pushes Neutron Launch to 2027, Stock Falls 7%",
+    "https://www.fool.com/coverage/stock-market-today/2026/10/15/stock-market-today-oct-15-rocket-lab-pushes-neutron-launch-to-2027-stock-falls-7/"
+   ],
+   [
+    "Yahoo Finance: Rocket Lab's Neutron Delay Leaves Wall Street Bullish But Raises the Stakes for 2027",
+    "https://finance.yahoo.com/markets/stocks/articles/rocket-labs-neutron-delay-leaves-160500684.html"
+   ],
+   [
+    "Via Satellite: Rocket Lab's First Neutron Launch Slips to Next Year (11 November 2025)",
+    "https://www.satellitetoday.com/finance/2025/11/11/rocket-labs-first-neutron-launch-slips-to-next-year/"
+   ],
+   [
+    "Goodwin: $3.6 billion debt commitments for Rocket Lab's $8 billion acquisition of Iridium",
+    "https://www.goodwinlaw.com/en/news-and-events/news/2026/06/announcements-technology-df-goodwin-advises-rocket-lab-debt-commitments-iridium"
+   ],
+   [
+    "Seeking Alpha: Rocket Lab projects $250M-$265M Q3 2026 revenue as it targets mid-2027 Iridium close",
+    "https://seekingalpha.com/news/4630457-rocket-lab-projects-250m-265m-q3-2026-revenue-as-it-targets-midminus-2027-iridium-close"
+   ],
+   [
+    "24/7 Wall St.: SpaceX and Tesla sink 9%; Rocket Lab and AST SpaceMobile tumble 13% (5 November 2026)",
+    "https://247wallst.com/investing/2026/11/05/spacex-and-tesla-sink-9-as-texas-election-fallout-threatens-musks-data-center-plans-rocket-lab-and-ast-spacemobile-tumble-13/"
+   ],
+   [
+    "Orbit Alpha quote API: RKLB price and market value (5 November 2026 close)",
+    "https://www.orbitalpha.cloud/api/quote?ticker=RKLB"
+   ]
+  ]
+ },
+ {
   "slug": "when-will-ast-spacemobile-start-commercial-service",
   "title": "When will AST SpaceMobile start commercial service?",
   "summary": "AST SpaceMobile is targeting initial, intermittent beta service in the US and four other countries before the end of 2026, with paid service three to six months after beta starts: spring 2027 at the earliest. Its launch plan needs 33 more satellites by March 2027; it has launched six since June.",
@@ -2882,7 +3065,7 @@
   "title": "When does Rocket Lab report Q3 2026 earnings?",
   "summary": "Rocket Lab reports Q3 2026 results after the US market close on Monday 9 November 2026, with a call at 5pm Eastern (10pm UK). It has guided to revenue of $250M to $265M, after a record $234M in Q2, and an adjusted EBITDA loss of $17M to $23M.",
   "published": "2026-10-24",
-  "updated": "2026-10-24",
+  "updated": "2026-11-06",
   "tickers": [
    "RKLB"
   ],
@@ -2938,7 +3121,7 @@
       "list": [
        "Revenue against the $250M to $265M range.",
        "Backlog, which was a record $2.36B at the end of Q2, up 137% on a year earlier.",
-       "Neutron: in August Rocket Lab said Stage 1 tank production was aligned with delivering Neutron to the launch pad in Q4 2026. Any update on the first launch date.",
+       "Neutron: on 14 October 2026 Rocket Lab moved the first launch from a Q4 2026 pad delivery to 2027, with a new date due after tank testing ends by the end of Q1 2027. See [when is Neutron's first launch](/articles/when-is-rocket-lab-neutron-first-launch).",
        "Iridium: Rocket Lab agreed on 29 June 2026 to buy Iridium in a deal valued at about $8 billion, paying $27 a share in cash plus Rocket Lab shares, and has said it is targeting completion in mid-2027.",
        "Losses: the Q2 net loss was $49.3M, or $0.08 a share."
       ]
@@ -2981,6 +3164,10 @@
    [
     "Seeking Alpha: Rocket Lab projects $250M-$265M Q3 2026 revenue as it targets mid-2027 Iridium close",
     "https://seekingalpha.com/news/4630457-rocket-lab-projects-250m-265m-q3-2026-revenue-as-it-targets-midminus-2027-iridium-close"
+   ],
+   [
+    "Rocket Lab: Update on Neutron Development and Adjusted Target Launch Timing (14 October 2026)",
+    "https://investors.rocketlabcorp.com/news-releases/news-release-details/rocket-lab-provides-update-neutron-development-and-adjusts"
    ]
   ],
   "canonical": "/earnings-preview/rklb",
