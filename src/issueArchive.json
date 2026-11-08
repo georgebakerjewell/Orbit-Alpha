@@ -1,5 +1,26 @@
 [
   {
+    "issue": 30,
+    "date": "2026-11-08",
+    "title": "SpaceX Stumbles on Merger Jitters While the Rest of the Sector Splits the Week",
+    "url": "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-30",
+    "description": "🌎 SpaceX Stumbles on Merger Jitters While the Rest of the Sector Splits the Week",
+    "tickers": [
+      "SPCX",
+      "RKLB",
+      "ASTS",
+      "LUNR",
+      "SPCE",
+      "RDW",
+      "VSAT",
+      "MDA",
+      "PL",
+      "GSAT",
+      "FLY",
+      "BKSY"
+    ]
+  },
+  {
     "issue": 29,
     "date": "2026-11-01",
     "title": "SpaceX Stumbles on Merger Jitters While the Rest of the Sector Splits the Week",
@@ -376,28 +397,6 @@
       "RDW",
       "VSAT",
       "BKSY",
-      "SPIR"
-    ]
-  },
-  {
-    "issue": 10,
-    "date": "2026-06-21",
-    "title": "Upgraded and dumped in the same 48 hours",
-    "url": "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-10",
-    "description": "Last week the entire sector traded on one event. This week it traded on something it hadn't had to think about in a while: the Federal Reserve. On...",
-    "tickers": [
-      "SPCX",
-      "RKLB",
-      "ASTS",
-      "MDA",
-      "PL",
-      "LUNR",
-      "GSAT",
-      "FLY",
-      "RDW",
-      "VSAT",
-      "BKSY",
-      "SPCE",
       "SPIR"
     ]
   }
