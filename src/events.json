@@ -7,11 +7,11 @@
     ],
     "vehicle": "Starship (Super Heavy Booster 22, Ship 42)",
     "status": "upcoming",
-    "date": null,
-    "dateText": "No earlier than 12 November 2026 (pending FAA approval)",
-    "summary": "SpaceX's Starship Flight 15 is targeting no earlier than 12 November 2026 from Starbase, Texas, with the first attempt to catch both the Super Heavy booster and the Starship upper stage. A double catch would open the way to the first reflight of a recovered ship.",
+    "date": "2026-11-13",
+    "dateText": "13 November 2026, 17:45 to 19:00 ET window (pending regulatory approval)",
+    "summary": "SpaceX's Starship Flight 15 is set for 13 November 2026 from Starbase, Texas, with the first attempt to catch both the Super Heavy booster and the Starship upper stage. A double catch would open the way to the first reflight of a recovered ship.",
     "stakes": [
-      "The target moved from 8 November to no earlier than 12 November 2026, according to a CADENA high profile missions slide reported by NASASpaceflight; the date remains subject to FAA approval (Starlust).",
+      "SpaceX has confirmed a 13 November 2026 target, with a 75 minute window opening at 17:45 ET, pending regulatory approval; the date had earlier moved from 8 November to 12 November and then 13 November.",
       "SpaceX plans to catch both stages with the launch tower's arms; a success would be the first full recovery of a Starship vehicle and would allow the first reflight of a properly recovered ship (NASASpaceflight).",
       "Elon Musk put the chance of a successful ship catch on the first attempt at about 50 to 60 percent (Space Launch Schedule, Wikipedia).",
       "Flight 14 on 28 September 2026 was the first Starship flight to reach orbit and deployed 26 Starlink V3 satellites, though the booster and the ship each lost an engine during ascent.",
@@ -40,6 +40,14 @@
         "15th Starship flight test"
       ],
       [
+        "Launch window",
+        "13 November 2026, 17:45 to 19:00 ET"
+      ],
+      [
+        "Flight plan",
+        "Booster catch about 6.5 minutes after liftoff; payload deploy in orbit; ship catch at Starbase about 22.5 hours after liftoff (SpaceX)"
+      ],
+      [
         "Main objective",
         "Tower catch of both the booster and the ship"
       ],
@@ -57,6 +65,10 @@
       ]
     ],
     "sources": [
+      [
+        "SpaceX: Starship Flight 15",
+        "https://www.spacex.com/launches/starship-flight-15"
+      ],
       [
         "NASASpaceflight on X: Flight 15 now NET November 12",
         "https://x.com/NASASpaceflight/status/2115817094960873916"
@@ -94,7 +106,7 @@
         "https://www.whataboutit.space/launches/starship-flight-15"
       ]
     ],
-    "updated": "2026-11-02"
+    "updated": "2026-11-09"
   },
   {
     "slug": "ast-spacemobile-bluebirds-14-16-launch",
@@ -105,14 +117,15 @@
     "vehicle": "Falcon 9 (listed by launch trackers; AST has not announced the launch)",
     "status": "upcoming",
     "date": null,
-    "dateText": "Fourth quarter 2026 (no date announced)",
+    "dateText": "Fourth quarter 2026 (no date announced; launch trackers list no earlier than 30 December)",
     "summary": "AST SpaceMobile's BlueBirds 14, 15 and 16 reached Cape Canaveral in October 2026 and await a launch date, listed for the fourth quarter. The launch would take the constellation to 16 satellites as AST works towards about 45 in orbit by early 2027.",
     "stakes": [
       "AST is aiming for about 45 satellites in orbit by early 2027 and about 90 for continuous global coverage; BlueBirds 11 to 13 took the count to 13 in August 2026.",
       "In October 2026 AST said it was targeting initial, intermittent coverage by the end of 2026 in the US, Canada, Japan, the UK and Saudi Arabia, with more satellites extending how long and how often coverage is available (Light Reading).",
       "AST's full year 2026 revenue guidance is $150 million to $200 million, with about half expected to come from contracted backlog.",
       "Advanced Television reports this batch is about a month behind the schedule shown in August, and that later launches depend partly on the availability of Blue Origin's New Glenn.",
-      "AST will hold its third quarter 2026 business update call on 9 November 2026 (StockTitan)."
+      "Space Launch Schedule and Orbital Radar list the Falcon 9 launch for no earlier than 30 December 2026 (Pacific time), a placeholder at the end of the quarter rather than a confirmed date.",
+      "AST reports third quarter 2026 results on 9 November 2026 after the market closes, which may bring a firmer launch date (Barchart)."
     ],
     "facts": [
       [
@@ -176,9 +189,17 @@
       [
         "StockTitan: AST SpaceMobile news",
         "https://www.stocktitan.net/news/ASTS/"
+      ],
+      [
+        "Space Launch Schedule: BlueBird 14-16 (Block 2 #9-11)",
+        "https://www.spacelaunchschedule.com/launch/falcon-9-block-5-bluebird-14-16-block-2-9-11/"
+      ],
+      [
+        "Barchart: AST SpaceMobile reports Q3 2026 results on 9 November",
+        "https://www.barchart.com/story/news/8725718/dear-ast-spacemobile-stock-fans-mark-your-calendars-for-november-9"
       ]
     ],
-    "updated": "2026-10-29"
+    "updated": "2026-11-09"
   },
   {
     "slug": "firefly-alpha-block-2-first-launch",
@@ -189,13 +210,14 @@
     "vehicle": "Alpha Block 2",
     "status": "upcoming",
     "date": null,
-    "dateText": "Fourth quarter 2026",
+    "dateText": "Fourth quarter 2026 (launch trackers list no earlier than 30 December)",
     "summary": "Firefly Aerospace is targeting the fourth quarter of 2026 for Alpha Flight 8 from Vandenberg, the first flight of the upgraded Alpha Block 2. It is one of two more Alpha launches Firefly plans this year and the first test of the reliability upgrades in flight.",
     "stakes": [
       "Firefly said on its second quarter 2026 call that it is targeting Flights 8 and 9 this year, for three Alpha launches in 2026.",
       "Block 2 is an upgrade intended to improve Alpha's reliability; Block 2 avionics flew in shadow mode on Flight 7 in March 2026.",
       "Before launch the rocket still needs acceptance testing, delivery to Vandenberg, a static fire and payload integration.",
-      "Firefly says most of its 2027 Alpha manifest is already sold."
+      "Firefly says most of its 2027 Alpha manifest is already sold.",
+      "Launch tracker Orbital Radar lists Flight 8 from SLC-2W no earlier than 30 December 2026 (Pacific time), carrying the TacSat technology demonstration satellite; Firefly has not announced a date and reports third quarter results on 10 November 2026."
     ],
     "facts": [
       [
@@ -205,6 +227,10 @@
       [
         "Mission",
         "Alpha Flight 8"
+      ],
+      [
+        "Payload (listed)",
+        "TacSat, an intelligence, surveillance and reconnaissance demonstration satellite"
       ],
       [
         "Launch site",
@@ -247,9 +273,17 @@
       [
         "Nasdaq: Why Fly Aerospace stock popped today (12 March 2026)",
         "https://www.nasdaq.com/articles/why-fly-aerospace-stock-popped-today"
+      ],
+      [
+        "Orbital Radar: Firefly Alpha Block 2, TacSat",
+        "https://orbitalradar.com/launch/firefly-alpha-block-2-tacsat"
+      ],
+      [
+        "Firefly Aerospace to announce third quarter 2026 results on 10 November 2026",
+        "https://finance.yahoo.com/markets/stocks/articles/firefly-aerospace-announce-third-quarter-201500287.html"
       ]
     ],
-    "updated": "2026-10-22"
+    "updated": "2026-11-09"
   },
   {
     "slug": "intuitive-machines-im-3",
@@ -480,5 +514,85 @@
       ]
     ],
     "updated": "2026-11-02"
+  },
+  {
+    "slug": "globalstar-hibleo-4-second-launch",
+    "title": "Globalstar HIBLEO-4 Replacement Satellites: Second Launch",
+    "tickers": [
+      "GSAT",
+      "MDA"
+    ],
+    "vehicle": "Falcon 9",
+    "status": "upcoming",
+    "date": null,
+    "dateText": "December 2026 launch window (Globalstar 10-Q)",
+    "summary": "Globalstar's second set of MDA Space-built HIBLEO-4 replacement satellites is due to launch on a Falcon 9 in a December 2026 window. Completing the replenishment matters because certain HIBLEO-4 milestones are a condition of Globalstar's pending sale to Amazon.",
+    "stakes": [
+      "Globalstar says the pending Amazon transaction is expected to close in 2027 and remains subject to closing conditions including outstanding regulatory approvals and Globalstar's achievement of certain HIBLEO-4 satellite milestones (third quarter 2026 results).",
+      "The replacement satellites support the reliability and continuity of Globalstar's existing mobile satellite services network; the FCC Space Bureau approved Amazon's application to acquire Globalstar's FCC licences in October 2026.",
+      "By 30 September 2026 Globalstar had incurred $303.2 million with MDA Space and $121.4 million with SpaceX for milestones on the replacement satellites (10-Q).",
+      "Third quarter 2026 revenue was $70.9 million, about 4% lower than a year earlier (TradingView 10-Q summary)."
+    ],
+    "facts": [
+      [
+        "Satellites",
+        "Second set of HIBLEO-4 replacement satellites (nine, as listed by Orbital Radar)"
+      ],
+      [
+        "Manufacturer",
+        "MDA Space"
+      ],
+      [
+        "Launch provider",
+        "SpaceX Falcon 9"
+      ],
+      [
+        "Launch site",
+        "Cape Canaveral, Florida (listed)"
+      ],
+      [
+        "Delivery",
+        "Satellites scheduled for delivery in December 2026 (10-Q)"
+      ],
+      [
+        "First set",
+        "Eight satellites, launched 15 August 2026"
+      ]
+    ],
+    "history": [
+      [
+        "HIBLEO-4 replacement launch 1 (Globalstar 2-R Mission 1)",
+        "15 August 2026 (Saturday evening, ET)",
+        "All eight satellites deployed and reached their orbital planes",
+        "GSAT closed up 0.8% on Monday 17 August ($82.39 to $83.03, Yahoo Finance price data)"
+      ]
+    ],
+    "sources": [
+      [
+        "StockTitan: Globalstar 10-Q for the third quarter of 2026",
+        "https://www.stocktitan.net/sec-filings/GSAT/10-q-globalstar-inc-quarterly-earnings-report-2cf63a3cfefb.html"
+      ],
+      [
+        "Globalstar announces third quarter 2026 financial results (5 November 2026)",
+        "https://finance.yahoo.com/technology/articles/globalstar-announces-third-quarter-2026-130000903.html"
+      ],
+      [
+        "TradingView: Globalstar 3Q 2026 10-Q summary",
+        "https://www.tradingview.com/news/tradingview:11c9e91844713:0-globalstar-3q-2026-revenue-70-9m-eps-0-14-10-q-summary/"
+      ],
+      [
+        "Globalstar confirms successful launch of all 8 HIBLEO-4 replacement satellites (16 August 2026)",
+        "https://investors.globalstar.com/news-releases/news-release-details/globalstar-confirms-successful-launch-all-8-hibleo-4-replacement"
+      ],
+      [
+        "Orbital Radar: Falcon 9, Globalstar 2-R Mission 2",
+        "https://orbitalradar.com/launch/falcon-9-globalstar-2-r-mission-2-x-9"
+      ],
+      [
+        "Yahoo Finance: GSAT price history",
+        "https://finance.yahoo.com/quote/GSAT/history/"
+      ]
+    ],
+    "updated": "2026-11-09"
   }
 ]
