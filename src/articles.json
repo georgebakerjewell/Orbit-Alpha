@@ -1,6 +1,194 @@
 [
  {
   "kind": "news",
+  "slug": "ast-spacemobile-rakuten-japan-joint-venture-j-leo",
+  "title": "AST and Rakuten's Japan venture: why the $1B grant is not AST's cash",
+  "summary": "AST SpaceMobile and Rakuten formed Rakuten AST, which expects up to ¥148bn (about $937M) of Japanese government support. The grant covers at most half of costs and goes to a venture AST owns 49% of. On our numbers the venture must spend about $1.87B to draw it all, with AST supplying the satellites.",
+  "published": "2026-11-09",
+  "updated": "2026-11-09",
+  "tickers": [
+   "ASTS",
+   "SPCX",
+   "FLY"
+  ],
+  "match": [
+   "rakuten",
+   "ast"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 9 November [AST SpaceMobile](/stocks/asts) and Rakuten Group said they had agreed on 6 November to set up Rakuten AST, a Tokyo company that will buy satellites and run a direct-to-smartphone satellite network in Japan. Rakuten Group holds 51% of the voting rights and an AST subsidiary 49%. AST will supply the satellites, and the companies are aiming to start domestic service by the end of March 2029.",
+     "The venture is the vehicle for J-LEO, a programme run by Japan's Ministry of Internal Affairs and Communications (MIC) to build a satellite-to-phone network operated and managed inside Japan. Rakuten AST expects up to ¥148 billion of support over about three years, paid through the industry body that manages the fund once the venture is set up. The companies also said Rakuten AST plans to offer its capacity to AST's customers outside Japan, subject to approval.",
+     "ASTS closed Friday at $32.33 and was trading at $36.68 at 13:38 New York time on Monday, up 13.5%, ahead of its third-quarter results due the same day."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the grant is matched money, the prize is the satellite order",
+    [
+     "Two details in the primary documents change how big this is for AST. First, the grant is not new: MIC's fund operator picked the joint proposal from Rakuten's preparatory company and Rakuten Mobile on 30 June, and Japanese outlets reported the roughly ¥150 billion award on 1 July. What is new is the structure: AST owns 49% of the company that receives the money and is named as the satellite supplier.",
+     "Second, J-LEO pays only half the bill. MIC's grant rules set the support for this programme at half of eligible costs, which are satellite procurement, launch and ground equipment. So to draw the full ¥148 billion, Rakuten AST has to spend at least ¥296 billion, and find the other ¥148 billion itself.",
+     {
+      "table": {
+       "head": [
+        "Our calculation",
+        "Figure",
+        "Working"
+       ],
+       "rows": [
+        [
+         "Grant in dollars",
+         "About $937M",
+         "¥148bn at ¥157.95 per dollar (Bank of Japan, 6 November)"
+        ],
+        [
+         "Eligible spending needed to draw it all",
+         "About $1.87B",
+         "Twice the grant, because the grant covers half of eligible costs"
+        ],
+        [
+         "AST's 49% look-through share of the grant",
+         "About $459M",
+         "49% of $937M"
+        ],
+        [
+         "AST's 49% of the unsubsidised half, if funded in line with ownership",
+         "About $459M",
+         "49% of the other ¥148bn; the release does not say how the venture will fund it"
+        ],
+        [
+         "Grant per year",
+         "About $312M",
+         "$937M over about three years"
+        ],
+        [
+         "AST's average spending per quarter, first half of 2026",
+         "About $502M",
+         "Operating cash outflow plus capital spending, from AST's Q2 cash flow statement"
+        ],
+        [
+         "Grant against AST's 2026 revenue guidance",
+         "About 5.4 times",
+         "$937M against the $175M midpoint of $150M to $200M"
+        ],
+        [
+         "Grant against AST's backlog",
+         "About 72%",
+         "$937M against about $1.30B at 30 June"
+        ],
+        [
+         "Rise in AST's market value on Monday",
+         "About $1.69B",
+         "$4.35 a share on about 389M shares (our quote feed)"
+        ]
+       ]
+      }
+     },
+     "Read together, the numbers say the subsidy is not a cash windfall for AST. If the venture's own half is funded in proportion to ownership, AST's share of the matching money is the same size as its share of the grant, so the two cancel out. The value for AST is elsewhere: a customer with a government mandate that must spend close to $1.9 billion on satellites, launches and ground kit by early 2029 to collect the full grant, with AST named as the satellite supplier. Neither company has said how much of that will be satellites, how many satellites, or at what price, so the size of the order is still unknown.",
+     "That is why the share move is larger than the subsidy itself. On Monday's price, AST added about $1.69 billion of market value, 1.8 times the whole grant (our calculation), for a grant that goes to a company Rakuten controls. The market is pricing the prospect of a large, state-backed satellite order and a model AST can repeat with other governments, not the grant money. For context, the whole grant spread over three years would cover about 15% of AST's spending at its first-half pace."
+    ]
+   ],
+   [
+    "Why AST did it",
+    [
+     "AST needs customers that pay for satellites before subscriber revenue arrives. Its Q2 revenue was $31.5M, mostly gateway deliveries and US government work, while it spent about $502M a quarter in the first half of 2026. A Japanese venture that buys satellites with government help turns AST's hardware into revenue earlier, and keeps an option on the capacity: the release says satellites in the Japanese constellation can also serve AST's customers elsewhere. The trade-off is control. Rakuten holds the majority, and the network is designed so Japanese operators run the ground equipment themselves.",
+     "For Rakuten, a long-time AST partner and investor since 2020, the subsidy halves the cost of a network it could not otherwise justify, and gives Japan the domestically controlled system J-LEO was set up to fund."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "[SpaceX](/stocks/spcx) is the competitor in Japan. KDDI has sold au Starlink Direct since April 2025, and in September said it had signed for SpaceX's next-generation Starlink Mobile V2 satellites, aiming to offer broadband and voice on phones by the end of 2027. Rakuten AST's target of March 2029 is more than a year later, so its selling point is that the network is Japanese-controlled, which is what the state money is paying for.",
+     "More satellites for AST means more launches. Half of eligible costs includes launch, so the venture can claim launch spending too. AST's own rocket, Blacklift, using [Firefly Aerospace](/stocks/fly) engines, is not due to fly until late 2028, close to the venture's deadline (see [AST's Blacklift deal with Firefly](/articles/ast-spacemobile-blacklift-rocket-firefly-engine-deal)). Until then AST depends on Falcon 9 and Blue Origin's delayed New Glenn ([our New Glenn piece](/articles/blue-origin-new-glenn-delay-ast-spacemobile-satellites)). For the wider picture, see [the direct-to-device spectrum race](/articles/direct-to-device-spectrum-race-spacex-amazon-ast)."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "AST's Q3 results and call on 9 November: any number of satellites, contract value or payment schedule for the Japanese venture, and how AST will account for its 49% stake and for sales to it. The [AST earnings preview](/earnings-preview/asts) has the figures to compare.",
+       "How Rakuten AST funds its unsubsidised half, and how much AST puts in. Legal capital at set-up is only ¥100 million.",
+       "Rakuten Mobile's commercial-environment testing of satellite-to-phone service, planned within 2026.",
+       "Launch pace for BlueBirds 14 to 16, tracked on the [launch page](/launches/ast-spacemobile-bluebirds-14-16-launch), since the venture's March 2029 deadline depends on satellites reaching orbit.",
+       "Whether other governments copy the model. AST says it has agreements with about 60 mobile operators."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Does AST SpaceMobile receive $1 billion from Japan?",
+    "No. Up to ¥148 billion (about $937M) goes to Rakuten AST, a venture 51% owned by Rakuten and 49% by AST, and it covers at most half of eligible costs. AST's look-through share is about $459M, and if the venture's own half is funded in line with ownership, AST's share of that is about the same (our calculations)."
+   ],
+   [
+    "How much does Rakuten AST have to spend?",
+    "At least ¥296 billion, about $1.87B at the Bank of Japan's 6 November rate, on satellites, launches and ground equipment to draw the full grant, because MIC's rules pay half of eligible costs. AST supplies the satellites, but no order size or price has been published."
+   ],
+   [
+    "When will the Japanese network start?",
+    "The companies are aiming for domestic operations by the end of March 2029, matching MIC's target of starting service in Japan's 2028 fiscal year. KDDI aims to offer SpaceX's Starlink Mobile V2 service by the end of 2027."
+   ]
+  ],
+  "sources": [
+   [
+    "Rakuten Group: Rakuten and AST SpaceMobile establish \"Rakuten AST\" joint venture (9 November 2026)",
+    "https://global.rakuten.com/corp/news/press/2026/1109_01.html"
+   ],
+   [
+    "Business Wire via Yahoo Finance: Rakuten and AST SpaceMobile establish Rakuten AST joint venture (9 November 2026)",
+    "https://finance.yahoo.com/technology/articles/rakuten-ast-spacemobile-establish-rakuten-123000950.html"
+   ],
+   [
+    "MIC: J-LEO, Japan Low Earth Orbit Satellite Communications Project (programme page)",
+    "https://www.soumu.go.jp/main_sosiki/joho_tsusin/jiritsuseikakuho.html"
+   ],
+   [
+    "MIC: grant rules for the digital infrastructure fund, Article 21 (half of eligible costs for the LEO satellite programme)",
+    "https://www.soumu.go.jp/main_content/001052869.pdf"
+   ],
+   [
+    "MIC: J-LEO programme outline (eligible costs: satellites, launch, ground equipment)",
+    "https://www.soumu.go.jp/main_content/001052873.pdf"
+   ],
+   [
+    "MIC: J-LEO selection and grant decision status (published 30 June 2026)",
+    "https://www.soumu.go.jp/main_content/001100060.pdf"
+   ],
+   [
+    "Cabinet Office: MIC progress report on J-LEO (July 2026)",
+    "https://www8.cao.go.jp/space/comittee/27-anpo/anpo-dai70/siryou1.pdf"
+   ],
+   [
+    "AST SpaceMobile: business update and second quarter 2026 results (SEC 8-K exhibit 99.1, 10 August 2026)",
+    "https://www.sec.gov/Archives/edgar/data/0001780312/000119312526342540/asts-ex99_1.htm"
+   ],
+   [
+    "Bank of Japan: foreign exchange rates, 6 November 2026",
+    "https://www.boj.or.jp/en/statistics/market/forex/fxdaily/fxlist/fx261106.pdf"
+   ],
+   [
+    "KDDI: KDDI signs Asia's first Starlink Mobile V2 agreement (15 September 2026)",
+    "https://newsroom.kddi.com/english/news/detail/kddi_nr-1129_4719.html"
+   ],
+   [
+    "K-tai Watch: Rakuten satellite project selected for J-LEO support (1 July 2026, Japanese)",
+    "https://k-tai.watch.impress.co.jp/docs/news/2121582.html"
+   ],
+   [
+    "Mobile World Live: Rakuten, AST unveil Japan satellite JV (9 November 2026)",
+    "https://www.mobileworldlive.com/network-tech/rakuten-ast-unveil-japan-satellite-jv/"
+   ],
+   [
+    "Orbit Alpha live quote: ASTS (13:38 New York time, 9 November 2026)",
+    "https://www.orbitalpha.cloud/api/quote?ticker=ASTS"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "nasa-clps-2-10-billion-lunar-lander-contract",
   "title": "NASA's $10B CLPS 2: why the $1.6B top-up matters more for lander stocks",
   "summary": "NASA picked eight companies, including Intuitive Machines, Firefly, Voyager and SpaceX, for CLPS 2, a 10-year lunar delivery contract capped at $10B. Nothing is ordered yet. On our numbers the nearer money is the $1.6B added to CLPS 1: about 11 missions at June's $148M average price.",
