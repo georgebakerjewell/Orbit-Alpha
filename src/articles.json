@@ -1,6 +1,193 @@
 [
  {
   "kind": "news",
+  "slug": "nasa-clps-2-10-billion-lunar-lander-contract",
+  "title": "NASA's $10B CLPS 2: why the $1.6B top-up matters more for lander stocks",
+  "summary": "NASA picked eight companies, including Intuitive Machines, Firefly, Voyager and SpaceX, for CLPS 2, a 10-year lunar delivery contract capped at $10B. Nothing is ordered yet. On our numbers the nearer money is the $1.6B added to CLPS 1: about 11 missions at June's $148M average price.",
+  "published": "2026-11-09",
+  "updated": "2026-11-09",
+  "tickers": [
+   "LUNR",
+   "FLY",
+   "VOYG",
+   "SPCX",
+   "RDW"
+  ],
+  "match": [
+   "clps",
+   "lunar"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On Saturday 7 November NASA named eight companies eligible to compete for Moon deliveries under CLPS 2, the successor to its Commercial Lunar Payload Services programme. They include [Intuitive Machines](/stocks/lunr), [Firefly Aerospace](/stocks/fly), [Voyager Technologies](/stocks/voyg) (which bought the lander maker Astrobotic in July), [SpaceX](/stocks/spcx), Blue Origin and ispace-U.S., plus two large aerospace contractors. CLPS 2 is a 10-year, multiple-award IDIQ contract with a combined maximum of $10 billion. Selection lets a company bid for task orders; it is not an order.",
+     "In the same release NASA raised the ceiling of the original CLPS contract from $2.6 billion to $4.2 billion. That contract stays open for new orders until November 2028, with deliveries allowed until November 2033. NASA also gave Blue Origin a $94 million base contract (with a $140 million option) to land the PROMISE nuclear-powered rover, about $1.3 billion of launch and orbital transfer task orders under its VADR contract (with Firefly among the in-space transport suppliers), a Starship mission in 2028 for SpaceX to deploy cislunar communications satellites, and a power generation award to [Redwire](/stocks/rdw) for the miniCAST surface tower. NASA did not give values for the Firefly or Redwire pieces.",
+     "The news came after the market closed on Friday, when LUNR had already risen 21.5% to $10.47, VOYG 18.0% to $23.98 and FLY 36.8% to $20.76 (FLY on its [engine deal with AST SpaceMobile](/articles/ast-spacemobile-blacklift-rocket-firefly-engine-deal)). Monday is the first session to trade on it."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the $10B is a ceiling, the $1.6B is the nearer money",
+    [
+     "An IDIQ ceiling is the most NASA may spend, not what it will spend, and none of the $10 billion is assigned to any company. The useful questions are how big the pot is per year, how many missions it buys at today's prices, and who is competing for it.",
+     "Price per mission. In June NASA ordered four CLPS missions for late 2028: two from Astrobotic for $297.9 million, one from Firefly for $144.2 million and one from Intuitive Machines for $148.3 million, according to Reuters. That is $590.4 million for four, or about $147.6 million per mission on our calculation. We use that as the going rate.",
+     {
+      "table": {
+       "head": [
+        "Our calculation",
+        "Figure"
+       ],
+       "rows": [
+        [
+         "CLPS 2 ceiling per year ($10B over 10 years)",
+         "$1.0B"
+        ],
+        [
+         "Original CLPS ceiling per year ($2.6B over the 10 years to November 2028)",
+         "$0.26B"
+        ],
+        [
+         "CLPS 2 missions the ceiling buys at $147.6M each",
+         "about 68 (about 7 a year)"
+        ],
+        [
+         "New headroom on the original CLPS contract ($4.2B minus $2.6B)",
+         "$1.6B"
+        ],
+        [
+         "Missions that headroom buys at $147.6M each",
+         "about 11"
+        ],
+        [
+         "Even eight-way split of the CLPS 2 ceiling, per company per year",
+         "$125M"
+        ]
+       ]
+      }
+     },
+     "Two things follow. First, CLPS 2 allows about four times the annual spending of the original programme ($1.0 billion against $0.26 billion), so it is a real step up in the size of the market if NASA's budget follows. Second, the money that can turn into orders soonest is the $1.6 billion top-up to the original contract, because it must be ordered by November 2028. NASA said the increase supports the first phase of its Moon Base. The last round of orders under that contract, in June, went entirely to Astrobotic (now Voyager), Firefly and Intuitive Machines, so these three are best placed for it on the record so far.",
+     "How much it could matter to each company. The table compares a notional $125 million a year (an even eight-way split of the CLPS 2 ceiling, our assumption to show scale, not a forecast) with each company's 2026 revenue guidance and its market value at the 6 November close.",
+     {
+      "table": {
+       "head": [
+        "Company",
+        "2026 revenue guidance",
+        "$125M as % of guidance midpoint",
+        "Market value, 6 Nov",
+        "$125M as % of market value"
+       ],
+       "rows": [
+        [
+         "[Firefly](/stocks/fly)",
+         "$420M to $450M",
+         "29%",
+         "$3.40B",
+         "3.7%"
+        ],
+        [
+         "[Voyager](/stocks/voyg)",
+         "$285M to $305M",
+         "42%",
+         "$1.49B",
+         "8.4%"
+        ],
+        [
+         "[Intuitive Machines](/stocks/lunr)",
+         "$900M to $1B",
+         "13%",
+         "$2.36B",
+         "5.3%"
+        ]
+       ]
+      }
+     },
+     "On that yardstick lunar delivery matters most to Voyager, where Astrobotic is a large share of a smaller business: Voyager said on its Q3 call that Astrobotic could bring $150 million to $200 million of revenue in 2027, and the [Q3 results](/results/voyg-q3-2026) showed $347 million of backlog added with the deal. It matters least to Intuitive Machines, whose $900 million to $1 billion guidance rests on a wider mix that its Q2 release says includes spacecraft production and NASA's OMES and NSNS work alongside CLPS. For [SpaceX](/stocks/spcx), with [Q3 revenue](/results/spcx-q3-2026) of $14.58 billion, it is immaterial in money but gives Starship another NASA customer.",
+     "The catch is competition. Under the original contract, orders went largely to small specialists, including all four missions ordered in June. CLPS 2 is a smaller pool with heavier hitters: SpaceX, Blue Origin and two of the biggest aerospace contractors can land much larger cargo, and Blue Origin already holds the PROMISE rover delivery and, since May, two lunar terrain vehicle deliveries. As payloads grow from science instruments to Moon Base infrastructure, an even split is the optimistic case for the smaller landers, not the base case."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "[Redwire](/stocks/rdw) gains a small foothold in Moon Base surface power through miniCAST; NASA called the first phase components rather than a major system, with a larger integrated power solicitation expected in early 2027. Launch matters too: missions under the VADR orders will fly on New Glenn, Terran R and Falcon 9, so more lunar traffic is extra launch demand for SpaceX and for Blue Origin, whose New Glenn [return to flight has slipped](/articles/blue-origin-new-glenn-delay-ast-spacemobile-satellites)."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "Monday 9 November: the first trading reaction in LUNR, FLY and VOYG, after Friday's gains that came before the news.",
+       "Firefly's Q3 results on 10 November and Intuitive Machines' on 12 November (before the open): any guidance on CLPS bids, and whether either expects orders under the $1.6 billion CLPS 1 top-up. See the [earnings calendar](/space-stocks/earnings-calendar).",
+       "Voyager's Griffin-1 launch, which the company still targets for late 2026. A successful landing would be Astrobotic's first, and track record weighs in task order awards.",
+       "The first CLPS 2 task orders and their prices. If per-mission values rise well above $147.6 million as cargo gets heavier, the pot buys fewer missions; if orders favour the heavy landers, the small specialists' share shrinks."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Did Intuitive Machines, Firefly and Voyager win $10 billion?",
+    "No. They were among eight companies made eligible to bid under CLPS 2, a contract with a combined maximum of $10 billion over 10 years. No money is committed to any company until NASA issues task orders. An even eight-way split would be about $125 million per company per year, on our calculation."
+   ],
+   [
+    "How many Moon missions could CLPS 2 pay for?",
+    "At the average $147.6 million per mission NASA paid in its June orders, the $10 billion ceiling buys about 68 missions, or about seven a year. The separate $1.6 billion added to the original CLPS contract buys about 11, and must be ordered by November 2028."
+   ],
+   [
+    "Which space stock is most exposed to CLPS?",
+    "Relative to its size, Voyager, through Astrobotic: $125 million a year would be 42% of its 2026 revenue guidance midpoint, against 29% for Firefly and 13% for Intuitive Machines (our calculation)."
+   ]
+  ],
+  "sources": [
+   [
+    "NASA: NASA Awards Moon Base Transportation, Technology, Science Projects (7 November 2026)",
+    "https://www.nasa.gov/news-release/nasa-awards-moon-base-transportation-technology-science-projects/"
+   ],
+   [
+    "Firefly Aerospace: selected as a vendor for NASA's $10 billion CLPS 2 initiative",
+    "https://fireflyspace.com/news/firefly-aerospace-selected-as-a-vendor-for-nasas-10-billion-clps-2-initiative/"
+   ],
+   [
+    "Voyager Technologies: Voyager Awarded NASA CLPS 2 Contract",
+    "https://voyagertechnologies.com/press-releases/voyager-awarded-nasa-clps-2-contract/"
+   ],
+   [
+    "Voyager Technologies: Q3 2026 results",
+    "https://investors.voyagertechnologies.com/news/news-details/2026/Voyager-Reports-Record-Third-Quarter-2026-Revenue-Bookings-and-Backlog/default.aspx"
+   ],
+   [
+    "Firefly Aerospace: Q2 2026 results",
+    "https://investors.fireflyspace.com/news-releases/news-release-details/firefly-aerospace-announces-second-quarter-2026-financial"
+   ],
+   [
+    "Intuitive Machines: Q2 2026 results",
+    "https://investors.intuitivemachines.com/static-files/c4d7e93e-3ac0-459c-a4ac-da42cc935c85"
+   ],
+   [
+    "Intuitive Machines: Q3 2026 results date",
+    "https://investors.intuitivemachines.com/news-releases/news-release-details/intuitive-machines-announces-date-third-quarter-2026-financial"
+   ],
+   [
+    "Yahoo Finance: Firefly Aerospace to announce Q3 2026 results on 10 November",
+    "https://finance.yahoo.com/markets/stocks/articles/firefly-aerospace-announce-third-quarter-201500287.html"
+   ],
+   [
+    "Reuters: Astrobotic, Firefly, Intuitive Machines win more NASA moon contracts (30 June 2026)",
+    "https://www.reuters.com/science/nasa-awards-astrobotic-firefly-intuitive-machines-lunar-lander-contracts-moon-2026-06-30/"
+   ],
+   [
+    "SpaceQ: Voyager Technologies Q3 2026 results",
+    "https://spaceq.ca/voyager-technologies-q3-2026-results/"
+   ],
+   [
+    "SpaceNews: NASA selects nine companies for commercial lunar lander programme (2018)",
+    "https://spacenews.com/nasa-selects-nine-companies-for-commercial-lunar-lander-program/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "spacex-government-revenue-under-10-percent-musk",
   "title": "Musk's under-10% government claim implies a $24B SpaceX quarter",
   "summary": "Musk says government work will be under 10% of SpaceX revenue this quarter and under 5% in a year. Government revenue rose about 82% to $2.42B in Q3, so if it merely holds, Q4 revenue must top $24.2B, above the $22.9B consensus. SPCX rose 8.6% to $134.27.",
