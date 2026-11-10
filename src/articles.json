@@ -1,6 +1,160 @@
 [
  {
   "kind": "news",
+  "slug": "rocket-lab-pentagon-150-million-loan-neutron",
+  "title": "Rocket Lab's $150M Pentagon loan: why the cash matters less than the terms",
+  "summary": "The Pentagon's Office of Strategic Capital offered Rocket Lab a $150M conditional loan to raise Neutron's flight rate. On our sums it is 3.2% of Rocket Lab's $4.70B cash, but about 9% of what is left once the Iridium deal's cash needs are paid.",
+  "published": "2026-11-10",
+  "updated": "2026-11-10",
+  "tickers": [
+   "RKLB"
+  ],
+  "match": [
+   "rocket lab",
+   "loan"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 9 November the Department of War's Office of Strategic Capital (OSC) said it had signed a $150 million conditional loan commitment with Rocket Lab USA, the main operating arm of [Rocket Lab](/stocks/rklb). The money would help Neutron, the company's reusable medium-lift rocket, fly more often once it has made its first launch. OSC listed faster vehicle delivery and processing, more recovery and transport ships, more production of composite structures and engines, and infrastructure to cut the time between launches.",
+     "It is not yet a loan. Rocket Lab must first meet financial, legal, technical, investment and due diligence conditions, and no closing date or interest rate has been published. The news landed on the same day as Rocket Lab's [Q3 results](/results/rklb-q3-2026), which moved Neutron's first launch to no earlier than 2027. The shares fell as low as $54.96 on 10 November, 6.6% below the 9 November close of $58.86, then recovered to $60.06 by early afternoon in New York, up 2.0%."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the money is small, the timing and terms are not",
+    [
+     "Set against Rocket Lab's balance sheet today, $150 million barely registers. Set against the balance sheet it will have after buying Iridium, it is a useful cushion. The table shows both, using the Q3 10-Q and the 10 November share price.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Source or working"
+       ],
+       "rows": [
+        [
+         "Loan commitment",
+         "$150M",
+         "OSC release, 9 November"
+        ],
+        [
+         "Cash and marketable securities, 30 Sept",
+         "$4,703.8M",
+         "Rocket Lab Q3 10-Q"
+        ],
+        [
+         "Loan as share of that",
+         "3.2%",
+         "Our calculation"
+        ],
+        [
+         "Cash the Iridium deal needs",
+         "Over $3.0B",
+         "10-Q: share consideration, some Iridium debt repayment and fees"
+        ],
+        [
+         "Cash left after Iridium",
+         "Under $1.70B",
+         "Our calculation, before nine months of trading"
+        ],
+        [
+         "Loan as share of what is left",
+         "About 9%",
+         "Our calculation: $150M / $1.70B"
+        ],
+        [
+         "Cash used in operations plus capex, nine months",
+         "$211.4M",
+         "10-Q: $127.3M operating outflow + $84.2M capex"
+        ],
+        [
+         "Average per quarter",
+         "About $70.5M",
+         "Our calculation"
+        ],
+        [
+         "Quarters of that spending the loan covers",
+         "About 2.1",
+         "Our calculation"
+        ],
+        [
+         "Shares needed to raise $150M at $60.06",
+         "About 2.5M, or 0.4% of 632.0M",
+         "Our calculation, shares outstanding on 4 November"
+        ]
+       ]
+      }
+     },
+     "Three points follow from the numbers. First, Rocket Lab does not need this money to survive. It could raise the same sum by selling about 0.4% more stock at today's price, and its 10-Q says existing cash covers at least the next twelve months. So the value of the loan lies in its terms and in what it says, not in the cash.",
+     "Second, the terms are likely to be cheap by Rocket Lab's standards. OSC says it prices loans off the US Treasury yield of a similar maturity on the day of closing, plus a risk premium, at a fixed rate. Rocket Lab's main borrowing until now was its 4.25% convertible notes due 2029, which carried an effective interest rate of 5.0%; almost all of them have now turned into shares, leaving $1.3 million outstanding. A fixed loan near Treasury rates lets Rocket Lab fund Neutron's ships and factories without selling stock near its lows: the shares are 60% below their 52-week high of $151.",
+     "Third, the loan pays for things that only matter after Neutron flies. Ships, engine output and pad turnaround are cadence spending. With the first launch now no earlier than 2027, and conditions still to meet before closing, the cash is unlikely to be drawn in any size before then. That makes the loan a bet on Neutron's second year rather than its first flight, and it ties the real benefit to Rocket Lab hitting its debut date.",
+     "One more point tempers the signal. OSC announced a $150 million conditional loan of the same size to Stoke Space, another reusable rocket developer, on 26 October, for a second launch pad at Cape Canaveral. The Pentagon is backing more US launch capacity in general, not choosing Neutron over rivals."
+    ]
+   ],
+   [
+    "Why Rocket Lab took it",
+    [
+     "Rocket Lab is about to take on far more debt than it carries now. Once the Iridium deal closes, Rocket Lab USA will guarantee about $1.8 billion of Iridium term loans that run to September 2030 (see [when the Iridium deal will close](/articles/when-will-rocket-lab-iridium-deal-close)). Spending more than $3.0 billion of cash on the deal leaves less room for Neutron's ramp. A government loan aimed squarely at Neutron keeps that ramp funded without dipping into the cash meant for Iridium or adding to the share count, which grew in 2026 through at-the-market share sales."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "Financial close: whether and when OSC and Rocket Lab sign the final loan, and whether the rate, term and any covenants are disclosed in an 8-K.",
+       "Neutron's first launch, now no earlier than 2027. The loan's purpose only kicks in after it.",
+       "Iridium completion, targeted for mid-2027, which sets how much cash Rocket Lab has left alongside the loan.",
+       "Rocket Lab's Q4 2026 results, against guidance of $270M to $290M revenue and an adjusted EBITDA loss of $14M to $20M."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How big is the Pentagon loan for Rocket Lab?",
+    "$150 million, conditional on Rocket Lab meeting OSC's requirements. On our sums that is 3.2% of its $4.70B cash and securities at 30 September, but about 9% of the under $1.70B left once the Iridium deal's cash needs of over $3.0B are paid."
+   ],
+   [
+    "Has Rocket Lab received the money?",
+    "No. It is a conditional commitment. Rocket Lab must meet financial, legal, technical and due diligence conditions before financial close, and no closing date has been given. The money is meant for Neutron's flight rate after its first launch, now no earlier than 2027."
+   ],
+   [
+    "Why would Rocket Lab borrow when it has billions in cash?",
+    "OSC lends at a fixed rate based on Treasury yields plus a risk premium. That lets Rocket Lab fund Neutron's ships, engines and pads without selling shares, and keeps cash for the Iridium deal, after which it will also guarantee about $1.8B of Iridium's term loans."
+   ]
+  ],
+  "sources": [
+   [
+    "The Department of War's Office of Strategic Capital Signs $150 Million Conditional Loan Commitment With Rocket Lab (US Department of War)",
+    "https://www.war.gov/News/Releases/Release/Article/4644766/the-department-of-wars-office-of-strategic-capital-signs-150-million-conditiona/"
+   ],
+   [
+    "Rocket Lab Form 10-Q for the quarter to 30 September 2026",
+    "https://investors.rocketlabcorp.com/static-files/e7184018-2d30-4ec7-afed-7ed8659bd281"
+   ],
+   [
+    "Rocket Lab Announces Third Quarter 2026 Financial Results (Exhibit 99.1, Form 8-K, SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/0001819994/000181999426000073/rklb-11092026ex991.htm"
+   ],
+   [
+    "OSC Credit Program (Office of Strategic Capital)",
+    "https://www.cto.mil/osc/credit-program/"
+   ],
+   [
+    "Rocket Lab Gets $150 Million Conditional Loan Commitment from Pentagon OSC for Neutron (Defense Daily)",
+    "https://www.defensedaily.com/rocket-lab-gets-150-million-conditional-loan-commitment-from-pentagon-osc-for-neutron/space/"
+   ],
+   [
+    "Pentagon to finance second launch pad for Stoke Space (Air & Space Forces Magazine)",
+    "https://www.airandspaceforces.com/pentagon-finance-second-launch-pad-stoke-space/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "spacex-24-billion-texas-gas-power-plant-data-center",
   "title": "SpaceX's $24B Texas power plant and compute site: a way round the grid",
   "summary": "A Starbase city notice shows SpaceX plans a gas-fired power plant and super-compute facility costing about $24 billion for the initial phases. Our sums: that is 27% of its $89.9 billion of cash and securities, and its own power plant is a route round Texas's open-ended pause on new data-centre grid connections.",
