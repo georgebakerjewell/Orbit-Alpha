@@ -3068,7 +3068,7 @@
   "title": "When is Rocket Lab's Neutron first launch?",
   "summary": "Rocket Lab now expects Neutron's first launch in 2027, not Q4 2026, and will set a date only after tank testing ends, which it expects by the end of Q1 2027. Our sums: the delay day cut about $2.5B from its market value, yet its $2.39B of cash and securities covers about 25 quarters of H1 2026 cash burn.",
   "published": "2026-11-06",
-  "updated": "2026-11-06",
+  "updated": "2026-11-10",
   "tickers": [
    "RKLB"
   ],
@@ -3130,7 +3130,7 @@
        ]
       }
      },
-     "Two points stand out. First, on the day of the news the market took off roughly the value of Rocket Lab's entire $2.36B backlog, which shows how much of the valuation rests on Neutron rather than on contracted work. Second, most of the fall since then is not about Neutron: the shares dropped 12.2% on 5 November alone as space stocks sold off alongside SpaceX. The cash cover also has a caveat: the Iridium deal pays $27 in cash per Iridium share, backed by a $3.6B bridge loan commitment, so the cash pile is not all free for Neutron.",
+     "Two points stand out. First, on the day of the news the market took off roughly the value of Rocket Lab's entire $2.36B backlog, which shows how much of the valuation rests on Neutron rather than on contracted work. Second, most of the fall since then is not about Neutron: the shares dropped 12.2% on 5 November alone as space stocks sold off alongside SpaceX. The cash cover has since grown but also has a caveat: Rocket Lab ended September with $4.45B of cash and equivalents, yet the Iridium deal pays $27.00 in cash per Iridium share, about $2.86B in total on our sums, so the cash pile is not all free for Neutron (see [When will Rocket Lab's Iridium deal close?](/articles/when-will-rocket-lab-iridium-deal-close)).",
      "What the delay does cost is time. Analysts have noted that management ties reaching positive cash flow and profit to Neutron's first successful launch, so each quarter of slip pushes that point out. It also extends the period in which SpaceX's Falcon 9 faces no Neutron competition for medium-lift launches, a market Firefly is also aiming at with its planned Eclipse rocket."
     ]
    ],
@@ -3175,10 +3175,10 @@
     [
      {
       "list": [
-       "9 November 2026: [Q3 2026 results](/earnings-preview/rklb), the first chance to ask about Neutron since the delay, and any change to spending plans.",
+       "Q3 2026 results, 9 November: Rocket Lab kept first launch at no earlier than 2027, said the first Neutron flight hardware has been delivered to Launch Complex 3, and said new contracts worth over $515M took Neutron's backlog to 16 missions (see [Rocket Lab Q3 2026 results](/results/rklb-q3-2026)).",
        "Q1 2027: end of cryo and hydrostatic testing of the redesigned tank, and the new launch date that Rocket Lab says will follow.",
        "Neutron arriving at the launch pad, which had been the Q4 2026 milestone.",
-       "Cash: the Q3 balance sheet, at-the-market share sales and progress on Iridium, which Rocket Lab targets closing in mid-2027."
+       "Cash: at-the-market share sales and the Iridium deal, which Rocket Lab targets closing in mid-2027."
       ]
      },
      "For how Rocket Lab compares with its launch rivals see [Rocket Lab vs SpaceX](/compare/spacex-vs-rocket-lab) and [Rocket Lab vs Firefly](/compare/rocket-lab-vs-firefly), and for Firefly's next rocket milestone the [Alpha Block 2 launch page](/launches/firefly-alpha-block-2-first-launch). Live figures are on the [Rocket Lab stock page](/stocks/rklb) and the [cash runway guide](/space-stocks/cash-runway)."
@@ -3188,7 +3188,7 @@
   "faq": [
    [
     "Has Rocket Lab's Neutron launched yet?",
-    "No. As of 6 November 2026 Neutron has not flown. Rocket Lab expects its first launch in 2027."
+    "No. As of 10 November 2026 Neutron has not flown. Rocket Lab expects its first launch no earlier than 2027."
    ],
    [
     "Why was Neutron delayed again?",
@@ -3243,6 +3243,14 @@
    [
     "Orbit Alpha quote API: RKLB price and market value (5 November 2026 close)",
     "https://www.orbitalpha.cloud/api/quote?ticker=RKLB"
+   ],
+   [
+    "Rocket Lab Announces Third Quarter 2026 Financial Results (Exhibit 99.1, SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/0001819994/000181999426000073/rklb-11092026ex991.htm"
+   ],
+   [
+    "Rocket Lab Form 10-Q for the quarter to 30 September 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/0001819994/000181999426000074/rklb-20260930.htm"
    ]
   ]
  },
@@ -4211,5 +4219,230 @@
   ],
   "canonical": "/earnings-preview/asts",
   "canonicalLabel": "the AST SpaceMobile earnings preview"
+ },
+ {
+  "slug": "when-will-rocket-lab-iridium-deal-close",
+  "title": "When will Rocket Lab's Iridium deal close?",
+  "summary": "Rocket Lab targets mid-2027. Iridium's vote and US antitrust clearance are done; FCC consent and some foreign approvals remain. Our sums: with Rocket Lab below the $67.50 collar floor, the $54 headline is worth $50.54 per Iridium share at 9 November closes, 12.1% above Iridium's $45.08.",
+  "published": "2026-11-10",
+  "updated": "2026-11-10",
+  "tickers": [
+   "RKLB",
+   "GSAT"
+  ],
+  "sections": [
+   [
+    "The short answer",
+    [
+     "Rocket Lab and Iridium expect the deal to complete by mid-2027. Rocket Lab agreed on 29 June 2026 to buy Iridium for an enterprise value of about $8.0B, paying $27.00 in cash plus Rocket Lab shares for each Iridium share.",
+     "Three of the hurdles are cleared: the US antitrust (HSR) waiting period expired on 12 August, the share registration was declared effective on 26 August, and Iridium shareholders approved the deal on 24 September with about 99.6% of votes cast in favour. Rocket Lab's Q3 10-Q lists what is left: consent from the FCC, certain foreign regulatory approvals and other customary conditions. Rocket Lab also says the deal is now fully funded. The merger agreement's end date is 28 June 2027, which can be extended to 28 September and then 28 December 2027 if regulatory approvals are still pending."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the $54 headline is worth $50.54 today",
+    [
+     "The deal was announced as worth $54.00 per Iridium share: $27.00 in cash plus $27.00 in Rocket Lab stock. But the stock half only holds at $27.00 while Rocket Lab's share price is between $67.50 and $112.50. Below $67.50 the exchange ratio is fixed at 0.4000 Rocket Lab shares, so the stock half shrinks as Rocket Lab falls. Rocket Lab closed at $58.86 on 9 November, well under the floor, so on our sums the offer was worth $50.54 per Iridium share: $27.00 plus 0.4 x $58.86 = $23.54.",
+     {
+      "table": {
+       "head": [
+        "Rocket Lab share price",
+        "Exchange ratio",
+        "Value per Iridium share",
+        "New Rocket Lab shares",
+        "Dilution"
+       ],
+       "rows": [
+        [
+         "$45.20",
+         "0.4000",
+         "$45.08 (Iridium's close)",
+         "42.4M",
+         "6.7%"
+        ],
+        [
+         "$50.00",
+         "0.4000",
+         "$47.00",
+         "42.4M",
+         "6.7%"
+        ],
+        [
+         "$58.86 (9 Nov close)",
+         "0.4000",
+         "$50.54",
+         "42.4M",
+         "6.7%"
+        ],
+        [
+         "$67.50 (collar floor)",
+         "0.4000",
+         "$54.00",
+         "42.4M",
+         "6.7%"
+        ],
+        [
+         "$90.00",
+         "0.3000",
+         "$54.00",
+         "31.8M",
+         "5.0%"
+        ],
+        [
+         "$112.50 (collar cap)",
+         "0.2400",
+         "$54.00",
+         "25.4M",
+         "4.0%"
+        ]
+       ]
+      }
+     },
+     "How we got it: our calculations use the collar terms in the merger agreement, the 105,981,552 Iridium shares outstanding at the record date (equity awards excluded) and Rocket Lab's 632.0M shares outstanding on 4 November. The final ratio is set by Rocket Lab's 10-day average price ending two trading days before completion.",
+     "Three points follow. First, Iridium closed at $45.08 on 9 November, $5.46 or 12.1% below the $50.54 the deal paid on that day's prices. Put another way, Iridium's price would equal the deal value only if Rocket Lab were at $45.20, so the market is pricing in time to completion, the remaining approvals and Rocket Lab's own share price swings. Second, below the floor the dilution is capped: Rocket Lab issues at most about 42.4M shares, 6.7% of its share count, however far its price falls. The risk of a lower price lands on Iridium holders, not on Rocket Lab's. Third, the cash is in hand. The cash portion comes to about $2.86B on our sums, against $4.70B of cash and marketable securities at 30 September, after $3.91B of gross at-the-market share sales in the first nine months of 2026. Rocket Lab terminated its $3.6B bridge loan commitment on 15 September without drawing on it, booking a $27.3M loss on extinguishment.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Source or working"
+       ],
+       "rows": [
+        [
+         "Cash portion of the deal",
+         "About $2.86B",
+         "Our calculation: $27.00 x 105,981,552 shares"
+        ],
+        [
+         "Cash and marketable securities, 30 Sept 2026",
+         "$4.70B",
+         "Our sum from the 10-Q: $4,447.7M cash + $256.2M securities"
+        ],
+        [
+         "Left after paying the cash portion",
+         "About $1.84B",
+         "Our calculation, before deal costs"
+        ],
+        [
+         "Iridium term loans that stay in place",
+         "About $1.78B",
+         "Rocket Lab Q3 10-Q, guaranteed by Rocket Lab USA"
+        ],
+        [
+         "Rocket Lab market value, 9 Nov close",
+         "About $37.2B",
+         "Our calculation: $58.86 x 632.0M shares"
+        ],
+        [
+         "Iridium Q3 2026 revenue",
+         "$245.7M",
+         "Iridium Q3 results"
+        ],
+        [
+         "Rocket Lab Q3 2026 revenue",
+         "$267.8M",
+         "Rocket Lab Q3 results"
+        ]
+       ]
+      }
+     },
+     "The last two rows show why the deal matters. On Q3 figures Iridium would nearly double Rocket Lab's quarterly revenue, to about $513.5M on our simple sum. Iridium earned $135.6M of operational EBITDA in Q3, while Rocket Lab posted an adjusted EBITDA loss of $18.0M. The two measures are defined differently, so the sum is only a rough guide, but it suggests the combined group would be EBITDA-positive well before Neutron flies."
+    ]
+   ],
+   [
+    "What the FCC is weighing",
+    [
+     "The FCC must approve the transfer of Iridium's licences. Rocket Lab and Iridium told the FCC in a filing posted on 2 November that the deal will not harm competition or the public interest, and they have asked for quick approval, pointing to the FCC's approval of Amazon's purchase of Globalstar (see [our analysis of that deal](/articles/fcc-approves-amazon-globalstar-deal)).",
+     {
+      "list": [
+       "Globalstar: says it does not oppose the deal, but asked the FCC to look at Rocket Lab's role as its satellite supplier. Rocket Lab says eight Globalstar satellite platforms it built have launched and are operating, and Globalstar argues that relationship could give Rocket Lab both the incentive and the means to favour Iridium.",
+       "SpaceX: has raised satellite ground station coordination issues. The companies say SpaceX does not oppose the deal.",
+       "Ligado: concerns about interference with its planned operations. Rocket Lab and Iridium argue that both the SpaceX and Ligado issues predate the deal and belong in separate proceedings."
+      ]
+     },
+     "Replies in the FCC pleading cycle were due on 9 November, per Stocktwits. The FCC has not set a decision date."
+    ]
+   ],
+   [
+    "What it means for other covered stocks",
+    [
+     "[Globalstar](/stocks/gsat) is both a Rocket Lab customer and an Iridium rival in satellite phones and IoT, and it is itself being bought by Amazon. Its filing is about protecting the supply of its next satellites, so watch whether the FCC attaches conditions on supplier conduct. [SpaceX](/stocks/spcx) competes with Rocket Lab in launch and, through Starlink, with Iridium in satellite connectivity. For Rocket Lab, Iridium adds a satellite network with recurring service revenue next to its launch and spacecraft businesses."
+    ]
+   ],
+   [
+    "Dates and thresholds to watch",
+    [
+     {
+      "list": [
+       "The FCC decision, and whether it comes with conditions. The FCC is the main approval left.",
+       "Foreign regulatory approvals, which Rocket Lab has not itemised.",
+       "$67.50: if Rocket Lab's 10-day average price is above this at completion, the stock half is worth $27.00 and fewer shares are issued. Below it, 0.4000 shares are issued and the value falls.",
+       "28 June 2027: the merger agreement's end date, which can be extended to 28 September and 28 December 2027 for regulatory approvals. A $223.6M termination fee is payable by Iridium to Rocket Lab in specified circumstances.",
+       "Iridium's dividend: its board plans to raise the quarterly dividend to $0.16 a share from the Q4 2026 payment, which Iridium holders collect while they wait."
+      ]
+     },
+     "For the latest quarter see [Rocket Lab's Q3 2026 results](/results/rklb-q3-2026) and [Globalstar's Q3 2026 results](/results/gsat-q3-2026). For Neutron's timing see [When is Rocket Lab's Neutron first launch?](/articles/when-is-rocket-lab-neutron-first-launch), and for balance sheets across the sector the [cash runway guide](/space-stocks/cash-runway)."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Is the Rocket Lab Iridium deal approved?",
+    "Not fully. Iridium shareholders approved it on 24 September 2026 and the US antitrust waiting period expired on 12 August. FCC consent and certain foreign approvals are still needed."
+   ],
+   [
+    "What do Iridium shareholders get from Rocket Lab?",
+    "$27.00 in cash plus Rocket Lab shares for each Iridium share. The share ratio is 0.4000 if Rocket Lab's average price is at or below $67.50, $27.00 divided by the price between $67.50 and $112.50, and 0.2400 at or above $112.50."
+   ],
+   [
+    "Is the deal worth $54 a share?",
+    "Only if Rocket Lab's price is $67.50 or higher. At the 9 November close of $58.86 it was worth $50.54 per Iridium share on our sums."
+   ],
+   [
+    "How is Rocket Lab paying for Iridium?",
+    "With cash raised mainly through at-the-market share sales. It ended September with $4.70B of cash and marketable securities against a cash portion of about $2.86B on our sums, and it cancelled its $3.6B bridge loan commitment undrawn."
+   ]
+  ],
+  "sources": [
+   [
+    "Rocket Lab: Rocket Lab to Acquire Iridium (29 June 2026, via Nasdaq)",
+    "https://www.nasdaq.com/press-release/rocket-lab-acquire-iridium-historic-deal-creating-fully-vertically-integrated-space-0"
+   ],
+   [
+    "Rocket Lab Form 10-Q for the quarter to 30 September 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/0001819994/000181999426000074/rklb-20260930.htm"
+   ],
+   [
+    "Rocket Lab Form S-4/A: merger agreement terms, record date shares, end date and termination fee (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/0001819994/000175392626001606/g085885_s4a.htm"
+   ],
+   [
+    "Rocket Lab Announces Third Quarter 2026 Financial Results (Exhibit 99.1, SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/0001819994/000181999426000073/rklb-11092026ex991.htm"
+   ],
+   [
+    "Iridium Stockholders Approve Acquisition by Rocket Lab (24 September 2026, SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1418819/000095010326014464/dp253851_ex9901.htm"
+   ],
+   [
+    "Iridium Announces Third Quarter 2026 Results (20 October 2026)",
+    "https://investor.iridium.com/2026-10-20-Iridium-Announces-Third-Quarter-2026-Results"
+   ],
+   [
+    "Via Satellite: Globalstar Questions Supplier Relationship With Rocket Lab When Iridium Acquisition Closes (3 November 2026)",
+    "https://www.satellitetoday.com/connectivity/2026/11/03/globalstar-questions-supplier-relationship-with-rocket-lab-when-iridium-acquisition-closes/"
+   ],
+   [
+    "Stocktwits via TradingView: RKLB's Iridium Deal Draws Heat As Globalstar Echoes SpaceX Concerns",
+    "https://www.tradingview.com/news/stocktwits:411a13f44094b:0-rklb-s-iridium-deal-draws-heat-as-globalstar-echoes-spacex-concerns-rocket-lab-seeks-fast-fcc-approval/"
+   ],
+   [
+    "Gotrade: RKLB 9 November 2026 close $58.86",
+    "https://www.heygotrade.com/en/us-stock/rklb/"
+   ],
+   [
+    "CoinGlass: IRDM 9 November 2026 close $45.08",
+    "https://www.coinglass.com/stocks/IRDM"
+   ]
+  ]
  }
 ]
