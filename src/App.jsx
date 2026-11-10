@@ -699,35 +699,20 @@ function useCallbackRef(fn) {
   return useRef((...a) => ref.current(...a)).current;
 }
 
-// Subscribe popup: shown ONCE per browser. Remembered in localStorage (works like a cookie).
-const POPUP_KEY = "oa_popup_seen";
-
-// Remembered per browser as { t: when it last appeared, offers: the offers already shown }. Shown at most
-// once every 30 days per visitor, whatever the page's offer (the inline box carries the page's own offer).
-const POPUP_REPEAT_MS = 30 * 864e5;
-function popupRecord() {
-  const v = localStorage.getItem(POPUP_KEY);
-  if (!v) return null;
-  try { const r = JSON.parse(v); if (r && typeof r === "object") return { t: Number(r.t) || 0, offers: r.offers || [] }; } catch {}
-  return { t: Number(v) || 0, offers: ["pdf"] }; // older format: a timestamp or "shown"
+// Subscribe pop-up: shown once per visit (browser session) to everyone who has not subscribed.
+// Subscribing (oa_subscribed in localStorage, also set for visitors arriving from a newsletter link)
+// is the only thing that stops it for good. Within a visit it appears at most once.
+let popupShownThisLoad = false; // fallback when sessionStorage is blocked: once per page load
+function popupSeen() {
+  if (popupShownThisLoad) return true;
+  try { return !!sessionStorage.getItem("oa_popup_session"); } catch { return false; }
 }
-function popupSeen(offerKey) {
-  try {
-    if (sessionStorage.getItem("oa_popup_session")) return true;
-    const r = popupRecord();
-    if (!r) return false;
-    return Date.now() - r.t < POPUP_REPEAT_MS;
-  } catch { return true; } // storage blocked: don't nag
-}
-function markPopupSeen(offerKey) {
-  try {
-    sessionStorage.setItem("oa_popup_session", "1");
-    const r = popupRecord() || { offers: [] };
-    localStorage.setItem(POPUP_KEY, JSON.stringify({ t: Date.now(), offers: [...new Set([...r.offers, offerKey])].slice(-20) }));
-  } catch {}
+function markPopupSeen() {
+  popupShownThisLoad = true;
+  try { sessionStorage.setItem("oa_popup_session", "1"); } catch {}
 }
 
-// Shown at most once every 30 days (see popupSeen), never to subscribers, and only once the visitor has shown interest:
+// Shown once per visit (see popupSeen), never to subscribers, and only once the visitor has shown interest:
 // a second page view, reading half of a stock or news page, or moving to leave on desktop. Never in the first 10s.
 const POPUP_MIN_MS = 10000;
 // The two busiest landing pages lose most visitors before 15s (PostHog: only 10-30% of their visitors
@@ -805,10 +790,10 @@ function SubscribePopup({ path }) {
   const offerKey = offer[0];
   const fast = FAST_POPUP.has(path);
   const open = useCallbackRef((trigger) => {
-    if (show || subscribed || window.__oaOwner || popupSeen(offerKey) || path === "/newsletter" || aiVisit()) return; // owner mode: see index.html // AI visitors get the welcome bar instead
+    if (show || subscribed || window.__oaOwner || popupSeen() || path === "/newsletter" || aiVisit()) return; // owner mode: see index.html // AI visitors get the welcome bar instead
     const wait = (fast ? FAST_POPUP_MIN_MS : POPUP_MIN_MS) - (Date.now() - startedAt.current);
     if (wait > 0) { setTimeout(() => open(trigger), wait); return; } // too early: try again once the 10s have passed
-    markPopupSeen(offerKey); // recorded the moment it appears, so closing the tab counts as seen
+    markPopupSeen(); // recorded the moment it appears, so closing the tab counts as seen
     setShow(true);
     window.posthog?.capture?.("popup_shown", { trigger, page: path });
   });
