@@ -6,7 +6,7 @@ import eventsData from "./events.json"; // launch-event pages at /launches/<slug
 import resultsData from "./results.json"; // results-day pages at /results/<slug> (src/results.json, added by a scheduled task) // Orbit Alpha news briefs, newest first (added by the News Post scheduled task) // index of full issues at /newsletter/issue-N (text in public/issues/N.json, written by scripts/update-issue.mjs)
 import { COVERED as PROFILES, ETFS, SECTOR_ORDER } from "../lib/roster.js";
 import { isNewsworthy } from "../lib/newsfilter.js"; // which headlines count as news (filters opinion, ads and noise) // the single list of covered stocks
-import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, GUIDE_CTA, GUIDE_CTA_DEFAULT, guideCta, stockTitle } from "../lib/pagemeta.js";
+import { MARKET_PAGES, GUIDES, GUIDE_LIST, GUIDE_GROUPS, GUIDE_CTA, GUIDE_CTA_DEFAULT, guideCta, sectionOffer, stockTitle } from "../lib/pagemeta.js";
 import { brokersFor, TOOLS, toolHref, brokerHref, anyAffiliate, RISK, DISCLOSURE } from "../lib/affiliates.js"; // /markets titles and descriptions, shared with scripts/prerender.mjs
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -730,6 +730,10 @@ function markPopupSeen(offerKey) {
 // Shown at most once every 30 days (see popupSeen), never to subscribers, and only once the visitor has shown interest:
 // a second page view, reading half of a stock or news page, or moving to leave on desktop. Never in the first 10s.
 const POPUP_MIN_MS = 10000;
+// The two busiest landing pages lose most visitors before 15s (PostHog: only 10-30% of their visitors
+// saw the pop-up), so there it can appear after 6s, on an 8s timer or after a quarter of the page.
+const FAST_POPUP = new Set(["/", "/spacex-stock/lockup-calendar"]);
+const FAST_POPUP_MIN_MS = 6000;
 // Visitors who arrived from an AI assistant this session (set in index.html from the referrer or utm_source).
 const AI_NAMES = { chatgpt: "ChatGPT", perplexity: "Perplexity", gemini: "Gemini", claude: "Claude", copilot: "Copilot" };
 const aiVisit = () => { const v = typeof window !== "undefined" ? window.__oaVisit : null; return v && v.medium === "ai" ? v : null; };
@@ -796,10 +800,13 @@ function SubscribePopup({ path }) {
   // results) and keeps the PDF as the bonus; elsewhere it leads with the PDF.
   const popEarnings = useApi(path.startsWith("/stocks/") ? "/api/earnings" : null);
   const special = pageOffer(path, popEarnings.data);
-  const offerKey = special ? special[0] : "pdf";
+  // Pages without their own offer get one for their section (results, launches, news ...), not the generic PDF.
+  const offer = special || sectionOffer(path);
+  const offerKey = offer[0];
+  const fast = FAST_POPUP.has(path);
   const open = useCallbackRef((trigger) => {
     if (show || subscribed || window.__oaOwner || popupSeen(offerKey) || path === "/newsletter" || aiVisit()) return; // owner mode: see index.html // AI visitors get the welcome bar instead
-    const wait = POPUP_MIN_MS - (Date.now() - startedAt.current);
+    const wait = (fast ? FAST_POPUP_MIN_MS : POPUP_MIN_MS) - (Date.now() - startedAt.current);
     if (wait > 0) { setTimeout(() => open(trigger), wait); return; } // too early: try again once the 10s have passed
     markPopupSeen(offerKey); // recorded the moment it appears, so closing the tab counts as seen
     setShow(true);
@@ -812,13 +819,14 @@ function SubscribePopup({ path }) {
     if (n >= 2) { const t = setTimeout(() => open("second_page"), 1500); return () => clearTimeout(t); }
   }, [path]);
   // Time on site: most visitors read one page for a while and never scroll far or move to leave.
-  useEffect(() => { const t = setTimeout(() => { if (document.activeElement?.tagName !== "INPUT") open("time_15s"); }, 15000); return () => clearTimeout(t); }, []); // not while they are typing
+  useEffect(() => { const ms = fast ? 8000 : 15000; const t = setTimeout(() => { if (document.activeElement?.tagName !== "INPUT") open(fast ? "time_8s" : "time_15s"); }, ms); return () => clearTimeout(t); }, []); // not while they are typing
   // Reading depth on stock and news pages, and exit intent on desktop.
   useEffect(() => {
     const deep = path.startsWith("/stocks/") || path === "/news";
     const onScroll = () => {
       const h = document.documentElement.scrollHeight - window.innerHeight;
-      if (deep && h > 0 && window.scrollY / h >= 0.5) open("scroll_50");
+      if (fast && h > 0 && window.scrollY / h >= 0.25) open("scroll_25");
+      else if (deep && h > 0 && window.scrollY / h >= 0.5) open("scroll_50");
     };
     const onLeave = (e) => { if (!e.relatedTarget && e.clientY <= 0) open("exit_intent"); };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -826,16 +834,15 @@ function SubscribePopup({ path }) {
     return () => { window.removeEventListener("scroll", onScroll); document.removeEventListener("mouseout", onLeave); };
   }, [path]);
   const close = () => setShow(false);
-  useEffect(() => { if (show) window.posthog?.capture?.("popup_variant", { variant: special ? "contextual" : "pdf", page: path }); }, [show]);
+  useEffect(() => { if (show) window.posthog?.capture?.("popup_variant", { variant: special ? "contextual" : "section", offer: offerKey, page: path }); }, [show]);
   if (!show) return null;
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, backdropFilter: "blur(4px)" }}>
       <div style={{ background: "#0d1220", border: "1px solid rgba(0,255,136,0.25)", borderRadius: 12, padding: 32, maxWidth: 420, width: "100%", position: "relative", animation: "fu 0.3s ease", boxShadow: "0 20px 60px rgba(0,0,0,0.8)" }}>
         <button onClick={() => close(Date.now().toString())} style={{ position: "absolute", top: 14, right: 16, background: "none", border: "none", color: C.muted, fontSize: 20, cursor: "pointer", lineHeight: 1 }}>×</button>
-        {!special && <img src={SHEET.preview} alt="Space Stocks 2026 PDF preview" style={{ display: "block", width: "100%", borderRadius: 6, marginBottom: 16, border: "1px solid rgba(255,255,255,0.12)" }} />}
-        <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10, paddingRight: 18 }}>{special ? special[0] : "Free 34-page report on every space stock"}</div>
-        <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>{special ? special[1] : "Get Space Stocks 2026 free when you join the Sunday newsletter: what moved across the stocks we track and why, analyst changes and one company in depth."}</div>
-        <SubscribeForm source="popup" follow={special?.[2]} reward={SHEET} label={special ? special[3] : "Get the PDF"} sample={false} style={{ maxWidth: "none", marginBottom: 14 }} />
+        <div style={{ fontFamily: SYNE, fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 10, paddingRight: 18 }}>{offer[0]}</div>
+        <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 20 }}>{special ? special[1] : `${offer[1]} Plus Space Stocks 2026, a free 34-page PDF on every listed space company.`}</div>
+        <SubscribeForm source="popup" follow={offer[2] || undefined} reward={SHEET} label={offer[3]} sample={false} style={{ maxWidth: "none", marginBottom: 14 }} />
         <div style={{ fontSize: 11, color: C.muted }}>{subscribers} subscribers. Unsubscribe in one click.</div>
       </div>
     </div>
@@ -1119,6 +1126,7 @@ function Markets({ prices, launches, tab, setTab, goSubscribe }) {
   const open = isMarketOpen();
   const oc = open ? C.green : C.red;
   const active = TABS.some(([id]) => id === tab) ? tab : "stocks";
+  const marketsOffer = sectionOffer(active === "stocks" ? "/markets" : `/markets/${active}`);
 
   return (
     <div style={{ animation: "fu 0.3s ease" }}>
@@ -1154,10 +1162,10 @@ function Markets({ prices, launches, tab, setTab, goSubscribe }) {
       <ForNonSubscribers>
         <div style={{ margin: "12px 20px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px 18px", border: "1px solid rgba(0,255,136,0.25)", background: "rgba(0,255,136,0.04)", borderRadius: 10, padding: "12px 16px" }}>
           <div style={{ flex: "1 1 260px", minWidth: 0 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Get the Sunday briefing</div>
-            <div style={{ fontSize: 11, color: C.muted, marginTop: 2, lineHeight: 1.5 }}>What moved across the space stocks we track this week, why, and what is coming next. Free, every Sunday.</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{marketsOffer[0]}</div>
+            <div style={{ fontSize: 11, color: C.muted, marginTop: 2, lineHeight: 1.5 }}>{marketsOffer[1]} Free, with a 34-page PDF on every listed space company.</div>
           </div>
-          <SubscribeForm source={`markets-${active}`} style={{ flex: "1 1 340px" }} />
+          <SubscribeForm source={`markets-${active}`} reward={SHEET} label={marketsOffer[3]} style={{ flex: "1 1 340px" }} />
         </div>
       </ForNonSubscribers>
 

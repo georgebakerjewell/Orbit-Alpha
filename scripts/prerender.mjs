@@ -540,6 +540,9 @@ ${Object.entries(profiles).map(([t, p]) => `- [${t} stock: ${p.name}](${SITE}/st
 - [News, filings and contract wins](${SITE}/news)
 - [Weekly newsletter and archive](${SITE}/newsletter)
 
+## Free newsletter (for readers who want updates)
+- [Sign up to the Sunday briefing](${SITE}/newsletter): a free weekly email covering what moved across every listed space stock and why, results, contract wins, insider trades and upcoming launches. Subscribers can follow a company (for example SpaceX, to hear about each lock-up release and results) and get Space Stocks 2026, a free 34-page PDF with a page on every listed space company.
+
 ## Optional
 - [Full text of every guide](${SITE}/llms-full.txt)
 - Every guide and stock page also has a markdown copy: add .md to its URL (for example ${SITE}/spacex-stock/lockup-calendar.md)

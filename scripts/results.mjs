@@ -1,3 +1,4 @@
+import { readNextHtml } from "../lib/readnext.js";
 import { previewTargets } from "./previews.mjs";
 import { chartLinkHtml } from "../lib/affiliates.js";
 // Results-day pages (/results/<ticker>-<quarter>) and the /results index, built from src/results.json.
@@ -25,6 +26,7 @@ export function buildResults(ctx) {
 ${r.metrics?.length ? `<h2>The numbers</h2><table><thead><tr><th>Measure</th><th>${esc(r.quarter)}</th><th>Change</th></tr></thead><tbody>${r.metrics.map(([l, v, c]) => `<tr><td>${esc(l)}</td><td>${esc(v)}</td><td>${esc(c || "")}</td></tr>`).join("")}</tbody></table>` : ""}
 ${(r.tables || []).map((t) => `<h2>${esc(t.title)}</h2><table><thead><tr>${t.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${t.rows.map((row) => `<tr>${row.map((c) => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>${t.note ? `<p class="oa-note">${esc(t.note)}</p>` : ""}`).join("\n")}
 ${r.points?.length ? `<h2>What stood out</h2>${list(r.points.map(esc))}` : ""}
+${readNextHtml({ ticker: r.ticker, exclude: path, profiles, esc, placement: `results:${r.slug}` })}
 ${r.analysis?.length ? `<h2>Analysis</h2>${r.analysis.map(([h, ps]) => `<h3>${esc(h)}</h3>${[].concat(ps).map((x) => `<p>${esc(x)}</p>`).join("")}`).join("")}${r.analysisNote ? `<p class="oa-note">${esc(r.analysisNote)}</p>` : ""}` : ""}
 ${r.guidance ? `<h2>Outlook</h2><p>${esc(r.guidance)}</p>` : ""}
 ${r.reaction ? `<h2>How the shares reacted</h2><p>${esc(r.reaction)}</p>` : ""}
