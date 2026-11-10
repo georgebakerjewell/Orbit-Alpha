@@ -1,6 +1,149 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-24-billion-texas-gas-power-plant-data-center",
+  "title": "SpaceX's $24B Texas power plant and compute site: a way round the grid",
+  "summary": "A Starbase city notice shows SpaceX plans a gas-fired power plant and super-compute facility costing about $24 billion for the initial phases. Our sums: that is 27% of its $89.9 billion of cash and securities, and its own power plant is a route round Texas's open-ended pause on new data-centre grid connections.",
+  "published": "2026-11-10",
+  "updated": "2026-11-10",
+  "tickers": [
+   "SPCX"
+  ],
+  "match": [
+   "spacex",
+   "texas"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "The City of Starbase, Texas, has published notice of a public hearing on 9 December 2026 at which its City Commission will consider a property tax abatement agreement and a related economic development agreement with SpaceX. The notice says SpaceX proposes to build, own and operate a gas-fired power plant and super-compute facility on a tract of about 444 acres east of Brownsville, between Boca Chica Boulevard and the Port of Brownsville. Estimated capital investment for the initial phases is about $24 billion, and the project may be built in several phases with later expansions.",
+     "The notice gives no generating capacity, no computing capacity, no build timetable and no abatement terms. Bloomberg first reported the plan on 9 November and Reuters followed. SpaceX has not issued a release or an 8-K on it.",
+     "[SPCX](/stocks/spcx) rose about 6% on 9 November, trading at $142.07 in the afternoon according to Investing.com. Reports tied the rise to a broad rebound in AI and technology shares after the previous week's sell-off, not to the Texas plan."
+    ]
+   ],
+   [
+    "Orbit Alpha view: SpaceX is buying its own power to keep building",
+    [
+     "The headline number is large, but SpaceX is already spending at this rate. The more important part of the notice is the first three words of the project: a gas-fired power plant. SpaceX wants compute in Texas, and in Texas the grid is the bottleneck.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "$24B as a share (our calculation)"
+       ],
+       "rows": [
+        [
+         "Capital spending, Q3 2026",
+         "$19.59B",
+         "123%, about one and a quarter quarters"
+        ],
+        [
+         "Capital spending guidance, Q4 2026",
+         "$35B to $40B",
+         "60% to 69% of one quarter"
+        ],
+        [
+         "Spending on property and equipment, first nine months of 2026",
+         "$48.1B",
+         "50%"
+        ],
+        [
+         "Cash and marketable securities, 30 September 2026",
+         "$89.9B",
+         "27%"
+        ],
+        [
+         "Market value (13.58B shares at $142.07, 9 November)",
+         "about $1.93 trillion",
+         "1.2%, or about $1.77 a share"
+        ]
+       ]
+      }
+     },
+     "Our working: the capital spending, cash and nine-month figures are from SpaceX's Q3 results and 10-Q; market value uses the 13.58 billion shares outstanding on 15 October in the 10-Q and the 9 November afternoon price above. The $24 billion covers only the initial phases, so these shares are a floor for the project's eventual cost, not a ceiling.",
+     "Three points follow. First, this is one more quarter's worth of the AI buildout, not a change of strategy: $16.4 billion of Q3's $19.6 billion of capital spending already went to the AI segment. Second, the power plant is the strategic part. On 3 August the Texas governor ordered that no more data centres advance through ERCOT's grid connection process until a statewide audit is done, and the directive sets no end date. A site that generates its own electricity does not need to wait in that queue. Third, it does not escape politics. The audit collects information on on-site generation, and projects paired with data centres can face extra scrutiny. Democrats won the Texas governor's office in the 3 November midterms after a campaign that opposed AI data centres, according to Reuters and CoinDesk.",
+     "There is also a fit with SpaceX's financing. Its $40 billion [Apollo GPU lease](/articles/spacex-40-billion-apollo-gpu-lease) starts payments as Nvidia chips are delivered from the first half of 2027. Chips that cost rent from day one need a powered building ready for them, and a site whose power does not depend on an open-ended state queue lowers the risk of paying for chips that sit idle. The notice does not say when the plant would run, so whether it lines up with those deliveries is the key unknown."
+    ]
+   ],
+   [
+    "Why SpaceX did it",
+    [
+     "Gas supply is already being arranged. A SpaceX affiliate, Lone Star Mineral Development, has filed plans for an 8-mile natural gas pipeline to Starbase called Starpipe, due in service by January 2027, according to filings reviewed by Reuters. That pipeline was first linked to a plant turning gas into liquid methane for Starship, so a power plant on the same supply would share infrastructure SpaceX is building anyway.",
+     "Location helps too. The site lies within Starbase's city limits, so the abatement goes to the Starbase City Commission, and it sits in the Cameron County Enterprise Zone, which the notice says qualifies as a reinvestment zone for abatement. Compute capacity is what SpaceX sells: AI revenue reached $7.56 billion in Q3, mostly from renting data-centre capacity to other AI developers, and nameplate compute was 1.7 GW at 30 September with a target of 2.5 to 3 GW by the end of 2026. See the [SpaceX Q3 results](/results/spcx-q3-2026)."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "The 9 December Starbase hearing, and the abatement's size and length once the agreement is published.",
+       "Any filing that gives the plant's generating capacity, air permits or a start date, which will show whether power is ready for the 2027 GPU deliveries.",
+       "Q4 capital spending against the $35 billion to $40 billion guidance, and the cash balance after it. See [why SpaceX's default protection rose](/articles/spacex-stock-below-ipo-price-credit-default-swaps).",
+       "Whether the incoming Texas administration changes the data-centre pause or extends scrutiny to sites with their own generation.",
+       "The 8 December lock-up expiry, the day before the hearing: see [when the SpaceX lock-up ends](/articles/spacex-lock-up-ends-8-december)."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How big is SpaceX's Texas data centre plan?",
+    "The Starbase notice puts the initial phases at about $24 billion, with possible later phases. On our sums that is about 27% of SpaceX's $89.9 billion of cash and securities at 30 September and 60% to 69% of the $35 billion to $40 billion it guided to spend in Q4 alone. It gives no power or compute capacity."
+   ],
+   [
+    "Why is SpaceX building its own gas power plant?",
+    "The notice does not say. The facts point to the grid: Texas has paused new data centres from advancing through ERCOT's connection process until a statewide audit ends, with no deadline set. Generating power on site avoids waiting for a grid connection, though the audit still collects information on on-site generation."
+   ],
+   [
+    "When will the project be approved?",
+    "The Starbase City Commission holds a public hearing on the tax abatement and economic development agreement on 9 December 2026. Other permits, such as for the power plant itself, have not been disclosed."
+   ]
+  ],
+  "sources": [
+   [
+    "Notice of Public Hearing: tax abatement, 9 December 2026 (City of Starbase)",
+    "https://cdn.prod.website-files.com/67fcab04e05680343de9ea4e/6aee00848f7bbe0cdee604da_6aee005cf2854ef8fc7713ed_Public_Hearing_Notice_Tax_Abatement_Dec9_2026.pdf"
+   ],
+   [
+    "SpaceX Form 10-Q for the quarter ended 30 September 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm"
+   ],
+   [
+    "SpaceX Reports Third Quarter 2026 Results (SpaceX investor relations)",
+    "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ],
+   [
+    "SpaceX Form 8-K, 26 October 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000110465926118614/tm2628247d1_8k.htm"
+   ],
+   [
+    "SpaceX to Build Super-Compute Facility, Gas Power Plant in Texas (Bloomberg)",
+    "https://bloomberg.com/news/articles/2026-11-09/spacex-plans-24-billion-data-center-and-gas-plant-in-texas"
+   ],
+   [
+    "SpaceX plans $24 billion gas power plant, data center project in Texas (Reuters via Investing.com)",
+    "https://www.investing.com/news/stock-market-news/spacex-plans-24-billion-gas-power-plant-data-center-project-in-texas-5013083"
+   ],
+   [
+    "Texas Pauses Data Center Interconnections Pending Statewide Audit (Akin Gump)",
+    "https://www.akingump.com/en/insights/alerts/texas-pauses-data-center-interconnections-pending-statewide-audit"
+   ],
+   [
+    "SpaceX proposes a $24 billion Texas supercomputer (CoinDesk)",
+    "https://www.coindesk.com/markets/2026/11/09/spacex-proposes-a-usd24-billion-texas-supercomputer-worth-17-times-its-bitcoin-pile"
+   ],
+   [
+    "Why is SpaceX stock up over 6% on Monday? (Invezz via TradingView)",
+    "https://www.tradingview.com/news/invezz:47f797b8d094b:0-why-is-spacex-stock-up-over-6-on-monday/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "ast-spacemobile-rakuten-japan-joint-venture-j-leo",
   "title": "AST and Rakuten's Japan venture: why the $1B grant is not AST's cash",
   "summary": "AST SpaceMobile and Rakuten formed Rakuten AST, which expects up to ¥148bn (about $937M) of Japanese government support. The grant covers at most half of costs and goes to a venture AST owns 49% of. On our numbers the venture must spend about $1.87B to draw it all, with AST supplying the satellites.",
