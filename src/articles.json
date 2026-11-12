@@ -1,6 +1,178 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-tesla-merger-talks-december-exchange-ratio",
+  "title": "SpaceX-Tesla merger talks advance: at market prices Tesla holders get 45%",
+  "summary": "SpaceX and Tesla are negotiating terms and could announce a merger as soon as December, Bloomberg reports. Our sums at the 12 November close: an all-share deal at market prices would give Tesla holders 2.84 SpaceX shares each and 45% of the group; every 10% premium costs SpaceX holders about $157 billion.",
+  "published": "2026-11-12",
+  "updated": "2026-11-12",
+  "tickers": [
+   "SPCX"
+  ],
+  "match": [
+   "tesla",
+   "merger"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "Bloomberg reported on Thursday 12 November, citing people familiar with the matter, that merger talks between SpaceX and Tesla are progressing and that a deal could be announced as soon as December, with early 2027 also discussed. According to Bloomberg, as summarised by Reuters and The Information, the boards and their advisers are now negotiating how many SpaceX shares Tesla investors would receive and how the merged company would be governed. Neither company commented.",
+     "That is a faster timetable than before. In October Bloomberg had reported a push to announce a deal in the first half of 2027, as set out in our explainer [Are SpaceX and Tesla merging?](/articles/are-spacex-and-tesla-merging). SpaceX's 10-Q, filed on 22 October, still says its special committee has made no determination and that any deal needs the approval of that committee, the board and its controlling shareholder.",
+     "Tesla closed at $397.45, up 1.7% on the day and 15.6% over five sessions. SPCX closed at $139.94, up 0.1%."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the terms are the story, and the market has already moved them",
+    [
+     "The report says the argument is now about the exchange ratio. So the useful question is what a deal looks like at today's prices, and how much any premium for Tesla would cost SpaceX holders. If a deal were struck at market prices, with no premium, each Tesla share would swap for 2.84 SpaceX shares.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Our calculation"
+       ],
+       "rows": [
+        [
+         "SpaceX market value (13.58B shares at $139.94)",
+         "",
+         "about $1.90 trillion"
+        ],
+        [
+         "Tesla market value (3.95B shares at $397.45)",
+         "",
+         "about $1.57 trillion"
+        ],
+        [
+         "Exchange ratio at market prices",
+         "$397.45 / $139.94",
+         "2.84 SpaceX shares per Tesla share"
+        ],
+        [
+         "New SpaceX shares issued at that ratio",
+         "3.95B x 2.84",
+         "about 11.2 billion"
+        ],
+        [
+         "Tesla holders' share of the combined group, no premium",
+         "11.2B of 24.8B",
+         "45%"
+        ],
+        [
+         "Tesla holders' share with a 10% / 20% / 30% premium",
+         "",
+         "48% / 50% / 52%"
+        ],
+        [
+         "Cost to SpaceX holders of each 10% premium",
+         "10% of $1.57T",
+         "about $157B, or $11.57 a SpaceX share (8.3% of the price)"
+        ],
+        [
+         "Tesla share of combined Q3 2026 revenue",
+         "$28.05B of $42.63B",
+         "66%"
+        ],
+        [
+         "Tesla share of combined Q3 2026 net income",
+         "$0.79B of $5.19B",
+         "15%"
+        ]
+       ]
+      }
+     },
+     "Our working: share counts are from the covers of the two companies' Q3 10-Q filings (13,581,063,709 SpaceX Class A and Class B shares and 3,952,757,946 Tesla shares, both at 15 October); prices are the 12 November closes. Revenue and net income are from SpaceX's Q3 results (see our [SpaceX Q3 2026 results page](/results/spcx-q3-2026)) and Tesla's Q3 update. The counts leave out options and unvested awards, so the real percentages would differ a little.",
+     "Three things follow. First, the line between a give-away and a fair swap is narrow. At market prices Tesla holders would own 45%; a premium of about 20%, ordinary for a takeover, would take them to roughly half of a company in which Tesla supplied 15% of last quarter's combined profit. That is the sum each special committee will be defending, in opposite directions.",
+     "Second, the market has already shifted the starting point. On 20 October, the day the special committees were announced, the market ratio was 2.53 (Tesla $373.71, SPCX $147.79). It is now 2.84, 12% higher, because Tesla has risen 6.4% since then while SPCX has fallen 5.3%. On our calculation, setting terms at today's ratio rather than October's would hand Tesla holders about 1.23 billion more SpaceX shares, worth about $172 billion at the 12 November close. Part of Tesla's run may be the market pricing in a deal, which would make a premium on top of today's price harder for SpaceX's committee to accept.",
+     "Third, the dilution is large against the shares that trade. If the new shares were Class A stock, which neither company has said, about 11.2 billion would be issued against 8.25 billion Class A shares outstanding at 15 October, so the traded class would more than double. That would matter for index weights and for the supply of stock around the [8 December lock-up expiry](/articles/spacex-lock-up-ends-8-december)."
+    ]
+   ],
+   [
+    "Why the companies might do it",
+    [
+     "Musk has said a merger would be a good idea but that the decision rests with the special committees. The two companies already work together, including on the Terafab chip plant in Texas, and Reuters describes the plan as putting his AI, robotics, electric vehicle and space businesses under one roof. For SpaceX holders the trade is clear from the table: they would gain a business with about twice SpaceX's quarterly revenue and $45.4 billion of cash and short-term investments at 30 September, but with net income that fell 43% year on year to $787 million in Q3.",
+     "The obstacles are also on record. The Information, summarising Bloomberg, says one hurdle is walling off Tesla's Chinese factories from SpaceX's US defence work. And Tesla needs 50% of all its shares to vote yes. Musk owns 19.8% according to Tesla's proxy, so on our calculation about 38% of the other shares would have to approve, a vote the committees cannot take for granted."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "3 December: Tesla's annual meeting, according to Electrek, where three directors are up for re-election.",
+       "8 December: the next large SpaceX lock-up release, covered in [when the SpaceX lock-up ends](/articles/spacex-lock-up-ends-8-december).",
+       "Any 8-K from either company announcing an agreement: the exchange ratio, whether it is fixed or adjusts with prices, the class of shares Tesla holders receive and whether a majority of non-Musk Tesla shares must approve.",
+       "The market ratio between TSLA and SPCX: a ratio that keeps rising before any announcement means the market expects Tesla holders to do better on terms.",
+       "Live price and filings: the [SPCX stock page](/stocks/spcx)."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "What would Tesla shareholders get in a SpaceX merger?",
+    "No terms have been agreed. On our calculation at the 12 November closes, an all-share deal at market prices would give 2.84 SpaceX shares for each Tesla share, about 11.2 billion new SpaceX shares in total, and leave Tesla holders with 45% of the combined company."
+   ],
+   [
+    "How much would a premium for Tesla cost SpaceX shareholders?",
+    "Each 10% premium on Tesla's market value of about $1.57 trillion is about $157 billion, or $11.57 per SpaceX share, on our calculation. A 20% premium would give Tesla holders roughly half of the combined group."
+   ],
+   [
+    "When could a SpaceX and Tesla merger be announced?",
+    "Bloomberg reported on 12 November that a deal could be announced as soon as December, with early 2027 also discussed. Neither company has confirmed a timetable."
+   ]
+  ],
+  "sources": [
+   [
+    "SpaceX Form 10-Q for the quarter to 30 September 2026 (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm"
+   ],
+   [
+    "Tesla Form 10-Q for the quarter to 30 September 2026 (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1318605/000162828026066775/tsla-20260930.htm"
+   ],
+   [
+    "Tesla Q3 2026 Update, Form 8-K exhibit (21 October 2026)",
+    "https://ir.tesla.com/_flysystem/s3/sec/000162828026066738/tsla-20261021-gen.pdf"
+   ],
+   [
+    "Tesla 2026 proxy statement (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1318605/000110465926116700/tm267596-1_def14a.htm"
+   ],
+   [
+    "Bloomberg: SpaceX and Tesla talks on record merger are said to progress (12 November 2026)",
+    "https://www.bloomberg.com/news/articles/2026-11-12/spacex-and-tesla-talks-on-record-merger-are-said-to-progress"
+   ],
+   [
+    "Reuters: SpaceX, Tesla merger talks progress, Bloomberg News reports (12 November 2026)",
+    "https://www.reuters.com/legal/transactional/spacex-tesla-merger-talks-progress-bloomberg-news-reports-2026-11-12/"
+   ],
+   [
+    "The Information: SpaceX and Tesla could announce merger as soon as December (12 November 2026)",
+    "https://www.theinformation.com/briefings/spacex-tesla-announce-merger-soon-december"
+   ],
+   [
+    "Electrek: SpaceX could announce Tesla merger in December (12 November 2026)",
+    "https://electrek.co/2026/11/12/spacex-tesla-merger-announcement-december-report/"
+   ],
+   [
+    "Investor's Business Daily: Tesla and SpaceX share moves (12 November 2026)",
+    "https://www.investors.com/news/elon-musk-tesla-spacex-merger/"
+   ],
+   [
+    "Yahoo Finance: Tesla historical prices",
+    "https://finance.yahoo.com/quote/TSLA/history/"
+   ],
+   [
+    "Orbit Alpha: SpaceX Q3 2026 results",
+    "https://www.orbitalpha.cloud/results/spcx-q3-2026"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "spacex-74-billion-arizona-texas-ai-supercompute-campuses",
   "title": "SpaceX's $74B AI campuses: new $50B Arizona site costs up to $33 a watt",
   "summary": "SpaceX says it will invest more than $74 billion in two AI compute campuses, $24 billion at Starbase and about $50 billion in Arizona. Our sums: the Arizona phase 1 of 1.5 GW works out at up to $33 a watt, below the $50 a watt SpaceX says new compute earns a year, but no capacity comes before mid-2027.",
