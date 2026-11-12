@@ -1990,5 +1990,98 @@
         "Merlin.01 launched on 1 October 2026 and is operating, with payload commissioning under way. Satellogic plans further Merlin launches in the first half of 2027 and expects initial Merlin revenue in the second half of 2027."
       ]
     ]
+  },
+  {
+    "slug": "lunr-q3-2026",
+    "ticker": "LUNR",
+    "quarter": "Q3 2026",
+    "period": "the three months to 30 September 2026",
+    "reported": "2026-11-12",
+    "headline": "Revenue up over 400% to a record $269M, backlog at a record $1.9B",
+    "summary": "Intuitive Machines revenue rose to a record $269.3M from $52.4M a year earlier, with adjusted EBITDA of $8.3M and positive free cash flow of $33M. Backlog reached a record $1.9B and full-year 2026 revenue guidance is $920M to $950M.",
+    "metrics": [
+      [
+        "Revenue",
+        "$269.3M",
+        "from $52.4M a year earlier; record"
+      ],
+      [
+        "Gross profit",
+        "$69.3M",
+        "26% gross margin"
+      ],
+      [
+        "Net loss",
+        "$3.4M",
+        "from $10.0M"
+      ],
+      [
+        "Net loss attributable to the company",
+        "$4.0M",
+        "Q3 2026"
+      ],
+      [
+        "Adjusted EBITDA",
+        "$8.3M",
+        "from -$13.2M"
+      ],
+      [
+        "Operating cash flow",
+        "$66.2M",
+        "record quarter"
+      ],
+      [
+        "Free cash flow",
+        "$33.5M",
+        "positive for the quarter"
+      ],
+      [
+        "Cash and equivalents",
+        "$463.8M",
+        "from $582.6M at end of 2025"
+      ],
+      [
+        "Backlog",
+        "$1.87B",
+        "record; from $213.1M at end of 2025"
+      ]
+    ],
+    "points": [
+      "Selected as a vendor on NASA's CLPS 2 contract, worth $10B with a $5B option, for lunar cargo missions supporting Artemis.",
+      "Booked $450M of new awards plus acquired Goonhilly backlog, led by AMDT3, JPL's EAGLE-VSWIR and two IM 300 platforms for a national security space customer.",
+      "Completed the acquisition of Goonhilly Earth Station and COMSAT; the Lanteris deal in January added $612.8M of backlog.",
+      "Altus-2 to Altus-5 relay satellites for the Near Space Network will now deploy together in 2028 on a NASA-provided launch vehicle.",
+      "IM-3 and the first Altus-1 lunar satellite remain on track for a planned launch in the March/April timeframe."
+    ],
+    "guidance": "Intuitive Machines expects full-year 2026 revenue of $920M to $950M and positive adjusted EBITDA for the year.",
+    "reaction": "Shares were up about 12% in pre-market trading on the morning of 12 November, per Investing.com.",
+    "faq": [
+      [
+        "What is Intuitive Machines' 2026 revenue guidance?",
+        "$920M to $950M for full-year 2026, with positive adjusted EBITDA. Revenue for the first nine months was $662.2M, so Q4 needs about $258M to $288M to land in the range (our calculation)."
+      ],
+      [
+        "How big is Intuitive Machines' backlog?",
+        "A record $1.87B at 30 September 2026, up from $213.1M at the end of 2025. The rise includes $612.8M acquired with Lanteris, $31.7M from Goonhilly and $1.77B of new awards."
+      ],
+      [
+        "When is Intuitive Machines' IM-3 mission?",
+        "The company says IM-3, along with its first Altus-1 lunar satellite, remains on track for a planned launch in the March/April timeframe. It did not give a specific date."
+      ]
+    ],
+    "sources": [
+      [
+        "Intuitive Machines Reports Third Quarter 2026 Financial Results (Intuitive Machines investor relations)",
+        "https://investors.intuitivemachines.com/news-releases/news-release-details/intuitive-machines-reports-third-quarter-2026-financial-results"
+      ],
+      [
+        "Intuitive Machines Reports Third Quarter 2026 Financial Results (GlobeNewswire via The Manila Times)",
+        "https://www.manilatimes.net/2026/11/12/tmt-newswire/globenewswire/intuitive-machines-reports-third-quarter-2026-financial-results-reports-record-financials-across-the-board-revenue-profitability-positive-cash-flow-and-backlog/2468450"
+      ],
+      [
+        "Why is Intuitive Machines stock surging today? (Investing.com)",
+        "https://www.investing.com/news/stock-market-news/why-is-intuitive-machines-stock-surging-today-93CH-5021479"
+      ]
+    ]
   }
 ]
