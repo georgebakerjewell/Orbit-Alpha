@@ -2083,5 +2083,268 @@
         "https://www.investing.com/news/stock-market-news/why-is-intuitive-machines-stock-surging-today-93CH-5021479"
       ]
     ]
+  },
+  {
+    "slug": "hawk-q3-2026",
+    "ticker": "HAWK",
+    "quarter": "Q3 2026",
+    "period": "the three months to 30 September 2026",
+    "reported": "2026-11-12",
+    "headline": "Revenue up 84% to $59.3M, full-year guidance raised",
+    "summary": "HawkEye 360 revenue rose 84% to $59.3M from $32.2M a year earlier, with adjusted EBITDA of $13.3M and a net loss of $0.2M. Backlog was $300.3M and full-year 2026 revenue guidance was raised to $225M to $227M.",
+    "metrics": [
+      [
+        "Revenue",
+        "$59.3M",
+        "up 84% from $32.2M"
+      ],
+      [
+        "International revenue",
+        "$23.3M",
+        "up 76%; up 11% from $21.0M in Q2"
+      ],
+      [
+        "Net loss",
+        "$0.2M",
+        "from net income of $1.7M"
+      ],
+      [
+        "Adjusted EBITDA",
+        "$13.3M",
+        "from $9.6M"
+      ],
+      [
+        "Operating cash flow",
+        "$9.6M",
+        "from $4.0M"
+      ],
+      [
+        "Free cash flow",
+        "$0.1M",
+        "from -$6.0M"
+      ],
+      [
+        "Cash and equivalents",
+        "$494.9M",
+        "from $92.7M at end of 2025"
+      ],
+      [
+        "Backlog",
+        "$300.3M",
+        "from $292.2M at 30 June 2026"
+      ]
+    ],
+    "points": [
+      "Signed $54M of new multi-year contracts with 11 allied partners and nations during the quarter.",
+      "Since 1 October, signed about $135M of global contracts, including more than $70M of follow-on European awards.",
+      "Won a National Reconnaissance Office contract to supply commercial RF data, the first commercial provider to move from study into an operational augmentation contract.",
+      "Launched Clusters 15 and 16 in October and established communications with all six satellites.",
+      "Set up HawkEye 360 Luxembourg, its first European subsidiary, and a collaboration with Leonardo."
+    ],
+    "guidance": "HawkEye 360 raised full-year 2026 guidance to revenue of $225M to $227M and adjusted EBITDA of $38M to $40M.",
+    "reaction": "Shares were up about 5.7% at $15.50 in after-hours trading at 17:29 ET (22:29 UK) on 12 November, against a $14.67 close, per Yahoo Finance.",
+    "faq": [
+      [
+        "What is HawkEye 360's 2026 guidance?",
+        "Revenue of $225M to $227M and adjusted EBITDA of $38M to $40M for full-year 2026, both raised. Revenue for the first nine months was $158.9M, so Q4 needs about $66.1M to $68.1M to land in the range (our calculation)."
+      ],
+      [
+        "How much cash does HawkEye 360 have?",
+        "$494.9M of cash and equivalents at 30 September 2026, up from $92.7M at the end of 2025. The company also repaid its term loans during the year and reported no long-term debt on its balance sheet."
+      ],
+      [
+        "How big is HawkEye 360's backlog?",
+        "$300.3M at 30 September 2026, up from $292.2M at 30 June. Since the quarter ended it has signed about $135M of further contracts, which are not in that figure."
+      ]
+    ],
+    "sources": [
+      [
+        "HawkEye 360 Announces Third Quarter 2026 Financial Results (PR Newswire)",
+        "https://www.prnewswire.com/news-releases/hawkeye-360-announces-third-quarter-2026-financial-results-302938345.html"
+      ],
+      [
+        "HawkEye 360: Q3 Earnings Snapshot (Yahoo Finance)",
+        "https://finance.yahoo.com/markets/stocks/articles/hawkeye-360-q3-earnings-snapshot-212229790.html"
+      ],
+      [
+        "HawkEye 360 quote (Yahoo Finance)",
+        "https://finance.yahoo.com/quote/HAWK/"
+      ]
+    ]
+  },
+  {
+    "slug": "yss-q3-2026",
+    "ticker": "YSS",
+    "quarter": "Q3 2026",
+    "period": "the three months to 30 September 2026",
+    "reported": "2026-11-12",
+    "headline": "Revenue down 7% to $84.2M, $749.7M goodwill impairment",
+    "summary": "York Space Systems revenue fell 7% to $84.2M from $90.8M a year earlier and its net loss widened to $807.4M, including a $749.7M non-cash goodwill impairment. Backlog was $581.0M and full-year guidance was narrowed to $380M to $400M.",
+    "metrics": [
+      [
+        "Revenue",
+        "$84.2M",
+        "down 7% from $90.8M"
+      ],
+      [
+        "Gross margin",
+        "18%",
+        "from 22%"
+      ],
+      [
+        "Contribution margin (non-GAAP)",
+        "40%",
+        "from 35%"
+      ],
+      [
+        "Net loss",
+        "$807.4M",
+        "from $20.1M; includes $749.7M impairment"
+      ],
+      [
+        "Adjusted EBITDA",
+        "-$27.6M",
+        "from -$3.4M"
+      ],
+      [
+        "Cash and equivalents",
+        "$308.9M",
+        "from $162.6M at end of 2025"
+      ],
+      [
+        "Total liquidity",
+        "$459M",
+        "including $150M revolving facility"
+      ],
+      [
+        "Backlog",
+        "$581.0M",
+        "from $542.6M at end of 2025"
+      ]
+    ],
+    "points": [
+      "Recorded a $749.7M non-cash goodwill impairment, citing difficulty estimating the timing and amount of contract awards beyond 2026.",
+      "Identified government pipeline rose by $3B from 30 June to $14.9B over the next two years.",
+      "Won two Space Force Space Data Network task orders and a place on the NITE-STAR IDIQ contract.",
+      "Named Tomorrow.io as the customer for its $187M commercial contract for the DeepSky constellation.",
+      "Announced a planned acquisition of Outlook Industries to move into unmanned ground and maritime systems."
+    ],
+    "guidance": "York narrowed its full-year 2026 revenue guidance to $380M to $400M.",
+    "reaction": "Shares were down about 1.5% at $6.50 in after-hours trading at 18:03 ET (23:03 UK) on 12 November, against a $6.60 close, per Yahoo Finance.",
+    "faq": [
+      [
+        "What is York Space Systems' 2026 revenue guidance?",
+        "$380M to $400M for full-year 2026, a narrower range than before. Revenue for the first nine months was $293.1M, so Q4 needs about $86.9M to $106.9M to land in the range (our calculation)."
+      ],
+      [
+        "Why did York Space Systems report an $807M loss?",
+        "The Q3 net loss of $807.4M includes a $749.7M non-cash goodwill impairment. York said it took the charge because it is difficult to estimate with sufficient certainty the timing and amount of future contract awards beyond 2026."
+      ],
+      [
+        "How much cash does York Space Systems have?",
+        "$308.9M of cash and equivalents at 30 September 2026. With $150M available under its revolving facility, total liquidity was $459M."
+      ]
+    ],
+    "sources": [
+      [
+        "York Space Systems Reports Third Quarter 2026 Results (Business Wire)",
+        "https://www.businesswire.com/news/home/20261112049211/en/York-Space-Systems-Reports-Third-Quarter-2026-Results"
+      ],
+      [
+        "York Space Systems Reports Third Quarter 2026 Results (Yahoo Finance)",
+        "https://finance.yahoo.com/technology/articles/york-space-systems-reports-third-212200918.html"
+      ],
+      [
+        "York Space Systems quote (Yahoo Finance)",
+        "https://finance.yahoo.com/quote/YSS/"
+      ]
+    ]
+  },
+  {
+    "slug": "spce-q3-2026",
+    "ticker": "SPCE",
+    "quarter": "Q3 2026",
+    "period": "the three months to 30 September 2026",
+    "reported": "2026-11-12",
+    "headline": "Net loss narrows to $58.8M, first commercial flight early Q2 2027",
+    "summary": "Virgin Galactic posted revenue of $0.4M and a net loss of $58.8M, narrower than $64.4M a year earlier, with free cash flow of -$99.1M. It held $184M of cash and securities and expects its first commercial spaceflight in early Q2 2027.",
+    "metrics": [
+      [
+        "Revenue",
+        "$0.4M",
+        "from $0.4M ($427K vs $365K)"
+      ],
+      [
+        "Net loss",
+        "$58.8M",
+        "from $64.4M"
+      ],
+      [
+        "Adjusted EBITDA",
+        "-$46.8M",
+        "from -$52.8M"
+      ],
+      [
+        "Operating cash used",
+        "$58.0M",
+        "from $56.3M"
+      ],
+      [
+        "Capital expenditure",
+        "$41.1M",
+        "from $51.5M"
+      ],
+      [
+        "Free cash flow",
+        "-$99.1M",
+        "from -$107.8M"
+      ],
+      [
+        "Cash, equivalents and marketable securities",
+        "$184M",
+        "at 30 September 2026"
+      ]
+    ],
+    "points": [
+      "First glide flight of lead spaceship Apeiron is expected in January, with first commercial spaceflight in early Q2 2027.",
+      "The second spaceship is expected to begin commercial flights in late Q2 or early Q3 2027.",
+      "A new launch hangar and fuelling site, planned for the second half of 2028, is expected to lift capacity by 20% to 150 spaceflights a year.",
+      "Opened a limited tranche of spaceflight bookings at $850,000 per seat.",
+      "Completed construction of the rocket motor production facility in Arizona, with final occupancy approval pending."
+    ],
+    "guidance": "Virgin Galactic expects free cash flow of -$80M to -$90M in Q4 2026.",
+    "reaction": "Shares were down about 1.8% at $2.62 in after-hours trading at 18:11 ET (23:11 UK) on 12 November, against a $2.67 close, per Yahoo Finance.",
+    "faq": [
+      [
+        "When will Virgin Galactic start commercial spaceflights?",
+        "The company expects the first glide flight of its spaceship Apeiron in January and its first commercial spaceflight in early Q2 2027. A second spaceship is expected to join in late Q2 or early Q3 2027."
+      ],
+      [
+        "How much cash does Virgin Galactic have?",
+        "$184M of cash, cash equivalents and marketable securities at 30 September 2026. It guides to Q4 free cash flow of -$80M to -$90M, which would leave roughly $94M to $104M at year end before any new funding (our calculation)."
+      ],
+      [
+        "How much does a Virgin Galactic spaceflight cost?",
+        "The company has opened a limited tranche of spaceflight expedition bookings at $850,000 per seat. More than 100 existing future astronauts have begun preparing for upcoming flights."
+      ]
+    ],
+    "sources": [
+      [
+        "Virgin Galactic Announces Third Quarter 2026 Financial Results and Provides Business Update (Virgin Galactic investor relations)",
+        "https://investors.virgingalactic.com/news/news-details/2026/Virgin-Galactic-Announces-Third-Quarter-2026-Financial-Results-and-Provides-Business-Update/default.aspx"
+      ],
+      [
+        "Virgin Galactic Form 8-K, 12 November 2026 (SEC EDGAR)",
+        "https://www.sec.gov/Archives/edgar/data/1706946/000119312526458580/0001193125-26-458580-index.htm"
+      ],
+      [
+        "Virgin Galactic: Q3 Earnings Snapshot (Yahoo Finance)",
+        "https://finance.yahoo.com/markets/stocks/articles/virgin-galactic-q3-earnings-snapshot-213009933.html"
+      ],
+      [
+        "Virgin Galactic quote (Yahoo Finance)",
+        "https://finance.yahoo.com/quote/SPCE/"
+      ]
+    ]
   }
 ]
