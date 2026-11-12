@@ -114,18 +114,17 @@
     "tickers": [
       "ASTS"
     ],
-    "vehicle": "Falcon 9 (listed by launch trackers; AST has not announced the launch)",
+    "vehicle": "Falcon 9",
     "status": "upcoming",
     "date": null,
-    "dateText": "Fourth quarter 2026 (no date announced; launch trackers list no earlier than 30 December)",
-    "summary": "AST SpaceMobile's BlueBirds 14, 15 and 16 reached Cape Canaveral in October 2026 and await a launch date, listed for the fourth quarter. The launch would take the constellation to 16 satellites as AST works towards about 45 in orbit by early 2027.",
+    "dateText": "Awaiting SpaceX launch date confirmation (AST, 9 November 2026); launch trackers list no earlier than 30 December 2026",
+    "summary": "AST SpaceMobile's BlueBirds 14, 15 and 16 are at Cape Canaveral awaiting a SpaceX launch date, which AST had not confirmed as of 9 November 2026. The launch would take the constellation to 16 satellites as AST targets about 45 in orbit by mid 2027.",
     "stakes": [
-      "AST is aiming for about 45 satellites in orbit by early 2027 and about 90 for continuous global coverage; BlueBirds 11 to 13 took the count to 13 in August 2026.",
-      "In October 2026 AST said it was targeting initial, intermittent coverage by the end of 2026 in the US, Canada, Japan, the UK and Saudi Arabia, with more satellites extending how long and how often coverage is available (Light Reading).",
-      "AST's full year 2026 revenue guidance is $150 million to $200 million, with about half expected to come from contracted backlog.",
-      "Advanced Television reports this batch is about a month behind the schedule shown in August, and that later launches depend partly on the availability of Blue Origin's New Glenn.",
-      "Space Launch Schedule and Orbital Radar list the Falcon 9 launch for no earlier than 30 December 2026 (Pacific time), a placeholder at the end of the quarter rather than a confirmed date.",
-      "AST reports third quarter 2026 results on 9 November 2026 after the market closes, which may bring a firmer launch date (Barchart)."
+      "In its third quarter 2026 results on 9 November, AST said BlueBirds 14 to 16 shipped to Cape Canaveral in September and are awaiting SpaceX launch date confirmation.",
+      "AST now targets about 45 BlueBirds in orbit by the middle of 2027, later than the earlier aim of early 2027, and says launch agreements cover over 100 satellites to be deployed across 2027 and 2028.",
+      "AST is still targeting nationwide intermittent service activation in the United States and other key markets before the end of 2026; BlueBirds 11 to 13 took the count to 13 in August 2026.",
+      "The next batches follow quickly: BlueBirds 17 to 19 on Blue Origin's New Glenn in early 2027 and BlueBirds 20 to 25 on launches expected during the first quarter of 2027 (AST).",
+      "Space Launch Schedule and Orbital Radar list the Falcon 9 launch for no earlier than 30 December 2026 (Pacific time), a placeholder rather than a confirmed date."
     ],
     "facts": [
       [
@@ -134,7 +133,7 @@
       ],
       [
         "Launch vehicle",
-        "Falcon 9 (listed, not confirmed by AST)"
+        "Falcon 9 (SpaceX)"
       ],
       [
         "Launch site",
@@ -142,7 +141,7 @@
       ],
       [
         "Status",
-        "Arrived at Cape Canaveral, October 2026"
+        "Shipped to Cape Canaveral in September 2026; awaiting SpaceX launch date confirmation"
       ],
       [
         "Satellites in orbit before launch",
@@ -154,6 +153,10 @@
       ]
     ],
     "sources": [
+      [
+        "AST SpaceMobile business update and third quarter 2026 results (9 November 2026)",
+        "https://feeds.issuerdirect.com/news-release.html?newsid=7492534759712978&symbol=ASTS"
+      ],
       [
         "Stocktwits: BlueBirds 14-16 reach Florida (11 October 2026)",
         "https://stocktwits.com/news-articles/markets/equity/asts-stock-bluebirds-14-16-florida-fcc-sda-backed-900-mhz-test/cZx4DUVRBFg"
@@ -193,13 +196,9 @@
       [
         "Space Launch Schedule: BlueBird 14-16 (Block 2 #9-11)",
         "https://www.spacelaunchschedule.com/launch/falcon-9-block-5-bluebird-14-16-block-2-9-11/"
-      ],
-      [
-        "Barchart: AST SpaceMobile reports Q3 2026 results on 9 November",
-        "https://www.barchart.com/story/news/8725718/dear-ast-spacemobile-stock-fans-mark-your-calendars-for-november-9"
       ]
     ],
-    "updated": "2026-11-09"
+    "updated": "2026-11-12"
   },
   {
     "slug": "firefly-alpha-block-2-first-launch",
@@ -210,14 +209,14 @@
     "vehicle": "Alpha Block 2",
     "status": "upcoming",
     "date": null,
-    "dateText": "Fourth quarter 2026 (launch trackers list no earlier than 30 December)",
-    "summary": "Firefly Aerospace is targeting the fourth quarter of 2026 for Alpha Flight 8 from Vandenberg, the first flight of the upgraded Alpha Block 2. It is one of two more Alpha launches Firefly plans this year and the first test of the reliability upgrades in flight.",
+    "dateText": "First quarter of 2027 (Firefly, 10 November 2026)",
+    "summary": "Firefly Aerospace now expects Alpha Flight 8, the first flight of the upgraded Alpha Block 2, in the first quarter of 2027 after a national security customer asked it to change its manifest. The flight is the first in-flight test of Alpha's reliability upgrades.",
     "stakes": [
-      "Firefly said on its second quarter 2026 call that it is targeting Flights 8 and 9 this year, for three Alpha launches in 2026.",
+      "On its third quarter 2026 call on 10 November, Firefly said it is progressing towards Alpha Flight 8 in the first quarter of 2027, having preferred to launch before the end of 2026 (Motley Fool transcript).",
+      "The chief executive said the move followed direction from a national security customer that required a readjustment to the launch manifest, and that the vehicle is being prepared for shipping to Vandenberg.",
       "Block 2 is an upgrade intended to improve Alpha's reliability; Block 2 avionics flew in shadow mode on Flight 7 in March 2026.",
-      "Before launch the rocket still needs acceptance testing, delivery to Vandenberg, a static fire and payload integration.",
-      "Firefly says most of its 2027 Alpha manifest is already sold.",
-      "Launch tracker Orbital Radar lists Flight 8 from SLC-2W no earlier than 30 December 2026 (Pacific time), carrying the TacSat technology demonstration satellite; Firefly has not announced a date and reports third quarter results on 10 November 2026."
+      "Firefly reported a record $1.7 billion backlog and expects 2026 revenue of $440 million to $450 million; in November it signed Synspective for up to 10 Alpha Block 2 launches through 2030 (Firefly, Via Satellite).",
+      "Before the slip, Earnings Whispers noted that fourth quarter revenue expectations leaned heavily on Flight 8 flying in the quarter."
     ],
     "facts": [
       [
@@ -237,12 +236,12 @@
         "SLC-2W, Vandenberg Space Force Base, California"
       ],
       [
-        "Next mission",
-        "Alpha Flight 9, also targeted for the fourth quarter of 2026"
-      ],
-      [
         "Previous flight",
         "Flight 7, 11 March 2026 (Pacific time), reached orbit"
+      ],
+      [
+        "Schedule change",
+        "Moved from fourth quarter 2026 to first quarter 2027 (announced 10 November 2026)"
       ]
     ],
     "history": [
@@ -275,15 +274,23 @@
         "https://www.nasdaq.com/articles/why-fly-aerospace-stock-popped-today"
       ],
       [
-        "Orbital Radar: Firefly Alpha Block 2, TacSat",
-        "https://orbitalradar.com/launch/firefly-alpha-block-2-tacsat"
+        "Motley Fool: Firefly Aerospace Q3 2026 earnings call transcript",
+        "https://www.fool.com/earnings/call-transcripts/2026/11/11/firefly-aerospace-fly-q3-2026-earnings-call-transcript/"
       ],
       [
-        "Firefly Aerospace to announce third quarter 2026 results on 10 November 2026",
-        "https://finance.yahoo.com/markets/stocks/articles/firefly-aerospace-announce-third-quarter-201500287.html"
+        "Firefly Aerospace third quarter 2026 results (10 November 2026)",
+        "https://www.globenewswire.com/news-release/2026/11/10/3400229/0/en/firefly-aerospace-announces-third-quarter-2026-financial-results-with-record-backlog-of-1-7-billion.html"
+      ],
+      [
+        "Via Satellite: Synspective orders 10 launches on Firefly's Alpha rocket",
+        "https://www.satellitetoday.com/launch/2026/11/10/synspective-orders-10-launches-on-fireflys-alpha-rocket/"
+      ],
+      [
+        "Earnings Whispers via Finviz: Firefly's Q4 Alpha launch put to the test (3 November 2026)",
+        "https://finviz.com/news/414437/fireflys-sales-pause-puts-q4-alpha-launch-and-420-million-floor-to-the-test"
       ]
     ],
-    "updated": "2026-11-09"
+    "updated": "2026-11-12"
   },
   {
     "slug": "intuitive-machines-im-3",
@@ -594,5 +601,73 @@
       ]
     ],
     "updated": "2026-11-09"
+  },
+  {
+    "slug": "ast-spacemobile-bluebirds-17-19-new-glenn-launch",
+    "title": "AST SpaceMobile BlueBirds 17, 18 and 19 New Glenn Launch",
+    "tickers": [
+      "ASTS"
+    ],
+    "vehicle": "New Glenn (Blue Origin)",
+    "status": "upcoming",
+    "date": null,
+    "dateText": "Early first quarter of 2027 (AST, 9 November 2026)",
+    "summary": "AST SpaceMobile expects BlueBirds 17, 18 and 19 to launch on Blue Origin's New Glenn in early 2027, with the satellites due to ship by the end of November 2026. It is AST's first planned batch on New Glenn and part of a push to about 45 satellites by mid 2027.",
+    "stakes": [
+      "AST said on 9 November 2026 that BlueBirds 17 to 19 are expected to ship by the end of November for a Blue Origin launch expected in early first quarter 2027.",
+      "AST targets about 45 BlueBirds in orbit by the middle of 2027 and says launch agreements cover over 100 satellites to be deployed across 2027 and 2028, from SpaceX, Blue Origin and others.",
+      "New Glenn's availability is a risk: the rocket exploded during a prelaunch test in Florida in May 2026, and reports say its next flight has been pushed to January 2027 (Light Reading).",
+      "In July 2026 AST said the New Glenn setback would push initial commercial service into 2027 (ISS Tracker, Satellite Today), and has since announced its own rocket, Blacklift, to launch BlueBirds from late 2028."
+    ],
+    "facts": [
+      [
+        "Satellites",
+        "BlueBirds 17, 18 and 19"
+      ],
+      [
+        "Launch vehicle",
+        "New Glenn (Blue Origin)"
+      ],
+      [
+        "Customer",
+        "AST SpaceMobile"
+      ],
+      [
+        "Status",
+        "Expected to ship by end of November 2026"
+      ],
+      [
+        "Satellites in orbit now",
+        "13 (BlueBirds 14 to 16 await a Falcon 9 launch)"
+      ],
+      [
+        "Following batch",
+        "BlueBirds 20 to 25, shipping December and January for launches expected in the first quarter of 2027"
+      ]
+    ],
+    "history": [],
+    "sources": [
+      [
+        "AST SpaceMobile business update and third quarter 2026 results (9 November 2026)",
+        "https://feeds.issuerdirect.com/news-release.html?newsid=7492534759712978&symbol=ASTS"
+      ],
+      [
+        "Light Reading: AST SpaceMobile's Blacklift rocket gambit draws skepticism",
+        "https://lightreading.com/satellite/ast-spacemobile-s-blacklift-rocket-gambit-draws-skepticism"
+      ],
+      [
+        "Satellite Today: AST SpaceMobile discloses delays to launch campaign (16 July 2026)",
+        "https://www.satellitetoday.com/connectivity/2026/07/16/ast-spacemobile-discloses-delays-to-launch-campaign-explores-vertical-integration/"
+      ],
+      [
+        "ISS Tracker: AST SpaceMobile sees New Glenn setback delaying initial commercial service into 2027",
+        "https://isstracker.pl/en/news/ast-spacemobile-przewiduje-ze-opoznienie-zwiazane-z-new-glenn-opozni-uruchomienie-pierwszej-uslugi-komercyjnej-do-roku-2027,7q99Td"
+      ],
+      [
+        "AST SpaceMobile: Successful orbital launch of BlueBirds 11, 12 and 13",
+        "https://www.businesswire.com/news/home/20260805761351/en/AST-SpaceMobile-Announces-Successful-Orbital-Launch-of-BlueBirds-11-12-and-13"
+      ]
+    ],
+    "updated": "2026-11-12"
   }
 ]
