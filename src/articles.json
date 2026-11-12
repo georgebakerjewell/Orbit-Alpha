@@ -1,6 +1,162 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-74-billion-arizona-texas-ai-supercompute-campuses",
+  "title": "SpaceX's $74B AI campuses: new $50B Arizona site costs up to $33 a watt",
+  "summary": "SpaceX says it will invest more than $74 billion in two AI compute campuses, $24 billion at Starbase and about $50 billion in Arizona. Our sums: the Arizona phase 1 of 1.5 GW works out at up to $33 a watt, below the $50 a watt SpaceX says new compute earns a year, but no capacity comes before mid-2027.",
+  "published": "2026-11-12",
+  "updated": "2026-11-12",
+  "tickers": [
+   "SPCX"
+  ],
+  "match": [
+   "spacex",
+   "$74"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 12 November SpaceX said it is advancing two supercomputing projects with combined investment of more than $74 billion: more than $24 billion at its Starbase site in Texas and about $50 billion at a campus in Cochise County, Arizona. The Texas figure was already public from a Starbase city notice, which we covered in [SpaceX's $24B Texas power plant](/articles/spacex-24-billion-texas-gas-power-plant-data-center). The new part is SpaceX putting its name and a price on Arizona.",
+     "SpaceX said the Texas facility will generate its own electricity rather than draw from the public grid, and committed $220 million to Brownsville's water and wastewater systems. In Arizona it is working with local electric cooperatives, said the campus would use dry cooling with no planned industrial groundwater use, and said cooperative members' bills could fall by up to 20%. The two projects would create more than 6,000 construction jobs and more than 1,500 permanent ones. SpaceX gave no capacity figures and no timetable in the statement.",
+     "The Arizona application was filed on 30 October by Tombstone Resources LLC, with SpaceX presenting at a town hall on 4 November. The local electric cooperative, SSVEC, says the first phase would total 1.5 gigawatts of electric load and future phases could take the site to as much as 6 GW.",
+     "[SPCX](/stocks/spcx) traded at $142.71 at about 13:40 New York time, up 2.1% on the previous close of $139.75. Several reports also linked the rise to speculation about Elon Musk and the outgoing Nvidia chief executive, so the move cannot be pinned on the campuses alone."
+    ]
+   ],
+   [
+    "Orbit Alpha view: Arizona is the big one, and its cost fits SpaceX's own pricing",
+    [
+     "Two thirds of the $74 billion is Arizona, and Arizona is a different kind of project from Texas. The useful question is what $50 billion buys. SpaceX did not say how many gigawatts the figure covers, so we show both readings against the numbers SpaceX itself has published.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Our calculation"
+       ],
+       "rows": [
+        [
+         "$74B against cash and securities at 30 September",
+         "$89.9B",
+         "82%"
+        ],
+        [
+         "$74B against spending on property and equipment, first nine months of 2026",
+         "$48.1B",
+         "1.5 times"
+        ],
+        [
+         "$74B against Q4 2026 capital spending guidance",
+         "$35B to $40B",
+         "about two quarters of spending"
+        ],
+        [
+         "$74B against market value (13.57B shares at $142.71)",
+         "about $1.94 trillion",
+         "3.8%, or about $5.45 a share"
+        ],
+        [
+         "Arizona phase 1 load against nameplate compute at 30 September",
+         "1.5 GW vs 1.7 GW",
+         "88% of today's fleet"
+        ],
+        [
+         "Full Arizona build-out against the end-2026 target",
+         "6 GW vs 2.5 to 3 GW",
+         "2 to 2.4 times"
+        ],
+        [
+         "Arizona cost per watt if $50B covers phase 1 (1.5 GW)",
+         "",
+         "about $33"
+        ],
+        [
+         "Arizona cost per watt if $50B covers the full 6 GW",
+         "",
+         "about $8"
+        ]
+       ]
+      }
+     },
+     "Our working: cash, nine-month spending, Q4 guidance, nameplate compute and the end-2026 target are from SpaceX's Q3 results and call, summarised on our [SpaceX Q3 results page](/results/spcx-q3-2026). Market value uses the 13.57 billion shares outstanding on 15 October in the 10-Q and the 12 November midday price. Phase 1 and full build-out loads are from SSVEC.",
+     "The cross-check that matters is per watt. On the Q3 call SpaceX's finance chief said pricing for new compute was running slightly above the top of a $30 to $50 per watt range, in annual revenue, and that new deployments were paying back in less than a year. If the $50 billion buys the 1.5 GW first phase, the cost is about $33 a watt, below one year's revenue at the $50 a watt SpaceX quotes. That is consistent with the payback claim only if the $50 billion includes the chips; if it covers buildings, power and cooling alone, the chips come on top and the payback is longer. Two cautions: 1.5 GW is electric load for the whole site, and the IT capacity that earns rent will be smaller once cooling and other losses are taken off; and the payback figures are management claims that the accounts cannot yet confirm.",
+     "The scale against today's business is the other point. At SpaceX's quoted $30 to $50 a watt, a fully earning 1.5 GW would in theory bring $45 billion to $75 billion a year, against an AI segment that brought in $7.56 billion in Q3, or about $30 billion annualised. That is an upper bound on our assumptions, not a forecast. It shows why SpaceX keeps committing capital at this pace: on its own pricing, each gigawatt is worth tens of billions a year if the demand holds.",
+     "The cost side is just as large. Spending at the top of the Q4 guidance would take cash and securities down to roughly $50 billion to $55 billion before Q4 operating cash flow, as we set out in our [Apollo GPU lease](/articles/spacex-40-billion-apollo-gpu-lease) piece. A $74 billion programme is bigger than that. SpaceX has not said over how many years it will spend the money or how it will pay for it, so operating cash flow, more leases like the $40 billion Apollo deal, or new borrowing will have to fill the gap."
+    ]
+   ],
+   [
+    "Why SpaceX did it",
+    [
+     "Power is the constraint, and the two sites take opposite routes round it. Texas builds its own gas-fired plant to avoid the state's open-ended pause on new data-centre grid connections. Arizona goes the other way: it sits next to the Arizona Electric Power Cooperative's Apache Station, and the application says the project would fund $3.6 billion of grid upgrades. SpaceX told residents its investment could lift the station's capacity from about 1 GW to more than 6 GW, according to the Arizona Republic. The cooperative says the developer would pay for all upgrades and that protections against early closure, such as deposits and minimum payments, are under negotiation.",
+     "Two sites in two states also spread political and permitting risk. In Texas, Democrats won the governor's office on 3 November after a campaign that opposed AI data centres, according to Reuters, while Pima County in Arizona has paused new data-centre developments, according to the Arizona Daily Star. Cochise County is a separate jurisdiction, but it faces a 2,400-signature petition asking officials to refuse the permit."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "9 December, twice: the Cochise County planning and zoning hearing on the Arizona permit, and the Starbase City Commission vote on the Texas tax abatement.",
+       "The energy services agreement between SpaceX's developer, SSVEC and the Arizona Electric Power Cooperative, which needs approval from the Arizona Corporation Commission. Its minimum payments will show how much of the power cost SpaceX is locking in.",
+       "Timing: the developer's preliminary schedule has construction starting in spring 2027 and the first stage online 3 to 6 months later, so Arizona adds nothing to the 2.5 to 3 GW target for end-2026 or the Q1 2027 revenue guidance of $33 billion to $37 billion.",
+       "Whether SpaceX says how many gigawatts the $50 billion buys and whether it includes chips, which decides whether the cost is nearer $8 or $33 a watt.",
+       "Q4 results: capital spending against the $35 billion to $40 billion guidance and the year-end cash balance, which show how much of the $74 billion can come from the balance sheet."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much is SpaceX investing in AI data centres?",
+    "SpaceX says more than $74 billion across two campuses: more than $24 billion at Starbase in Texas and about $50 billion in Cochise County, Arizona. On our calculation that equals 82% of its $89.9 billion of cash and securities at 30 September and about 3.8% of its market value."
+   ],
+   [
+    "How big is the SpaceX Arizona data centre?",
+    "The local cooperative says phase 1 would be 1.5 GW of electric load, rising to as much as 6 GW. Phase 1 alone is 88% of SpaceX's 1.7 GW of nameplate compute at 30 September; the full site would be 2 to 2.4 times its end-2026 target."
+   ],
+   [
+    "When would the Arizona campus start running?",
+    "Not before mid-2027. The developer's preliminary schedule has construction starting in spring 2027 with the first stage online 3 to 6 months later, subject to the county hearing on 9 December and approval of the power agreement by the Arizona Corporation Commission."
+   ]
+  ],
+  "sources": [
+   [
+    "SpaceX statement on Texas and Arizona supercompute projects, via Seeking Alpha (12 November 2026)",
+    "https://www.tradingview.com/news/seekingalpha:1866a3eec094b:0-spacex-advances-74b-of-new-data-center-projects-in-texas-and-arizona/"
+   ],
+   [
+    "SSVEC: Tombstone Resources project FAQ",
+    "https://www.ssvec-projectinfo.org/"
+   ],
+   [
+    "Cochise County: data centre project documents",
+    "https://www.cochise.az.gov/1014/Data-Centers"
+   ],
+   [
+    "Orbit Alpha: SpaceX Q3 2026 results",
+    "https://www.orbitalpha.cloud/results/spcx-q3-2026"
+   ],
+   [
+    "Reuters: SpaceX plans over $74 billion investment in Texas, Arizona AI campuses",
+    "https://www.reuters.com/business/media-telecom/spacex-invest-over-74-billion-supercompute-facilities-texas-arizona-2026-11-12/"
+   ],
+   [
+    "Arizona Daily Star / Arizona Republic: SpaceX proposes massive data center in Southern Arizona",
+    "https://tucson.com/news/local/environment/article_aea3ca7b-bd15-4daa-92a8-2ee75346a1ae.html"
+   ],
+   [
+    "MarketWatch: SpaceX CFO highlights promising pricing trends in AI",
+    "https://www.marketwatch.com/livecoverage/spacex-earnings-stock-results-musk-spcx/card/spacex-cfo-highlights-promising-pricing-trends-in-ai-3i1X2G43Jd9ckHZlbhM7"
+   ],
+   [
+    "Aterio: SpaceX-linked 6 GW campus in Cochise County",
+    "https://www.aterio.io/blog/spacex-linked-6-gw-campus-cochise-county-arizona"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "rocket-lab-pentagon-150-million-loan-neutron",
   "title": "Rocket Lab's $150M Pentagon loan: why the cash matters less than the terms",
   "summary": "The Pentagon's Office of Strategic Capital offered Rocket Lab a $150M conditional loan to raise Neutron's flight rate. On our sums it is 3.2% of Rocket Lab's $4.70B cash, but about 9% of what is left once the Iridium deal's cash needs are paid.",
