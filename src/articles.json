@@ -1,6 +1,174 @@
 [
  {
   "kind": "news",
+  "slug": "blue-origin-exits-nasa-space-station-competition-voyager-starlab",
+  "title": "Blue Origin quits NASA station race: why Voyager's real test is 2028",
+  "summary": "Blue Origin will not bid for NASA's next commercial space station contract, leaving Voyager's Starlab, Axiom and Vast for two initial development awards. Starlab has $5.0M left of its $217.5M NASA grant on our sums, so the April 2027 award is its next NASA money.",
+  "published": "2026-11-13",
+  "updated": "2026-11-13",
+  "tickers": [
+   "VOYG",
+   "MDA",
+   "RDW",
+   "SPCX"
+  ],
+  "match": [
+   "blue origin",
+   "cld"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "Blue Origin has decided not to bid in Phase 2 of NASA's Commercial LEO Destinations (CLD) programme, the competition to pick the privately built stations that will follow the International Space Station, due to retire in 2030. The company told Aviation Week on 13 November that it is moving resources to its lunar work for Artemis and Moon Base. That shelves Orbital Reef, the station it was developing with Sierra Space under a 2021 NASA Phase 1 award.",
+     "When NASA issued the final request for proposals on 9 October, four companies were expected to bid: Axiom Space, Blue Origin, Starlab Space and Vast. Starlab is the joint venture led by [Voyager Technologies](/stocks/voyg), which owned 61.9% of it at the end of 2025. Proposals are due on 8 December and NASA expects to award contracts around 15 April 2027.",
+     "Voyager shares did not rise on the news. They traded at $26.59 at 16:07 UK time on 13 November, down 4.3% from the 12 November close of $27.79, giving a market value of about $1.65B."
+    ]
+   ],
+   [
+    "Orbit Alpha view: one fewer rival, but the decisive award comes in 2028",
+    [
+     "The structure of NASA's contract matters more than the headline. It is an indefinite-delivery, indefinite-quantity contract with a guaranteed minimum of $100 million and a ceiling of $34.063 billion over up to 15 years. NASA plans to award the first stage (CLIN 1: design through critical design review, 15 to 18 months) to two providers, then pick one provider for the second stage (CLIN 2: final development, certification and uncrewed checkout), with room to keep a second if budget allows. The CLIN 2 winner's guaranteed minimum rises by four crewed service missions.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Source or working"
+       ],
+       "rows": [
+        [
+         "Expected bidders when the RFP was issued",
+         "4",
+         "Axiom, Blue Origin, Starlab, Vast (Oct 2026 reporting)"
+        ],
+        [
+         "Expected bidders now",
+         "3",
+         "After Blue Origin's exit"
+        ],
+        [
+         "CLIN 1 awards planned",
+         "2",
+         "NASA pre-proposal charts"
+        ],
+        [
+         "Bidders left out of CLIN 1 if all three bid",
+         "1",
+         "Our calculation, from 4 bidders chasing 2 places to 3"
+        ],
+        [
+         "CLIN 2 providers planned",
+         "1",
+         "NASA pre-proposal charts, extra providers only if budget allows"
+        ],
+        [
+         "Likely CLIN 2 decision",
+         "July to October 2028",
+         "Our calculation: April 2027 award plus 15 to 18 months"
+        ],
+        [
+         "Starlab NASA Phase 1 grant",
+         "$217.5M",
+         "Voyager 10-K"
+        ],
+        [
+         "Received by 30 September 2026",
+         "$212.5M",
+         "Voyager Q3 2026 results"
+        ],
+        [
+         "Phase 1 money still to come",
+         "$5.0M",
+         "Our calculation"
+        ],
+        [
+         "Contract ceiling against Voyager market value",
+         "About 21x",
+         "Our calculation: $34.063B / $1.65B on 13 November"
+        ]
+       ]
+      }
+     },
+     "Three points follow. First, Blue Origin's exit improves Starlab's position for the first stage: if the three remaining companies all bid, only one misses out, against two before. NASA funding to date also favours Starlab, with $217.5M against $140M for Axiom and none for Vast, though Vast plans to launch its Haven-1 station in the first quarter of 2027, around the time NASA decides.",
+     "Second, the first stage is not the prize. CLIN 1 is a 15 to 18 month design phase, and the $100M guaranteed minimum is small next to Voyager's 2026 revenue guidance of $285M to $305M. The award that decides who builds and operates a NASA-certified station is CLIN 2, which on NASA's timetable falls in the second half of 2028. Fewer rivals in 2026 does not change the fact that NASA plans to fund only one station to the end.",
+     "Third, timing matters for Voyager's cash. With $5.0M of the Phase 1 grant left, Starlab's next NASA money is the April 2027 award. Until then development is funded by Voyager and its partners. Voyager had $553.6M of cash and $815.7M of total liquidity at 30 September, against $841.1M of convertible notes and a Q3 adjusted EBITDA loss of $44.9M, so it can carry Starlab to the award, but a loss in April would leave a 61.9% stake in a station with about $700M of commercial reservations and no NASA development funding.",
+     "That helps explain the muted share move. Voyager had already risen 36.7% from $20.33 on 5 November to $27.79 on 12 November after its [Q3 results](/results/voyg-q3-2026), and Blue Origin's exit improves the odds in the smaller of the two contests, not the larger one."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "[MDA Space](/stocks/mda) is an equity partner in Starlab and will supply its external robotics, so a Starlab win in April would bring work for MDA as well as Voyager.",
+     "[Redwire](/stocks/rdw) was named as a member of the Orbital Reef team for payload operations and microgravity manufacturing, so that potential customer is gone. It keeps exposure to the remaining field: it supplies solar arrays for Axiom's station and is in the Haven-1 lab payload network for Vast.",
+     "[SpaceX](/stocks/spcx) is the launch and transport provider in all three remaining plans. Starlab has chosen Starship to launch the whole station in one flight, while Axiom and Vast plan to use Dragon, and Vast's modules fly on Falcon 9. NASA's RFP also requires previously certified crew and cargo vehicles for the first four missions, which favours vehicles already flying."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "8 December 2026: proposals due. Any further withdrawal, or a new bidder, changes the arithmetic above.",
+       "First quarter of 2027: Vast's planned Haven-1 launch, which would give one rival flight hardware in orbit before NASA chooses.",
+       "Around 15 April 2027: NASA's two CLIN 1 awards. A Starlab miss would leave Voyager without NASA development funding for its largest long-term project.",
+       "Second half of 2028: the CLIN 2 decision on our timetable, which picks the station NASA plans to fund to certification."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Does Blue Origin's exit mean Starlab will win NASA's space station contract?",
+    "No. It improves the odds for the first stage, where NASA plans two awards and three bidders are now expected, so only one would miss out. The decisive stage, CLIN 2, picks one provider after a 15 to 18 month design phase, which on our sums falls between July and October 2028."
+   ],
+   [
+    "How much NASA money does Starlab have left?",
+    "Starlab's Phase 1 NASA grant was $217.5M and Voyager had received $212.5M by 30 September 2026, leaving $5.0M on our calculation. The next NASA money depends on the Phase 2 award expected around 15 April 2027."
+   ],
+   [
+    "Who is still competing to replace the ISS?",
+    "Axiom Space, Vast and Starlab, the joint venture 61.9% owned by Voyager at the end of 2025 with partners including Airbus, Mitsubishi and MDA Space. Proposals are due on 8 December 2026."
+   ]
+  ],
+  "sources": [
+   [
+    "CLD contract final RFP pre-proposal conference charts, NASA (via GovTribe)",
+    "https://govtribe.com/file/government-file/80jsc027r0004-cldc-final-rfp-pre-proposal-conference-charts-dot-pdf"
+   ],
+   [
+    "Voyager Technologies annual report exhibit, Starlab ownership and NASA grant (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/0001788060/000162828026057100/ex991voyagertechnologiesfy.htm"
+   ],
+   [
+    "Voyager Reports Record Third Quarter 2026 Revenue, Bookings and Backlog (Business Wire via Morningstar)",
+    "https://www.morningstar.com/news/business-wire/20261102392426/voyager-reports-record-third-quarter-2026-revenue-bookings-and-backlog"
+   ],
+   [
+    "Starlab partners, Voyager Technologies",
+    "https://voyagertechnologies.com/starlab/"
+   ],
+   [
+    "Blue Origin Passing On NASA CLD Competition (Aviation Week)",
+    "https://aviationweek.com/space/commercial-space/blue-origin-passing-nasa-cld-competition"
+   ],
+   [
+    "Blue Origin bows out of NASA commercial space station competition (SpaceNews)",
+    "https://spacenews.com/blue-origin-bows-out-of-nasa-commercial-space-station-competition/"
+   ],
+   [
+    "NASA advances plans for commercial space stations ahead of ISS retirement (SatellitePro ME)",
+    "https://satelliteprome.com/news/nasa-advances-plans-for-commercial-space-stations-ahead-of-iss-retirement/"
+   ],
+   [
+    "4 Companies to Vie for NASA Space Station Funding (Douglas Messier)",
+    "https://douglasmmessier.substack.com/p/4-companies-to-vie-for-nasa-space"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "spacex-tesla-merger-talks-december-exchange-ratio",
   "title": "SpaceX-Tesla merger talks advance: at market prices Tesla holders get 45%",
   "summary": "SpaceX and Tesla are negotiating terms and could announce a merger as soon as December, Bloomberg reports. Our sums at the 12 November close: an all-share deal at market prices would give Tesla holders 2.84 SpaceX shares each and 45% of the group; every 10% premium costs SpaceX holders about $157 billion.",
