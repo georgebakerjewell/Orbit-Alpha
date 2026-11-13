@@ -734,7 +734,7 @@ function upcomingResults(earnings, ticker) {
 
 function pageOffer(path, earnings) {
   const stockT = path.startsWith("/stocks/") ? path.split("/")[2]?.toUpperCase() : null;
-  const pageCta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES, articlesData);
+  const pageCta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES, articlesData, eventsData);
   const next = stockT && upcomingResults(earnings, stockT);
   if (next && PROFILES[stockT]) {
     const name = PROFILES[stockT].name;
@@ -830,6 +830,63 @@ function SubscribePopup({ path }) {
         <SubscribeForm source="popup" follow={offer[2] || undefined} reward={SHEET} label={offer[3]} sample={false} style={{ maxWidth: "none", marginBottom: 14 }} />
         <div style={{ fontSize: 11, color: C.muted }}>{subscribers} subscribers. Unsubscribe in one click.</div>
       </div>
+    </div>
+  );
+}
+
+// Slim bar fixed to the bottom of the screen on desktop. Desktop visitors signed up at under half the
+// mobile rate (PostHog, 30 days to 13 Nov 2026: 0.7% vs 1.7%) and only had the one-off pop-up. Appears once
+// the visitor has read a third of the page or stayed 30s; closing it hides it for 7 days.
+const DESK_BAR_KEY = "oa_dbar_x";
+const DESK_BAR_DAYS = 7;
+function deskBarClosed() {
+  try { const t = Number(localStorage.getItem(DESK_BAR_KEY) || 0); return t > 0 && Date.now() - t < DESK_BAR_DAYS * 86_400_000; } catch { return false; }
+}
+function DesktopBar({ path }) {
+  const subscribed = useSubscribed();
+  const [desk] = useState(() => typeof window !== "undefined" && !!window.matchMedia?.("(min-width: 900px) and (pointer: fine)").matches);
+  const [closed, setClosed] = useState(deskBarClosed);
+  const [show, setShow] = useState(false);
+  const [hidden, setHidden] = useState(false); // another sign-up box is on screen
+  const [done, setDone] = useState(false);
+  const barRef = useRef(null);
+  const barEarnings = useApi(desk && path.startsWith("/stocks/") ? "/api/earnings" : null);
+  const offer = pageOffer(path, barEarnings.data) || sectionOffer(path);
+  const eligible = desk && !closed && !(subscribed && !done) && !window.__oaOwner && !aiVisit() && path !== "/newsletter" && path !== "/free-pdf";
+  useEffect(() => {
+    setShow(false);
+    if (!eligible) return;
+    const reveal = () => setShow(true);
+    // Step aside while one of the page's own sign-up boxes is in view, so two forms never show at once.
+    const otherBoxInView = () => [...document.querySelectorAll('input[type="email"]')].some((el) => {
+      if (barRef.current?.contains(el)) return false;
+      const r = el.getBoundingClientRect();
+      return r.height > 0 && r.bottom > 0 && r.top < window.innerHeight;
+    });
+    const onScroll = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      if (h > 0 && window.scrollY / h >= 0.33) reveal();
+      setHidden(otherBoxInView());
+    };
+    const t = setTimeout(() => { setHidden(otherBoxInView()); reveal(); }, 30000);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { clearTimeout(t); window.removeEventListener("scroll", onScroll); };
+  }, [path, eligible]);
+  const visible = show && (!hidden || done);
+  const logged = useRef("");
+  useEffect(() => { if (visible && logged.current !== path) { logged.current = path; window.posthog?.capture?.("desktop_bar_shown", { page: path, offer: offer[0] }); } }, [visible, path]);
+  if (!eligible || !visible) return null;
+  const close = () => { setClosed(true); try { localStorage.setItem(DESK_BAR_KEY, String(Date.now())); } catch {} };
+  return (
+    <div ref={barRef} role="region" aria-label="Newsletter sign-up" style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 50, background: "#070a14", borderTop: "1px solid rgba(0,255,136,0.35)", boxShadow: "0 -8px 30px rgba(0,0,0,0.5)", padding: "12px 48px 12px 20px", animation: "fu 0.3s ease" }}>
+      <div style={{ maxWidth: 1040, margin: "0 auto", display: "flex", alignItems: "center", gap: 20 }}>
+        <div style={{ flex: "1 1 auto", minWidth: 0, fontSize: 12.5, color: C.light, lineHeight: 1.5 }}>
+          <span style={{ color: "#fff", fontWeight: 700 }}>{offer[0]}.</span>{" "}
+          <span style={{ color: C.muted }}>Free every Sunday, with a 34-page PDF on every listed space company.</span>
+        </div>
+        <SubscribeForm source="desktop-bar" follow={offer[2] || undefined} reward={SHEET} label={offer[3]} sample={false} onDone={() => setDone(true)} style={{ flex: "0 0 400px" }} />
+      </div>
+      <button onClick={close} aria-label="Close" style={{ position: "absolute", top: "50%", right: 14, transform: "translateY(-50%)", background: "none", border: "none", color: C.muted, fontSize: 20, lineHeight: 1, cursor: "pointer", padding: 4 }}>×</button>
     </div>
   );
 }
@@ -1162,6 +1219,17 @@ function Markets({ prices, launches, tab, setTab, goSubscribe }) {
         {active === "contracts" && <ContractsTab />}
         {active === "filings" && <FilingsTab />}
       </div>
+
+      {/* Second box under the table: the top bar had no sign-ups from /markets visitors since 21 Oct (PostHog). */}
+      <ForNonSubscribers>
+        <div style={{ ...cardStyle, margin: "0 20px 40px", border: "1px solid rgba(0,255,136,0.3)", background: "rgba(0,255,136,0.04)", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px 24px" }}>
+          <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+            <div style={{ fontFamily: SYNE, fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 6 }}>{marketsOffer[0]}</div>
+            <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.6 }}>{marketsOffer[1]} Plus Space Stocks 2026, a free 34-page PDF on every listed space company.</div>
+          </div>
+          <SubscribeForm source={`markets-${active}-end`} reward={SHEET} label={marketsOffer[3]} style={{ flex: "1 1 340px" }} />
+        </div>
+      </ForNonSubscribers>
     </div>
   );
 }
@@ -2780,7 +2848,7 @@ function GuidePage({ path }) {
     }).catch(() => alive && setFailed(true));
     return () => { alive = false; };
   }, [path]);
-  const cta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES, articlesData);
+  const cta = guideCta(path, resultsData.map((r) => ({ ...r, name: PROFILES[r.ticker]?.name })), PROFILES, articlesData, eventsData);
   const onClick = (e) => {
     const href = e.target.closest("a")?.getAttribute("href");
     if (!href || !href.startsWith("/") || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
@@ -2934,6 +3002,7 @@ export default function App() {
     <div style={{ minHeight: "100vh", background: C.bg, color: C.text, fontFamily: MONO, fontSize: 13, position: "relative", overflowX: "hidden" }}>
       <GlobalStyles />
       <SubscribePopup path={path} />
+      <DesktopBar path={path} />
       <Stars />
 
       <div style={{ position: "relative", zIndex: 2 }}>
