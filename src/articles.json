@@ -1,6 +1,162 @@
 [
  {
   "kind": "news",
+  "slug": "virgin-galactic-250-million-share-sale-dilution",
+  "title": "Virgin Galactic's $250M share sale now equals 84% of its market value",
+  "summary": "Virgin Galactic set up a new $250M at-the-market share sale and swapped part of its 2027 notes for stock, and its shares fell about 27% to $1.96. At that price the full sale would add about 128M shares, 84% of the current count, and at least 35% of net proceeds must repay debt.",
+  "published": "2026-11-13",
+  "updated": "2026-11-13",
+  "tickers": [
+   "SPCE"
+  ],
+  "match": [
+   "virgin galactic",
+   "stock"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "Alongside its [third-quarter results](/results/spce-q3-2026) on 12 November, Virgin Galactic filed a prospectus for a new at-the-market (ATM) programme with Jefferies, letting it sell up to $250M of shares into the market over time, with the agent paid up to 3.0%. On 13 November it agreed to swap $12.5M of its 2.50% convertible notes due February 2027 for new shares, and won bondholder consent to sell certain assets without having to use all the proceeds to redeem its 9.80% first lien notes due 2028.",
+     "The same day its 10-Q said there is substantial doubt about its ability to continue as a going concern, on an assessment that leaves out future share sales, and on the results call the company said extra test work had pushed back the start of flight testing for its first Delta spaceship, Apeiron, with the first glide flight now expected in January. The shares fell to $1.955 by 13:38 New York time on 13 November, down 26.8% from the $2.67 close on 12 November and at a new 52-week low."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the share price drop makes the raise much more dilutive",
+    [
+     "The prospectus worked its dilution example at $2.87, the 11 November close. At that price $250M buys about 87M shares. At Friday's $1.955 the same $250M needs about 128M shares, roughly 41M more, because the share price fell while the size of the programme is fixed in dollars. Against 151.7M shares outstanding on 5 November, that is 84% more shares if the programme is used in full.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Source or working"
+       ],
+       "rows": [
+        [
+         "Shares outstanding, 5 November",
+         "151.7M",
+         "10-Q cover"
+        ],
+        [
+         "Market value at $1.955",
+         "$296.5M",
+         "Our calculation: 151.7M x $1.955"
+        ],
+        [
+         "ATM size",
+         "$250M",
+         "424B5 prospectus"
+        ],
+        [
+         "ATM as share of market value",
+         "84%",
+         "Our calculation"
+        ],
+        [
+         "Shares needed at $2.87 (prospectus example)",
+         "87.1M (57% of shares)",
+         "Our calculation: $250M / $2.87"
+        ],
+        [
+         "Shares needed at $1.955",
+         "127.9M (84% of shares)",
+         "Our calculation: $250M / $1.955"
+        ],
+        [
+         "Net proceeds after a 3.0% commission",
+         "$242.5M",
+         "Our calculation, before other offering costs"
+        ],
+        [
+         "Minimum 35% sent to first lien noteholders",
+         "$84.9M",
+         "Our calculation from the prospectus terms"
+        ],
+        [
+         "Left for operations and growth",
+         "Up to $157.6M",
+         "Our calculation"
+        ],
+        [
+         "First lien notes outstanding",
+         "$172.0M, falling to $87.1M",
+         "8-K; our calculation if the full sweep applies"
+        ]
+       ]
+      }
+     },
+     "The second point is where the money goes. The prospectus says at least 35% of net proceeds must go to redeem the 9.80% first lien notes. So of the $250M headline, at most about $157.6M reaches the business. That is a real benefit for the balance sheet, because it could roughly halve the $172.0M of first lien debt, but it means shareholders fund the lenders first.",
+     "The third point is runway. The company held $184M of cash and securities on 30 September and guided to fourth-quarter free cash flow of minus $80M to minus $90M, leaving $94M to $104M at year end. Adding the most the ATM can deliver to operations gives $252M to $262M. Third-quarter free cash flow was minus $99.1M, so on our sums that covers about two and a half quarters at that rate, which reaches into the third quarter of 2027, only a few months after the first commercial flight now planned for early in the second quarter. In other words, even a fully used programme looks like a bridge to first revenue flights rather than funding to the end of the build-out, and it only works at the assumed size if buyers keep absorbing shares near today's price.",
+     "The note swap is small by comparison: at $1.955, the $12.5M of principal would convert into about 6.4M shares before accrued interest (our calculation), around 4% of the share count, with the final number set by the share price on 17 and 18 November within 85% to 115% of the 16 November close. It cuts the remaining 2027 notes from $17.9M to $5.4M."
+    ]
+   ],
+   [
+    "Why the company did it",
+    [
+     "The old programme was used up. The 10-Q shows the 2024 ATM had raised $295.8M of its $300M limit by 30 September, including 45.0M shares sold in 2026 for $145.0M, an average of $3.22 a share on our calculation. Friday's price is 39% below that average, so each dollar now costs existing holders more shares than at any point this year.",
+     "The company needs cash before revenue starts: it plans a new launch hangar and fuelling site to lift capacity to 150 flights a year from the second half of 2028, and more rocket motor production. Settling most of the 2027 notes in shares rather than cash, and freeing up asset sale proceeds, both protect cash for that work. The trade-off is ownership: holders are being asked to fund the build-out at a lower price than at any time in the past year."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "16 to 18 November: the price that sets the number of shares for the note swap, closing around 19 November.",
+       "The Q4 results and 10-K will show how much of the $250M was sold and at what average price.",
+       "January 2027: the first glide flight of Apeiron, after a captive-carry test above Spaceport America.",
+       "Early Q2 2027: the first commercial spaceflight, the point at which revenue should begin to offset cash burn.",
+       "Any asset sale before 30 July 2027: 80% of net cash proceeds above $5M must go to redeeming first lien notes.",
+       "See the [SPCE stock page](/stocks/spce) for live price, filings and contracts."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much will Virgin Galactic's $250M share sale dilute shareholders?",
+    "It depends on the selling price. At the 11 November close of $2.87 the full $250M would need about 87M new shares, 57% of the 151.7M outstanding. At $1.955 on 13 November it would need about 128M shares, or 84%, on our calculation."
+   ],
+   [
+    "How much of the $250M will Virgin Galactic keep?",
+    "After a commission of up to 3.0%, net proceeds would be about $242.5M, and at least 35% must go to redeeming the 9.80% first lien notes. That leaves up to about $157.6M for operations and growth, on our calculation from the prospectus terms."
+   ],
+   [
+    "Why did Virgin Galactic stock fall on 13 November 2026?",
+    "The new $250M share sale, a stock-for-notes swap, a going-concern warning in its 10-Q and a later start to flight testing of its first Delta spaceship all landed together. The shares fell 26.8% to $1.955 by early afternoon in New York, a new 52-week low."
+   ]
+  ],
+  "sources": [
+   [
+    "Virgin Galactic 424B5 prospectus supplement, $250M at-the-market offering, 12 November 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1706946/000119312526458526/d130163d424b5.htm"
+   ],
+   [
+    "Virgin Galactic Form 8-K, note exchange and first lien indenture amendment, 13 November 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1706946/000119312526459413/d112611d8k.htm"
+   ],
+   [
+    "Virgin Galactic Form 10-Q for the quarter to 30 September 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1706946/000170694626000135/spce-20260930.htm"
+   ],
+   [
+    "Virgin Galactic Announces Third Quarter 2026 Financial Results and Provides Business Update (Virgin Galactic investor relations)",
+    "https://investors.virgingalactic.com/news/news-details/2026/Virgin-Galactic-Announces-Third-Quarter-2026-Financial-Results-and-Provides-Business-Update/default.aspx"
+   ],
+   [
+    "Virgin Galactic falls as expected first flight for Apeiron pushed back (TipRanks/The Fly)",
+    "https://www.tipranks.com/news/the-fly/virgin-galactic-falls-as-expected-first-flight-for-apeiron-pushed-back-thefly-news"
+   ],
+   [
+    "Virgin Galactic quote (Yahoo Finance)",
+    "https://finance.yahoo.com/quote/SPCE/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "blue-origin-exits-nasa-space-station-competition-voyager-starlab",
   "title": "Blue Origin quits NASA station race: why Voyager's real test is 2028",
   "summary": "Blue Origin will not bid for NASA's next commercial space station contract, leaving Voyager's Starlab, Axiom and Vast for two initial development awards. Starlab has $5.0M left of its $217.5M NASA grant on our sums, so the April 2027 award is its next NASA money.",
