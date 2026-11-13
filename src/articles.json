@@ -3882,9 +3882,9 @@
  {
   "slug": "when-will-ast-spacemobile-start-commercial-service",
   "title": "When will AST SpaceMobile start commercial service?",
-  "summary": "AST SpaceMobile is targeting initial, intermittent beta service in the US and four other countries before the end of 2026, with paid service three to six months after beta starts: spring 2027 at the earliest. Its launch plan needs 33 more satellites by March 2027; it has launched six since June.",
+  "summary": "AST SpaceMobile is targeting initial, intermittent beta service in the US and four other countries before the end of 2026, with paid service three to six months after beta starts: spring 2027 at the earliest. It now targets about 45 satellites in orbit by mid 2027, 32 more than today, and has launched six since June.",
   "published": "2026-11-03",
-  "updated": "2026-11-03",
+  "updated": "2026-11-13",
   "tickers": [
    "ASTS"
   ],
@@ -3947,7 +3947,7 @@
       }
      },
      "The gap is the point. Going from 13 to 46 satellites by the end of March means adding 33 in about five months. Falcon 9 has carried AST's satellites three at a time, so that is the equivalent of 11 Falcon 9 launches (our calculation). Since June, AST has managed two: BlueBirds 8 to 10 on 17 June and 11 to 13 on 5 August. The plan leans on Blue Origin's New Glenn returning around the turn of the year, after it put one AST satellite in the wrong orbit in April and exploded on the pad in May.",
-     "The first step has already slipped. Advanced Television's 19 October schedule had BlueBirds 14 to 16 launching later in October; on 3 November Next Spaceflight still listed them as no earlier than the fourth quarter, with no date. Our reading: beta by year end is achievable with the coverage AST already has, because it is defined as intermittent, but the move to paid and then continuous service depends on a launch rate AST has not yet shown.",
+     "The first step has already slipped. Advanced Television's 19 October schedule had BlueBirds 14 to 16 launching later in October. In its Q3 update on 9 November AST said they were still awaiting SpaceX launch date confirmation, and launch trackers list them for no earlier than 30 December. AST itself moved its target to about 45 satellites in orbit by the middle of 2027. Our reading: beta by year end is achievable with the coverage AST already has, because it is defined as intermittent, but the move to paid and then continuous service depends on a launch rate AST has not yet shown.",
      {
       "table": {
        "head": [
@@ -4051,9 +4051,9 @@
     [
      {
       "list": [
-       "9 November 2026: AST's Q3 business update call. Look for a launch date for BlueBirds 14 to 16, a confirmed beta start and any firmer date for paid service. The [AST earnings preview](/earnings-preview/asts) has the figures to compare.",
-       "BlueBirds 14 to 16 on Falcon 9: no date announced, listed for the fourth quarter.",
-       "November and December: BlueBirds 17 to 27 are scheduled in three more batches by year end, per Advanced Television. Falling behind here pushes back the 46-satellite target.",
+       "9 November 2026 (done): AST's Q3 update kept the year-end target for initial, intermittent coverage and set a target of about 45 satellites by mid 2027. See [AST's Q3 2026 results](/results/asts-q3-2026).",
+       "BlueBirds 14 to 16 on Falcon 9: awaiting SpaceX date confirmation; trackers list no earlier than 30 December.",
+       "Early Q1 2027: BlueBirds 17 to 19 on New Glenn, then BlueBirds 20 to 25 on launches expected during Q1 2027 (AST, 9 November).",
        "Around year end: New Glenn's return to flight, which the 2027 launch schedule depends on.",
        "31 December 2026: AST's target for initial, intermittent coverage in five countries.",
        "End of March to end of June 2027: the window for paid service if beta starts on time."
@@ -4069,7 +4069,7 @@
    ],
    [
     "How many satellites does AST SpaceMobile have?",
-    "13 in orbit after the 5 August 2026 launch. BlueBirds 14 to 16 are at Cape Canaveral awaiting a launch date. An unconfirmed schedule has 46 in orbit by the end of March 2027."
+    "13 in orbit after the 5 August 2026 launch. BlueBirds 14 to 16 are at Cape Canaveral awaiting a SpaceX launch date. AST targets about 45 in orbit by the middle of 2027."
    ],
    [
     "Which carriers will offer AST SpaceMobile service?",
@@ -4128,6 +4128,10 @@
    [
     "Orbit Alpha live quote: ASTS (close 2 November 2026, market value and 52-week range)",
     "https://www.orbitalpha.cloud/api/quote?ticker=ASTS"
+   ],
+   [
+    "AST SpaceMobile: business update and third quarter 2026 results (SEC 8-K exhibit 99.1, 9 November 2026)",
+    "https://www.sec.gov/Archives/edgar/data/0001780312/000119312526453758/asts-ex99_1.htm"
    ]
   ]
  },
@@ -5067,6 +5071,229 @@
    [
     "CoinGlass: IRDM 9 November 2026 close $45.08",
     "https://www.coinglass.com/stocks/IRDM"
+   ]
+  ]
+ },
+ {
+  "slug": "why-has-york-space-systems-stock-fallen",
+  "title": "Why has York Space Systems stock fallen so much?",
+  "summary": "York (YSS) closed at $6.60 on 12 November 2026, 81% below its $34 IPO price, after the Pentagon halted SDA Tranche 3 payments, a short report and a 32% guidance cut. On our sums the market now values it below book value, at 1.9 times 2026 revenue.",
+  "published": "2026-11-13",
+  "updated": "2026-11-13",
+  "tickers": [
+   "YSS"
+  ],
+  "sections": [
+   [
+    "The short answer",
+    [
+     "York Space Systems priced its IPO at $34 a share in January 2026. It closed at $6.60 on 12 November, down 81% (our calculation), and touched a low of $5.26 on 5 November. Four things did most of the damage: the loss of visibility on its main customer programme, a short-seller report, two earnings misses with a deep cut to 2026 revenue guidance, and, on 12 November, a $749.7M goodwill write-down.",
+     "The core problem is concentration. A Wolfpack Research short report on 11 May said 96% of York's 2025 revenue came from the Pentagon's Space Development Agency (SDA). In April the Space Force's spring budget restructured the SDA Transport Layer programme and halted Tranche 3 payments, according to the securities class action filed against York. York has been rebuilding its pipeline since, but quarterly revenue has fallen from $116.3M in Q1 to $92.6M in Q2 and $84.2M in Q3."
+    ]
+   ],
+   [
+    "Orbit Alpha view: priced below book, with a year of cash at this pace",
+    [
+     "The useful question now is what $6.60 implies. On the balance sheet York published with its Q3 results, the market values the whole company at less than its book value, even after the write-down, and the operating business at under two times this year's revenue.",
+     {
+      "table": {
+       "head": [
+        "Measure (our calculations)",
+        "Figure",
+        "Working"
+       ],
+       "rows": [
+        [
+         "Market value",
+         "$892M",
+         "135.2M shares at 30 September x $6.60 close on 12 November"
+        ],
+        [
+         "Value at the $34 IPO price",
+         "$4.60B",
+         "Same share count x $34; about $3.7B lower now"
+        ],
+        [
+         "Debt",
+         "$146.2M",
+         "$6.6M current plus $139.7M long-term debt"
+        ],
+        [
+         "Enterprise value",
+         "$730M",
+         "$892M + $146.2M debt - $308.9M cash"
+        ],
+        [
+         "Enterprise value / 2026 revenue",
+         "1.9x",
+         "$730M / $390M guidance midpoint"
+        ],
+        [
+         "Enterprise value / backlog",
+         "1.3x",
+         "$730M / $581.0M backlog"
+        ],
+        [
+         "Price / book value",
+         "0.83x",
+         "$892M / $1,080.9M stockholders' equity ($7.99 a share)"
+        ],
+        [
+         "Tangible book value",
+         "$2.49 a share",
+         "$1,080.9M less $322.5M goodwill and $422.3M other intangibles"
+        ],
+        [
+         "Cash per share",
+         "$2.28",
+         "$308.9M / 135.2M shares"
+        ]
+       ]
+      }
+     },
+     "Two numbers show why investors are not paying even book value. First, the write-down: goodwill was $674.3M at the start of 2026 and $322.5M at 30 September after a $749.7M impairment. That means York added about $398M of goodwill this year, through its acquisitions of Orbion, Solestial and All.Space, and then wrote off more than the entire goodwill it began the year with (our arithmetic). York paid for those deals with $183.3M of cash and $246.9M of new shares. York said it took the charge because it cannot estimate with enough certainty the timing and amount of contract awards beyond 2026.",
+     "Second, the cash. The IPO raised $589.6M net of underwriting and offering costs, but cash rose only $146.4M in nine months, to $308.9M, because operations used $248.4M and acquisitions $183.3M. At the nine-month average of $82.8M a quarter, cash covers about 3.7 more quarters before York draws its $150M revolving facility (our arithmetic, not a forecast; part of the outflow is working capital, as customer prepayments fell $80.5M). Compare other covered companies on the [cash runway guide](/space-stocks/cash-runway).",
+     "So the share price already reflects a business that is shrinking this year, burning cash and buying growth with stock. What would change the picture is evidence that the $14.9B pipeline York cites turns into funded orders: backlog fell slightly in Q3 to $581.0M, with new contract wins and modifications adding only $17M and York's subsidiaries $44M."
+    ]
+   ],
+   [
+    "How the shares got here",
+    [
+     {
+      "table": {
+       "head": [
+        "Date",
+        "Event",
+        "Share move"
+       ],
+       "rows": [
+        [
+         "Late January 2026",
+         "IPO of about 18.5M shares at $34, roughly $583M of net proceeds",
+         "Later traded as high as $44.54"
+        ],
+        [
+         "April 2026",
+         "Space Force spring budget restructures the SDA Transport Layer and halts Tranche 3 payments (as described in the class action)",
+         "Cited by plaintiffs as a cause of the fall"
+        ],
+        [
+         "11 May",
+         "Wolfpack Research discloses a short position, alleging the SDA programme York relied on was being replaced",
+         "Fell sharply"
+        ],
+        [
+         "14 to 15 May",
+         "Q1 loss of $0.68 a share against $0.11 expected; revenue $116.3M",
+         "Down 18% intraday on 15 May"
+        ],
+        [
+         "13 to 14 August",
+         "Q2 loss of $0.31 a share against $0.12 expected; 2026 revenue guidance cut to $375M to $405M from $545M to $595M",
+         "Down 11.2% intraday on 14 August"
+        ],
+        [
+         "25 August",
+         "Goldman Sachs halves its target to $14",
+         "Down more than 5.5%"
+        ],
+        [
+         "October",
+         "Class action lead-plaintiff deadline of 30 October draws a run of law-firm notices",
+         "Shares kept falling, to a low of $5.26 on 5 November"
+        ],
+        [
+         "12 November",
+         "Outlook Industries acquisition announced before the open; Q3 results and $749.7M impairment after the close",
+         "Closed down 8.8% at $6.60, then $6.50 after hours"
+        ]
+       ]
+      }
+     },
+     "The class action alleges York's IPO documents overstated its satellites and its incumbent position on Tranche 3. These are allegations and have not been proven. The full Q3 figures are on the [York Q3 2026 results page](/results/yss-q3-2026)."
+    ]
+   ],
+   [
+    "What York says it is doing about it",
+    [
+     "York's answer is to widen the business beyond SDA satellites. In Q3 it won two Space Force Space Data Network task orders and a place on the NITE-STAR IDIQ contract, named Tomorrow.io as the customer for a $187M commercial constellation contract, and is prime contractor on the Space Force Tetra 3 and 4 missions, with spacecraft delivery targeted for the fourth quarter. Its All.Space subsidiary sold Hydra terminals to the US Navy and to Viasat ([VSAT](/stocks/vsat)).",
+     "On 12 November it agreed to buy Outlook Industries, a maker of unmanned ground systems, to form York Terrestrial Systems. York did not disclose a price or say how it will pay. Management argues that after the election the government will put more weight on competition and vendor diversity, which it says favours York's pricing and production capacity."
+    ]
+   ],
+   [
+    "Dates and numbers to watch",
+    [
+     {
+      "list": [
+       "19 November 2026, 5pm ET: York's investor call on the Outlook acquisition. The terms matter: York has issued $246.9M of shares for acquisitions this year, and new stock at $6.60 dilutes far more per dollar than stock at $34.",
+       "Fourth-quarter revenue: York needs $86.9M to $106.9M to land inside its $380M to $400M guidance, against $84.2M in Q3 (our calculation). See the [York earnings preview](/earnings-preview/yss) for the next report.",
+       "Cash at 31 December: whether it stays near $300M or falls by another quarter's burn of about $80M.",
+       "Backlog: the first quarter that it rises because of new government awards rather than acquisitions.",
+       "The class action: the court's choice of lead plaintiff, after the 30 October deadline.",
+       "Live price and filings: [YSS stock page](/stocks/yss)."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "What was York Space Systems' IPO price?",
+    "$34 a share. York sold about 18.5 million shares in its January 2026 IPO on the NYSE. It closed at $6.60 on 12 November 2026, 81% lower."
+   ],
+   [
+    "Why did York Space Systems take a $749.7M impairment?",
+    "York said it could not estimate with sufficient certainty the timing and amount of future contract awards beyond 2026. The non-cash charge cut goodwill to $322.5M and drove a Q3 net loss of $807.4M."
+   ],
+   [
+    "Is York Space Systems trading below book value?",
+    "Yes, on our sums. At $6.60 its market value is about $892M against stockholders' equity of $1,080.9M at 30 September, or 0.83 times book. Excluding goodwill and intangibles, book value is about $2.49 a share."
+   ],
+   [
+    "How much cash does York Space Systems have?",
+    "$308.9M at 30 September 2026, plus $150M available under a revolving facility. Operations used $248.4M in the first nine months of 2026."
+   ]
+  ],
+  "sources": [
+   [
+    "York Space Systems Reports Third Quarter 2026 Results (Business Wire, 12 November 2026)",
+    "https://www.businesswire.com/news/home/20261112049211/en/York-Space-Systems-Reports-Third-Quarter-2026-Results"
+   ],
+   [
+    "York Space Systems to Acquire Outlook Industries, Expanding Into Unmanned Systems (Business Wire, 12 November 2026)",
+    "https://www.businesswire.com/news/home/20261112355309/en/York-Space-Systems-to-Acquire-Outlook-Industries-Expanding-Into-Unmanned-Systems"
+   ],
+   [
+    "Stocktwits: Why is York Space Systems stock falling today? Wolfpack short report (11 May 2026)",
+    "https://stocktwits.com/news-articles/markets/equity/why-is-yss-stock-falling-today-may-11/cZXaJ0jRehl"
+   ],
+   [
+    "The Motley Fool: Why York Space Systems stock just crashed (15 May 2026)",
+    "https://www.fool.com/investing/2026/05/15/why-york-space-systems-stock-just-crashed/"
+   ],
+   [
+    "The Motley Fool via Yahoo Finance: Why York Space Systems stock crashed again Friday (14 August 2026)",
+    "https://finance.yahoo.com/markets/stocks/articles/why-york-space-systems-stock-171435137.html"
+   ],
+   [
+    "Stocktwits via Yahoo Finance: Goldman Sachs halves YSS price target; guidance cut to $375M to $405M (25 August 2026)",
+    "https://finance.yahoo.com/markets/stocks/articles/yss-stock-falling-despite-space-180332726.html"
+   ],
+   [
+    "SueWallSt via Morningstar: York Space Systems class action, IPO terms and Tranche 3 halt (8 October 2026)",
+    "https://www.morningstar.com/news/pr-newswire/20261008ny66188/suewallst-reminds-york-space-systems-investors-of-the-pending-class-action-lawsuit-with-a-lead-plaintiff-deadline-of-october-30-2026-yss"
+   ],
+   [
+    "Kessler Topaz Meltzer & Check: York Space Systems securities class action",
+    "https://www.ktmc.com/yss-york-space-systems-inc-class-action-lawsuit/"
+   ],
+   [
+    "MarketBeat: York Space Systems stock falls 10.4% (12 November 2026)",
+    "https://www.marketbeat.com/instant-alerts/price-york-space-systems-nyse-yss-stock-falls-104-heres-why-2026-11-12/"
+   ],
+   [
+    "Orbit Alpha live quote: YSS (close 12 November 2026, 52-week range)",
+    "https://www.orbitalpha.cloud/api/quote?ticker=YSS"
    ]
   ]
  }
