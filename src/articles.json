@@ -1,6 +1,132 @@
 [
  {
   "kind": "news",
+  "slug": "vulcan-failure-amazon-leo-fcc-milestone-spacex",
+  "title": "Vulcan failure: Amazon Leo can't reach its FCC halfway mark without it",
+  "summary": "ULA's Vulcan failed on 15 November, destroying 40 Amazon Leo satellites and grounding the rocket booked for 52% of Amazon's remaining launches. Our count: Amazon's non-BE-4 bookings cover about 996 satellites, short of the 1,220 it needs to reach half its FCC constellation.",
+  "published": "2026-11-16",
+  "updated": "2026-11-16",
+  "tickers": [
+   "SPCX",
+   "ASTS",
+   "RKLB",
+   "FLY"
+  ],
+  "match": [
+   "vulcan",
+   "fail"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "United Launch Alliance's Vulcan rocket failed about 10 minutes after lifting off from Cape Canaveral at 12:40 p.m. Eastern on Sunday 15 November, and its 40 Amazon Leo broadband satellites were lost. It was Vulcan's fifth flight, its first in nine months, and the first total mission failure in ULA's 20-year history. Ars Technica's sources placed the problem in the booster stage, which is powered by two Blue Origin BE-4 engines; ULA has not given a cause or a return-to-flight date. The US Space Force's pause on national security missions for Vulcan, in place since a booster problem on 12 February, remains.",
+     "The flight was the first of 38 Vulcan launches Amazon bought in 2022. No covered company owns ULA or Amazon, but space stocks fell in overnight trading late on Sunday. On our site's quote feed early on Monday 16 November (UK morning), [AST SpaceMobile](/stocks/asts) was at $31.26, 4.1% below Friday's $32.60 close, and [Rocket Lab](/stocks/rklb) at $59.03, down 4.1% from $61.53, while [SpaceX](/stocks/spcx) was up 0.7% at $140.11 against $139.11."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the halfway mark now rests on BE-4 rockets",
+    [
+     "The 40 lost satellites matter less than the rocket being grounded. The FCC licence for Amazon Leo's first generation covers 3,232 satellites. Amazon missed the original deadline to have half of them, 1,616, in orbit by 30 July 2026, and in June the FCC granted a waiver with a penalty: satellites launched after that date do not get priority access to spectrum until Amazon reaches the 50% mark or 30 March 2028, whichever comes first (or 30 October 2027 if it can show half the fleet is built with launches secured). The full constellation is still due by 30 July 2029. Ars Technica puts the number in orbit today at 396.",
+     "We added up Amazon's remaining published launch bookings by rocket to see how much of that gap can be closed without Vulcan.",
+     {
+      "table": {
+       "head": [
+        "Rocket",
+        "Launches left",
+        "Satellites (our calculation)",
+        "Share of the 2,836 still to launch"
+       ],
+       "rows": [
+        [
+         "Vulcan (grounded, BE-4 engines)",
+         "37",
+         "1,480 (37 x 40, the minimum per flight Ars reports)",
+         "52%"
+        ],
+        [
+         "Ariane 6",
+         "21 (24 booked, 3 flown)",
+         "756 if each carries 36, as the 23 November flight will",
+         "27%"
+        ],
+        [
+         "Falcon 9",
+         "10",
+         "240 (24 per flight, as in 2025: 72 on 3 flights)",
+         "8%"
+        ],
+        [
+         "New Glenn (grounded since May, BE-4 engines) or new contracts",
+         "Not published",
+         "About 360 (the balance)",
+         "13%"
+        ]
+       ]
+      }
+     },
+     "Working: 3,232 licensed minus 396 in orbit leaves 2,836 to launch by July 2029. To reach the 1,616 halfway mark Amazon needs 1,220 more. Every Ariane 6 and Falcon 9 flight it has booked would add about 996 (756 plus 240), which is 224 short. So, on its current contracts, Amazon cannot reach the halfway mark at all unless Vulcan or New Glenn flies again, and both depend on the BE-4. If investigators trace Sunday's failure to the engine, the two rockets meant to carry roughly two thirds of Amazon's remaining satellites (52% plus 13%) share one fix. Our reading of the FCC terms is that the 30 March 2028 backstop, rather than the milestone, is becoming the more likely route to priority spectrum for satellites launched after July 2026.",
+     "Amazon has also said it has built its 1,000th satellite, so more than half of what it has made is in storage. The constraint is rides, not factories. Arianespace's 23 November launch of 36 satellites would take the fleet to 432, still 27% of the halfway mark."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "[SpaceX](/stocks/spcx) gains twice, though not much in revenue. Amazon Leo is set to be the first head-to-head rival to Starlink's consumer service, which earned $3.12B in the third quarter from 13.6 million subscribers ([Q3 results](/results/spcx-q3-2026)); every month Amazon's rollout slips is a month Starlink sells without a like-for-like competitor. And with Vulcan and New Glenn both grounded, Falcon 9 and Falcon Heavy are the only US heavy rockets now flying national security missions; the Space Force has already moved six missions from ULA to SpaceX. The launch revenue itself is small: Amazon's 10 Falcon 9 flights and any extra military swaps sit inside a Space segment that brought in $1.77B last quarter. The catch is capacity, as SpaceX is moving Falcon 9 towards retirement in favour of Starship, which caught its upper stage for the first time on [Flight 15](/launches/spacex-starship-flight-15) but is not certified for national security payloads.",
+     "[AST SpaceMobile](/stocks/asts) did not use Vulcan, but its next three BlueBirds after the batch waiting for Falcon 9 are due to ship by the end of November for a New Glenn flight early in 2027. A BE-4 finding would put that flight at risk, which is why AST fell most on Sunday night. We set out what a New Glenn slip means for AST's coverage targets in [our earlier analysis](/articles/blue-origin-new-glenn-delay-ast-spacemobile-satellites).",
+     "[Rocket Lab](/stocks/rklb) has no exposure to Vulcan that we can find, and its Neutron rocket is too small to carry 40-satellite batches; its first 16 Neutron launches are already booked, with a debut no earlier than 2027. Its overnight fall looks like sector selling rather than a link to the failure. [Firefly](/stocks/fly), which is supplying 36 engines for AST's planned Blacklift rocket from late 2028, is likewise not directly affected."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     "Whether ULA or Blue Origin names the BE-4 as the cause: that decides whether New Glenn's January return also slips. The Ariane 6 launch of 36 Amazon Leo satellites, set for as early as 23 November, is now Amazon's only near-term launch. Watch too for a Space Force statement on its Vulcan pause and any further missions moved to SpaceX, and for Amazon buying more Falcon 9 flights, which Ars Technica expects to be hard as SpaceX winds the rocket down."
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How far is Amazon Leo from its FCC milestone after the Vulcan failure?",
+    "Amazon has 396 satellites in orbit against a halfway mark of 1,616, so it needs 1,220 more. Our count of its published Ariane 6 and Falcon 9 bookings comes to about 996 satellites, so it cannot reach the mark without Vulcan or New Glenn flying again."
+   ],
+   [
+    "Does the Vulcan failure help SpaceX?",
+    "Mainly competitively. It delays Amazon Leo, set to be the first head-to-head rival to Starlink's consumer service, and leaves Falcon 9 and Falcon Heavy as the only US heavy rockets flying national security missions. The extra launch revenue is small next to SpaceX's $1.77B quarterly Space segment."
+   ],
+   [
+    "Why did AST SpaceMobile shares fall after the Vulcan failure?",
+    "AST does not fly on Vulcan, but its next New Glenn launch, planned for early 2027, uses the same Blue Origin BE-4 engine that powers Vulcan's booster. If the engine is found at fault, that flight could slip."
+   ]
+  ],
+  "sources": [
+   [
+    "ULA suffers first outright failure with loss of Vulcan rocket carrying 40 Amazon Leo satellites (Spaceflight Now, 15 November 2026)",
+    "https://spaceflightnow.com/2026/11/15/ula-suffers-first-total-mission-failure-with-loss-of-vulcan-rocket-carrying-40-amazon-leo-satellites/"
+   ],
+   [
+    "FCC Space Bureau order DA 26-553 on the Amazon Leo milestone waiver",
+    "https://docs.fcc.gov/public/attachments/DA-26-553A1.pdf"
+   ],
+   [
+    "Vulcan rocket fails during launch, dealing major blow to SpaceX competitors (Ars Technica, 15 November 2026)",
+    "https://arstechnica.com/space/2026/11/vulcan-rocket-fails-during-launch-dealing-major-blow-to-spacex-competitors/"
+   ],
+   [
+    "FCC gives Amazon Leo more time to launch (Payload, 9 June 2026)",
+    "https://payloadspace.com/fcc-gives-amazon-leo-more-time-to-launch/"
+   ],
+   [
+    "Vulcan launch of Amazon Leo satellites fails (SpaceNews, 15 November 2026)",
+    "https://spacenews.com/vulcan-launch-of-amazon-leo-satellites-fails/"
+   ],
+   [
+    "ASTS, RKLB, LUNR and FLY fall after ULA rocket failure (Stocktwits via Yahoo Finance, 16 November 2026)",
+    "https://finance.yahoo.com/markets/stocks/articles/asts-rklb-lunr-fly-fall-055834650.html"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "virgin-galactic-250-million-share-sale-dilution",
   "title": "Virgin Galactic's $250M share sale now equals 84% of its market value",
   "summary": "Virgin Galactic set up a new $250M at-the-market share sale and swapped part of its 2027 notes for stock, and its shares fell about 27% to $1.96. At that price the full sale would add about 128M shares, 84% of the current count, and at least 35% of net proceeds must repay debt.",
