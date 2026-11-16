@@ -6,10 +6,12 @@
       "SPCX"
     ],
     "vehicle": "Starship (Super Heavy Booster 22, Ship 42)",
-    "status": "upcoming",
+    "status": "done",
     "date": "2026-11-13",
-    "dateText": "13 November 2026, 17:45 to 19:00 ET window (pending regulatory approval)",
-    "summary": "SpaceX's Starship Flight 15 is set for 13 November 2026 from Starbase, Texas, with the first attempt to catch both the Super Heavy booster and the Starship upper stage. A double catch would open the way to the first reflight of a recovered ship.",
+    "dateText": "Launched 13 November 2026 at 17:47 ET from Starbase, Texas",
+    "summary": "SpaceX's Starship Flight 15 launched on 13 November 2026, reached orbit and deployed 26 Starlink V3 satellites; Ship 42 was then caught by the launch tower, a first for an upper stage. The booster catch was aborted and Booster 22 was lost in the Gulf.",
+    "outcome": "Starship lifted off at 4:47 p.m. CST on 13 November and deployed 26 Starlink V3 satellites in orbit. Booster 22's guidance system aborted the tower catch automatically and the booster exploded at splashdown in the Gulf, but Ship 42 was caught by the tower at Starbase at 3:20 p.m. CST on 14 November (Spaceflight Now).",
+    "reaction": "Liftoff came after the US market close on Friday 13 November, a session in which SPCX ticked lower ahead of the flight (Investor's Business Daily). The next trading session, Monday 16 November, had not opened when this page was updated.",
     "stakes": [
       "SpaceX has confirmed a 13 November 2026 target, with a 75 minute window opening at 17:45 ET, pending regulatory approval; the date had earlier moved from 8 November to 12 November and then 13 November.",
       "SpaceX plans to catch both stages with the launch tower's arms; a success would be the first full recovery of a Starship vehicle and would allow the first reflight of a properly recovered ship (NASASpaceflight).",
@@ -104,9 +106,21 @@
       [
         "WAI Hub: Starship Flight 15",
         "https://www.whataboutit.space/launches/starship-flight-15"
+      ],
+      [
+        "Spaceflight Now: Starship returns to Starbase and a successful tower catch (13 to 15 November 2026)",
+        "https://spaceflightnow.com/2026/11/13/live-coverage-starship-flight-15-attempts-to-recover-full-vehicle-in-double-launch-pad-catch/"
+      ],
+      [
+        "Space.com: SpaceX launches Starship on 22-hour Flight 15 test but aborts booster catch",
+        "https://www.space.com/space-exploration/launches-spacecraft/spacex-starship-flight-15-chopsticks-double-catch-super-heavy-ship"
+      ],
+      [
+        "Investor's Business Daily: SpaceX launches Starship Flight 15 mission",
+        "https://www.investors.com/news/spacex-starship-flight-15-launch-tower-catch-elon-musk-rocket-lab-electron-milestone-spcx-stock-rklb/"
       ]
     ],
-    "updated": "2026-11-09"
+    "updated": "2026-11-16"
   },
   {
     "slug": "ast-spacemobile-bluebirds-14-16-launch",
