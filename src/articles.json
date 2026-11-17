@@ -4139,6 +4139,245 @@
   ]
  },
  {
+  "slug": "why-has-firefly-aerospace-stock-jumped",
+  "title": "Why has Firefly Aerospace stock jumped?",
+  "summary": "Firefly (FLY) rose 48% from $15.18 on 5 November to $22.48 on 16 November after a $1.3B AST SpaceMobile engine deal, a NASA CLPS 2 selection and a Q3 beat. On our sums that added about $1.25B of market value, close to the deal's headline value, which is not yet in its $1.7B backlog.",
+  "published": "2026-11-17",
+  "updated": "2026-11-17",
+  "tickers": [
+   "FLY",
+   "ASTS"
+  ],
+  "sections": [
+   [
+    "The short answer",
+    [
+     "Three pieces of news in four trading days. [Firefly Aerospace](/stocks/fly) closed at $15.18 on 5 November, after a sell-off across space stocks. On 6 November it signed an engine licence and supply deal with [AST SpaceMobile](/stocks/asts) valued at more than $1.3B and the shares rose 36.8%. On 7 November NASA named it one of eight companies eligible to bid for CLPS 2 Moon deliveries, and FLY rose 17.1% on the next trading day. On 10 November it reported third-quarter revenue of $110.7M, up 259%, a record $1.7B backlog and a higher floor to its 2026 guidance; the shares rose 12.3% on 11 November to a closing high of $26.61.",
+     "Some of the gain has gone since. FLY fell 10.8% to $22.48 on 16 November, when space stocks dropped after US Treasury Secretary Scott Bessent called for a \"dramatic shakeup\" at Nvidia, SpaceX's partner on orbital AI data centres. That still leaves the shares up 48.1% from the 5 November close, and up 75.4% at the 11 November peak (our calculations from daily closes)."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the market has paid about the deal's headline value, no more",
+    [
+     "The useful check is how much value the rally added, against what Firefly actually won. Two details matter. First, the $1.7B backlog is measured at 30 September, and Firefly lists the AST contracts under \"additional recent highlights\" after the quarter end, so the AST deal is not in that figure. Second, the CLPS 2 selection is a right to bid for task orders, not an order, so it adds nothing to backlog yet. On those terms, the value the market added is close to the AST deal alone.",
+     {
+      "table": {
+       "head": [
+        "Measure (our calculations)",
+        "Figure",
+        "Working"
+       ],
+       "rows": [
+        [
+         "Market value, 5 November",
+         "$2.60B",
+         "171.6M shares at 30 September x $15.175"
+        ],
+        [
+         "Market value, 16 November",
+         "$3.86B",
+         "171.6M x $22.48"
+        ],
+        [
+         "Value added since 5 November",
+         "$1.25B",
+         "$3.86B - $2.60B; it was $1.96B at the $26.61 close on 11 November"
+        ],
+        [
+         "Headline value of the AST contracts",
+         "More than $1.3B",
+         "Firefly release, 6 November"
+        ],
+        [
+         "Backlog including the AST contracts",
+         "About $3.0B",
+         "$1.7B at 30 September + $1.3B; Firefly has not published a combined figure"
+        ],
+        [
+         "AST's share of that combined backlog",
+         "About 43%",
+         "$1.3B / $3.0B"
+        ],
+        [
+         "Enterprise value, 5 November",
+         "$2.09B",
+         "$2.60B - $534.7M cash and short-term investments + $25.1M notes payable"
+        ],
+        [
+         "Enterprise value, 16 November",
+         "$3.35B",
+         "$3.86B - $534.7M + $25.1M"
+        ],
+        [
+         "Enterprise value / backlog, before and after",
+         "1.23x then 1.12x",
+         "$2.09B / $1.7B on 5 November; $3.35B / about $3.0B on 16 November"
+        ],
+        [
+         "Enterprise value / 2026 revenue guidance",
+         "4.7x then 7.5x",
+         "Against the $445M midpoint of $440M to $450M"
+        ]
+       ]
+      }
+     },
+     "So per dollar of contracted work, Firefly is no dearer than before the rally; it is dearer per dollar of this year's revenue, because most of the AST money arrives over several years. Firefly said the licence and support portions will be recognised over time as work is completed, and the engine portion when engines are delivered for AST's first three Blacklift rockets, which AST plans to fly from late 2028. The rally also concentrates the story: on our sums nearly half the combined order book would come from one customer that is itself loss-making and spending heavily on its satellite network.",
+     "The AST stock is the part to watch. About $800M of the deal is an up-front licence fee made up of $400M in cash and 10 to 14 million AST shares, set by a forward volume-weighted average price. Our reading is that this works out at $400M of stock only while AST trades between $28.57 ($400M / 14M) and $40.00. AST closed at $28.58 on 16 November, one cent above the lower edge. Below it the share count stops at 14 million, so each further $1 fall in AST during the pricing period takes about $14M off what Firefly receives, and the shares are then subject to lock-ups. Our full working on the deal from both sides is in [AST SpaceMobile's $1.3B Firefly engine deal](/articles/ast-spacemobile-blacklift-rocket-firefly-engine-deal).",
+     "Cash is the other number the deal changes. Firefly had $534.7M of cash and short-term investments at 30 September, an undrawn $305M credit line, and used $270.5M of free cash flow in the first nine months, about $90.2M a quarter. That is about 5.9 quarters of cash at that pace, or about 10.4 once the $400M up-front cash arrives (our arithmetic, not a forecast; we have not seen a payment date). Compare other covered companies on the [cash runway guide](/space-stocks/cash-runway)."
+    ]
+   ],
+   [
+    "How the shares moved, day by day",
+    [
+     {
+      "table": {
+       "head": [
+        "Date",
+        "Close",
+        "Move",
+        "What happened"
+       ],
+       "rows": [
+        [
+         "5 November",
+         "$15.18",
+         "",
+         "Space and AI stocks sold off"
+        ],
+        [
+         "6 November",
+         "$20.76",
+         "+36.8%",
+         "AST SpaceMobile engine deal announced before the open"
+        ],
+        [
+         "9 November",
+         "$24.31",
+         "+17.1%",
+         "First session after NASA's CLPS 2 selection on Saturday 7 November"
+        ],
+        [
+         "10 November",
+         "$23.70",
+         "-2.5%",
+         "Q3 results and Synspective launch order after the close"
+        ],
+        [
+         "11 November",
+         "$26.61",
+         "+12.3%",
+         "Q3 revenue and adjusted loss beat estimates; Barclays raised its target to $35 from $34"
+        ],
+        [
+         "12 November",
+         "$25.31",
+         "-4.9%",
+         ""
+        ],
+        [
+         "13 November",
+         "$25.21",
+         "-0.4%",
+         ""
+        ],
+        [
+         "16 November",
+         "$22.48",
+         "-10.8%",
+         "Space stocks fell after Treasury Secretary Bessent's Nvidia comments"
+        ]
+       ]
+      }
+     },
+     "Investing.com reported that Q3 revenue of $110.7M beat a consensus of roughly $102M to $103M, and the adjusted loss of $0.45 a share beat an estimate of about $0.48. The full numbers are on the [Firefly Q3 2026 results page](/results/fly-q3-2026)."
+    ]
+   ],
+   [
+    "What else Firefly announced",
+    [
+     {
+      "list": [
+       "Guidance: 2026 revenue of $440M to $450M, from $420M to $450M. With $309.2M in the first nine months, that implies $130.8M to $140.8M in the fourth quarter, against $110.7M in the third (our arithmetic).",
+       "Alpha: Flight 8, the first Block 2 rocket, moved to the first quarter of 2027 at a national security customer's request, so no Alpha launch is planned in the fourth quarter. Firefly says it has structures in production for Flights 9 to 12 and will give a 2027 launch target with its Q4 results. See the [Alpha Block 2 launch page](/launches/firefly-alpha-block-2-first-launch).",
+       "Demand: Japanese radar satellite operator Synspective ordered up to 10 Alpha launches through 2030, and Lockheed extended its agreement to up to 25 Alpha launches through 2031. The chief executive said Firefly has \"more customers than we have rockets available in the near-term manifest\".",
+       "Moon: CLPS 2 is a 10-year contract with a combined ceiling of $10B shared by eight companies; our numbers on what it could be worth are in [NASA's $10B CLPS 2](/articles/nasa-clps-2-10-billion-lunar-lander-contract).",
+       "Share count: 171.6M at 30 September, which management expects to rise by about 1 million a quarter from option exercises."
+      ]
+     }
+    ]
+   ],
+   [
+    "Dates and numbers to watch",
+    [
+     {
+      "list": [
+       "The AST share pricing period: any sustained AST price below $28.57 points to the full 14 million shares and less than $400M of stock value for Firefly.",
+       "Firefly's Q4 results, likely in early 2027: the first backlog figure that should include the AST contracts, the 2027 Alpha launch target and how much AST revenue is booked. The date will appear on the [space stocks earnings calendar](/space-stocks/earnings-calendar).",
+       "Alpha Flight 8 in the first quarter of 2027: the first flight of Block 2, and the start of the launch cadence that the Synspective and Lockheed orders depend on.",
+       "The first CLPS 2 task orders, which would turn the selection into backlog."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Why did Firefly stock go up?",
+    "Three announcements between 6 and 11 November: a more than $1.3B engine deal with AST SpaceMobile, selection for NASA's CLPS 2 lunar delivery contract and third-quarter results that beat estimates. FLY rose from $15.18 on 5 November to a closing high of $26.61 on 11 November."
+   ],
+   [
+    "Is the AST SpaceMobile deal in Firefly's $1.7B backlog?",
+    "No. The $1.7B is backlog at 30 September, and Firefly lists the AST contracts as a highlight after the quarter end. Adding them gives about $3.0B, of which AST would be about 43% (our calculation)."
+   ],
+   [
+    "How much of the AST deal is paid in AST shares?",
+    "Part of the roughly $800M up-front licence fee: $400M in cash plus 10 to 14 million AST shares, set by a forward volume-weighted average price and subject to lock-ups. The rest is $250M for engines and $250M for three years of engineering support."
+   ],
+   [
+    "Why did Firefly stock fall on 16 November?",
+    "Space stocks fell broadly after Treasury Secretary Scott Bessent called for a \"dramatic shakeup\" at Nvidia, SpaceX's partner on orbital AI data centres. FLY closed down 10.8% at $22.48, still 48.1% above its 5 November close."
+   ]
+  ],
+  "sources": [
+   [
+    "Firefly Aerospace Announces Third Quarter 2026 Financial Results (Exhibit 99.1, Form 8-K, SEC EDGAR, 10 November 2026)",
+    "https://www.sec.gov/Archives/edgar/data/0001860160/000186016026000030/fly-ex99_1.htm"
+   ],
+   [
+    "Firefly Aerospace Signs Rocket Engine Deal Valued at More Than $1.3 Billion with AST SpaceMobile (GlobeNewswire, 6 November 2026)",
+    "https://www.globenewswire.com/news-release/2026/11/06/3397457/0/en/firefly-aerospace-signs-rocket-engine-deal-valued-at-more-than-1-3-billion-with-ast-spacemobile.html"
+   ],
+   [
+    "Motley Fool: Firefly Aerospace Q3 2026 earnings call transcript (11 November 2026)",
+    "https://www.fool.com/earnings/call-transcripts/2026/11/11/firefly-aerospace-fly-q3-2026-earnings-call-transcript/"
+   ],
+   [
+    "NASA: NASA Awards Moon Base Transportation, Technology, Science Projects (7 November 2026)",
+    "https://www.nasa.gov/news-release/nasa-awards-moon-base-transportation-technology-science-projects/"
+   ],
+   [
+    "Investing.com: Why is Firefly Aerospace stock surging today? (11 November 2026)",
+    "https://www.investing.com/news/stock-market-news/why-is-firefly-aerospace-stock-surging-today-93CH-5019533"
+   ],
+   [
+    "Benzinga via TradingView: Rocket Lab, Firefly, AST SpaceMobile stocks drop (16 November 2026)",
+    "https://www.tradingview.com/news/benzinga:8203aa6e8094b:0-rocket-lab-firefly-ast-spacemobile-stocks-drop-what-s-going-on-with-space-stocks-monday/"
+   ],
+   [
+    "Via Satellite: Synspective orders 10 launches on Firefly's Alpha rocket (10 November 2026)",
+    "https://www.satellitetoday.com/launch/2026/11/10/synspective-orders-10-launches-on-fireflys-alpha-rocket/"
+   ],
+   [
+    "Yahoo Finance: Firefly Aerospace (FLY) historical prices",
+    "https://finance.yahoo.com/quote/FLY/history/"
+   ],
+   [
+    "Yahoo Finance: AST SpaceMobile (ASTS) historical prices",
+    "https://finance.yahoo.com/quote/ASTS/history/"
+   ]
+  ]
+ },
+ {
   "slug": "when-is-rocket-lab-neutron-first-launch",
   "title": "When is Rocket Lab's Neutron first launch?",
   "summary": "Rocket Lab now expects Neutron's first launch in 2027, not Q4 2026, and will set a date only after tank testing ends, which it expects by the end of Q1 2027. Our sums: the delay day cut about $2.5B from its market value, yet its $2.39B of cash and securities covers about 25 quarters of H1 2026 cash burn.",
@@ -4590,7 +4829,7 @@
   "title": "Are SpaceX and Tesla merging?",
   "summary": "Not yet. On 20 October 2026 Elon Musk said SpaceX and Tesla had each formed a special committee of independent directors to consider a merger, but no terms have been agreed. A deal would need approval from both committees and boards, Musk as SpaceX's controlling shareholder, and 50% of all Tesla shares.",
   "published": "2026-10-27",
-  "updated": "2026-10-27",
+  "updated": "2026-11-17",
   "tickers": [
    "SPCX"
   ],
@@ -4656,7 +4895,7 @@
    [
     "Timing",
     [
-     "No timetable has been announced. Bloomberg reported, citing people familiar with the matter, that there is a push to announce a deal in the first half of 2027. Reuters reported on 22 October that some insiders worried Musk's public comments could invite shareholder scrutiny and delay the process by several weeks.",
+     "No timetable has been announced by either company. In October Bloomberg reported a push to announce a deal in the first half of 2027. On 12 November Bloomberg reported, citing people familiar with the matter, that talks were progressing and a deal could be announced as soon as December, with early 2027 also discussed; the boards and advisers are negotiating how many SpaceX shares Tesla investors would receive and how the merged company would be governed. Neither company commented. Our numbers on what an all-share deal would mean are in [SpaceX and Tesla merger talks: the exchange ratio](/articles/spacex-tesla-merger-talks-december-exchange-ratio).",
      "Tesla did not add anything on its own Q3 call on 21 October. Musk said: \"I think I said everything that should be said yesterday.\""
     ]
    ],
@@ -4683,7 +4922,7 @@
    ],
    [
     "When could a SpaceX and Tesla merger be announced?",
-    "There is no official timetable. Bloomberg reported a push to announce a deal in the first half of 2027."
+    "There is no official timetable. Bloomberg reported on 12 November that a deal could be announced as soon as December, with early 2027 also discussed. Until an agreement is signed, SpaceX's filing says its special committee has made no determination."
    ]
   ],
   "sources": [
@@ -4718,6 +4957,14 @@
    [
     "Tesla 2026 proxy statement (SEC)",
     "https://www.sec.gov/Archives/edgar/data/1318605/000110465926116700/tm267596-1_def14a.htm"
+   ],
+   [
+    "Bloomberg: SpaceX and Tesla talks on record merger are said to progress (12 November 2026)",
+    "https://www.bloomberg.com/news/articles/2026-11-12/spacex-and-tesla-talks-on-record-merger-are-said-to-progress"
+   ],
+   [
+    "Reuters: SpaceX, Tesla merger talks progress, Bloomberg News reports (12 November 2026)",
+    "https://www.reuters.com/legal/transactional/spacex-tesla-merger-talks-progress-bloomberg-news-reports-2026-11-12/"
    ]
   ]
  },
