@@ -1,6 +1,178 @@
 [
  {
   "kind": "news",
+  "slug": "iceye-avio-takeover-bid-41-euros",
+  "title": "ICEYE bids €41 for Avio: €1.44B for the business once its cash is netted",
+  "summary": "Finnish radar satellite operator ICEYE offered €41 a share in cash for Avio, about €2.05B, and Avio jumped about 12% to €38.12. Avio held €614.5M of net cash at 30 September, so the bid values the business itself at about €1.44B, or 0.72 times its €1,993M backlog.",
+  "published": "2026-11-17",
+  "updated": "2026-11-17",
+  "tickers": [
+   "AVIO"
+  ],
+  "match": [
+   "avio",
+   "iceye"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 17 November ICEYE, the Finnish operator of the largest synthetic aperture radar (SAR) satellite constellation, said its board had approved an all-cash voluntary tender offer for every share in [Avio](/stocks/avio), the Italian prime contractor for the Vega C rocket and a supplier of Ariane 6 boosters and missile motors. The bid is made through an Italian subsidiary called Iris 2 (no link to the EU's IRIS² programme) and offers €41 a share, about €2.05B in total, with the aim of delisting Avio from Milan.",
+     "ICEYE puts the premium at 21.3% to Avio's 16 November close. It will pay with balance-sheet cash and acquisition debt, and has pledged a further €1B of investment in Italy over five years. The offer needs at least two-thirds of the shares to be tendered and clearances in Italy, France, the UK and the US, plus the EU's Foreign Subsidies Regulation. Avio's board said it would assess the bid. Avio traded at €38.12 at 10:23 in Milan, up about 12% on the day and €2.88 below the offer."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the price is lower than the headline, and the gap is a vote on approval",
+    [
+     "The €2.05B headline is equity value. Avio's 9M 2026 results on 11 November reported a net financial position of €614.5M at 30 September, which is net cash, partly built from the €109.4M Advent International paid for new shares in September. A buyer taking over the company also takes over that cash, so the price paid for the business itself is about €1.44B on our calculation (€41 times 50.06M shares, less €614.5M).",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Basis"
+       ],
+       "rows": [
+        [
+         "Offer equity value",
+         "€2,053M",
+         "€41 x 50,064,811 shares"
+        ],
+        [
+         "Less net cash at 30 Sep 2026",
+         "€614.5M",
+         "Avio 9M 2026 results"
+        ],
+        [
+         "Implied business value",
+         "about €1,438M",
+         "Our calculation"
+        ],
+        [
+         "Business value / 2026 revenue guidance midpoint (€575M)",
+         "about 2.5x",
+         "Guidance €560M to €590M"
+        ],
+        [
+         "Business value / adjusted EBITDA guidance midpoint (€33M)",
+         "about 44x",
+         "Guidance €29M to €37M"
+        ],
+        [
+         "Business value / order backlog (€1,993M)",
+         "about 0.72x",
+         "Backlog at 30 Sep 2026"
+        ],
+        [
+         "Offer vs 52-week high (€44.85)",
+         "8.6% below",
+         "Yahoo Finance data"
+        ],
+        [
+         "Gap to offer at €38.12",
+         "7.6%",
+         "17 Nov, 10:23 Milan"
+        ]
+       ]
+      }
+     },
+     "Two things stand out. First, ICEYE is paying a high multiple of profit, about 44 times adjusted EBITDA, but less than one times the work already contracted. That is the shape of a buyer paying for capacity and position rather than current earnings: Avio's margins are thin (adjusted EBITDA guidance of €29M to €37M on €560M to €590M of revenue), but it owns Europe's small-launcher franchise and solid rocket motor production that defence customers are short of. A caution on the cash: Avio's own release says the balance moves with customer advances that are passed on to suppliers, so not all of the €614.5M is free to spend.",
+     "Second, the market does not treat the bid as done. A 7.6% gap to a cash offer is wide for a deal with an announced price, and it reflects real hurdles. The offer price is below the €44.85 52-week high, so holders who bought near the peak would be selling at a loss. Leonardo, Italy's state-controlled defence group, owns about 18% according to Bloomberg, and Advent holds about 6.54% after buying new shares at €33.40 on 24 September. Together that is about 24.5%; a holding above one third can block a two-thirds acceptance condition, so these two would need only around 9% more of the register on their side to stop it, on our calculation. Advent, by contrast, would make about 22.8% on its September purchase in under two months at €41, roughly €24.9M, which may make it a willing seller.",
+     "Then there is Rome. Avio builds launchers and missile propulsion, sectors where Italy's government can block or impose conditions on a foreign buyer, and France, the UK and the US must also clear the deal. A Finnish buyer pledging €1B of Italian investment and jobs is clearly written for that audience."
+    ]
+   ],
+   [
+    "Why ICEYE wants a rocket maker",
+    [
+     "ICEYE says the two businesses have reciprocal needs: it must secure launches to grow its constellation, and Avio needs long-term visibility on launch demand. Owning launch is the same vertical model SpaceX uses with Starlink and that [Rocket Lab](/stocks/rklb) is building by pairing launch with spacecraft manufacturing. It also adds a defence propulsion business, including the solid rocket motor plant Avio USA started building in Virginia in September, to ICEYE's radar intelligence offering for governments.",
+     "The scale is a stretch for ICEYE. It reported 2025 revenue of more than €250M and raised €450M in June at a valuation above €10B. The €2.05B offer is about eight times that 2025 revenue and 4.6 times the June raise, on our calculation, which is why acquisition debt is part of the funding. Avio's net cash, once acquired, would offset part of that borrowing."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "The most direct listed exposure to ICEYE is the [Seraphim Space Investment Trust](/space-etfs) (SSIT), which owns a stake in it; ICEYE was 47.1% of the trust's net asset value at 31 March 2026. SSIT barely moved on the news, down 0.79% in early trading: for its holders the question is whether a €2.05B debt-backed purchase adds to ICEYE's value, which the market has not yet decided.",
+     "For listed launch companies the bid is a price marker: a European launcher with thin margins but a full order book drew a cash offer at about 2.5 times revenue and 0.72 times backlog for the business. It also follows [OHB's €554M Sentinel-3 contract](/articles/ohb-esa-sentinel-3-ngt-contract-554-million) as another sign that European space spending is consolidating around fewer, bigger groups. See [OHB](/stocks/ohb) for a listed European comparison."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "Avio's board statement on the offer, and whether Leonardo says it will tender.",
+       "The formal offer document filed with Italy's market regulator Consob, which will set the acceptance period.",
+       "Italy's government decision on clearing a foreign buyer of a launch and missile propulsion company, and any conditions it attaches.",
+       "Whether the share price closes the €2.88 gap to €41 or trades above it, which would signal the market expects a higher or rival bid.",
+       "The next Vega C launch, which Avio has said is now close to Christmas after a late satellite delivery."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much is ICEYE paying for Avio?",
+    "€41 a share in cash, about €2.05B for all 50.06M shares. Avio had €614.5M of net cash at 30 September, so the price for the business itself is about €1.44B on our calculation, roughly 2.5 times the midpoint of Avio's 2026 revenue guidance."
+   ],
+   [
+    "Why is Avio stock below the €41 offer?",
+    "At €38.12 on 17 November the shares were 7.6% below the offer. The deal needs two-thirds acceptance, where Leonardo holds about 18%, and approvals in Italy, France, the UK, the US and the EU, so the market is pricing a real chance it fails or is delayed."
+   ],
+   [
+    "Who owns ICEYE and how can investors get exposure?",
+    "ICEYE is private. The London-listed Seraphim Space Investment Trust (SSIT) holds a stake, which was 47.1% of its net asset value at 31 March 2026."
+   ]
+  ],
+  "sources": [
+   [
+    "Seraphim Space Investment Trust RNS: ICEYE announces tender offer for Avio, 17 November 2026",
+    "https://www.tradingview.com/news/reuters.com,2026-11-17:newsml_RSQ4741Da:0-reg-seraphim-space-i-t-iceye-announces-tender-offer-for-avio/"
+   ],
+   [
+    "Avio 9M 2026 results press release, 11 November 2026",
+    "https://www.avio.com/press-release/solid-double-digit-growth-in-revenue-and-profits-confirmed-significant-progress-in-u-s-expansion-strategy-"
+   ],
+   [
+    "Avio FY 2025 results and 2026 guidance, 12 March 2026",
+    "https://www.avio.com/press-release/fy-2025-results-record-high-order-backlog-and-revenues-growth-path-continue-2026"
+   ],
+   [
+    "SSIT RNS: ICEYE financing round (ICEYE 47.1% of NAV at 31 March 2026)",
+    "https://www.investegate.co.uk/announcement/rns/seraphim-space-investment-trust--ssit/iceye-financing-round-/9608514"
+   ],
+   [
+    "ICEYE press releases (2025 financials)",
+    "https://www.iceye.com/newsroom/press-releases/all"
+   ],
+   [
+    "Reuters: Finnish Iceye Oy launches bid for Italian rocket maker Avio, 17 November 2026",
+    "https://malaysia.news.yahoo.com/finnish-iceye-oy-launches-bid-062222156.html"
+   ],
+   [
+    "Bloomberg: Avio gets €2 billion takeover bid from Finland's Iceye, 17 November 2026",
+    "https://www.bloomberg.com/news/articles/2026-11-17/avio-gets-2-billion-takeover-bid-from-finland-s-iceye"
+   ],
+   [
+    "European Spaceflight: ICEYE launches €2.05B takeover bid for Avio, 17 November 2026",
+    "https://europeanspaceflight.com/iceye-launches-e2-05b-takeover-bid-for-italian-rocket-builder-avio/"
+   ],
+   [
+    "European Spaceflight: next Vega C launch edges closer to Christmas Day as satellites arrive late",
+    "https://europeanspaceflight.com/next-vega-c-launch-edges-closer-to-christmas-day-as-satellites-arrive-late/"
+   ],
+   [
+    "The Next Web: Iceye bids €2.05bn for Avio (two-thirds condition, Leonardo stake), 17 November 2026",
+    "https://thenextweb.com/news/finlands-iceye-bids-e2-05bn-for-italian-rocket-maker-avio"
+   ],
+   [
+    "Yahoo Finance: AVIO.MI price history",
+    "https://finance.yahoo.com/quote/AVIO.MI/history/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "vulcan-failure-amazon-leo-fcc-milestone-spacex",
   "title": "Vulcan failure: Amazon Leo can't reach its FCC halfway mark without it",
   "summary": "ULA's Vulcan failed on 15 November, destroying 40 Amazon Leo satellites and grounding the rocket booked for 52% of Amazon's remaining launches. Our count: Amazon's non-BE-4 bookings cover about 996 satellites, short of the 1,220 it needs to reach half its FCC constellation.",
