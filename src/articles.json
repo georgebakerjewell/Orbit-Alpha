@@ -1,6 +1,166 @@
 [
  {
   "kind": "news",
+  "slug": "telesat-standstill-geo-lenders-debt-december",
+  "title": "Telesat buys six weeks: GEO cash covers 12% of December's C$2.4B",
+  "summary": "Telesat's GEO lenders agreed not to enforce until 18 January 2027, past the C$2.4B due on 6 December. The pause is cheap for both sides, but Telesat GEO's C$286.7M of cash covers only about 12% of that debt, and the lenders' own plan would add about 54M shares to roughly 36M today.",
+  "published": "2026-11-17",
+  "updated": "2026-11-17",
+  "tickers": [
+   "TSAT",
+   "MDA"
+  ],
+  "match": [
+   "telesat",
+   "standstill"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "After the market closed on 16 November 2026, [Telesat](/stocks/tsat) said it had agreed standstill arrangements with an ad hoc committee of holders of Telesat GEO Inc.'s term loans, secured notes and unsecured notes. The lenders will take no enforcement action up to and including 18 January 2027, and Telesat will keep paying interest during the pause. The term loans and some of the secured notes mature on 6 December 2026, so the standstill runs 43 days past that date.",
+     "Telesat said its goal is still a \"fair and consensual resolution\". It gave no new terms. The shares had already fallen before the news: they closed at $43.12 on Nasdaq on 16 November, down 4.8% on the day, and at C$62.01 in Toronto. Today's session is the first to trade on the announcement."
+    ]
+   ],
+   [
+    "Orbit Alpha view: a cheap pause that does not close the gap",
+    [
+     "A standstill is not a refinancing. Nothing about the size of the debt, its maturity date or the lawsuit over Lightspeed has changed. What it removes is the risk that the December maturity triggers enforcement while talks are still going. The numbers show why both sides could agree to it easily, and why it settles very little.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "What it shows"
+       ],
+       "rows": [
+        [
+         "Telesat GEO debt due 6 December 2026",
+         "about C$2.4B",
+         "term loans and 2026 secured notes"
+        ],
+        [
+         "All Telesat GEO debt maturing to October 2027",
+         "about C$3B",
+         "adds 2027 secured and unsecured notes"
+        ],
+        [
+         "Telesat GEO cash, 30 September 2026",
+         "C$286.7M",
+         "about 12% of the December debt (our calculation)"
+        ],
+        [
+         "Net cash interest paid, first nine months of 2026",
+         "C$115.4M",
+         "about C$38M a quarter (our calculation)"
+        ],
+        [
+         "Interest at that pace, 16 November to 18 January",
+         "about C$27M",
+         "63 days; about 9% of GEO cash (our calculation)"
+        ],
+        [
+         "2026 GEO adjusted EBITDA guidance",
+         "C$210M to C$230M",
+         "before refinancing costs"
+        ],
+        [
+         "Days added beyond the 6 December maturity",
+         "43",
+         "our calculation"
+        ]
+       ]
+      }
+     },
+     "For the lenders, the pause costs almost nothing: they keep collecting interest, and Telesat GEO's 2026 EBITDA guidance of C$210M to C$230M is several times the roughly C$38M a quarter of net interest the group paid in the first nine months (consolidated figure; our calculation from the third quarter cash flow statement). For Telesat, paying about C$27M of interest over the standstill at that pace uses around 9% of GEO's cash. Neither side gives up a position.",
+     "The gap is the problem. C$286.7M of GEO cash against about C$2.4B due in December leaves roughly C$2.1B to find (our calculation from the published figures). Telesat says the GEO debt does not reach beyond Telesat GEO's guarantors and that Lightspeed is fully funded on its own, so the group's consolidated C$813.8M of cash at 30 September is not the pool that repays this debt: only C$286.7M of it sat in Telesat GEO.",
+     "The lenders' own answer to that gap shows what the market is weighing. Their latest proposal, delivered on 14 October and reported by The Globe and Mail, would repay principal and accrued interest in full through a C$1.7B rights offering at C$31.50 a share plus a C$1.5B loan. C$1.7B at C$31.50 is about 54 million new shares (our calculation). Yahoo Finance's $1.56B market value at the 16 November close implies about 36 million shares today. On those figures, a holder who did not take up their rights would end up owning about 40% of their current share of the company, and the subscription price is about 49% below Monday's Toronto close of C$62.01 (our calculations). That is a reported proposal Telesat has not accepted, not a deal, but it is the clearest public marker of what refinancing could cost shareholders.",
+     "One more detail matters: the committee covers term loans, secured notes and unsecured notes. The unsecured notes do not mature until October 2027, yet their holders are part of the same pause. A settlement negotiated with that group would naturally cover the whole C$3B stack rather than only the December slice."
+    ]
+   ],
+   [
+    "Why Telesat did it",
+    [
+     "Telesat has been trying to keep its two businesses apart. In September 2025 it moved 62% of Lightspeed into a subsidiary that does not guarantee the GEO debt; term lenders sued in January 2026, calling it a fraudulent transfer, which Telesat denies. A default on 6 December would have let lenders pursue the GEO collateral, which is essentially everything except Lightspeed, while that case is unresolved. Chief executive Dan Goldberg ruled out a Chapter 11 filing in August, and Payload notes that the 1991 law privatising Telesat Canada says Canadian insolvency law does not apply to it. With formal court routes awkward on both sides, a negotiated pause is the path of least resistance."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     {
+      "list": [
+       "[MDA Space](/stocks/mda) builds the 225 Lightspeed satellites, and its satellite systems arm, about 67% of first half revenue, was driven mainly by Lightspeed (see [our IRIS² analysis](/articles/mda-space-iris2-antenna-contract)). The standstill reduces the chance of a disorderly GEO default in December. The ring-fence Telesat describes means MDA's exposure is to Lightspeed's funding, which Telesat says is in place, rather than to the GEO lenders.",
+       "[SpaceX](/stocks/spcx) holds 14 of the 15 Falcon 9 launches Lightspeed needs, with the first two satellites now due on a rideshare around June 2027 ([launch page](/launches/telesat-lightspeed-first-launch))."
+      ]
+     }
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "6 December 2026: the term loans and 2026 secured notes mature. Under the standstill, missing that date does not lead to enforcement.",
+       "18 January 2027: the standstill ends. Watch for an extension, a signed restructuring agreement or a rights offering announcement before then.",
+       "Any revised lender proposal: the subscription price against the share price and the number of new shares decide how much of the company existing holders keep.",
+       "The New York and Ontario lawsuits over the 2025 Lightspeed transfer, which shape each side's bargaining position.",
+       "Around June 2027: the first two Lightspeed satellites launch, the first hardware test of the business the ring-fence is meant to protect."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Has Telesat defaulted on its debt?",
+    "No. The term loans and some secured notes of Telesat GEO mature on 6 December 2026. Lenders on an ad hoc committee agreed not to take enforcement action up to 18 January 2027, and Telesat will keep paying interest during that time. The debt itself has not been extended or refinanced."
+   ],
+   [
+    "How much does Telesat GEO owe compared with its cash?",
+    "About C$2.4B falls due on 6 December and about C$3B matures by October 2027, against C$286.7M of Telesat GEO cash at 30 September 2026. The cash covers about 12% of the December amount (our calculation)."
+   ],
+   [
+    "How dilutive would the lenders' rescue plan be?",
+    "As reported in October, the plan includes a C$1.7B rights offering at C$31.50 a share. That is about 54 million new shares against roughly 36 million now, so a holder who does not subscribe would keep about 40% of their current share of the company (our calculation). Telesat has not accepted the plan."
+   ]
+  ],
+  "sources": [
+   [
+    "Telesat: standstill arrangement with GEO lenders (16 November 2026)",
+    "https://www.telesat.com/press/press-releases/telesat-enters-into-standstill-arrangement-with-geo-lenders-allowing-telesat-additional-time-to-address-upcoming-maturities/"
+   ],
+   [
+    "Telesat: results for the three and nine months ended 30 September 2026 (PDF)",
+    "https://www.telesat.com/?jet_download=cde649033b8f671b21059262117c34b581effaed"
+   ],
+   [
+    "SEC: Telesat schedule of indebtedness, 30 June 2026 (Form 6-K XBRL)",
+    "https://www.sec.gov/Archives/edgar/data/1845840/000121390026088672/R65.htm"
+   ],
+   [
+    "Payload: Telesat stays quiet on C$2.4B GEO debt due in December (30 October 2026)",
+    "https://payloadspace.com/telesat-stays-quiet-on-c2-4b-geo-debt-due-in-december/"
+   ],
+   [
+    "The Globe and Mail: Telesat creditors put forward new proposal (20 October 2026)",
+    "https://www.theglobeandmail.com/politics/article-telesat-creditors-put-forward-new-proposal-debt-repayment-deadline/"
+   ],
+   [
+    "SpaceQ: Telesat lenders agree to hold off, buying time on December debt (17 November 2026)",
+    "https://spaceq.ca/telesat-standstill-geo-lenders-debt/"
+   ],
+   [
+    "9fin: A closer look at the Telesat Canada creditor lawsuit (21 January 2026)",
+    "https://www.9fin.com/insights/telesat-canada-creditor-lawsuit"
+   ],
+   [
+    "Orbit Alpha: Telesat share price data (16 November 2026 close)",
+    "https://www.orbitalpha.cloud/api/quote?ticker=TSAT"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "iceye-avio-takeover-bid-41-euros",
   "title": "ICEYE bids €41 for Avio: €1.44B for the business once its cash is netted",
   "summary": "Finnish radar satellite operator ICEYE offered €41 a share in cash for Avio, about €2.05B, and Avio jumped about 12% to €38.12. Avio held €614.5M of net cash at 30 September, so the bid values the business itself at about €1.44B, or 0.72 times its €1,993M backlog.",
