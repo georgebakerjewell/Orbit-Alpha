@@ -1,6 +1,153 @@
 [
  {
   "kind": "news",
+  "slug": "kulr-14-8-million-kulr-one-max-japan-order-margin",
+  "title": "KULR's $14.8M order tops nine months of sales, but earns little at 4%",
+  "summary": "KULR won a $14.8M order for KULR ONE Max energy storage in Japan, with $6.2M to ship this quarter. That is 122% of its revenue for the first nine months of 2026, but at the third quarter's 3.6% gross margin the whole order would earn about $0.5M, under five days of cash burn.",
+  "published": "2026-11-18",
+  "updated": "2026-11-18",
+  "tickers": [
+   "KULR"
+  ],
+  "match": [
+   "kulr",
+   "14.8"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "Before the market opened on 18 November 2026, [KULR](/stocks/kulr) said it had received a new $14.8M purchase order in the fourth quarter for its KULR ONE Max (K1M) battery energy storage systems, which go into power-as-a-service deployments in Japan. It expects to ship $6.2M of the order before the end of 2026 and the remaining $8.6M in 2027. The release does not name the buyer.",
+     "The shares rose 9.7% to $1.69 by mid-morning in New York, from a $1.54 close on 17 November, giving a market value of about $78.2M. The stock had been close to its 52-week low of $1.40."
+    ]
+   ],
+   [
+    "Orbit Alpha view: big against sales, small against the cash burn",
+    [
+     "By KULR's own standards this is a large order. It is bigger than everything the company sold in the first nine months of the year, and the part due this quarter is close to a full quarter of revenue. The catch is the margin. In the third quarter, when K1M shipments drove most of the growth, KULR kept only 3.6 cents of gross profit from each dollar of sales, because the new K1M configuration was in its first production builds. Run through the published figures, the order matters far more for the revenue line than for the cash position.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "What it shows"
+       ],
+       "rows": [
+        [
+         "New K1M order",
+         "$14.8M",
+         "$6.2M in Q4 2026, $8.6M in 2027"
+        ],
+        [
+         "Revenue, first nine months of 2026",
+         "$12.16M",
+         "order equals 122% of it (our calculation)"
+        ],
+        [
+         "Revenue, third quarter 2026",
+         "$7.40M",
+         "the $6.2M Q4 portion equals 84% of it (our calculation)"
+        ],
+        [
+         "Gross margin, third quarter 2026",
+         "3.6%",
+         "$0.27M gross profit on $7.40M of revenue"
+        ],
+        [
+         "Gross profit on the order at Q3 margin",
+         "about $0.54M",
+         "our calculation"
+        ],
+        [
+         "Gross profit on the order at Q3 2025 margin (17%)",
+         "about $2.5M",
+         "our calculation"
+        ],
+        [
+         "Operating cash used, continuing operations, nine months",
+         "$32.3M",
+         "about $118,000 a day (our calculation)"
+        ],
+        [
+         "Days of burn covered by the order's gross profit",
+         "about 5 (at 3.6%), about 21 (at 17%)",
+         "our calculation"
+        ],
+        [
+         "Cash, 30 September 2026",
+         "$54.5M",
+         "no debt; about 15 months at the nine-month pace (our calculation)"
+        ],
+        [
+         "Market value at $1.69",
+         "about $78.2M",
+         "46.28M shares outstanding on 6 November"
+        ]
+       ]
+      }
+     },
+     "Our working: the order is $14.8M against nine-month revenue of $12.16M, and the $6.2M Q4 slice against Q3 revenue of $7.40M. Gross profit in Q3 was $269,828 on $7,396,716 of revenue, a 3.6% margin; applied to $14.8M that is about $0.54M. Even at the 17% margin KULR earned a year earlier, the order would produce about $2.5M of gross profit. KULR used $32.3M of cash in its continuing operations in the first nine months, or roughly $118,000 a day, so the order's gross profit covers somewhere between five and 21 days of that spending.",
+     "The market's reaction is larger than the profit the order can bring. Today's 15 cent rise adds about $6.9M of market value across 46.28M shares, more than the order would earn in gross profit even at the higher margin. The rise makes more sense as a vote that the Japan business is real and repeating than as a payment for this order's profit. Netting the $54.5M of September cash off the $78.2M market value leaves about $24M for the operating business, although some of that cash has been spent since 30 September.",
+     "There is also a concentration point. The 10-Q shows one customer made up 51% of third-quarter revenue and another 34%. KULR does not say whether the new order comes from either of them, but a business this dependent on a few buyers can swing hard on each order, in both directions."
+    ]
+   ],
+   [
+    "Why the company did it",
+    [
+     "KULR has narrowed its focus after selling all its bitcoin in the third quarter and repaying its $20.0M Coinbase loan. It now presents three battery lines: KULR ONE Air for drones, KULR ONE Space, and KULR ONE Max for Japan's open power market, which it calls its fastest-growing business. Management has said the plan in Japan is to win market share and an installed base first, then lift prices and margins through its own safety, battery management and monitoring technology. Taking a large order at a low starting margin fits that plan: it buys volume now and bets on repeat builds becoming cheaper.",
+     "The order also lands as KULR cuts costs. It announced a November reduction in force worth about $4M a year, expects research and development spending to fall from the fourth quarter, and has paused its at-the-market share sales until 31 December 2026."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "Fourth-quarter results: whether the $6.2M ships on time; on its own it would equal 84% of Q3 revenue.",
+       "Gross margin on K1M: the company blamed Q3's 3.6% on initial production builds; repeat builds of the same configuration are the test of whether this order earns real profit.",
+       "Cash: $54.5M at 30 September against a nine-month burn of $32.3M, and whether the $4M of savings and lower R&D slow that pace.",
+       "The share sale pause: the ATM pause runs to 31 December 2026, so any decision to restart it in 2027 would show how management views the cash runway.",
+       "Further Japan orders: a second order of similar size would support the market's reading that this is a repeating business, not a one-off."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How big is KULR's $14.8M order?",
+    "It is 122% of KULR's revenue for the first nine months of 2026 ($12.16M), and the $6.2M due to ship this quarter equals 84% of third-quarter revenue of $7.40M (our calculations from the company's figures)."
+   ],
+   [
+    "Will the order make KULR profitable?",
+    "Not on its own. At the third quarter's 3.6% gross margin the full order would earn about $0.54M of gross profit, and about $2.5M even at last year's 17% margin, against $32.3M of operating cash used in the first nine months of 2026 (our calculation)."
+   ],
+   [
+    "Why did KULR shares rise on the news?",
+    "The shares rose 9.7% to $1.69, adding about $6.9M of market value. That is more than the order's likely gross profit, so the move reflects the size of the order relative to KULR's sales and what it suggests about repeat demand in Japan, rather than its immediate profit."
+   ]
+  ],
+  "sources": [
+   [
+    "KULR Secures New $14.8 Million Purchase Order for KULR ONE Max Energy Storage Systems (KULR, 18 November 2026)",
+    "https://kulr.ai/kulr-secures-new-14-8-million-purchase-order-for-kulr-one-max-energy-storage-systems/"
+   ],
+   [
+    "KULR Reports Third Quarter 2026 Revenue of $7.4 Million (KULR, 10 November 2026)",
+    "https://kulr.ai/kulr-reports-third-quarter-2026-revenue-of-7-4-million-up-197-year-over-year-as-product-sales-nearly-quadruple/"
+   ],
+   [
+    "KULR Technology Group Form 10-Q for the quarter ended 30 September 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1662684/000110465926124824/tmb-20260930x10q.htm"
+   ],
+   [
+    "KULR Secures New $14.8 Million Purchase Order (GlobeNewswire via Yahoo Finance, 18 November 2026)",
+    "https://finance.yahoo.com/energy/articles/kulr-secures-14-8-million-133000022.html"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "telesat-standstill-geo-lenders-debt-december",
   "title": "Telesat buys six weeks: GEO cash covers 12% of December's C$2.4B",
   "summary": "Telesat's GEO lenders agreed not to enforce until 18 January 2027, past the C$2.4B due on 6 December. The pause is cheap for both sides, but Telesat GEO's C$286.7M of cash covers only about 12% of that debt, and the lenders' own plan would add about 54M shares to roughly 36M today.",
