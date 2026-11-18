@@ -1,6 +1,166 @@
 [
  {
   "kind": "news",
+  "slug": "avio-iceye-bid-italy-golden-power-leonardo-tomahawk",
+  "title": "Rome cools on ICEYE's Avio bid, yet the gap to €41 shrinks to 3.8%",
+  "summary": "Italy's defence minister urged Leonardo to think carefully before selling its 18.04% Avio stake to ICEYE, and Raytheon picked Avio USA to develop Tomahawk motors. Avio still closed at €39.50, 3.8% below the €41 offer, which on our rough calculation prices about a 78% chance of a deal.",
+  "published": "2026-11-18",
+  "updated": "2026-11-18",
+  "tickers": [
+   "AVIO"
+  ],
+  "match": [
+   "avio",
+   "government"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "A day after ICEYE offered €41 a share in cash for [Avio](/stocks/avio) (see [our analysis of the bid](/articles/iceye-avio-takeover-bid-41-euros)), Italy's government gave its first public reaction. Defence Minister Guido Crosetto told Reuters on 18 November that if he were Leonardo, the state-controlled defence group that owns 18.04% of Avio, he would think carefully before selling. A government source said Rome had not yet received a formal notification of the bid under its golden power rules, which let it clear, attach conditions to or veto foreign purchases of strategic companies. Leonardo's chief executive had said on 17 November he was pleasantly surprised by the offer and would study it with the government.",
+     "Separately, Raytheon awarded Ursa Major and Avio USA, Avio's US subsidiary, a joint multi-year contract to design, develop and qualify a new solid rocket motor booster for the Tomahawk cruise missile, which Raytheon said would expand its domestic suppliers for the part. No value was disclosed. Avio closed at €39.50 in Milan, up 0.8% on the day and €1.50 below the offer."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the market is betting on a deal, but the compromise on offer breaks the bid's own arithmetic",
+    [
+     "A cool word from the defence minister would normally widen the gap between a target's share price and a cash offer. Avio's narrowed. It was 7.6% on the morning of 17 November, 4.6% at that day's close and 3.8% at the 18 November close. If the deal failed and the shares fell back to the undisturbed €34.10 of 16 November, a holder at €39.50 would lose €5.40; if it closed they would gain €1.50. Balancing those gives an implied chance of success of about 78% on our calculation, before allowing for the months a deal would take or for the chance of a higher bid. Mediobanca Research, which has a €44 target, argued the offer could start a contest for control involving Italian or European buyers, so part of today's price is probably a bet on a better offer rather than on this one closing as written.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Basis"
+       ],
+       "rows": [
+        [
+         "Offer price",
+         "€41.00",
+         "ICEYE offer, 17 Nov"
+        ],
+        [
+         "Undisturbed price",
+         "€34.10",
+         "Close 16 Nov"
+        ],
+        [
+         "Close 18 Nov",
+         "€39.50",
+         "Milan close"
+        ],
+        [
+         "Gap to offer",
+         "3.8% (€1.50)",
+         "Our calculation"
+        ],
+        [
+         "Implied chance of success",
+         "about 78%",
+         "(39.50 - 34.10) / (41.00 - 34.10), our calculation"
+        ],
+        [
+         "Leonardo stake",
+         "18.04%, about 9.03M shares",
+         "Shareholder register via Milano Finanza"
+        ],
+        [
+         "Value of Leonardo stake at €41",
+         "about €370M",
+         "Our calculation from 50,064,811 shares"
+        ],
+        [
+         "Share of other holders ICEYE needs if Leonardo stays out",
+         "81.3%",
+         "66.67% / 81.96%, our calculation"
+        ],
+        [
+         "Most ICEYE could own if Leonardo stays out",
+         "81.96%",
+         "Our calculation"
+        ],
+        [
+         "Threshold linked to delisting through a tender",
+         "90%",
+         "Italian takeover rules, Consob"
+        ]
+       ]
+      }
+     },
+     "The compromise most analysts now float is that Rome clears the deal on condition that Leonardo keeps a stake. Broker Equita said there was a good chance the deal proceeds on those lines. Look at what that does to the terms. The offer is conditional on ICEYE reaching at least 66.67% of Avio. With Leonardo's 18.04% held back, ICEYE would need 81.3% of every other share, from a register where the other named holders (Advent 6.54%, Goldman Sachs 5.33%, Barclays 3.77% and the Del Vecchio holding Delfin 3.49%) add up to only 19.13% and the remaining 62.83% is spread among other investors. That is a high bar for any tender, and higher still when several analysts say the price undervalues the company.",
+     "It also rules out the delisting that ICEYE says is the aim. Even if every other holder tendered, ICEYE would end with 81.96%, short of the 90% at which Italian rules require a buyer to take out the remaining holders and the shares come off the market, and the 95% squeeze-out level. So a Leonardo-stays outcome means either ICEYE accepts a lower acceptance level than it set, where its terms allow, and owns a still-listed Avio with Leonardo and other minorities beside it, or the deal is restructured. Either way, the version Rome appears to want is not the version ICEYE has offered.",
+     "For Leonardo the money is small: at €41 its stake is worth about €370M, which Equita puts at about 1% of the group's sum-of-the-parts value. Its choice will be made on political and industrial grounds, not on price, which is why the minister's words carry more weight than the premium."
+    ]
+   ],
+   [
+    "Why the Tomahawk award matters for the bid",
+    [
+     "The Raytheon contract adds no revenue Avio can count yet. It is a development and qualification programme, and both companies describe it as a pathway to future production orders. Avio USA broke ground on a solid rocket motor plant in southern Virginia in September, which Reuters reports it expects to complete in late 2028, so any production revenue sits beyond that.",
+     "Its relevance is strategic. The offer needs clearance from the US Committee on Foreign Investment, as well as from Rome and Brussels. A subsidiary on track to become a qualified supplier of boosters for a US Navy missile is a more sensitive asset to change hands than a launch business, so the award raises the stakes of the US review at the same moment Rome signals caution. Mediobanca also points to Avio's role as a solid motor supplier to the European missile maker MBDA. Both sides of the Atlantic now have a munitions supply reason to look closely, and that is the risk the 3.8% gap is meant to price."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "Leonardo's board meeting on the offer, and whether it says it will tender, keep its stake or keep part of it.",
+       "ICEYE's formal golden power notification to the Italian government, which as of 18 November had not been received, and any conditions attached to a clearance.",
+       "Avio's board statement on the offer, which it is preparing with Chiomenti and Jefferies.",
+       "The offer document filed with Consob, which will set the acceptance period and say whether ICEYE can accept less than 66.67%.",
+       "Whether Avio trades above €41, which would show the market expects a higher or rival bid rather than this one closing.",
+       "The next Vega C launch, which Avio has said is now close to Christmas."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Can Italy block ICEYE's takeover of Avio?",
+    "Yes. Under its golden power rules the government can clear the deal, clear it with conditions or veto it. As of 18 November Rome said it had not received a formal notification, and the defence minister urged Leonardo to think carefully before selling its 18.04% stake."
+   ],
+   [
+    "What happens to the bid if Leonardo keeps its Avio stake?",
+    "ICEYE would need 81.3% of all other shares to meet its 66.67% acceptance condition, on our calculation, and could own at most 81.96%. That is below the 90% Italian rules link to a delisting, so Avio would likely stay listed unless the deal is restructured."
+   ],
+   [
+    "What did Avio win from Raytheon?",
+    "Avio USA and Ursa Major won a joint contract to design, develop and qualify a solid rocket motor booster for the Tomahawk missile, adding US suppliers for the part. No value was disclosed and production orders would come later; Avio's Virginia motor plant is due to be completed in late 2028."
+   ]
+  ],
+  "sources": [
+   [
+    "Ursa Major and Avio USA: Raytheon awards joint contract for Tomahawk solid rocket motors, 18 November 2026",
+    "https://www.prnewswire.com/news-releases/raytheon-awards-ursa-major-and-avio-usa-a-joint-contract-to-develop-solid-rocket-motors-for-the-us-navys-tactical-tomahawk-missile-program-302943557.html"
+   ],
+   [
+    "Avio: board takes note of the Article 102 notice and starts assessing the offer, 17 November 2026",
+    "https://www.avio.com/it/comunicati-stampa/avio-s-p-a-offerta-pubblica-di-acquisto-volontaria-totalitaria-sulle-azioni-ordinarie-di-avio-il-consiglio-di-amministrazione-prende-atto-della-comunicazione-ex-articolo-102-del-tuf-e-avvia-le-attivita-di-valutazione-dell-offerta"
+   ],
+   [
+    "Consob: obligation and right to purchase (90% and 95% thresholds)",
+    "https://www.consob.it/web/area-pubblica/obbligo-e-diritto-d-acquisto"
+   ],
+   [
+    "Reuters: Iceye bid for Avio gets frosty response from Italian government, 18 November 2026",
+    "https://www.reuters.com/business/aerospace-defense/iceye-bid-avio-gets-frosty-response-italian-government-2026-11-18/"
+   ],
+   [
+    "Milano Finanza: ICEYE launches €41 offer for Avio (conditions, shareholders, analyst views), 17 November 2026",
+    "https://www.milanofinanza.it/news/avio-la-finlandese-iceye-lancia-un-opa-a-41-euro-per-azione-obiettivo-il-delisting-202611170757173347"
+   ],
+   [
+    "Axios: RTX taps Ursa and Avio to develop Tomahawk motors, 18 November 2026",
+    "https://www.axios.com/2026/11/18/tomahawk-missile-ursa-avio-rtx-iran"
+   ],
+   [
+    "Yahoo Finance: AVIO.MI price history",
+    "https://finance.yahoo.com/quote/AVIO.MI/history/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "kulr-14-8-million-kulr-one-max-japan-order-margin",
   "title": "KULR's $14.8M order tops nine months of sales, but earns little at 4%",
   "summary": "KULR won a $14.8M order for KULR ONE Max energy storage in Japan, with $6.2M to ship this quarter. That is 122% of its revenue for the first nine months of 2026, but at the third quarter's 3.6% gross margin the whole order would earn about $0.5M, under five days of cash burn.",
