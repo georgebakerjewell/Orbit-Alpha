@@ -11,7 +11,7 @@
     "dateText": "Launched 13 November 2026 at 17:47 ET from Starbase, Texas",
     "summary": "SpaceX's Starship Flight 15 launched on 13 November 2026, reached orbit and deployed 26 Starlink V3 satellites; Ship 42 was then caught by the launch tower, a first for an upper stage. The booster catch was aborted and Booster 22 was lost in the Gulf.",
     "outcome": "Starship lifted off at 4:47 p.m. CST on 13 November and deployed 26 Starlink V3 satellites in orbit. Booster 22's guidance system aborted the tower catch automatically and the booster exploded at splashdown in the Gulf, but Ship 42 was caught by the tower at Starbase at 3:20 p.m. CST on 14 November (Spaceflight Now).",
-    "reaction": "Liftoff came after the US market close on Friday 13 November, a session in which SPCX ticked lower ahead of the flight (Investor's Business Daily). The next trading session, Monday 16 November, had not opened when this page was updated.",
+    "reaction": "Liftoff came after the US market close on Friday 13 November, when SPCX closed at $139.11. In the next session, Monday 16 November, SPCX closed at $137.36, down 1.3%, amid a wider tech sell-off that also hit other space stocks (Yahoo Finance price data, 24/7 Wall St.).",
     "stakes": [
       "SpaceX has confirmed a 13 November 2026 target, with a 75 minute window opening at 17:45 ET, pending regulatory approval; the date had earlier moved from 8 November to 12 November and then 13 November.",
       "SpaceX plans to catch both stages with the launch tower's arms; a success would be the first full recovery of a Starship vehicle and would allow the first reflight of a properly recovered ship (NASASpaceflight).",
@@ -118,9 +118,17 @@
       [
         "Investor's Business Daily: SpaceX launches Starship Flight 15 mission",
         "https://www.investors.com/news/spacex-starship-flight-15-launch-tower-catch-elon-musk-rocket-lab-electron-milestone-spcx-stock-rklb/"
+      ],
+      [
+        "Yahoo Finance: SPCX price history",
+        "https://finance.yahoo.com/quote/SPCX/history/"
+      ],
+      [
+        "24/7 Wall St.: SpaceX dips despite historic Starship catch (16 November 2026)",
+        "https://247wallst.com/investing/2026/11/16/ast-spacemobile-drops-7-as-tech-selloff-hits-space-stocks-rocket-lab-falls-4-spacex-dips-despite-historic-starship-catch/"
       ]
     ],
-    "updated": "2026-11-16"
+    "updated": "2026-11-19"
   },
   {
     "slug": "ast-spacemobile-bluebirds-14-16-launch",
@@ -631,7 +639,8 @@
       "AST said on 9 November 2026 that BlueBirds 17 to 19 are expected to ship by the end of November for a Blue Origin launch expected in early first quarter 2027.",
       "AST targets about 45 BlueBirds in orbit by the middle of 2027 and says launch agreements cover over 100 satellites to be deployed across 2027 and 2028, from SpaceX, Blue Origin and others.",
       "New Glenn's availability is a risk: the rocket exploded during a prelaunch test in Florida in May 2026, and reports say its next flight has been pushed to January 2027 (Light Reading).",
-      "In July 2026 AST said the New Glenn setback would push initial commercial service into 2027 (ISS Tracker, Satellite Today), and has since announced its own rocket, Blacklift, to launch BlueBirds from late 2028."
+      "In July 2026 AST said the New Glenn setback would push initial commercial service into 2027 (ISS Tracker, Satellite Today), and has since announced its own rocket, Blacklift, to launch BlueBirds from late 2028.",
+      "ULA's Vulcan, which uses two Blue Origin BE-4 engines (New Glenn uses seven), failed to reach orbit on 15 November 2026; ULA said early flight data pointed to how fuel was supplied to the engines, though the investigation remains open under FAA oversight (Yahoo Finance)."
     ],
     "facts": [
       [
@@ -680,8 +689,97 @@
       [
         "AST SpaceMobile: Successful orbital launch of BlueBirds 11, 12 and 13",
         "https://www.businesswire.com/news/home/20260805761351/en/AST-SpaceMobile-Announces-Successful-Orbital-Launch-of-BlueBirds-11-12-and-13"
+      ],
+      [
+        "Yahoo Finance: ASTS stock jumps overnight as bulls cheer ULA launch clue (18 November 2026)",
+        "https://finance.yahoo.com/markets/stocks/articles/asts-stock-jumps-overnight-despite-055736587.html"
       ]
     ],
-    "updated": "2026-11-12"
+    "updated": "2026-11-19"
+  },
+  {
+    "slug": "spacex-starship-flight-16",
+    "title": "SpaceX Starship Flight 16",
+    "tickers": [
+      "SPCX"
+    ],
+    "vehicle": "Starship (Super Heavy Booster 23, Ship 43)",
+    "status": "upcoming",
+    "date": null,
+    "dateText": "Targeted for December 2026 (NASASpaceflight, Starlust); no date announced by SpaceX",
+    "summary": "SpaceX's Starship Flight 16 is reportedly targeted for December 2026 and could be the first Starship launch from Launch Complex 39A in Florida. It follows Flight 15's first tower catch of a ship and tests SpaceX's push towards rapid reuse.",
+    "stakes": [
+      "Flight 16 would be the first Starship launch from the East Coast, bringing Launch Complex 39A at Kennedy Space Center online; NASASpaceflight says a significant amount of first-time work at 39A must be completed for a launch before the end of the year.",
+      "Flight 15 on 13 November 2026 achieved the first tower catch of a Starship upper stage, but the booster catch was aborted after an early end to the boostback burn and Booster 22 was lost (SpaceX, Starlust).",
+      "SpaceX plans to refly an upper stage from early 2027 and to move towards weekly launches in the first half of the year (Starlust).",
+      "Analysts said the Flight 15 catch strengthened the bull case for SPCX but that they await proof of rapid reuse (Seeking Alpha via TradingView)."
+    ],
+    "facts": [
+      [
+        "Vehicle",
+        "Starship"
+      ],
+      [
+        "Booster",
+        "Super Heavy Booster 23 (NASASpaceflight)"
+      ],
+      [
+        "Ship",
+        "Ship 43 (NASASpaceflight)"
+      ],
+      [
+        "Launch site",
+        "Launch Complex 39A, Kennedy Space Center, Florida (planned, subject to change)"
+      ],
+      [
+        "Mission",
+        "16th Starship flight test"
+      ],
+      [
+        "Previous flight",
+        "Flight 15, 13 November 2026, from Starbase, Texas"
+      ]
+    ],
+    "history": [
+      [
+        "Starship Flight 14 (first orbital flight)",
+        "28 September 2026",
+        "Reached orbit and deployed 26 Starlink V3 satellites; one engine lost on each stage",
+        "SPCX closed down 2.16% at $145.47 in the session that opened after the morning liftoff (24/7 Wall St.)"
+      ],
+      [
+        "Starship Flight 15",
+        "13 November 2026",
+        "Deployed 26 Starlink V3 satellites; Ship 42 caught by the tower; booster catch aborted and Booster 22 lost",
+        "SPCX closed down 1.3% at $137.36 on Monday 16 November (Yahoo Finance price data)"
+      ]
+    ],
+    "sources": [
+      [
+        "NASASpaceflight: SpaceX working through Starship Flight 15 and 16 milestones (18 October 2026)",
+        "https://www.nasaspaceflight.com/2026/10/spacex-flight-15-16-milestones/"
+      ],
+      [
+        "Starlust: Musk inspects Flight 15 upper stage (16 November 2026)",
+        "https://starlust.org/elon-musk-inspects-starship-flight-15-upper-stage-could-refly-within-weeks-of-refurbishment/"
+      ],
+      [
+        "SpaceX: Starship Flight 15",
+        "https://www.spacex.com/launches/starship-flight-15"
+      ],
+      [
+        "TradingView: Starship catch strengthens bull case, but analysts await proof of rapid reuse",
+        "https://fr.tradingview.com/news/seekingalpha:ed0a934cc094b:0-spacex-s-historic-starship-catch-strengthens-bull-case-but-analysts-await-proof-of-rapid-reuse/"
+      ],
+      [
+        "24/7 Wall St.: SpaceX flew the most powerful rocket ever built and the stock fell anyway",
+        "https://247wallst.com/investing/2026/09/29/spacex-flew-the-most-powerful-rocket-ever-built-and-the-stock-fell-anyway/"
+      ],
+      [
+        "Yahoo Finance: SPCX price history",
+        "https://finance.yahoo.com/quote/SPCX/history/"
+      ]
+    ],
+    "updated": "2026-11-19"
   }
 ]
