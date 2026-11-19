@@ -1,6 +1,170 @@
 [
  {
   "kind": "news",
+  "slug": "anthropic-ipo-spacex-compute-10-gigawatts",
+  "title": "Anthropic's $105B raise: SpaceX's top customer can pay but can still leave",
+  "summary": "Anthropic priced its IPO at $83, raising about $104.8B of new money with its private placement, and Musk says it wants 10 GW more SpaceX compute. Our sums: its cash now covers the $120.5B SpaceX deal about twice, so the risk to SpaceX is the short notice period, not Anthropic's ability to pay.",
+  "published": "2026-11-19",
+  "updated": "2026-11-19",
+  "tickers": [
+   "SPCX"
+  ],
+  "match": [
+   "anthropic",
+   "spacex",
+   "compute"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "Anthropic priced its initial public offering at $83 a share on 18 November, above its $70 to $78 range, and its shares start trading on Nasdaq as ANT today, 19 November. Its pricing filing shows 980 million shares sold for $81.34 billion, of which 956.4 million are new shares from the company, plus a concurrent $26.0 billion private placement at the same price and an option for underwriters to buy up to 147 million more new shares. CNBC reports that the offering is larger than SpaceX's own IPO in June, which raised $85.7 billion only after the over-allotment.",
+     "Anthropic matters to SpaceX shareholders because, as we set out in [Anthropic is SpaceX's Customer B](/articles/anthropic-spacex-customer-b-revenue), it is reported to be the customer behind 34.5% of SpaceX's Q3 revenue. Its S-1 says it agreed to spend up to $120.5 billion on SpaceX compute into 2029, about $3.1 billion a month once all capacity arrives in December.",
+     "Speaking at the New York Times DealBook Summit on the evening of 18 November, Elon Musk said SpaceX rents compute to Anthropic under short-term agreements that either side can end, and that Anthropic has said it would most likely want an additional 10 gigawatts, according to CNBC. Anthropic has not confirmed the figure. [SPCX](/stocks/spcx) closed at $143.50 on 18 November, up 1.3%, and was indicated at about $146.50 before the open on 19 November."
+    ]
+   ],
+   [
+    "Orbit Alpha view: ability to pay is settled, commitment is not",
+    [
+     "The worry about SpaceX's dependence on one customer has two parts: can Anthropic pay, and will it keep paying. The IPO answers the first. It does nothing for the second.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "How we got it"
+       ],
+       "rows": [
+        [
+         "New money to Anthropic from base IPO shares",
+         "about $78.8B",
+         "956,351,354 shares at $82.44 after underwriting fees, from the pricing filing; before other offering costs"
+        ],
+        [
+         "Plus concurrent private placement",
+         "$26.0B",
+         "pricing filing"
+        ],
+        [
+         "New money excluding the underwriters' option",
+         "about $104.8B",
+         "sum of the two"
+        ],
+        [
+         "Cash and short-term investments, 30 September",
+         "$131.8B",
+         "Anthropic S-1/A, 10 November"
+        ],
+        [
+         "Cash after the IPO, before the option",
+         "about $236.7B",
+         "$131.8B plus $104.8B, ignoring cash flow since September"
+        ],
+        [
+         "Cover for the full SpaceX commitment",
+         "about 2.0 times",
+         "$236.7B against up to $120.5B"
+        ],
+        [
+         "SpaceX bill at full rate, per year",
+         "about $37.2B",
+         "$3.1B a month times 12, from the S-1"
+        ],
+        [
+         "Share of Anthropic's run-rate revenue",
+         "about 46%",
+         "$37.2B against about $81B run-rate at end of October (S-1/A, via CNBC)"
+        ],
+        [
+         "SpaceX deal as share of Anthropic's total commitments",
+         "about 13%",
+         "$120.5B against $900.9B (S-1/A)"
+        ]
+       ]
+      }
+     },
+     "All figures are our calculations from Anthropic's pricing filing and S-1 amendments. On these numbers, Anthropic could pay the whole SpaceX commitment out of cash about twice over, before counting any revenue. Whether SpaceX's biggest customer can pay, a fair question given the rise in SpaceX's own credit default swaps covered in [our 5 November piece](/articles/spacex-stock-below-ipo-price-credit-default-swaps), is now largely settled for this contract.",
+     "The second part is where the asymmetry sits. For SpaceX, Anthropic is about a third of revenue. For Anthropic, the SpaceX deal is only about 13% of its $900.9 billion of compute and infrastructure commitments, and it is the part it can leave fastest: the S-1 allows cancellation on 90 days' notice once the non-cancellable periods end in January and March 2027, and Musk put it at three to six months on stage. Yet at the full rate it would cost Anthropic about 46% of its current run-rate revenue. A supplier that is that expensive and that easy to exit is the first place a buyer looks if it needs to cut.",
+     "That is also how we read the 10 gigawatt remark. It is a statement of interest relayed by SpaceX's chief executive, not a contract, and Anthropic has not repeated it. For scale, 10 gigawatts is almost six times the 1.7 gigawatts of nameplate compute SpaceX reported in total at 30 September in its [Q3 results](/results/spcx-q3-2026), so it could only be served from data centres not yet built, such as the campuses in [SpaceX's $74B supercompute plan](/articles/spacex-74-billion-arizona-texas-ai-supercompute-campuses). Until a filing shows new capacity under longer, non-cancellable terms, the useful number for SpaceX revenue remains about $3.1 billion a month on three months' notice."
+    ]
+   ],
+   [
+    "Why the contracts are short, and why that matters",
+    [
+     "Anthropic's S-1/A says about $70.7 billion of its commitments fall due in the 12 months after 30 September, and about $451.6 billion before the end of 2030. The rest, roughly $450 billion, is expected between 2031 and 2045. So most of Anthropic's spending is on long contracts that start later, while the SpaceX deal is large now and short. That fits a buyer that needs capacity immediately and wants to be free of it once its longer-term capacity arrives.",
+     "SpaceX has made the opposite bet on its side of the deal. As covered in [SpaceX's $40B Apollo GPU lease](/articles/spacex-40-billion-apollo-gpu-lease), it is taking on five-year fixed payments of about $2 billion a quarter from 2027, and it guided to $35 billion to $40 billion of capital spending in Q4. The IPO makes Anthropic a stronger customer, but it does not shorten SpaceX's obligations or lengthen Anthropic's."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "Today, 19 November: Anthropic's first trading day. A strong debut does not change the SpaceX contract terms, but it shapes how freely Anthropic can raise more later.",
+       "December 2026: Anthropic expects all contracted SpaceX capacity to be delivered, taking payments to about $3.1 billion a month.",
+       "January and March 2027: the non-cancellable periods end and notice becomes possible on each agreement.",
+       "Anthropic's first 10-Q as a listed company: whether the SpaceX commitment grows, and whether any new agreement carries a longer fixed term. That would be the first evidence behind the 10 gigawatt remark.",
+       "SpaceX's Q4 results: the share of revenue from its largest AI customer, and whether a second cloud customer passes 10% of revenue."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much did Anthropic raise in its IPO?",
+    "Its pricing filing shows $81.34 billion of shares sold at $83, including about $1.96 billion sold by existing holders. With the $26.0 billion private placement, our calculation is that Anthropic itself receives about $104.8 billion before other costs, or more if the underwriters buy the 147 million option shares."
+   ],
+   [
+    "Does the Anthropic IPO make SpaceX's AI revenue safer?",
+    "It makes payment safer: on our sums Anthropic's cash after the IPO is about twice the $120.5 billion it could owe SpaceX. It does not make the revenue more certain, because the agreements can be cancelled on 90 days' notice after January and March 2027."
+   ],
+   [
+    "Has Anthropic agreed to buy 10 gigawatts from SpaceX?",
+    "No. Musk said on 18 November that Anthropic had expressed interest in an additional 10 gigawatts. Anthropic has not confirmed it and no contract has been filed. It is almost six times the 1.7 gigawatts of compute SpaceX had in total at 30 September."
+   ]
+  ],
+  "sources": [
+   [
+    "Anthropic, PBC free writing prospectus with pricing terms, 18 November 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/2130357/000162828026074937/anthropicpbc-fwppricing.htm"
+   ],
+   [
+    "Anthropic, PBC final prospectus (424B4), 19 November 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm"
+   ],
+   [
+    "Anthropic, PBC Form S-1/A Amendment No. 2, 10 November 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/2130357/000162828026072484/anthropicpbc-sx1ax2.htm"
+   ],
+   [
+    "Anthropic, PBC Form S-1, 26 October 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm"
+   ],
+   [
+    "SpaceX Reports Third Quarter 2026 Results (SpaceX investor relations)",
+    "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ],
+   [
+    "Anthropic IPO raises over $81 billion in largest offering on record, topping SpaceX (CNBC)",
+    "https://www.cnbc.com/2026/11/18/anthropic-ipo-ai-offering-price.html"
+   ],
+   [
+    "Musk says Jensen Huang is irreplaceable, regrets midterm spending (CNBC)",
+    "https://www.cnbc.com/2026/11/19/elon-musk-jensen-huang-midterms.html"
+   ],
+   [
+    "Musk at DealBook: SpaceX and Tesla 'probably' better together, Anthropic wants more compute (Dealroom)",
+    "https://dealroom.co/news/174185-musk-at-dealbook-spacex-and-tesla-probably-better-together-anthropic-wan/"
+   ],
+   [
+    "Anthropic reports $17 billion in Q3 revenue, purchase commitments of $895.4 billion in revised S-1 (CNBC)",
+    "https://www.cnbc.com/2026/11/02/anthropic-ant-s-1-quarter-financials.html"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "ast-spacemobile-firefly-10-million-shares-dilution",
   "title": "AST SpaceMobile's Firefly stock payment: 14M shares no longer cover $400M",
   "summary": "AST SpaceMobile issued 10M shares to Firefly and 780,052 to Ligado this week, and its stock fell 7.6% to a 52-week low of $25.49. On our sums, at that price the share part of the Firefly licence would need about 15.7M shares, above the top of AST's own 10M to 14M estimate.",
