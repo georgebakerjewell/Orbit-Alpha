@@ -110,7 +110,12 @@
     } catch (e) { oaInit(""); }
     function startPosthog() {
     if (oaStarted) return; oaStarted = true;
-    if (POSTHOG_KEY && !window.__oaOwner) posthog.init(POSTHOG_KEY, {
+    // Automated browsers (headless Chrome, Selenium, Puppeteer) are not readers: keep them out of analytics.
+    // From 16 Nov 2026 a scraper (Chrome 146 on Windows, 1541px-wide viewport, US, no referrer) loaded
+    // /spacex-ipo 60-70 times a day and made up about 40% of daily "visitors".
+    var oaBot = navigator.webdriver || /HeadlessChrome|PhantomJS|Puppeteer|Playwright/i.test(navigator.userAgent)
+      || (/Chrome\/146\./.test(navigator.userAgent) && window.innerWidth === 1541);
+    if (POSTHOG_KEY && !window.__oaOwner && !oaBot) posthog.init(POSTHOG_KEY, {
       api_host: POSTHOG_HOST,
       person_profiles: "identified_only",
       capture_pageview: "history_change", // count page views as visitors click around the app, not just the first load
