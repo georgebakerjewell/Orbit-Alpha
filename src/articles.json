@@ -5114,6 +5114,234 @@
   ]
  },
  {
+  "slug": "is-spacex-retiring-falcon-9",
+  "title": "Is SpaceX retiring Falcon 9?",
+  "summary": "Not on a fixed date. SpaceX says it will wind down Falcon once Starship flies reliably several times a week, and reportedly takes no Falcon 9 bookings beyond 2028. Our sums: launch was 12% of SpaceX's Q3 revenue, but 43 of Falcon 9's 165 flights in 2025 carried other customers' payloads.",
+  "published": "2026-11-20",
+  "updated": "2026-11-20",
+  "tickers": [
+   "SPCX",
+   "PL",
+   "TSAT",
+   "RKLB",
+   "ASTS",
+   "GSAT"
+  ],
+  "sections": [
+   [
+    "The short answer",
+    [
+     "Yes, eventually, but SpaceX has not set a date. On 22 August 2026 Elon Musk posted that once Starship is flying reliably several times per week, it makes sense to shift SpaceX engineering and production resources to Starship, \"which means winding down Falcon\". That covers Falcon 9 and Falcon Heavy (Space.com, NPR).",
+     "Separately, industry and government sources reported in August and September that SpaceX has stopped taking new Falcon 9 bookings beyond 2028, and Ars Technica reported that SpaceX told NASA it plans to end commercial Falcon 9 launches in 2028 (Space.com, Jalopnik). SpaceX has not confirmed a retirement date, and as of 13 November it had not answered NPR's request for comment. Missions already booked keep flying: the Space Force told NPR it has secured Falcon 9 launches through 2028, and NASA crew and cargo flights to the space station are the likeliest exception after that."
+    ]
+   ],
+   [
+    "Orbit Alpha view: small money for SpaceX, a capacity gap for everyone else",
+    [
+     "Retiring Falcon costs SpaceX little. Its Space segment, which holds Falcon, Dragon and Starship, made $1.77B of revenue in the third quarter of 2026, 12.1% of the $14.58B total (our calculation), and posted a $7M operating loss. Starlink and the AI business now carry the company, and Starship Flight 15 on 13 November reached orbit with 26 Starlink V3 satellites before its ship was caught by the tower (see [Starship Flight 15](/launches/spacex-starship-flight-15)).",
+     "For other satellite operators the picture is the reverse. Falcon 9 flew 165 times in 2025, and 122 of those were Starlink missions (Space.com). That leaves 43 flights, about 26% of the total, carrying other customers' payloads in one year (our calculation). Rocket Lab's Neutron, a new medium-lift rocket, has 16 missions in backlog and will not fly before 2027: its entire backlog equals about 37% of one year of Falcon 9's outside flights (our calculation). Quilty Space told NPR the commercial market may be short of some 150 launches between now and 2030.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Source or working"
+       ],
+       "rows": [
+        [
+         "Falcon 9 flights in 2025",
+         "165",
+         "Space.com"
+        ],
+        [
+         "Of which Starlink",
+         "122",
+         "Space.com"
+        ],
+        [
+         "Flights for other customers, 2025",
+         "43 (26.1%)",
+         "Our calculation: 165 - 122"
+        ],
+        [
+         "Falcon flights expected in 2026",
+         "140 to 145",
+         "SpaceX president, quoted by Teslarati from Time"
+        ],
+        [
+         "SpaceX Space segment revenue, Q3 2026",
+         "$1.77B (12.1% of revenue)",
+         "Our calculation: $1.77B / $14.58B, SpaceX Q3 results"
+        ],
+        [
+         "SpaceX Space segment result, Q3 2026",
+         "$7M operating loss",
+         "SpaceX Q3 results"
+        ],
+        [
+         "Rocket Lab Neutron backlog",
+         "16 missions, first launch 2027 at earliest",
+         "Rocket Lab Q3 results"
+        ],
+        [
+         "Neutron backlog against Falcon 9 outside flights",
+         "About 37% of one year",
+         "Our calculation: 16 / 43"
+        ]
+       ]
+      }
+     },
+     "The point: the decision barely moves SpaceX's own numbers, but it removes the rocket behind nearly half of all launches worldwide in 2025 (Jalopnik), and no replacement in our coverage has that capacity yet. Operators that hold Falcon 9 slots before the end of 2028 are protected; those whose deployments slip past 2028 are the ones exposed."
+    ]
+   ],
+   [
+    "Which covered companies depend on Falcon 9",
+    [
+     "Every near-term Falcon 9 launch for companies we cover falls before the reported 2028 horizon, so the schedule risk is about slippage, not about launches already booked.",
+     {
+      "table": {
+       "head": [
+        "Company",
+        "Falcon 9 dependence",
+        "What to watch"
+       ],
+       "rows": [
+        [
+         "Telesat (TSAT)",
+         "First two Lightspeed satellites ride a third-party Falcon 9 around June 2027, then 15 satellites per Falcon 9. MDA's order book covers 225 Lightspeed satellites: if all flew 15 at a time, that is 15 Falcon 9 launches (our arithmetic; Telesat has not said how many are spares).",
+         "Global service now targeted for the end of Q2 2028, so most of the campaign falls in the year before the reported booking horizon. See [Lightspeed first launch](/launches/telesat-lightspeed-first-launch)."
+        ],
+        [
+         "AST SpaceMobile (ASTS)",
+         "BlueBirds 14 to 16 await a SpaceX launch date; trackers list no earlier than 30 December 2026. AST also uses New Glenn, and says launch agreements cover over 100 satellites across 2027 and 2028.",
+         "[BlueBirds 14 to 16 launch](/launches/ast-spacemobile-bluebirds-14-16-launch)"
+        ],
+        [
+         "Globalstar (GSAT)",
+         "Second batch of HIBLEO-4 replacement satellites due on a Falcon 9 in a December 2026 window; certain HIBLEO-4 milestones are a condition of the Amazon deal.",
+         "[HIBLEO-4 second launch](/launches/globalstar-hibleo-4-second-launch)"
+        ],
+        [
+         "Intuitive Machines (LUNR)",
+         "IM-3 lunar lander due on a Falcon 9 in January to March 2027.",
+         "[IM-3](/launches/intuitive-machines-im-3)"
+        ],
+        [
+         "Planet (PL)",
+         "Signed a multi-launch deal with Stoke Space on 9 November for its reusable Nova rocket from Cape Canaveral, with Nova Pathfinder orbital demonstrations from 2027. No price was given.",
+         "Planet reports fiscal Q3 2027 results on 10 December 2026: see the [space stocks earnings calendar](/space-stocks/earnings-calendar)"
+        ],
+        [
+         "Rocket Lab (RKLB)",
+         "A potential beneficiary rather than a customer: Neutron is a medium-lift rocket that could compete for the same customers, and Rocket Lab reported a record 117-launch backlog.",
+         "[When is Neutron's first launch?](/articles/when-is-rocket-lab-neutron-first-launch)"
+        ]
+       ]
+      }
+     }
+    ]
+   ],
+   [
+    "What would trigger the wind-down",
+    [
+     "Musk's condition is Starship flying reliably several times per week. Starship Flight 14 flew in the third quarter and Flight 15 on 13 November, and Flight 16 is reportedly targeted for December 2026 (see [Starship Flight 16](/launches/spacex-starship-flight-16)). The last two flights were at least six weeks apart, so several flights a week would be a large step up and the condition is not close to being met.",
+     "NASA is the main constraint. Dragon, which flies on Falcon 9, is the only American spacecraft that can carry NASA astronauts to and from the space station, which is set to retire in 2030, and Starship is not certified to carry NASA crews (NPR, Teslarati). NPR noted that NASA's three additional Dragon flights, ordered in September, would only take Dragon through 2028 if flown every six months with no further orders."
+    ]
+   ],
+   [
+    "Dates to watch",
+    [
+     {
+      "list": [
+       "December 2026: Globalstar's HIBLEO-4 launch and Starship Flight 16 (both targeted, no fixed date).",
+       "10 December 2026: Planet's fiscal Q3 2027 results, the first chance for management to discuss launch costs after the Stoke deal.",
+       "No earlier than 30 December 2026: AST SpaceMobile BlueBirds 14 to 16 on Falcon 9.",
+       "End of Q1 2027: Rocket Lab expects to finish Neutron tank testing and set a launch date.",
+       "Around June 2027: Telesat's first Lightspeed satellites on a third-party Falcon 9.",
+       "Any SpaceX statement fixing a Falcon retirement date, or a change in NASA's Dragon orders."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "When will SpaceX stop flying Falcon 9?",
+    "SpaceX has not given a date. Musk tied the wind-down to Starship flying reliably several times per week, and SpaceX has reportedly stopped taking new Falcon 9 bookings beyond 2028."
+   ],
+   [
+    "Will Falcon 9 still fly NASA astronauts?",
+    "Dragon on Falcon 9 is currently the only American way to fly NASA crews to the space station, and Starship is not certified for NASA crews, so NASA missions are the likeliest exception to any commercial cut-off."
+   ],
+   [
+    "How much of SpaceX's revenue comes from launches?",
+    "SpaceX's Space segment, which includes Falcon, Dragon and Starship, made $1.77B in Q3 2026, about 12% of total revenue, and lost $7M. See the [SpaceX Q3 2026 results](/results/spcx-q3-2026)."
+   ],
+   [
+    "Which space stocks are most exposed to a Falcon 9 retirement?",
+    "Companies whose deployments run into 2028 on Falcon 9, such as Telesat's Lightspeed campaign. Launches already booked before 2028, including AST SpaceMobile's and Globalstar's next missions, are not directly affected unless they slip."
+   ]
+  ],
+  "sources": [
+   [
+    "Space.com: SpaceX planning to retire Falcon 9 when Starship is up and running (24 August 2026)",
+    "https://www.space.com/space-exploration/launches-spacecraft/goodbye-falcon-9-spacex-planning-to-retire-workhorse-launcher-when-starship-is-up-and-running"
+   ],
+   [
+    "NPR: SpaceX's giant rocket may leave NASA in the dust (13 November 2026)",
+    "https://www.npr.org/2026/11/13/nx-s1-6039312/spacex-nasa-starship-iss-dragon-falcon-musk"
+   ],
+   [
+    "Teslarati: Elon Musk sets a condition that could end Falcon 9 (23 August 2026)",
+    "https://www.teslarati.com/elon-musk-just-set-a-condition-that-could-end-falcon-9-as-we-know-it/"
+   ],
+   [
+    "Jalopnik: SpaceX no longer taking Falcon 9 reservations past 2028 (22 September 2026)",
+    "https://www.jalopnik.com/2265985/spacex-no-longer-taking-falcon-9-reservations/"
+   ],
+   [
+    "SpaceX Reports Third Quarter 2026 Results (SpaceX investor relations)",
+    "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ],
+   [
+    "Rocket Lab Announces Third Quarter 2026 Financial Results (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/0001819994/000181999426000073/rklb-11092026ex991.htm"
+   ],
+   [
+    "Planet and Stoke Space Sign Multi-Launch Agreement for Nova Launch Capabilities (Business Wire, 9 November 2026)",
+    "https://finviz.com/news/419176/planet-and-stoke-space-sign-multi-launch-agreement-for-nova-launch-capabilities"
+   ],
+   [
+    "Via Satellite: Planet taps Stoke Space for new launch deal (9 November 2026)",
+    "https://www.satellitetoday.com/launch/2026/11/09/planet-taps-stoke-space-for-new-launch-deal/"
+   ],
+   [
+    "Via Satellite: Telesat delays Lightspeed full service entry to mid-2028 (29 October 2026)",
+    "https://www.satellitetoday.com/finance/2026/10/29/telesat-delays-lightspeed-service-entry-to-mid-2028-goldberg-addresses-launch-crunch-and-sovereign-demand/"
+   ],
+   [
+    "MDA Space: Awarded $474 million to expand the Telesat Lightspeed constellation (4 August 2026)",
+    "https://mda.space/article/mda-space-awarded-474-million-to-expand-the-telesat-lightspeed-leo-constellation"
+   ],
+   [
+    "AST SpaceMobile business update and third quarter 2026 results (9 November 2026)",
+    "https://feeds.issuerdirect.com/news-release.html?newsid=7492534759712978&symbol=ASTS"
+   ],
+   [
+    "Globalstar announces third quarter 2026 financial results (5 November 2026)",
+    "https://finance.yahoo.com/technology/articles/globalstar-announces-third-quarter-2026-130000903.html"
+   ],
+   [
+    "Intuitive Machines reports second quarter 2026 financial results",
+    "https://investors.intuitivemachines.com/news-releases/news-release-details/intuitive-machines-reports-second-quarter-2026-financial-results"
+   ],
+   [
+    "Planet to Announce Fiscal Third Quarter 2027 Results on 10 December 2026 (Business Wire via Finviz)",
+    "https://finviz.com/news/420187/planet-to-announce-fiscal-third-quarter-2027-results-on-thursday-december-10-2026"
+   ]
+  ]
+ },
+ {
   "slug": "why-has-firefly-aerospace-stock-jumped",
   "title": "Why has Firefly Aerospace stock jumped?",
   "summary": "Firefly (FLY) rose 48% from $15.18 on 5 November to $22.48 on 16 November after a $1.3B AST SpaceMobile engine deal, a NASA CLPS 2 selection and a Q3 beat. On our sums that added about $1.25B of market value, close to the deal's headline value, which is not yet in its $1.7B backlog.",
