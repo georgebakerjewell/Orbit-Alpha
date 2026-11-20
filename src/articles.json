@@ -1,6 +1,176 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-32-billion-chip-bonds-8-percent-yield-saturn",
+  "title": "SpaceX's $32B chip bonds: rated A3, yet dearer than its own debt",
+  "summary": "SpaceX's chip-financing trust sold $32 billion of bonds on 19 November, the largest part $25.2 billion at 8.259%. Our calculation: that is about 2.3 points over the average high-grade yield, roughly $580 million a year, and about 1 point more than SpaceX's own unsecured bonds.",
+  "published": "2026-11-20",
+  "updated": "2026-11-20",
+  "tickers": [
+   "SPCX",
+   "PL"
+  ],
+  "match": [
+   "spacex",
+   "chip"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On Thursday 19 November Saturn Funding Trust, the Apollo-managed vehicle that will buy Nvidia chips and lease them to SpaceX, sold $32 billion of bonds in three parts, according to Bloomberg. The largest part, about $25.2 billion of Class A3 notes, priced at a yield of 8.259%. Investors had committed to about $26 billion before the day, and the last $6 billion was sold on Thursday. Moody's rated the notes A3 and KBRA A-minus, Bloomberg reported. The bonds sit alongside a senior secured bank loan in a financing of more than $40 billion that pays for about $47.3 billion of Nvidia Rubin equipment, with deliveries expected to start in January.",
+     "The Financial Times reported that lenders pushed for safeguards to stop SpaceX sending the financed chips into space, where they could not be repossessed. SpaceX says the chips will run in data centres on Earth; whether the restriction is in the final documents is not known. The FT also reported that the notes mature in 2032 but SpaceX repays the principal within four years.",
+     "[SPCX](/stocks/spcx) rose 3.2% to $141.70 on 17 November when the sale was first reported, then fell 3.5% to $138.43 on 19 November from $143.50, after trading as high as $147.29. Thursday was also the day after Anthropic's record IPO and a broad fall in AI stocks, so the move cannot be pinned on the bonds alone."
+    ]
+   ],
+   [
+    "Orbit Alpha view: SpaceX paid about $580 million a year for a novel structure",
+    [
+     "The headline is the size. The more useful number is the price. These notes carry a better rating than SpaceX itself: A3 is one notch above the BBB+ Fitch gives SpaceX, as we noted in [SpaceX sinks below its IPO price](/articles/spacex-stock-below-ipo-price-credit-default-swaps). They are also repaid faster, within four years. Both features normally mean a lower yield. Instead the notes yield about 1 point more than SpaceX's own unsecured bonds from June, which the FT put at about 7.2% for the 2031 maturity, and 2.3 points more than the average US high-grade bond.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "How we got it"
+       ],
+       "rows": [
+        [
+         "Yield on the $25.2B Class A3 notes",
+         "8.259%",
+         "Bloomberg"
+        ],
+        [
+         "Average US high-grade yield on 19 Nov",
+         "5.95%",
+         "Bloomberg index data"
+        ],
+        [
+         "Premium over average high-grade",
+         "about 2.3 points, about $582M a year",
+         "8.259% minus 5.95%, times $25.2B"
+        ],
+        [
+         "Premium over SpaceX's 2031 bonds",
+         "about 1.1 points, about $267M a year",
+         "8.259% minus about 7.2% (FT), times $25.2B"
+        ],
+        [
+         "First-year interest on the A3 notes",
+         "up to about $2.08B",
+         "8.259% on the full $25.2B, before any repayment"
+        ],
+        [
+         "Same figure against SpaceX's Q3 interest bill",
+         "about 3.1 times",
+         "$675M of Q3 interest expense (10-Q)"
+        ],
+        [
+         "First-year interest on the whole financing, illustration",
+         "about $2.9B, up from our $2.1B at 6%",
+         "8.259% on an average $35B balance, as in our 29 October working"
+        ],
+        [
+         "Equipment financed vs cash and securities",
+         "about 53%",
+         "$47.3B against $89.9B at 30 September"
+        ]
+       ]
+      }
+     },
+     "Our working uses the 19 November figures reported by Bloomberg and the FT and SpaceX's 30 September 10-Q. Premiums are on the full $25.2 billion and shrink as principal is repaid. The last row of interest is an illustration: SpaceX's 26 October 8-K says the lease carries a fixed rate set at pricing, which has not been published, and the other two bond parts and the bank loan may cost more or less than 8.259%. When we wrote up [the Apollo GPU lease](/articles/spacex-40-billion-apollo-gpu-lease) in October we used 6% only to show scale; the market has now settled well above that.",
+     "What the extra points buy is the off-balance-sheet structure. The bonds are issued by the trust, not by SpaceX, which helps protect SpaceX's investment-grade rating, according to Bloomberg. But the risk has not moved. Moody's leaned on SpaceX's promise to keep paying rent even if the equipment fails or a disaster strikes, and SpaceX's own 8-K calls the arrangement a finance lease. For shareholders this is SpaceX debt in all but name, and on our numbers it costs more than SpaceX's own borrowing. Lenders are charging for the novelty of GPU collateral, which loses value as newer chips arrive, not for SpaceX's credit."
+    ]
+   ],
+   [
+    "Why the space clause matters",
+    [
+     "The FT detail tells you what lenders think the collateral is worth: chips they can reclaim and resell. That cuts against the idea of these chips doubling as an orbital computing fleet. Musk has said SpaceX would launch Nvidia-powered computers into orbit in 2027, according to Benzinga. If the restriction is in the final documents, the $47.3 billion of financed equipment stays on the ground, and any orbital compute would have to be paid for some other way, most likely from SpaceX's own cash flow. SpaceX's finance chief has already said a large part of the compute build will be self-funded.",
+     "It also shows the limits of this route for future rounds. The deal needed about 2.3 points over the high-grade average to clear on a day when AI shares were falling, and CreditSights told Bloomberg that clients were sceptical after SpaceX's June bonds fell in the secondary market. SpaceX guided to $35 billion to $40 billion of capital spending in Q4 alone, so the cost of the next financing will matter as much as this one."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     {
+      "list": [
+       "[Planet Labs](/stocks/pl) supplied the satellite for Google's first Project Suncatcher prototype, which flew on a SpaceX rideshare in October. On the same day as the bond sale, Google booked Blue Origin's New Glenn, not SpaceX, for its first heavy-lift Suncatcher launch in the first quarter of 2029. Google is paying for space computing from its own balance sheet; SpaceX's largest chip purchase comes with lenders asking for the chips to stay on Earth.",
+       "For smaller borrowers such as [AST SpaceMobile](/stocks/asts) and [Telesat](/stocks/tsat), which is negotiating with lenders on its GEO debt (see [Telesat's standstill](/articles/telesat-standstill-geo-lenders-debt-december)), the useful reference is the price: an A3-rated structure backed by SpaceX's rent still had to pay 8.259%.",
+       "SpaceX's AI capital needs keep growing faster than its space business. The [Q3 results](/results/spcx-q3-2026) showed $16.4 billion of $19.6 billion of capital spending going to AI."
+      ]
+     }
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "An 8-K or the year-end 10-K confirming the final lease rate and how the lease is reported. SpaceX said in October that it expects the lease to close before the end of 2026.",
+       "Whether the final documents limit where the chips can be used, which would show how SpaceX plans to fund its 2027 orbital compute ambitions.",
+       "Secondary trading in the new notes against the 8.259% issue yield, after the June bonds fell once they began trading.",
+       "First chip deliveries, expected from January, which start the quarterly rent payments.",
+       "Tuesday 8 December, when about 798 million locked-up shares become free to sell; see [what happens when the lock-up ends](/articles/spacex-lock-up-ends-8-december)."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Is SpaceX's $32 billion chip debt on its balance sheet?",
+    "The bonds are issued by Saturn Funding Trust, not SpaceX, which is why reports call the deal off-balance-sheet. But SpaceX must pay the rent that services them even if the chips fail, and its own 8-K describes a finance lease. In economic terms it is a SpaceX obligation, now costing about 8.26% on the largest part."
+   ],
+   [
+    "Why do A3-rated bonds yield more than SpaceX's own bonds?",
+    "On our reading, investors are charging for the new structure and for GPU collateral that loses value as newer chips arrive. The notes yield about 1 point more than SpaceX's 2031 bonds and about 2.3 points more than the average high-grade bond, roughly $580 million a year on $25.2 billion."
+   ],
+   [
+    "Can SpaceX send the financed Nvidia chips into space?",
+    "SpaceX says they will run in data centres on Earth. The FT reported that lenders sought a clause to stop the chips being launched, because orbit makes them impossible to repossess. It is not known whether the clause made it into the final documents."
+   ]
+  ],
+  "sources": [
+   [
+    "SpaceX 8-K on the GPU lease commitment, 26 October 2026 (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000110465926118614/0001104659-26-118614-index.htm"
+   ],
+   [
+    "SpaceX Sells $32 Billion of AI Chip Debt at Yields Topping 8% (Bloomberg)",
+    "https://www.bloomberg.com/news/articles/2026-11-19/spacex-eyes-at-least-32-billion-ai-chip-debt-sale-on-thursday"
+   ],
+   [
+    "SpaceX sold US$32 bil of AI chip debt at yields topping 8%, Bloomberg via The Edge Malaysia",
+    "https://theedgemalaysia.com/node/826632"
+   ],
+   [
+    "SpaceX lenders seek safeguards on AI chips in space (Financial Times)",
+    "https://www.ft.com/content/33b5643c-2957-4d42-9116-5e34a3c54e29"
+   ],
+   [
+    "SpaceX lenders seek safeguards against Musk sending AI chips into space - FT (Investing.com)",
+    "https://www.investing.com/news/stock-market-news/spacex-lenders-seek-safeguards-against-musk-sending-ai-chips-into-space--ft-5040555"
+   ],
+   [
+    "SpaceX Lenders Don't Want Nvidia Chips Leaving Earth (Benzinga)",
+    "https://www.benzinga.com/markets/tech/26/11/63464192/elon-musks-dream-meets-wall-street-reality-spacex-lenders-dont-want-nvidia-chips-leaving-earth"
+   ],
+   [
+    "The \"Bank of Nvidia\" Is Pulling Back. SpaceX's CFO Says Cash Flow Funds Most of Its 10GW Build (TIKR via Yahoo Finance)",
+    "https://finance.yahoo.com/markets/stocks/articles/bank-nvidia-pulling-back-spacex-064901367.html"
+   ],
+   [
+    "Google picks Bezos' Blue Origin to launch AI computing satellites in 2029 (Reuters)",
+    "https://www.reuters.com/business/media-telecom/google-picks-bezos-blue-origin-launch-ai-computing-satellites-2029-2026-11-19/"
+   ],
+   [
+    "Google Orders Heavy-Lift Launch for Project Suncatcher from Blue Origin (Via Satellite)",
+    "https://www.satellitetoday.com/launch/2026/11/19/google-orders-heavy-lift-launch-for-project-suncatcher-from-blue-origin/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "anthropic-ipo-spacex-compute-10-gigawatts",
   "title": "Anthropic's $105B raise: SpaceX's top customer can pay but can still leave",
   "summary": "Anthropic priced its IPO at $83, raising about $104.8B of new money with its private placement, and Musk says it wants 10 GW more SpaceX compute. Our sums: its cash now covers the $120.5B SpaceX deal about twice, so the risk to SpaceX is the short notice period, not Anthropic's ability to pay.",
