@@ -1,5 +1,19 @@
 [
   {
+    "issue": 32,
+    "date": "2026-11-22",
+    "title": "SpaceX's AI pivot collides with a broader tech selloff, while a rocket failure two states away reshapes the launch queue",
+    "url": "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-32",
+    "description": "🌎 SpaceX's AI pivot collides with a broader tech selloff, while a rocket failure two states away reshapes the launch queue",
+    "tickers": [
+      "SPCX",
+      "ASTS",
+      "RDW",
+      "FLY",
+      "BKSY"
+    ]
+  },
+  {
     "issue": 31,
     "date": "2026-11-15",
     "title": "One of the busiest weeks in the sector for a while, and a deep dive into how NASA has turned to lucrative selected contractors for their advancement",
@@ -368,28 +382,6 @@
       "FLY",
       "RDW",
       "LUNR",
-      "GSAT",
-      "MDA",
-      "VSAT",
-      "BKSY",
-      "SPCE",
-      "SPIR"
-    ]
-  },
-  {
-    "issue": 12,
-    "date": "2026-07-05",
-    "title": "The week the sector stopped selling and started buying.",
-    "url": "https://orbit-alpha.beehiiv.com/p/orbit-alpha-issue-12",
-    "description": "After three weeks of unrelenting correction, the IPO rotation, the Fed repricing, the margin-call cascade, the sector did something it hadn't done since...",
-    "tickers": [
-      "RKLB",
-      "SPCX",
-      "ASTS",
-      "LUNR",
-      "FLY",
-      "RDW",
-      "PL",
       "GSAT",
       "MDA",
       "VSAT",
