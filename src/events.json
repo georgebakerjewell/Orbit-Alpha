@@ -323,13 +323,13 @@
     "vehicle": "Falcon 9",
     "status": "upcoming",
     "date": null,
-    "dateText": "First quarter of 2027 (launch window January to March)",
-    "summary": "Intuitive Machines' IM-3 lunar lander is scheduled to launch on a Falcon 9 in a January to March 2027 window, aiming for the Reiner Gamma region of the Moon. It is the company's third landing attempt, after IM-2 ended with its lander on its side in March 2025.",
+    "dateText": "March to April 2027 (Intuitive Machines, 12 November 2026)",
+    "summary": "Intuitive Machines' IM-3 lunar lander is now planned to launch on a Falcon 9 in March to April 2027, aiming for the Reiner Gamma region of the Moon. It is the company's third landing attempt and should also deploy its first ALTUS lunar relay satellite.",
     "stakes": [
-      "On the second quarter 2026 call, management said IM-3 was in assembly, integration and test, with an engine test still to come before a final green light to fly in the first quarter of 2027.",
+      "On its third quarter 2026 call on 12 November, management said IM-3 fired its LOX-methane engine on the fully integrated lander in late October and is on track to finish end-to-end testing in the first quarter, supporting a March to April 2027 launch; it was previously expected in the first quarter of 2027.",
+      "The IM-3 launch is expected to deploy the first ALTUS Lunar Communications Relay satellite, part of the company's lunar data services business.",
       "IM-3 flies under a NASA Commercial Lunar Payload Services task order (CP-11) and carries Lunar Vertex, NASA's CADRE rovers and instruments from ESA and Korea's KASI.",
-      "Intuitive Machines reported record second quarter 2026 revenue of $206 million and backlog of $1.8 billion, and kept its full-year revenue outlook of $900 million to $1 billion.",
-      "The company said IM-4 remains planned for late 2027."
+      "Third quarter 2026 revenue was $269.3 million with backlog of about $1.87 billion, and the company kept its 2026 revenue forecast of $920 million to $950 million (New Space Economy)."
     ],
     "facts": [
       [
@@ -355,6 +355,10 @@
       [
         "Mission number",
         "Third Intuitive Machines lunar mission"
+      ],
+      [
+        "Also on board",
+        "First ALTUS Lunar Communications Relay satellite (planned)"
       ]
     ],
     "history": [
@@ -366,6 +370,14 @@
       ]
     ],
     "sources": [
+      [
+        "Benzinga: Intuitive Machines Q3 2026 earnings call transcript (12 November 2026)",
+        "https://www.benzinga.com/news/26/11/63191155/intuitive-machines-q3-2026-earnings-call-transcript"
+      ],
+      [
+        "New Space Economy: Intuitive Machines third quarter 2026 results (12 November 2026)",
+        "https://newspaceeconomy.ca/2026/11/12/intuitive-machines-third-quarter-2026-results/"
+      ],
       [
         "Intuitive Machines Q2 2026 earnings call transcript",
         "https://finance.yahoo.com/markets/stocks/articles/intuitive-machines-lunr-q2-2026-134458777.html"
@@ -387,7 +399,7 @@
         "https://www.benzinga.com/general/space/25/03/44181829/intuitive-machines-stock-is-in-free-fall-thursday-whats-going-on"
       ]
     ],
-    "updated": "2026-10-22"
+    "updated": "2026-11-23"
   },
   {
     "slug": "virgin-galactic-delta-flight-tests",
