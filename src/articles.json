@@ -1,6 +1,165 @@
 [
  {
   "kind": "news",
+  "slug": "echostar-dish-american-tower-525-million-settlement",
+  "title": "DISH settles American Tower claim at 19 cents: what EchoStar keeps",
+  "summary": "American Tower will take $525M from EchoStar's $2.4bn FCC trust to settle its DISH Wireless tower claims, about 19 cents per dollar of its $2.7bn claim. By our calculation, what could flow back to EchoStar from the trust is worth between nothing and about $2.30 a share.",
+  "published": "2026-11-23",
+  "updated": "2026-11-23",
+  "tickers": [
+   "ECHO",
+   "SPCX"
+  ],
+  "match": [
+   "american",
+   "tower",
+   "dish"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 23 November American Tower announced a proposed settlement of its claims against DISH Wireless, the bankrupt EchoStar subsidiary that walked away from its 5G tower leases, and against EchoStar itself. American Tower expects a $525M cash payment on or before 31 December 2026 from the Wireless Creditor Trust, the $2.4bn fund the FCC required as a condition of approving EchoStar's spectrum sales. If the money arrives later, it accrues interest; American Tower's lawyer told the court the term sheet rate is 9%. The deal still needs final documents, bankruptcy court approval and an FCC-approved change to the trust's procedures, and American Tower can return to litigation if those fail.",
+     "The agreement in principle was first disclosed at a bankruptcy hearing in Houston on 18 November. American Tower had put its claim at about $2.7bn in August, so the settlement is roughly 19 cents on the dollar. Crown Castle, which says it is owed more than $3.5bn, told the court it had received no proposal in eight weeks. EchoStar shares were at $89.80 at 10:39 ET on 23 November, up 6.6% from Friday's $84.26 close, according to our [quote feed](/stocks/echo)."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the trust leftover is EchoStar's, and it is small",
+    [
+     "The $525M is not paid from EchoStar's own $13.44bn of cash. It comes from the trust, which AT&T funded directly as part of the spectrum purchase price and which EchoStar records on its balance sheet as an FCC escrow with a matching liability. Crown Castle's lawyer told the court that EchoStar holds the residual interest in the trust, so whatever is not paid out to creditors goes back to EchoStar. That makes every settlement a direct trade-off for EchoStar shareholders: each dollar a creditor gives up is a dollar EchoStar may recover.",
+     {
+      "table": {
+       "head": [
+        "Wireless Creditor Trust (our calculation from figures given in court)",
+        "$M"
+       ],
+       "rows": [
+        [
+         "Trust funded by AT&T",
+         "2,400"
+        ],
+        [
+         "Small claims of $100,000 or less (DISH estimate)",
+         "-35"
+        ],
+        [
+         "Larger claims outside the three big tower firms (DISH estimate)",
+         "-545"
+        ],
+        [
+         "American Tower settlement",
+         "-525"
+        ],
+        [
+         "Left for Crown Castle, SBA and any residual",
+         "about 1,295"
+        ]
+       ]
+      }
+     },
+     "DISH's lawyer told the court about $1.5bn would remain after these items; the three figures he gave leave about $1.295bn, and the gap was not explained. Using the lower figure, what EchoStar might get back depends almost entirely on Crown Castle:",
+     {
+      "table": {
+       "head": [
+        "Scenario (our calculation)",
+        "Crown Castle",
+        "SBA",
+        "Left for EchoStar",
+        "Per EchoStar share"
+       ],
+       "rows": [
+        [
+         "Both settle at DISH's July estimates",
+         "$554.1M",
+         "$69.6M",
+         "about $671M",
+         "about $2.31"
+        ],
+        [
+         "Crown at American Tower's 19.4 cents, SBA at its full claim",
+         "about $681M",
+         "$194M",
+         "about $420M",
+         "about $1.44"
+        ],
+        [
+         "Both paid their full claims",
+         "$3.5bn or more",
+         "$194M or more",
+         "nothing; a shortfall of about $2.4bn",
+         "$0"
+        ]
+       ]
+      }
+     },
+     "Per share figures divide by the 290.98 million Class A and B shares outstanding on 26 October, from EchoStar's latest 10-Q. Even the best case is about 2.6% of EchoStar's market value of about $26.1bn at today's price. The trust is a small number for EchoStar; the bigger risk is the third row. DISH has said that if the trust falls short, a plan should create a litigation trust to pursue claims that could cover the gap, and Crown Castle has argued that DISH Wireless's remaining value lies mainly in potential claims against EchoStar. American Tower's settlement removes one such claimant: its release covers EchoStar, which it had sued for interference in Colorado in June 2026. Crown Castle's interference claims against EchoStar remain.",
+     "The share move confirms where EchoStar's value sits. EchoStar is owed about 261.8 million SpaceX shares, roughly 0.90 SpaceX shares per EchoStar share (our [earlier analysis](/articles/spacex-boost-mobile-echostar-talks) explains the deal). SpaceX rose $10.85 from Friday's close to $138.64 at 10:39 ET, which by our calculation adds about $9.76 to the value of that stake per EchoStar share. EchoStar itself rose $5.54. The settlement, worth at most a couple of dollars a share either way, is not what is moving the stock."
+    ]
+   ],
+   [
+    "Why EchoStar settled",
+    [
+     "Price certainty. In July DISH estimated American Tower's claim at $384.6M, applying its own reading of the bankruptcy cap on lease damages; the court has not ruled on that cap or on DISH's argument that the forced spectrum sale was a force majeure event. Settling at $525M costs about $140M more than DISH's estimate, but removes the chance of losing both arguments against a $2.7bn claim. It also takes the largest settled creditor out of the fight over who controls the case, and ends American Tower's separate claims against EchoStar. DISH said settlements with SBA, Lumos and Segra, and Charter and Cox were within reach, and that with American Tower these five groups would account for almost 40% of estimated allowed claims."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "8 December: the date by which the bankruptcy court must approve the American Tower settlement under its terms.",
+       "FCC consent to amend the trust so the payment can be made by 31 December; after that date the unpaid amount accrues interest, about $3.9M a month at 9% by our calculation.",
+       "9 December objections and 16 to 18 December hearings on EchoStar's proposed $100M loan to DISH Wireless, followed by the creditors' requests for a Chapter 11 trustee or conversion to Chapter 7, which could put the case under a fiduciary independent of EchoStar.",
+       "Whether SBA and Crown Castle settle, and at what fraction of their claims: Crown's outcome decides whether the trust leaves anything for EchoStar.",
+       "For the larger driver of EchoStar's value, the SpaceX price on our [SpaceX stock page](/stocks/spcx) and the spectrum closing, still targeted for 30 November 2027 (see our [Q3 results summary](/results/echo-q3-2026))."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Does EchoStar pay American Tower the $525M?",
+    "Not from its own cash. The money comes from the $2.4bn FCC trust that AT&T funded as part of its spectrum purchase. But EchoStar is said to hold the residual interest in that trust, so each dollar paid out reduces what could come back to EchoStar, and EchoStar owes 9% interest if payment slips past 31 December."
+   ],
+   [
+    "How much of the trust could go back to EchoStar?",
+    "By our calculation, about $671M (about $2.31 a share) if Crown Castle and SBA settle at DISH's July estimates, about $420M ($1.44 a share) if Crown settles at American Tower's 19.4 cents, and nothing if both are paid in full, which would leave a shortfall of about $2.4bn."
+   ],
+   [
+    "Why did EchoStar shares rise on 23 November?",
+    "Mostly because of SpaceX. EchoStar is owed about 0.90 SpaceX shares per EchoStar share, and SpaceX's $10.85 rise by 10:39 ET adds about $9.76 per EchoStar share by our calculation, more than EchoStar's own $5.54 gain."
+   ]
+  ],
+  "sources": [
+   [
+    "American Tower Announces Proposed Settlement of DISH/EchoStar Litigation (Business Wire, 23 November 2026)",
+    "https://www.businesswire.com/news/home/20261123666368/en/"
+   ],
+   [
+    "EchoStar Form 10-Q for the quarter ended 30 September 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1415404/000110465926121675/sats-20260930x10q.htm"
+   ],
+   [
+    "DISH reaches $525 million deal with American Tower as Crown Castle says it got no calls in eight weeks (Wireless Estimator)",
+    "https://wirelessestimator.com/articles/2026/dish-reaches-525-million-deal-with-american-tower-as-crown-castle-says-it-got-no-calls-in-eight-weeks/"
+   ],
+   [
+    "Dish, American Tower reach $525M settlement (Fierce Network)",
+    "https://www.fierce-network.com/wireless/dish-american-tower-reach-525m-settlement"
+   ],
+   [
+    "Dish to Settle With American Tower for $525 Million (Broadband Breakfast)",
+    "https://broadbandbreakfast.com/dish-to-settle-with-american-tower-for-525-million/"
+   ],
+   [
+    "Bankrupt Dish Wireless Strikes $525 Million Settlement Deal With American Tower (WSJ Pro)",
+    "https://www.wsj.com/pro/bankruptcy/bankrupt-dish-wireless-strikes-525-million-settlement-deal-with-american-tower-63391fd1"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "spacex-32-billion-chip-bonds-8-percent-yield-saturn",
   "title": "SpaceX's $32B chip bonds: rated A3, yet dearer than its own debt",
   "summary": "SpaceX's chip-financing trust sold $32 billion of bonds on 19 November, the largest part $25.2 billion at 8.259%. Our calculation: that is about 2.3 points over the average high-grade yield, roughly $580 million a year, and about 1 point more than SpaceX's own unsecured bonds.",
