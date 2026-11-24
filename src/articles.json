@@ -1,5 +1,152 @@
 [
  {
+  "kind": "news",
+  "slug": "eutelsat-600-million-bond-7-75-percent-2028-notes-tender",
+  "title": "Eutelsat's 7.75% bond: why it pays €37.5M more a year to clear 2028",
+  "summary": "Eutelsat sold €600M of 2032 notes at 7.75% and bought back €496.9M of its 1.5% notes due 2028. On our sums the swap adds about €37.5M a year of interest until October 2028, and the new coupon is about 1.75 points above what Eutelsat paid on similar bonds in February.",
+  "published": "2026-11-24",
+  "updated": "2026-11-24",
+  "tickers": [
+   "ETL"
+  ],
+  "match": [
+   "eutelsat",
+   "notes"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 24 November 2026 [Eutelsat](/stocks/etl) said holders had tendered €496.9M of its €600M 1.5% senior notes due 2028, and that it would buy all of them back. No scaling back was needed, and €103.1M of the 2028 notes will stay outstanding. The buyback is funded by €600M of new senior notes due 2032, priced on 17 November at a 7.75% coupon and issued at par. The new notes settle on 25 November and the buyback on 26 November.",
+     "The deal grew during the week: Eutelsat launched it on 16 November as a €400M offering and raised it to €600M at pricing. The spare proceeds go into a treasury account to repay the rest of the 2028 notes on or before maturity, which falls on 13 October 2028. The shares closed at €1.605 on 23 November, down 4.5% from €1.681 on 16 November, the day the deal was launched."
+    ]
+   ],
+   [
+    "Orbit Alpha view: early certainty bought at a high price",
+    [
+     "The swap makes sense as insurance, but it is expensive insurance. Eutelsat has removed its 2028 maturity almost two years early, at the cost of paying more than five times the old coupon in the meantime. The table shows the arithmetic.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Working (our calculations from the published terms)"
+       ],
+       "rows": [
+        [
+         "Interest on the 2028 notes before the deal",
+         "€9.0M a year",
+         "€600M at 1.5%"
+        ],
+        [
+         "Interest on the new 2032 notes",
+         "€46.5M a year",
+         "€600M at 7.75%"
+        ],
+        [
+         "Extra interest once the remaining 2028 notes are repaid",
+         "€37.5M a year",
+         "€46.5M less €9.0M"
+        ],
+        [
+         "Extra interest until 13 October 2028",
+         "about €70M",
+         "€37.5M a year for 687 days, before any interest earned on cash set aside"
+        ],
+        [
+         "Extra interest as a share of revenue",
+         "3.0%",
+         "€37.5M against FY2025-26 revenue of €1,235.9M"
+        ],
+        [
+         "New notes against market value",
+         "about 32%",
+         "€600M against €1.89B (1,178.3M shares at €1.605, 23 November close)"
+        ]
+       ]
+      }
+     },
+     "The more telling number is the coupon itself. In February 2026, after a €1.5B equity raise backed by the French state and other large shareholders, Eutelsat sold a 5-year bond at 5.75% and a 7-year bond at 6.25%. The new notes mature in 2032, between those two, yet pay 7.75%. A straight line between the February coupons gives about 6.0% for a 2032 bond, so lenders are now charging Eutelsat about 1.75 points more, or roughly €10.5M a year on €600M. Part of that gap may reflect moves in general euro interest rates, which we have not adjusted for, but the direction is clear: Eutelsat's cost of debt has risen since the refinancing that was meant to settle its finances.",
+     "The equity market tells a similar story. The reserved share issue in late 2025 was priced at €4.00; the 23 November close of €1.605 is 59.9% below that. For balance, 7.75% is still well below the 9.75% Eutelsat was paying on the 2029 notes it retired in March, so this is not its most expensive debt."
+    ]
+   ],
+   [
+    "Why the company did it",
+    [
+     "Eutelsat is in a heavy spending phase. It expects gross capital expenditure of about €1.2B in FY2026-27 and about €4B over FY2026-29, and it has committed €3.39B to IRIS² infrastructure between 2027 and 2034, the programme behind its [€12.1B backlog](/articles/eutelsat-iris2-order-book-12-billion). Video revenue fell 17.8% like-for-like in the first quarter, so it cannot count on its older business to repay debt. Clearing the 2028 maturity now means the bond market's mood in 2028 no longer matters for that slice of debt.",
+     "The deal also fits the structure Eutelsat set out in its 2026 plan. The 2028 notes were issued by the Eutelsat SA subsidiary, while the new notes are issued by the parent, Eutelsat Communications, and guaranteed by Eutelsat SA and OneWeb Holdings, like the debt raised in February. In October the company said it would keep looking for ways to optimise its debt profile, and this deal came three weeks later."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "Eutelsat's 7.75% gives a fresh market price for a European satellite operator rated below investment grade, which is a reference point for [SES](/stocks/sesg) when it next refinances. It also shows the contrast with [Telesat](/stocks/tsat), whose GEO business has about C$2.4B due on 6 December 2026 and is still negotiating under a [standstill with its lenders](/articles/telesat-standstill-geo-lenders-debt-december). Eutelsat chose to pay more interest almost two years early rather than face a maturity close to the deadline."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "Settlement of the new notes on 25 November and of the buyback on 26 November 2026; the buyback depends on the new notes settling.",
+       "The annual general meeting on 26 November 2026.",
+       "First-half results on 12 February 2027, the first accounts to show the new notes, the higher interest charge and the cash held for the remaining €103.1M of 2028 notes.",
+       "Repayment of those remaining 2028 notes by 13 October 2028, and the €200M European Investment Bank loan due in December 2028."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Why did Eutelsat borrow at 7.75% to repay a 1.5% bond?",
+    "To remove a maturity almost two years early while it spends heavily on its OneWeb and IRIS² satellites. On our calculation it costs about €37.5M a year in extra interest until the old notes would have matured in October 2028, about €70M in total."
+   ],
+   [
+    "How much of the 2028 bond is left?",
+    "€103.1M of the €600M stays outstanding after holders tendered €496.9M. Eutelsat has put spare proceeds from the new notes into a treasury account to repay it on or before 13 October 2028."
+   ],
+   [
+    "Is Eutelsat paying more to borrow than earlier in 2026?",
+    "Yes. In February 2026 it paid 5.75% on a 5-year bond and 6.25% on a 7-year bond. The new 2032 notes pay 7.75%, about 1.75 points above a straight line between the February coupons (our calculation)."
+   ]
+  ],
+  "sources": [
+   [
+    "Eutelsat S.A.: results of the tender offer for its 1.500% notes due 2028 (24 November 2026)",
+    "https://www.marketscreener.com/news/eutelsat-s-a-announces-the-results-of-the-tender-offer-of-its-a-600-000-000-1-500-per-cent-senior-ce7851dad18af021"
+   ],
+   [
+    "Eutelsat Communications: success of €600M senior notes offering due 2032 (18 November 2026)",
+    "https://www.businesswire.com/news/home/20261117431675/en/Eutelsat-Communications-S.A.-Announces-the-Success-of-Its-Offering-of-%E2%82%AC600-Million-Senior-Notes-Due-2032-and-Eutelsat-S.A.-Announces-the-Maximum-Acceptance-Amount-of-Its-Tender-Offer"
+   ],
+   [
+    "Eutelsat Communications: launch of €400M notes offering and tender offer (16 November 2026)",
+    "https://www.businesswire.com/news/home/20261115053562/en/Eutelsat-Communications-S.A.-Announces-Offering-of-%E2%82%AC400-Million-Senior-Notes-Due-2032-and-Launch-by-Eutelsat-S.A.-of-Offer-to-Purchase-for-Cash-Its-Outstanding-Bonds-Due-2028"
+   ],
+   [
+    "Eutelsat: completion of its refinancing plan, €1.5B bond offering (6 March 2026)",
+    "https://www.eutelsat.com/media-press/media-centre/news/eutelsat-announces-completion-its-comprehensive-re-financing-plan"
+   ],
+   [
+    "Eutelsat Communications: First Quarter 2026-27 revenues (29 October 2026)",
+    "https://www.businesswire.com/news/home/20261029980799/en/Eutelsat-Group-UK-Regulatory-Announcement-Eutelsat-Communications-First-Quarter-2026-27-Revenues"
+   ],
+   [
+    "Markets Insider: Eutelsat S.A. 1.5% 2020/2028 bond details",
+    "https://markets.businessinsider.com/bonds/eutelsat_saeo-bonds_202020-28-bond-2028-fr00140005c6"
+   ],
+   [
+    "Reuters via TradingView: Eutelsat places €600 million senior notes due 2032",
+    "https://www.tradingview.com/news/reuters.com,2026:newsml_TUA2KWSF5:0-eutelsat-places-600-million-senior-notes-due-2032/"
+   ],
+   [
+    "Orbit Alpha quote data: Eutelsat (ETL.PA) daily closes, 16 to 23 November 2026",
+    "https://www.orbitalpha.cloud/api/quote?ticker=ETL"
+   ]
+  ]
+ },
+ {
   "slug": "why-has-ast-spacemobile-stock-fallen",
   "title": "Why has AST SpaceMobile stock fallen?",
   "summary": "AST SpaceMobile fell 59% from $63.12 on 6 October to $25.67 on 23 November, against 16% for the UFO space ETF. On our sums about half the fall came on five days of SpaceX news, which cost AST about $9.2B of market value, more than SpaceX reportedly agreed to pay for Grain's spectrum.",
