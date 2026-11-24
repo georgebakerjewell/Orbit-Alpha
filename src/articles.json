@@ -1,6 +1,162 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-tesla-merger-committees-musk-voting-control",
+  "title": "SpaceX-Tesla merger teams named: why Musk would keep 75% of the votes",
+  "summary": "Tesla and SpaceX have named five directors and three banks to negotiate an all-share merger, the FT reports. Our sums from the filings: if Tesla holders got one-vote Class A shares, Musk's voting power would slip only from about 86% to 75%, while other Tesla holders would own 38% of the group but 13% of its votes.",
+  "published": "2026-11-24",
+  "updated": "2026-11-24",
+  "tickers": [
+   "SPCX"
+  ],
+  "match": [
+   "tesla",
+   "merger"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "The Financial Times reported on Monday 23 November that Tesla and SpaceX have put five directors on the two special committees negotiating a possible all-share merger: Roelof Botha and Randy Glein for SpaceX, and Robyn Denholm, Kathleen Wilson-Thompson and Jack Hartung for Tesla. Morgan Stanley and Goldman Sachs are advising the SpaceX committee and Evercore the Tesla committee. The exchange ratio has not been agreed, and a deal could be reached before the end of the year, according to Yahoo Finance's summary of the FT report. Neither company has announced terms.",
+     "The same reports note that Musk holds about 20% of Tesla's voting power against about 84% at SpaceX, so the structure of the combined company decides how much control he ends up with. SpaceX's 10-Q confirms that both boards formed special committees after its 20 October earnings call.",
+     "[SpaceX](/stocks/spcx) was down 4.3% at $127.58 at 1.40pm New York time on Tuesday 24 November, after closing at $133.35 on Monday. Tesla was down 0.5% at $383.43 (Orbit Alpha quote data, Yahoo Finance)."
+    ]
+   ],
+   [
+    "Orbit Alpha view: Tesla holders would swap control for a minority vote",
+    [
+     "Most coverage of the deal has been about price: how many SpaceX shares each Tesla share gets. We worked through the [exchange ratio and premium](/articles/spacex-tesla-merger-talks-december-exchange-ratio) on 12 November. The committee news brings the other half of the bargain into view, which is votes. SpaceX has two classes of stock: Class A, which trades and carries one vote, and Class B, held by insiders and carrying ten votes. Tesla has one class, one vote per share. So unless the terms change SpaceX's structure, Tesla's outside holders would move from a company where Musk has about a fifth of the votes to one where he has a large majority.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure",
+        "Our working"
+       ],
+       "rows": [
+        [
+         "SpaceX votes today",
+         "61.6 billion",
+         "8,246.5M Class A x 1 + 5,334.5M Class B x 10 (shares at 15 October, 10-Q cover)"
+        ],
+        [
+         "Musk's SpaceX votes",
+         "53.0 billion, about 86%",
+         "849.5M Class A + 5,219.1M Class B x 10, as listed in the IPO prospectus"
+        ],
+        [
+         "Market exchange ratio, 23 November close",
+         "2.89 SpaceX shares per Tesla share",
+         "$385.46 / $133.35; 3.01 at 1.40pm on 24 November"
+        ],
+        [
+         "New Class A shares for Tesla holders, no premium",
+         "about 11.4 billion",
+         "3,952.8M Tesla shares x 2.89"
+        ],
+        [
+         "Musk's votes after the deal",
+         "about 75%",
+         "53.0B + 699.6M Tesla shares x 2.89, over 61.6B + 11.4B"
+        ],
+        [
+         "Musk's economic stake after the deal",
+         "about 32%",
+         "All his shares as a share of 25.0B in total"
+        ],
+        [
+         "Other Tesla holders: share of the economics",
+         "about 38%",
+         "(11.4B - 2.0B Musk) / 25.0B"
+        ],
+        [
+         "Other Tesla holders: share of the votes",
+         "about 13%",
+         "9.4B / 73.0B votes"
+        ],
+        [
+         "Same, with a 20% premium for Tesla",
+         "about 41% of economics, 15% of votes; Musk 74% of votes",
+         "Ratio 3.47"
+        ]
+       ]
+      }
+     },
+     "Our working: share counts are from SpaceX's Q3 10-Q cover and Tesla's Q3 10-Q cover (3,952,757,946 shares at 15 October); Musk's SpaceX holdings are from the IPO prospectus and his 699,580,882 Tesla shares from Tesla's 2026 proxy. The FT puts Musk's SpaceX voting power at about 84%; our 86% uses the prospectus holdings and the October share count, and the gap does not change the result. We assume, as a base case, that Tesla holders receive one-vote Class A shares, because that is the only listed SpaceX class. No terms have been published.",
+     "Three points follow. First, a premium barely moves the control picture. Each 10% added for Tesla holders shifts Musk's voting share by less than one percentage point, because ten-vote Class B shares dominate the count. Tesla's committee can win more value, but votes would need a change to the share structure itself, such as a sunset on Class B or giving Tesla holders a separate say on directors.",
+     "Second, Musk would be diluted economically but not in control. His economic stake would fall from about 45% of SpaceX to about 32% of the group, while his votes would stay at about three quarters. That is the gap the FT and Yahoo Finance flagged as the prize for Musk: greater voting power than he has at Tesla, where he holds 19.8% of the shares.",
+     "Third, the Tesla vote is where outside holders have leverage. As we set out on 12 November, a Tesla merger needs approval from shareholders who, on our numbers, would hold only about 13% of the combined company's votes afterwards. That is why the make-up of the committees matters: the reports note that all five directors have long-standing ties to Musk, though each was judged financially disinterested."
+    ]
+   ],
+   [
+    "What the market is pricing",
+    [
+     "The market ratio keeps moving towards Tesla. It was 2.53 on 20 October when the committees were announced, 2.84 on 12 November and 3.01 at 1.40pm on 24 November (our calculations from closing prices and Tuesday's quote). On Tuesday SPCX fell 4.3% while Tesla fell 0.5%. A rising ratio means each Tesla share already buys more SpaceX stock before any premium, which raises the value of any deal to Tesla holders and the dilution for SpaceX holders.",
+     "For SPCX holders the deal would also change who owns the traded class. At a 2.89 ratio about 11.4 billion new Class A shares would join 8.2 billion already outstanding, so former Tesla holders would own most of the listed stock, while Musk's Class B would keep control of the board."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "An announcement from either company with terms: the ratio, whether it is fixed, which class Tesla holders receive, and whether a majority of non-Musk Tesla shares must approve.",
+       "Any change to SpaceX's dual-class structure in the deal, such as a sunset on Class B voting rights. That is the term that would move control, not the premium.",
+       "8 December: the next large SpaceX lock-up release, covered in [when the SpaceX lock-up ends](/articles/spacex-lock-up-ends-8-december).",
+       "The TSLA to SPCX price ratio: our base case at today's prices is 3.01; each 10% move in it changes Tesla holders' economic share by about two percentage points.",
+       "Background on the talks: [Are SpaceX and Tesla merging?](/articles/are-spacex-and-tesla-merging) and the [SPCX stock page](/stocks/spcx)."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Would Elon Musk control a merged SpaceX and Tesla?",
+    "On our calculation, yes, if Tesla holders received one-vote Class A shares. Musk's ten-vote Class B shares give him about 86% of SpaceX's votes today; after a no-premium deal at the 23 November ratio of 2.89 he would hold about 75%, and still about 74% with a 20% premium."
+   ],
+   [
+    "Who is negotiating the SpaceX-Tesla merger?",
+    "According to the FT, SpaceX directors Roelof Botha and Randy Glein and Tesla directors Robyn Denholm, Kathleen Wilson-Thompson and Jack Hartung sit on the two special committees. Morgan Stanley and Goldman Sachs advise SpaceX's committee and Evercore advises Tesla's."
+   ],
+   [
+    "What would Tesla shareholders own after a merger?",
+    "At market prices, about 46% of the combined company's shares, including Musk's Tesla stake. Tesla holders other than Musk would own about 38% of the economics but, on our numbers, about 13% of the votes."
+   ]
+  ],
+  "sources": [
+   [
+    "SpaceX Form 10-Q for the quarter to 30 September 2026 (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm"
+   ],
+   [
+    "SpaceX registration statement (S-1/A), share classes and principal stockholders (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1181412/000162828026040364/spaceexplorationtechnologib.htm"
+   ],
+   [
+    "Tesla Form 10-Q for the quarter to 30 September 2026 (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1318605/000162828026066775/tsla-20260930.htm"
+   ],
+   [
+    "Tesla 2026 proxy statement (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1318605/000110465926116700/tm267596-1_def14a.htm"
+   ],
+   [
+    "Financial Times: SpaceX-Tesla, the directors negotiating the biggest merger ever (23 November 2026)",
+    "https://www.ft.com/content/2585e45e-9133-4215-a2d8-e1275e1033b9"
+   ],
+   [
+    "Yahoo Finance: Tesla and SpaceX assemble deal teams for a merger that could give Musk majority control (24 November 2026)",
+    "https://finance.yahoo.com/technology/article/tesla-and-spacex-assemble-deal-teams-for-a-merger-that-could-give-musk-majority-control-144555932.html"
+   ],
+   [
+    "Yahoo Finance: Tesla price history",
+    "https://finance.yahoo.com/quote/TSLA/history/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "eutelsat-600-million-bond-7-75-percent-2028-notes-tender",
   "title": "Eutelsat's 7.75% bond: why it pays €37.5M more a year to clear 2028",
   "summary": "Eutelsat sold €600M of 2032 notes at 7.75% and bought back €496.9M of its 1.5% notes due 2028. On our sums the swap adds about €37.5M a year of interest until October 2028, and the new coupon is about 1.75 points above what Eutelsat paid on similar bonds in February.",
