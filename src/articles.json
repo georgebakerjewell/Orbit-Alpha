@@ -1,5 +1,232 @@
 [
  {
+  "slug": "why-has-ast-spacemobile-stock-fallen",
+  "title": "Why has AST SpaceMobile stock fallen?",
+  "summary": "AST SpaceMobile fell 59% from $63.12 on 6 October to $25.67 on 23 November, against 16% for the UFO space ETF. On our sums about half the fall came on five days of SpaceX news, which cost AST about $9.2B of market value, more than SpaceX reportedly agreed to pay for Grain's spectrum.",
+  "published": "2026-11-24",
+  "updated": "2026-11-24",
+  "tickers": [
+   "ASTS",
+   "SPCX"
+  ],
+  "sections": [
+   [
+    "The short answer",
+    [
+     "Mostly SpaceX, then everything else at once. [AST SpaceMobile](/stocks/asts) closed at $63.12 on 6 October and at $25.67 on 23 November, a fall of 59.3%, and is 80.8% below its 52-week high of $133.86 (Orbit Alpha quote data). Over the same period the Procure Space ETF (UFO) fell 15.5% and [Rocket Lab](/stocks/rklb) 33.9%, so AST fell almost four times as far as the space sector.",
+     "The slide started with a run of moves by [SpaceX](/stocks/spcx) into satellite-to-phone service, AST's own market: an FCC order on 8 October letting SpaceX reach ordinary phones with spectrum it owns, its deal on 9 October to buy Grain Management's nationwide low-band spectrum, which AST had also pursued, and a 2 November report that it was in talks to buy Boost Mobile. Piper Sandler downgraded AST on 13 October, citing SpaceX. November then added AST-specific setbacks (a New Glenn delay, a third-quarter revenue miss and new shares issued to Firefly and Ligado) on top of a wide sell-off in growth and AI stocks."
+    ]
+   ],
+   [
+    "Orbit Alpha view: half the fall came on five SpaceX days",
+    [
+     "To separate SpaceX from everything else, we split the 33 trading days from 7 October to 23 November into the five days when the main news was a SpaceX move into AST's market, and the other 28. On the five SpaceX days AST fell 39.0% in total; on the other 28 it fell 33.4%. Compounded, the two give the 59.3% fall. Measured on a log scale, the SpaceX days account for about 55% of the decline (our calculations from daily closes).",
+     {
+      "table": {
+       "head": [
+        "Date",
+        "AST close",
+        "AST move",
+        "UFO move",
+        "Main news"
+       ],
+       "rows": [
+        [
+         "8 October",
+         "$56.93",
+         "-6.1%",
+         "-2.4%",
+         "FCC lets SpaceX serve ordinary phones with spectrum it owns, without a carrier lease"
+        ],
+        [
+         "9 October",
+         "$50.97",
+         "-10.5%",
+         "-0.1%",
+         "SpaceX agrees to buy Grain Management's nationwide 800 MHz spectrum, reported at about $8bn; AST had pursued it"
+        ],
+        [
+         "13 October",
+         "$47.07",
+         "-8.5%",
+         "-1.9%",
+         "Piper Sandler cuts AST to Neutral, target $54 from $98, citing SpaceX competition and launch access"
+        ],
+        [
+         "14 October",
+         "$42.14",
+         "-10.5%",
+         "-2.5%",
+         "Slide continues after the downgrade; Rocket Lab also fell 7.8%, so part of this day was sector-wide"
+        ],
+        [
+         "2 November",
+         "$36.33",
+         "-11.3%",
+         "-0.9%",
+         "Washington Post reports SpaceX talks to buy EchoStar's Boost Mobile"
+        ],
+        [
+         "Five days combined",
+         "",
+         "-39.0%",
+         "-7.5%",
+         "AST fell 34.1% more than UFO on these days"
+        ]
+       ]
+      }
+     },
+     {
+      "table": {
+       "head": [
+        "Measure (our calculations)",
+        "Figure",
+        "Working"
+       ],
+       "rows": [
+        [
+         "Market value, 6 October",
+         "$24.6B",
+         "390.0M shares of all classes at 30 September x $63.12"
+        ],
+        [
+         "Market value, 23 November",
+         "$10.3B",
+         "400.7M shares after the Firefly and Ligado placements x $25.67"
+        ],
+        [
+         "Market value lost since 6 October",
+         "$14.3B",
+         "$24.6B - $10.3B"
+        ],
+        [
+         "Lost on the five SpaceX days",
+         "about $9.2B",
+         "Sum of each day's fall x 390.0M shares"
+        ],
+        [
+         "SpaceX's reported price for Grain's spectrum",
+         "about $8bn",
+         "Wall Street Journal, via Broadband Breakfast"
+        ],
+        [
+         "AST on the other 28 days",
+         "-33.4%",
+         "Against -8.7% for UFO"
+        ]
+       ]
+      }
+     },
+     "Two points follow. First, investors have marked AST down by more on SpaceX headlines than SpaceX itself agreed to spend on the Grain spectrum. None of the five events changed AST's contracts: the Grain deal still needs FCC approval, the 8 October order and the 29 October FCC proposal cover SpaceX's right to use its own spectrum, and the Boost talks were a press report. What they changed is the competitive picture AST is valued on, because SpaceX now owns spectrum and could sell service without a carrier, while AST's model depends on carriers and leased spectrum.",
+     "Second, the SpaceX days do not explain everything. Even on the other 28 days AST fell almost four times as far as UFO. That fits a stock priced on future service rather than current revenue: when risk appetite drops, it drops furthest. It is also why the 10.3% rebound on 23 November, when growth stocks rallied, was AST's second-largest daily rise in the period."
+    ]
+   ],
+   [
+    "What else has weighed on the shares",
+    [
+     {
+      "list": [
+       "Launch delays. On 5 November AST fell 15.2% to $30.20 after a report that Blue Origin had pushed New Glenn's return to January 2027, in a wider sell-off. New Glenn is meant to carry up to eight BlueBirds a launch. BlueBirds 14 to 16 are still awaiting a SpaceX launch date, listed no earlier than 30 December. See [the New Glenn delay](/articles/blue-origin-new-glenn-delay-ast-spacemobile-satellites) and [the BlueBirds 14 to 16 launch page](/launches/ast-spacemobile-bluebirds-14-16-launch).",
+       "Third-quarter results. On 9 November AST reported revenue of $42.3M, up 187%, which 24/7 Wall St. put below a $46M consensus, and kept 2026 guidance of $150M to $200M. The shares rose 14.1% that day, then fell 8.7% on 10 November as Bank of America cut its target. Full figures are on [AST's Q3 2026 results page](/results/asts-q3-2026).",
+       "New shares. On 17 and 18 November AST issued 10M shares to Firefly for its Blacklift engine licence and 780,052 to Ligado, about 2.8% dilution; the stock fell 7.6% on 18 November. We worked through why the falling price makes the Firefly payment cost more stock in [AST's Firefly stock payment](/articles/ast-spacemobile-firefly-10-million-shares-dilution).",
+       "Sector sell-offs. AST fell 12.3% on 16 November and 8.9% on 20 November, both days when space, AI and other speculative growth stocks fell together."
+      ]
+     }
+    ]
+   ],
+   [
+    "What the share price now reflects",
+    [
+     "At $25.67, AST's market value of about $10.3B compares with about $3.2B of cash, equivalents and restricted cash and $4.08B of net long-term debt at 30 September. That gives an enterprise value of about $11.2B, or roughly 64 times the $175M midpoint of 2026 revenue guidance (our calculations; cash used since 30 September is not included). Cash alone is worth about $7.99 a share.",
+     "The cash covers a lot of building, but not indefinitely. AST used $1,004.4M in the first half of 2026, about $502M a quarter, and has said it expects about $1.0B of non-dilutive funding from its J-LEO agreement in Japan. The market value lost since 6 October, $14.3B, is equal to about 28 quarters of that spending (our arithmetic), which shows the fall reflects a lower view of what the finished network will earn against SpaceX, not a near-term cash problem. When service starts is covered in [When will AST SpaceMobile start commercial service?](/articles/when-will-ast-spacemobile-start-commercial-service)."
+    ]
+   ],
+   [
+    "Dates and numbers to watch",
+    [
+     {
+      "list": [
+       "BlueBirds 14 to 16 on Falcon 9, listed no earlier than 30 December: AST's first launch since 5 August, and on a SpaceX rocket.",
+       "Beta service before the end of 2026 in the US, Canada, Japan, the UK and Saudi Arabia, as AST targets.",
+       "BlueBirds 17 to 19 on New Glenn in early 2027: see [the launch page](/launches/ast-spacemobile-bluebirds-17-19-new-glenn-launch).",
+       "The FCC's decision on SpaceX's Grain purchase, and its final satellite-to-phone rules after the 29 October proposal.",
+       "The Firefly share pricing: below $28.57, 14M shares no longer add up to $400M, so more shares or less value for Firefly.",
+       "AST's fourth-quarter results: the date and what to look for are on the [AST earnings preview](/earnings-preview/asts)."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much has AST SpaceMobile stock fallen?",
+    "From $63.12 on 6 October to $25.67 on 23 November, a fall of 59.3%, and 80.8% below its 52-week high of $133.86. The UFO space ETF fell 15.5% over the same period (our calculations from daily closes)."
+   ],
+   [
+    "Why does SpaceX news hurt AST SpaceMobile?",
+    "SpaceX is building its own satellite-to-phone service and buying spectrum so it can sell without a carrier, while AST relies on carrier partners and leased spectrum. SpaceX is also AST's only working launcher until New Glenn flies again. On our sums five days of SpaceX news cost AST about $9.2B of market value."
+   ],
+   [
+    "How much cash does AST SpaceMobile have?",
+    "About $3.2B of cash, equivalents and restricted cash at 30 September 2026, against $4.08B of net long-term debt. It used about $502M a quarter in the first half of 2026. Compare other companies on the [cash runway guide](/space-stocks/cash-runway)."
+   ],
+   [
+    "Is AST SpaceMobile still launching satellites?",
+    "Yes, but slowly. It has 13 BlueBirds in orbit; BlueBirds 14 to 16 await a SpaceX launch listed no earlier than 30 December, and 17 to 19 are due on New Glenn in early 2027. AST targets about 45 in orbit by mid 2027."
+   ]
+  ],
+  "sources": [
+   [
+    "AST SpaceMobile third-quarter 2026 results, Exhibit 99.1 to Form 8-K (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/0001780312/000119312526453758/asts-ex99_1.htm"
+   ],
+   [
+    "24/7 Wall St.: AST SpaceMobile sinks 7% as satellite rival clears regulatory hurdle (8 October 2026)",
+    "https://247wallst.com/investing/2026/10/08/ast-spacemobile-sinks-7-as-satellite-rival-clears-regulatory-hurdle-rocket-lab-drops-4-planet-labs-falls-5/"
+   ],
+   [
+    "24/7 Wall St.: AST SpaceMobile falls as SpaceX spectrum deal closes off low-band option (9 October 2026)",
+    "https://247wallst.com/investing/2026/10/09/ast-spacemobile-falls-6-as-spacex-spectrum-deal-closes-off-low-band-option-rocket-lab-and-planet-labs-slip/"
+   ],
+   [
+    "Broadband Breakfast: SpaceX pays $8 billion for Grain Management airwaves",
+    "https://broadbandbreakfast.com/earthquake-in-the-sky-spacex-pays-8-billion-for-grain-management-airwaves-to-advance-starlink-mobile/"
+   ],
+   [
+    "Yahoo Finance: AST SpaceMobile shares fall as Piper Sandler downgrades on SpaceX competition (13 October 2026)",
+    "https://finance.yahoo.com/markets/stocks/articles/ast-spacemobile-shares-fall-5-132837331.html"
+   ],
+   [
+    "Benzinga: AST SpaceMobile stock sinks to 52-week low (14 October 2026)",
+    "https://www.benzinga.com/trading-ideas/movers/26/10/62362937/ast-spacemobile-stock-sinks-to-52-week-low-heres-why"
+   ],
+   [
+    "Washington Post: Inside Elon Musk's plan to conquer a new industry (2 November 2026)",
+    "https://www.washingtonpost.com/technology/2026/11/02/inside-elon-musks-plan-upend-wireless-phone-industry/"
+   ],
+   [
+    "FCC news release: FCC Proposes to Modernize Leasing Rules for D2D Services (29 October 2026)",
+    "https://docs.fcc.gov/public/attachments/DOC-426297A1.txt"
+   ],
+   [
+    "24/7 Wall St.: Rocket Lab sinks despite record backlog, AST SpaceMobile falls on BofA price target cut (10 November 2026)",
+    "https://247wallst.com/investing/2026/11/10/rocket-lab-sinks-9-despite-record-backlog-ast-spacemobile-falls-6-on-bofa-price-target-cut-spacex-slides-3/"
+   ],
+   [
+    "24/7 Wall St.: AST SpaceMobile drops as tech sell-off hits space stocks (16 November 2026)",
+    "https://247wallst.com/investing/2026/11/16/ast-spacemobile-drops-7-as-tech-selloff-hits-space-stocks-rocket-lab-falls-4-spacex-dips-despite-historic-starship-catch/"
+   ],
+   [
+    "24/7 Wall St.: AST SpaceMobile just plunged 44% in a month (20 November 2026)",
+    "https://247wallst.com/investing/2026/11/20/ast-spacemobile-just-plunged-44-in-a-month-as-space-stocks-face-a-hard-landing-could-asts-stock-realistically-double-from-here/"
+   ],
+   [
+    "Orbit Alpha quote data: ASTS, RKLB and UFO daily closes",
+    "https://www.orbitalpha.cloud/api/quote?ticker=ASTS&range=3mo"
+   ]
+  ]
+ },
+ {
   "kind": "news",
   "slug": "echostar-dish-american-tower-525-million-settlement",
   "title": "DISH settles American Tower claim at 19 cents: what EchoStar keeps",
