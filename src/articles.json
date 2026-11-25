@@ -1,6 +1,193 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-starmind-fcc-million-satellite-data-centers",
+  "title": "FCC clears SpaceX for a million AI satellites: only 100,000 due by 2035",
+  "summary": "The FCC licensed SpaceX's Starmind plan for up to 1 million orbital data centre satellites. Our reading of the order: only the two shells below 600 km are cleared now, and SpaceX need launch just 100,000 by 2035, which is still 7.6 times every Starlink satellite launched since 2019.",
+  "published": "2026-11-25",
+  "updated": "2026-11-25",
+  "tickers": [
+   "SPCX",
+   "VSAT"
+  ],
+  "match": [
+   "fcc",
+   "satellites"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 25 November the FCC's Space Bureau granted in part, and deferred in part, [SpaceX](/stocks/spcx)'s application to launch and operate Starmind, a constellation of up to 1,000,000 satellites designed to work as data centres in orbit. SpaceX filed the application on 30 January 2026 and the FCC put it out for comment on 4 February.",
+     "The order rejects petitions to deny from Amazon's Kuiper Systems (Amazon Leo), [Viasat](/stocks/vsat) and the American Astronomical Society. It also waives SpaceX's surety bond, exempts it from a processing round, and declines to cap the number of satellites, saying the rules set no such limit.",
+     "SPCX traded at $123.57 at 13:39 New York time, down 1.8% on the day from a $125.81 close, after falling as low as $113.93 earlier in the session. Most of the week's selling has followed reports of [merger talks with Tesla](/articles/spacex-tesla-merger-committees-musk-voting-control), not this licence."
+    ]
+   ],
+   [
+    "Orbit Alpha view: a licence for an option, not a build plan",
+    [
+     "The headline says one million satellites. The order itself is narrower in three ways that matter for anyone trying to put a value on orbital compute.",
+     {
+      "list": [
+       "What is actually licensed is radio for backup and emergency control only, in 18.8 to 19.3 GHz and 28.6 to 29.1 GHz, on an unprotected, non-interference basis. The data itself is meant to move over optical laser links, including to Starlink satellites, so the FCC was not handing SpaceX new spectrum. That is a large part of why the Amazon and Viasat objections failed.",
+       "Only part of the constellation can fly yet. The order accepts SpaceX's debris plan for satellites below 600 km and defers its request to dispose of higher satellites in other orbits or around the Sun. Of the six nominal shells in the grant, two (550 to 568 km and 565 to 585 km) sit below 600 km. The four shells from 686 km to 1,002 km need a further application before any satellite goes there.",
+       "The deadlines are loose. SpaceX swapped the old rule for the FCC's new milestones. Under section 25.164 an NGSO licensee must have half its satellites up within six years and all of them within nine. Starmind instead needs one satellite by 25 November 2033, 10% by 2035, 50% by 2038 and all by 2040."
+      ]
+     },
+     {
+      "table": {
+       "head": [
+        "Milestone",
+        "Old rule (section 25.164)",
+        "Starmind grant"
+       ],
+       "rows": [
+        [
+         "First satellite",
+         "No separate step",
+         "25 Nov 2033"
+        ],
+        [
+         "100,000 satellites (10%)",
+         "No separate step",
+         "25 Nov 2035"
+        ],
+        [
+         "500,000 satellites (50%)",
+         "25 Nov 2032",
+         "25 Nov 2038"
+        ],
+        [
+         "1,000,000 satellites (100%)",
+         "25 Nov 2035",
+         "25 Nov 2040"
+        ]
+       ]
+      }
+     },
+     "Our calculation from those dates: the 500,000 mark moves out six years, and the requirement for 2035 drops from the full million to 100,000.",
+     "Even the relaxed schedule is huge next to what SpaceX has done so far. Tracker data shows 13,122 Starlink satellites launched since 2019 and 2,301 launched in 2026 up to 22 November. Our sums:",
+     {
+      "table": {
+       "head": [
+        "Step",
+        "Satellites",
+        "Average a year",
+        "Times 2026 Starlink pace"
+       ],
+       "rows": [
+        [
+         "Now to Nov 2035",
+         "100,000",
+         "about 11,100",
+         "4.8x"
+        ],
+        [
+         "Nov 2035 to Nov 2038",
+         "400,000",
+         "about 133,000",
+         "58x"
+        ],
+        [
+         "Nov 2038 to Nov 2040",
+         "500,000",
+         "250,000",
+         "109x"
+        ]
+       ]
+      }
+     },
+     "The first step means sustaining nearly five times this year's Starlink launch rate for nine years; the later steps need rates tens of times higher than anything flown so far. Because the licence lapses if milestones are missed, the realistic reading is that SpaceX now holds a cheap, low-risk right to start building, with no bond posted, and can decide later how far to go. The value of Starmind to SPCX shareholders still rests on Starship cadence and the cost of the satellites, neither of which this order changes.",
+     "One part of SpaceX's own application helps size the ambition: it gave the example that launching 1 million tonnes a year of satellites producing 100 kW of compute per tonne would add 100 GW of AI compute capacity a year. For scale, SpaceX's announced ground campuses in [Arizona and Texas](/articles/spacex-74-billion-arizona-texas-ai-supercompute-campuses) start with 1.5 GW in Arizona phase 1."
+    ]
+   ],
+   [
+    "Why SpaceX wanted it now",
+    [
+     "Getting a licence early puts SpaceX ahead of rivals such as the startup Orbital, which filed for 100,000 data centre satellites in June. The waiver of the processing round means SpaceX did not have to wait to be grouped with other applicants; the price is that its backup links get no protection from operators licensed later. The order's refusal to set a de facto cap on satellite numbers also gives SpaceX room to scale without a fresh fight over totals. It also lets SpaceX tell AI customers such as Anthropic, which already buys SpaceX compute (see [our piece on its IPO](/articles/anthropic-ipo-spacex-compute-10-gigawatts)), that an orbital route has US approval in principle."
+    ]
+   ],
+   [
+    "What it means for other space stocks",
+    [
+     "For [Viasat](/stocks/vsat) the outcome is a loss on the record: its petition was denied, and the FCC dismissed arguments about aggregate interference from a million satellites because Starmind is limited to backup links on a non-interference basis. The same reasoning will make it harder to block later orbital compute filings that follow the same template.",
+     "The order does not touch launch providers such as [Rocket Lab](/stocks/rklb) and [Firefly](/stocks/fly) directly. The more useful read-across is that the FCC has now shown it will license very large constellations under its new milestone rules, which also apply to other operators moving off the old schedule."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "25 December 2026: SpaceX's 30 days to decline the conditioned grant run out; silence counts as acceptance.",
+       "A modification application with a final debris plan for the shells above 600 km, which is needed before most of the constellation can be built.",
+       "The first semi-annual report, due by 1 July 2027 for the period from 1 December 2026, and every 1 January and 1 July after that, showing how many Starmind satellites are deployed.",
+       "Starship flight rate in 2027, which sets how quickly any large batch of Starmind satellites could go up.",
+       "25 November 2033: the deadline for the first Starmind satellite, which also starts the 15-year licence term."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Did the FCC approve all one million SpaceX data centre satellites?",
+    "It authorised up to 1,000,000 satellites, but only backup radio control was licensed, and only the two shells below 600 km are cleared to deploy now. The four higher shells need a further application with a final debris plan first."
+   ],
+   [
+    "How fast does SpaceX have to launch Starmind satellites?",
+    "One by 25 November 2033, 100,000 by 2035, 500,000 by 2038 and 1,000,000 by 2040, or the licence lapses. Our sums: 100,000 by 2035 is about 7.6 times all the Starlink satellites launched since 2019."
+   ],
+   [
+    "Why did SPCX stock fall on the day of the approval?",
+    "SPCX was down 1.8% at $123.57 in early afternoon trading on 25 November. The selling this week has followed reports of Tesla merger talks; the licence does not change near-term revenue, since the first satellite is not required until 2033."
+   ]
+  ],
+  "sources": [
+   [
+    "FCC: SpaceX Orbital Data Center System order and authorisation, DA 26-1273 (25 November 2026)",
+    "https://docs.fcc.gov/public/attachments/DA-26-1273A1.pdf"
+   ],
+   [
+    "FCC: FCC Authorizes 1 Million Satellites for Data Centers in Space",
+    "https://www.fcc.gov/document/fcc-authorizes-1-million-satellites-data-centers-space"
+   ],
+   [
+    "SpaceX: Application for the SpaceX Orbital Data Center System (30 January 2026)",
+    "https://cdn.geekwire.com/wp-content/uploads/2026/01/SpaceX-Center.pdf"
+   ],
+   [
+    "eCFR: 47 CFR 25.164 Milestones",
+    "https://www.ecfr.gov/current/title-47/part-25/section-25.164"
+   ],
+   [
+    "Reuters via Charlotte Observer: US authorizes SpaceX to deploy 1 million satellites for data centers in space",
+    "https://www.charlotteobserver.com/news/business/article318253088.html"
+   ],
+   [
+    "Seeking Alpha via TradingView: FCC authorizes SpaceX to deploy up to 1M orbital data center satellites",
+    "https://www.tradingview.com/news/seekingalpha:1e015a5bc094b:0-fcc-authorizes-spacex-to-deploy-up-to-1m-orbital-data-center-satellites/"
+   ],
+   [
+    "Flight Atlas: Starlink satellites launched and in orbit (18 November 2026)",
+    "https://www.flightatlas.org/satellite-constellations/starlink"
+   ],
+   [
+    "Space Atlas: Starlink launches in 2026 (22 November 2026)",
+    "https://www.spaceatlas.tech/how-many-starlink-satellites"
+   ],
+   [
+    "Light Reading: SpaceX and a startup file separate plans to deploy 100K satellites",
+    "https://www.lightreading.com/satellite/spacex-and-a-startup-file-separate-plans-to-deploy-100k-satellites"
+   ],
+   [
+    "Orbit Alpha: SPCX quote, 25 November 2026",
+    "https://www.orbitalpha.cloud/stocks/spcx"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "momentus-poison-pill-burkle-stake-below-cash",
   "title": "Momentus poison pill: why investors are buying a stock below its cash",
   "summary": "Momentus adopted a one-year poison pill after investors led by Ronald Burkle's OA3 built a 12.9% stake. At $2.04 the company is valued at $49M, against $108.7M of cash on 30 September: about 42% of cash per share, which is the gap the buyers are chasing.",
