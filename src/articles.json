@@ -1,6 +1,144 @@
 [
  {
   "kind": "news",
+  "slug": "momentus-poison-pill-burkle-stake-below-cash",
+  "title": "Momentus poison pill: why investors are buying a stock below its cash",
+  "summary": "Momentus adopted a one-year poison pill after investors led by Ronald Burkle's OA3 built a 12.9% stake. At $2.04 the company is valued at $49M, against $108.7M of cash on 30 September: about 42% of cash per share, which is the gap the buyers are chasing.",
+  "published": "2026-11-25",
+  "updated": "2026-11-25",
+  "tickers": [
+   "MNTS"
+  ],
+  "match": [
+   "momentus",
+   "rights"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 24 November [Momentus](/stocks/mnts) said its board had adopted a limited duration shareholder rights agreement, often called a poison pill. It follows a Schedule 13D filed on 23 November by OA3, LLC (controlled by Ronald Burkle of The Yucaipa Companies) and Kenneth Abdalla's Warrior Global Holdings, which together report 3,101,079 shares, or 12.9% of the 24,063,401 shares outstanding.",
+     "The plan is triggered when anyone owns 10% or more. Existing 10% holders are grandfathered at their current level, but any further buying while at or above 10% sets it off. Rights are distributed to holders of record on 4 December 2026 and the plan expires on 24 November 2027. The board can redeem the rights for $0.001 each.",
+     "The shares closed at $2.04 on 24 November, up 4.6% from $1.95 on 20 November, the last close before the 13D was filed."
+    ]
+   ],
+   [
+    "Orbit Alpha view: the buyers are paying less than half of cash per share",
+    [
+     "The 13D is not a bet on a turnaround story; the numbers point to a balance-sheet trade. Momentus's 10-Q shows $108.7 million of cash on 30 September and total liabilities of $17.8 million, with 22.5 million shares outstanding at that date. At the 24 November close the whole company is valued at about $49 million.",
+     {
+      "table": {
+       "head": [
+        "Measure",
+        "Figure"
+       ],
+       "rows": [
+        [
+         "Cash, 30 Sept 2026 (10-Q)",
+         "$108.7M"
+        ],
+        [
+         "Total liabilities, 30 Sept 2026",
+         "$17.8M"
+        ],
+        [
+         "Cash per share, 30 Sept (22.46M shares)",
+         "$4.84"
+        ],
+        [
+         "Cash minus all liabilities, per share",
+         "$4.04"
+        ],
+        [
+         "Share price, 24 Nov close",
+         "$2.04"
+        ],
+        [
+         "Market value, 24.06M shares at $2.04",
+         "$49.1M"
+        ],
+        [
+         "Group's average cost (13D)",
+         "$1.89 a share, $5.85M in total"
+        ],
+        [
+         "Cost of the 87.1% the group does not own, at $2.04",
+         "$42.8M"
+        ]
+       ]
+      }
+     },
+     "Our calculations from the 10-Q, the 13D and the 24 November close. The price is about 42% of cash per share at 30 September and about half of cash after subtracting every liability on the balance sheet. Cash has fallen since then: operating cash outflow was $21.1 million in the first nine months of 2026, about $7.0 million a quarter, partly offset by $3.0 million of gross ATM sales after the quarter. Even taking off one more quarter at that rate and adding the ATM money gives roughly $104.6 million, or about $4.35 a share on today's count.",
+     "That is why the pill matters. Buying every share the group does not already own would cost about $42.8 million at Tuesday's price, well under the cash on the balance sheet at 30 September. Without the pill, a buyer could in principle keep accumulating in the market and reach control without paying a premium. The 13D says the group intends to buy more and lists a merger, a liquidation or board changes among the outcomes it may pursue.",
+     "The filings also show a tug of war over new shares. On 4 November OA3 bid $1.86 a share for 1.9 million shares through the company's at-the-market (ATM) programme, worth about $3.5 million, and was turned down; that block would have lifted the group to about 19.3% on our count. After 30 September the company instead sold 1.6 million shares through the ATM for $3.0 million gross, an average of about $1.88, almost the same price. The filings do not say why the bid was refused, but the effect is that the board, not the buyers, decides who receives new stock."
+    ]
+   ],
+   [
+    "Why the board did it",
+    [
+     "The release says the plan is meant to stop anyone gaining control through open-market buying without paying all holders a control premium, and that the board believes the share price does not reflect long-term value. It does not block a negotiated deal: the board can redeem the rights or exempt a buyer.",
+     "The pill also keeps the ATM as the board's main tool. The 10-Q says up to $53.0 million can still be sold under it. At $2.04 that would be about 26 million shares, more than doubling the share count, and each share sold at that price is sold for less than half of the cash per share it dilutes. Holders have already seen this year's raises lift the share count from 2.17 million at the end of 2025 to 24.06 million by 18 November, roughly elevenfold, while the stock fell from a 52-week high of $22.20."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "4 December 2026: record date for the rights distribution.",
+       "The 8-K with the full rights agreement, which will set the exercise price and any exemptions.",
+       "Any amended 13D from the Burkle and Abdalla group, especially a proposal to the board, a request to redeem the pill or plans for board seats.",
+       "Further ATM sales below cash per share, which would show up in the full-year 10-K.",
+       "Fourth-quarter cash burn, against the roughly $7.0 million a quarter average of the first nine months.",
+       "24 November 2027: the pill expires unless the board ends or extends it."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Why did Momentus adopt a poison pill?",
+    "Investors led by Ronald Burkle's OA3 disclosed a 12.9% stake on 23 November and said they want to buy more. The plan stops anyone going above 10% (or adding to a grandfathered stake above 10%) without the board's agreement, so control would need a negotiated deal rather than open-market buying."
+   ],
+   [
+    "Is Momentus trading below its cash?",
+    "Yes, on the latest reported figures. Cash was $108.7 million on 30 September, or $4.84 a share on 22.5 million shares, and $4.04 a share after all liabilities. The stock closed at $2.04 on 24 November, a market value of about $49 million (our calculation)."
+   ],
+   [
+    "What did the Burkle group pay for its Momentus shares?",
+    "The 13D shows about $5.85 million for 3,101,079 shares, an average of $1.89. OA3's 2,547,094 shares cost about $4.88 million, or $1.92 each. At $2.04 the whole stake was worth about $6.3 million, roughly 8% above cost."
+   ]
+  ],
+  "sources": [
+   [
+    "Momentus Adopts Limited Duration Shareholder Rights Agreement (Business Wire, 24 Nov 2026)",
+    "https://www.businesswire.com/news/home/20261124603192/en/Momentus-Adopts-Limited-Duration-Shareholder-Rights-Agreement"
+   ],
+   [
+    "Schedule 13D, OA3 LLC, Ronald Burkle, Kenneth Abdalla and Warrior Global (SEC, 23 Nov 2026)",
+    "https://www.sec.gov/Archives/edgar/data/1309734/000090514826005136/xslSCHEDULE_13D_X02/primary_doc.xml"
+   ],
+   [
+    "Schedule 13D Exhibit 2, schedule of transactions (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1309734/000090514826005136/ex2.htm"
+   ],
+   [
+    "Form 4, OA3 LLC purchases of 20 and 23 Nov 2026 (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1015899/000090514826005172/xslF345X06/form4.xml"
+   ],
+   [
+    "Momentus Form 10-Q for the quarter ended 30 Sept 2026 (SEC)",
+    "https://www.sec.gov/Archives/edgar/data/1781162/000162828026075311/mnts-20260930.htm"
+   ],
+   [
+    "Momentus Insider Bought Shares Worth $1,237,153 (MT Newswires via Yahoo Finance)",
+    "https://finance.yahoo.com/markets/stocks/articles/momentus-insider-bought-shares-worth-090431993.html"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "spacex-tesla-merger-committees-musk-voting-control",
   "title": "SpaceX-Tesla merger teams named: why Musk would keep 75% of the votes",
   "summary": "Tesla and SpaceX have named five directors and three banks to negotiate an all-share merger, the FT reports. Our sums from the filings: if Tesla holders got one-vote Class A shares, Musk's voting power would slip only from about 86% to 75%, while other Tesla holders would own 38% of the group but 13% of its votes.",
