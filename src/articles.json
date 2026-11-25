@@ -1,6 +1,135 @@
 [
  {
   "kind": "news",
+  "slug": "spacex-trump-accounts-new-shares-dilution",
+  "title": "SpaceX to gift new shares to Trump Accounts: up to $8.9B of dilution",
+  "summary": "SpaceX will issue one new share to every currently active Trump Account, with Musk matching from his own stake. If all of the nearly 70 million accounts count, our calculation puts the company's gift at $8.9B, 0.5% of its shares, with about 65% of the cost falling on holders other than Musk.",
+  "published": "2026-11-25",
+  "updated": "2026-11-25",
+  "tickers": [
+   "SPCX"
+  ],
+  "match": [
+   "trump",
+   "accounts"
+  ],
+  "sections": [
+   [
+    "What happened",
+    [
+     "On 25 November [SpaceX](/stocks/spcx) said it had committed to contribute one newly issued Class A share to every currently active Trump Account, the tax-advantaged savings accounts for American children created by the 2025 tax law. Elon Musk will personally match the number of shares SpaceX gives, as part of the pledge he made on 19 October to give one SpaceX share to every child in the country. The release says the plan depends on third-party and government approvals, and it gives neither a number of qualifying accounts nor a date.",
+     "The same release repeated that President and COO Gwynne Shotwell is separately giving more than 2 million of her own shares; she said in October that the first distribution would take place in December, aimed at 11 to 17 year olds in lower-income ZIP codes.",
+     "SPCX closed at $127.44, up 1.3% from $125.81, after falling as low as $113.93 during a session dominated by worries about a [possible Tesla merger](/articles/spacex-tesla-merger-committees-musk-voting-control) and an [FCC licence for orbital data centres](/articles/spacex-starmind-fcc-million-satellite-data-centers)."
+    ]
+   ],
+   [
+    "Orbit Alpha view: this time shareholders, not just Musk, pay",
+    [
+     "Until now the Trump Account gifts from SpaceX people came out of personal holdings. Musk's October pledge of roughly 73 million shares, worth about $10.7B at the time, would have cut his outright holding by about 1.5% and cost other investors nothing. Wednesday's announcement is different in kind: the company's half is made of new shares, so every SpaceX shareholder funds it through dilution, and Musk's matching half is still his own.",
+     "How big that is depends on what SpaceX means by \"currently active\", which it has not defined. The White House said on 7 October that nearly 70 million accounts had been created, more than 60 million of them by automatic enrollment, but that parents still have to claim an account to use it. So 70 million is the ceiling, and the real figure could be much lower if only claimed accounts count. The table shows the range.",
+     {
+      "table": {
+       "head": [
+        "Accounts that qualify",
+        "New SpaceX shares",
+        "Share of SpaceX stock",
+        "Value at 25 Nov close",
+        "Borne by holders other than Musk"
+       ],
+       "rows": [
+        [
+         "70 million (all created accounts)",
+         "70 million",
+         "0.52%",
+         "$8.92B",
+         "$5.77B"
+        ],
+        [
+         "35 million (half)",
+         "35 million",
+         "0.26%",
+         "$4.46B",
+         "$2.88B"
+        ],
+        [
+         "10 million",
+         "10 million",
+         "0.07%",
+         "$1.27B",
+         "$0.82B"
+        ]
+       ]
+      }
+     },
+     "Our calculation: about 13.58 billion shares in issue, worked out from the $1.73 trillion market value and the $127.44 close reported by our [SPCX quote](/stocks/spcx) on 25 November; Musk's 4.8 billion directly owned shares (from an August SEC filing, as reported by Al Jazeera) are about 35% of that, so roughly 65% of the dilution falls on everyone else. Musk's unvested awards and options are left out, which slightly overstates the share borne by others.",
+     "Put in context, the ceiling case is not trivial. $8.9B is about twice the $4.40B net income SpaceX reported for the [third quarter](/results/spcx-q3-2026), and more than three times the $2.6B of philanthropic gifts the White House said had gone into all Trump Accounts by early October. But at 0.52% of the share count it is small next to the 43% fall from the $225.64 high to Wednesday's close, which is why the market barely registered it. The dilution only becomes material if most automatically created accounts count as active."
+    ]
+   ],
+   [
+    "Why SpaceX did it",
+    [
+     "The release frames it as giving the next generation of Americans a stake in the company building their future infrastructure. The practical effect is to make millions of children SpaceX shareholders through accounts built for long-term saving, and it answers a public call: Treasury Secretary Scott Bessent said last week that it is important for entrepreneurs to share their bounty through the accounts.",
+     "Pairing the company gift with Musk's match also changes the shape of his 19 October pledge: SpaceX says the match is part of that pledge, so company shares and Musk's shares now arrive together. Whether a child in an active account ends up with one share from each source, or Musk's shares go to other children, is not stated."
+    ]
+   ],
+   [
+    "What to watch next",
+    [
+     {
+      "list": [
+       "A filing or update that defines \"currently active\" and gives the number of shares to be issued: that single number sets the cost to shareholders.",
+       "Which approvals are needed and when the shares are issued; the release names third-party and government approvals as a risk.",
+       "How the gift appears in SpaceX's fourth-quarter results, as a share issue with no cash attached.",
+       "Shotwell's first distribution, set for December, and the timing of Musk's own gift, which he described in October as happening next year.",
+       "Any agreed exchange ratio in a Tesla merger: extra SpaceX shares in issue change the per-share arithmetic, though only slightly at this scale."
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "Does SpaceX's Trump Account gift dilute shareholders?",
+    "Yes, the company's part does, because SpaceX is issuing new shares. If all of the nearly 70 million created accounts qualify, our calculation is about 70 million new shares, 0.52% of the roughly 13.58 billion in issue, worth $8.92B at the 25 November close. Musk's matching shares come from his own stake and do not dilute anyone."
+   ],
+   [
+    "How many Trump Accounts are active?",
+    "SpaceX has not said. The White House reported on 7 October that nearly 70 million accounts had been created, more than 60 million by automatic enrollment, and that parents must claim an account to manage it. The number that qualifies for SpaceX's share could therefore be well below 70 million."
+   ],
+   [
+    "Who pays for the SpaceX share gift?",
+    "All shareholders, in proportion to their holdings, through dilution. On our calculation Musk directly owns about 35% of SpaceX shares, so around 65% of the cost of the company's gift falls on other investors, up to about $5.8B if every created account counts."
+   ]
+  ],
+  "sources": [
+   [
+    "SpaceX: SpaceX to Invest in the Next Generation of Americans (25 November 2026)",
+    "https://ir.spacex.com/updates/releases-details/2026/SpaceX-to-Invest-in-the-Next-Generation-of-Americans-2026-r_LYQ5cH94/default.aspx"
+   ],
+   [
+    "The White House: Trump Accounts Put 70 Million Kids on the Path to Financial Freedom (7 October 2026)",
+    "https://www.whitehouse.gov/releases/2026/10/a-financial-stake-in-the-future-for-nearly-70-million-american-children-trump-accounts-made-it-possible/"
+   ],
+   [
+    "Yahoo Finance: SpaceX, Elon Musk to give one share each to active Trump Accounts",
+    "https://finance.yahoo.com/markets/article/spacex-elon-musk-to-give-one-share-each-to-active-trump-accounts-205719872.html"
+   ],
+   [
+    "Al Jazeera: Musk pledges $10bn in SpaceX shares for US children",
+    "https://aljazeera.com/news/2026/10/21/musk-pledges-10bn-in-spacex-shares-for-us-children-who-really-gains"
+   ],
+   [
+    "TeslaNorth: SpaceX Pledges a Share for Every Active Trump Account",
+    "https://teslanorth.com/2026/11/25/spacex-share-active-trump-accounts/"
+   ],
+   [
+    "TeslaNorth: SpaceX President Gives Over 2 Million Shares to Kids' Trump Accounts",
+    "https://teslanorth.com/2026/10/30/shotwell-spacex-shares-trump-accounts/"
+   ]
+  ]
+ },
+ {
+  "kind": "news",
   "slug": "spacex-starmind-fcc-million-satellite-data-centers",
   "title": "FCC clears SpaceX for a million AI satellites: only 100,000 due by 2035",
   "summary": "The FCC licensed SpaceX's Starmind plan for up to 1 million orbital data centre satellites. Our reading of the order: only the two shells below 600 km are cleared now, and SpaceX need launch just 100,000 by 2035, which is still 7.6 times every Starlink satellite launched since 2019.",
