@@ -8509,5 +8509,216 @@
     "https://www.orbitalpha.cloud/api/quote?ticker=YSS"
    ]
   ]
+ },
+ {
+  "slug": "is-rocket-lab-raising-electron-prices",
+  "title": "Is Rocket Lab raising Electron prices?",
+  "summary": "Yes, on new orders. Rocket Lab's CFO says customers already pay more and sees a \"very strong uplift\" within six to nine months as SpaceX rideshare slots run out. Our sums: each 10% rise adds about $0.87M a launch, 23% more margin per launch, but only about 2% to group revenue.",
+  "published": "2026-11-27",
+  "updated": "2026-11-27",
+  "tickers": [
+   "RKLB",
+   "SPCX",
+   "BKSY",
+   "FLY"
+  ],
+  "sections": [
+   [
+    "The short answer",
+    [
+     "Yes, but gradually and only on new contracts. In a YouTube interview released on 22 November 2026, chief financial officer Adam Spice said Electron could see \"a very strong uplift in pricing that goes along with this increase in demand\", adding: \"I think that's going to start to manifest itself in the next, I'd say, probably six to nine months.\" On the third-quarter results call earlier in November he said customers were already paying higher prices on new orders (Stocktwits, 24/7 Wall St.).",
+     "Rocket Lab has not announced a new Electron price or said how large the rise will be. The reason it gives is supply: satellite operators cannot book SpaceX's Transporter and Bandwagon rideshare flights for 2029 and beyond, and Spice called Electron \"their next best alternative to a transporter or bandwagon, which are going away\". Bloomberg Law reported that SpaceX had stopped taking new Falcon 9 rideshare reservations by July (see [Is SpaceX retiring Falcon 9?](/articles/is-spacex-retiring-falcon-9)).",
+     "Rocket Lab shares closed at $49.63 on 23 November, up 9.3% on the day, after falling from $57.37 on 16 November to $45.42 on 20 November, a 20.8% drop (our calculation from closing prices). They closed at $47.02 on 25 November."
+    ]
+   ],
+   [
+    "Orbit Alpha view: a margin story, not a revenue story",
+    [
+     "Rocket Lab's 10-Q shows why price matters more for profit than for sales. In the first nine months of 2026 Electron earned $8.7M of revenue per launch and cost $4.9M per launch, leaving about $3.8M per launch (our calculation). Because the rocket costs the same to build whatever the customer pays, every extra dollar of price falls straight through to that margin.",
+     "But launch is a small part of the group. Launch services made $53.1M of Rocket Lab's $267.8M third-quarter revenue, 19.8% (our calculation). Electron completed 18 missions in the nine months, a pace of 24 a year (our calculation). At that pace, even a 20% price rise adds about $42M a year, against third-quarter revenue run at $1.07B a year and a market value of about $29.7B.",
+     {
+      "table": {
+       "head": [
+        "Electron price rise",
+        "Extra revenue per launch",
+        "Change in margin per launch",
+        "Extra a year at 24 launches",
+        "Extra a year at 52 launches"
+       ],
+       "rows": [
+        [
+         "10%",
+         "$0.87M",
+         "+23%",
+         "$20.9M (about 2% of group revenue)",
+         "$45.2M"
+        ],
+        [
+         "20%",
+         "$1.74M",
+         "+46%",
+         "$41.8M (about 4%)",
+         "$90.5M"
+        ],
+        [
+         "30%",
+         "$2.61M",
+         "+69%",
+         "$62.6M (about 6%)",
+         "$135.7M"
+        ]
+       ]
+      }
+     },
+     "Working (ours): price rise times the nine-month average of $8.7M per launch; margin change against the $3.8M gap between $8.7M revenue and $4.9M cost per launch, assuming cost per launch stays flat; group revenue is third-quarter revenue of $267.8M times four; 52 launches a year is the rate Peter Beck said the Electron factory was designed for. Market value is 632.0M shares (10-Q cover, 4 November) times $47.02.",
+     "The bigger lever is volume. Rocket Lab built about 17 Electrons in the first nine months of 2026 on a line designed for 52 a year, and Spice said about 100 a year was possible within two years if the company approves 50,000 to 75,000 square feet of extra factory space. Moving from 24 to 52 launches a year at today's $8.7M would add about $244M of annual launch revenue (our calculation), more than any of the price rises above. Higher prices make that extra capacity more profitable; they do not replace it."
+    ]
+   ],
+   [
+    "Why the higher prices will take time to show",
+    [
+     "Launch contracts are fixed price, so new prices apply to new bookings, and Rocket Lab records most Electron mission revenue at a point in time, when the launch happens. Its \"revenue per launch\" measure counts the contract value of the launches flown in a period, whenever the deal was signed. Spice expects operators planning their next missions to start looking elsewhere in the second half of 2027, for satellites flying in 2029 and later. On that timeline the higher prices are booked in 2027 but appear in reported revenue per launch mainly from 2028 onwards.",
+     "Much of the near-term manifest is already priced. Launch services backlog was $1.85B at 30 September, 52% of the $3.57B total, and only about 33% of the total backlog is expected to turn into revenue within 12 months. Synspective's 20 extra Electron launches, signed on 30 September for 2028 to 2031 and bringing its total to 47, were agreed before the latest pricing comments, on undisclosed terms.",
+     {
+      "table": {
+       "head": [
+        "Electron measure",
+        "Q3 2026",
+        "Q3 2025",
+        "Nine months 2026",
+        "Nine months 2025"
+       ],
+       "rows": [
+        [
+         "Revenue per launch",
+         "$7.8M",
+         "$10.1M",
+         "$8.7M",
+         "$8.2M"
+        ],
+        [
+         "Cost per launch",
+         "$5.0M",
+         "$5.9M",
+         "$4.9M",
+         "$5.5M"
+        ],
+        [
+         "Gap per launch (our calculation)",
+         "$2.8M",
+         "$4.2M",
+         "$3.8M",
+         "$2.7M"
+        ],
+        [
+         "Electron missions completed",
+         "6",
+         "4",
+         "18",
+         "14"
+        ],
+        [
+         "Launch services revenue",
+         "$53.1M",
+         "$40.9M",
+         "$161.3M",
+         "$123.1M"
+        ]
+       ]
+      }
+     },
+     "Rocket Lab put both the third-quarter fall and the nine-month rise in revenue per launch down to \"changes in customer mix and mission complexity\", so a single quarter says little about pricing. Q3 2025 launch revenue and nine-month 2025 revenue are our calculations from the increases the 10-Q reports ($12.2M and $38.2M)."
+    ]
+   ],
+   [
+    "Which other covered companies are affected",
+    [
+     {
+      "list": [
+       "SpaceX (SPCX): the cause. Rideshare is a small part of a company whose Space segment made 12% of Q3 revenue, but its rideshare rates, which start at $350,000 for 50 kilograms to sun-synchronous orbit, set the floor small-satellite operators compare against. See [SpaceX stock](/stocks/spcx).",
+       "BlackSky (BKSY): a customer. It signed four more dedicated Electron launches in February 2026, taking it to 17 Electron launches since 2019, so new BlackSky orders would face the new pricing. See [BlackSky stock](/stocks/bksy).",
+       "Firefly Aerospace (FLY): a competitor that benefits from the same shortage. Its Alpha rocket carries a listed price of $15M, against Electron's $8.7M average revenue per launch. See [Alpha Block 2 first launch](/launches/firefly-alpha-block-2-first-launch) and [Rocket Lab vs Firefly](/compare/rocket-lab-vs-firefly)."
+      ]
+     }
+    ]
+   ],
+   [
+    "What to watch",
+    [
+     {
+      "list": [
+       "Rocket Lab's fourth-quarter results, the first chance to see whether revenue per launch and new launch bookings reflect higher prices: see the [Rocket Lab earnings preview](/earnings-preview/rklb) and [Q3 2026 results](/results/rklb-q3-2026).",
+       "Any board approval of a second Electron production line, which Beck put at tens of millions of dollars.",
+       "Second half of 2027: when Spice expects operators who cannot get SpaceX rideshare slots to start booking elsewhere.",
+       "End of Q1 2027: Rocket Lab expects to finish Neutron tank testing and set a first launch date. See [When is Neutron's first launch?](/articles/when-is-rocket-lab-neutron-first-launch)"
+      ]
+     }
+    ]
+   ]
+  ],
+  "faq": [
+   [
+    "How much does an Electron launch cost?",
+    "Rocket Lab does not quote a standard price. Its average revenue per Electron launch was $8.7M in the first nine months of 2026 and $7.8M for launches flown in the third quarter, with cost per launch of $4.9M and $5.0M respectively."
+   ],
+   [
+    "When will higher Electron prices show up in Rocket Lab's results?",
+    "The CFO expects the uplift to start within six to nine months of 22 November 2026, on new orders. Because Electron revenue is recorded when a mission flies, launches booked at higher prices for 2028 and 2029 slots would show in reported revenue per launch mainly from 2028."
+   ],
+   [
+    "Why are Electron prices going up?",
+    "Rocket Lab says demand is rising because SpaceX's Transporter and Bandwagon rideshare flights cannot be booked for 2029 and beyond, leaving Electron as the next best option for many small satellites."
+   ],
+   [
+    "How much of Rocket Lab's revenue comes from launches?",
+    "Launch services made $53.1M of $267.8M revenue in Q3 2026, about 20%. The rest came from Space Systems, mainly spacecraft and components. See the [Rocket Lab Q3 2026 results](/results/rklb-q3-2026)."
+   ]
+  ],
+  "sources": [
+   [
+    "Rocket Lab Form 10-Q for the quarter to 30 September 2026 (SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/1819994/000181999426000074/rklb-20260930.htm"
+   ],
+   [
+    "Rocket Lab Announces Third Quarter 2026 Financial Results (Exhibit 99.1, SEC EDGAR)",
+    "https://www.sec.gov/Archives/edgar/data/0001819994/000181999426000073/rklb-11092026ex991.htm"
+   ],
+   [
+    "Interview with Adam Spice and Peter Beck (YouTube)",
+    "https://www.youtube.com/watch?v=mmD28kHDC2w"
+   ],
+   [
+    "Stocktwits: CFO sees 'very strong uplift' in Electron prices as SpaceX rideshare slots tighten (22 November 2026)",
+    "https://stocktwits.com/news-articles/markets/equity/rklb-stock-cfo-uplift-electron-prices-spacex-rideshare-slots-tighten/cNbYMSlR9SZ"
+   ],
+   [
+    "24/7 Wall St.: Rocket Lab rallies 11% as CFO eyes higher Electron prices (23 November 2026)",
+    "https://247wallst.com/investing/2026/11/23/rocket-lab-rallies-11-after-its-worst-week-ever-as-cfo-eyes-higher-electron-prices-ast-spacemobile-jumps-14-spacex-surges-9/"
+   ],
+   [
+    "Bloomberg Law: SpaceX turns away Falcon customers in major bet on Starship",
+    "https://news.bloomberglaw.com/texas-brief/spacex-turns-away-falcon-customers-in-major-bet-on-starship-4"
+   ],
+   [
+    "Rocket Lab: Largest-ever Electron commercial deal, 20-launch contract for Synspective (30 September 2026)",
+    "https://investors.rocketlabcorp.com/news-releases/news-release-details/rocket-lab-secures-largest-ever-electron-commercial-deal-20"
+   ],
+   [
+    "Rocket Lab: Multi-launch contract with BlackSky for four dedicated Electron missions (26 February 2026)",
+    "https://rocketlabcorp.com/updates/rocket-lab-secures-latest-multi-launch-contract-with-blacksky-for-4x-dedicated-electron-missions/"
+   ],
+   [
+    "SpaceX Reports Third Quarter 2026 Results (SpaceX investor relations)",
+    "https://ir.spacex.com/files/content_files/SpaceX-Reports-Third-Quarter-2026-Results.pdf"
+   ],
+   [
+    "Next Spaceflight: Firefly Alpha listed price",
+    "https://nextspaceflight.com/rockets/62/"
+   ],
+   [
+    "Orbit Alpha quote data for RKLB (closing prices 16 to 25 November 2026)",
+    "https://www.orbitalpha.cloud/api/quote?ticker=RKLB"
+   ]
+  ]
  }
 ]
